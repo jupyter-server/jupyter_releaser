@@ -1,0 +1,45 @@
+name: Draft Changelog
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "The owner/repo GitHub target"
+        required: true
+      branch:
+        description: The branch to target"
+        required: true
+      version_spec:
+        description: "New Version Spec"
+        required: true
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        python-version: ["3.9"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Install Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: "x64"
+      - name: Upgrade packaging dependencies
+        run: |
+          pip install --upgrade pip setuptools wheel --user
+      - name: Install Dependencies
+        run: |
+          pip install -e .
+      - name: Draft Changelog
+        id: draft-changelog
+        uses: ./.github/actions/draft-changelog
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          version_spec: ${{ github.event.inputs.version_spec }}
+          target: ${{ github.event.inputs.target }}
+          branch: ${{ github.event.inputs.branch }}
+      - name: "** Next Step **"
+        run: |
+          echo "Review PR: ${{ steps.draft-changelog.outputs.pr_url }}"

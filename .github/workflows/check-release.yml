@@ -1,0 +1,50 @@
+name: Check Release
+on:
+  push:
+    branches: ["*"]
+jobs:
+  check_release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.8.0
+        with:
+          access_token: ${{ github.token }}
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Install Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.9
+          architecture: "x64"
+      - name: Get pip cache dir
+        id: pip-cache
+        run: |
+          echo "::set-output name=dir::$(pip cache dir)"
+      - name: Cache pip
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('setup.cfg') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+            ${{ runner.os }}-pip-
+      - name: Cache checked links
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pytest-link-check
+          key: ${{ runner.os }}-linkcheck-${{ hashFiles('**/.md') }}-md-links
+          restore-keys: |
+            ${{ runner.os }}-linkcheck-
+      - name: Upgrade packaging dependencies
+        run: |
+          pip install --upgrade pip setuptools wheel --user
+      - name: Install Dependencies
+        run: |
+          pip install -e .
+      - name: Check Release
+        env:
+          TWINE_PASSWORD: ${{ secrets.TEST_PYPI_TOKEN }}
+        uses: ./.github/actions/check-release
+        with:
+          token: ${{ secrets.GH_TOKEN }}

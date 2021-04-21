@@ -1,0 +1,48 @@
+name: "Draft Changelog"
+description: "Create an automated changelog entry PR"
+inputs:
+  token:
+    description: "GitHub access token"
+    required: true
+  version_spec:
+    description: "New Version Specifier"
+    required: true
+  target:
+    description: "The owner/repo GitHub target"
+    required: true
+  branch:
+    description: The branch to target"
+    required: false
+  changelog:
+    description: "Changelog file"
+    default: "CHANGELOG.md"
+    required: false
+  dry_run:
+    description: "If set, do not make a PR"
+    default: "false"
+    required: false
+outputs:
+  pr_url:
+    description: "The URL of the Changelog Pull Request"
+    value: ${{ steps.draft-changelog.outputs.pr_url }}
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      id: draft-changelog
+      run: |
+        set -eux
+
+        # Set up env variables
+        export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
+        export RH_REPOSITORY=${{ inputs.target }}
+        if [ ! -z ${{ inputs.branch }} ]; then
+          export RH_BRANCH=${{ inputs.branch }}
+        fi
+        export RH_VERSION_SPEC=${{ inputs.version_spec }}
+        export RH_CHANGELOG=${{ inputs.changelog }}
+        export RH_DRY_RUN=${{ inputs.dry_run }}
+
+        # Draft Changelog
+        pip install -q jupyter-releaser
+        python -m jupyter_releaser.actions.draft_changelog

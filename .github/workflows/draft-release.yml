@@ -1,0 +1,65 @@
+name: Draft Release
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "The owner/repo GitHub target"
+        required: true
+      branch:
+        description: "The branch to target"
+        required: true
+      version_spec:
+        description: "New Version Specifier"
+        required: true
+      post_version_spec:
+        description: "Post Version Specifier"
+        required: false
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        python-version: ["3.9"]
+    env:
+      VERSION_SPEC: ${{ github.event.inputs.version_spec }}
+      POST_VERSION_SPEC: ${{ github.event.inputs.post_version_spec }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Install Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: "x64"
+      - name: Upgrade packaging dependencies
+        run: |
+          pip install --upgrade pip setuptools wheel --user
+      - name: Get pip cache dir
+        id: pip-cache
+        run: |
+          echo "::set-output name=dir::$(pip cache dir)"
+      - name: Cache pip
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('setup.py') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-${{ matrix.python-version }}-
+            ${{ runner.os }}-pip-
+      - name: Install Dependencies
+        run: |
+          pip install -e .
+      - name: Create Draft GitHub Release
+        id: draft-release
+        uses: ./.github/actions/draft-release
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          target: ${{ github.event.inputs.target }}
+          branch: ${{ github.event.inputs.branch }}
+          version_spec: ${{ github.event.inputs.version_spec }}
+          post_version_spec: ${{ github.event.inputs.post_version_spec }}
+      - name: "** Next Step **"
+        run: |
+          echo "Run the "Publish Release" Workflow with Release Url:"
+          echo ${{ steps.draft-release.outputs.release_url }}

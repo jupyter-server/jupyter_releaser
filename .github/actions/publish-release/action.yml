@@ -1,0 +1,36 @@
+name: "Publish Release"
+description: "Publish assets and finalize GitHub release"
+inputs:
+  token:
+    description: "GitHub access token"
+    required: true
+  release_url:
+    description: "The full url to the GitHub release page"
+    required: true
+  dry_run:
+    description: "If set, do not push permanent changes"
+    default: "false"
+    required: false
+outputs:
+  release_url:
+    description: "The html URL of the GitHub release"
+    value: ${{ steps.publish-release.outputs.release_url }}
+  pr_url:
+    description: "The html URL of the forwardport PR if applicable"
+    value: ${{ steps.publish-release.outputs.pr_url }}
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      id: publish-release
+      run: |
+        set -eux
+
+        # Set up env variables
+        export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
+        export RH_DRY_RUN=${{ inputs.dry_run }}
+        export release_url=${{ inputs.release_url }}
+
+        # Publish release
+        pip install -q jupyter-releaser
+        python -m jupyter_releaser.actions.publish_release

@@ -1,0 +1,70 @@
+name: "Check Release"
+description: "Run through a dry run release cycle"
+inputs:
+  token:
+    description: "GitHub access token"
+    required: true
+  changelog:
+    description: "Changelog file"
+    default: "CHANGELOG.md"
+    required: false
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      id: draft-release
+      run: |
+        set -eux
+
+        # Set up env variables
+        export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
+        export RH_REPOSITORY=${GITHUB_REPOSITORY}
+        export RH_VERSION_SPEC=0.0.1a0
+        export RH_POST_VERSION_SPEC=0.1.0.dev0
+        export RH_CHANGELOG=${{ inputs.changelog }}
+        export RH_DRY_RUN=true
+        if [ ! -z ${GITHUB_HEAD_REF} ]; then
+          echo "Using GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}"
+          export RH_BRANCH=${GITHUB_HEAD_REF}
+        else
+          # e.g refs/head/foo or refs/tag/bar
+          echo "Using GITHUB_REF: ${GITHUB_REF}"
+          export RH_BRANCH=$(echo ${GITHUB_REF} | cut -d'/' -f 3)
+        fi
+
+        # Install Jupyter Releaser from git unless we are testing Releaser itself
+        export repo_name=$(echo ${GITHUB_REPOSITORY} | cut -d'/' -f 2)
+        echo "repo name: ${repo_name}"
+        if [ ${repo_name} !=  "jupyter_releaser" ]; then
+           pip install git+https://github.com/jupyter-server/jupyter_releaser.git
+        fi
+
+        # Draft Changelog
+        python -m jupyter_releaser.actions.draft_changelog
+
+        # Draft Release
+        python -m jupyter_releaser.actions.draft_release
+
+    - shell: bash
+      id: publish-release
+      run: |
+        set -eux
+
+        # Set up env variables
+        export release_url=${{ steps.draft-release.outputs.release_url }}
+        export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
+        export RH_DRY_RUN=true
+
+        # Publish Release
+        python -m jupyter_releaser.actions.publish_release ${release_url}
+
+    - shell: bash
+      run: |
+        set -eux
+
+        # Set up env variables
+        export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
+        export release_url=${{ steps.publish-release.outputs.release_url }}
+
+        # Delete Draft Release
+        jupyter-releaser delete-release ${release_url}
