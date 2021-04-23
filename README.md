@@ -1,5 +1,7 @@
 # Jupyter Releaser
 
+** Experimental! **
+
 ## Motivation
 
 A set of helper scripts and GitHub Actions to aid in automated releases of Python and npm packages.
