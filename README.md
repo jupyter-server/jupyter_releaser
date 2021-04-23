@@ -2,24 +2,26 @@
 
 ** Experimental! **
 
+**Jupyter Releaser** contains a set of helper scripts and GitHub Actions to aid in automated releases of Python and npm packages.
+
 ## Motivation
 
-A set of helper scripts and GitHub Actions to aid in automated releases of Python and npm packages.
+This project should help maintainers reduce toil and save time in the release process by enforcing best practices to:
 
-- Enforces best practices:
-
-  - Automated changelog for every release
-  - Published to test server and verified with install and import of dist asset(s)
-  - Commit message with hashes of dist file(s)
-  - Annotated git tag in standard format
-  - GitHub release with changelog entry
-  - Verified url links in markdown and reStructuredText files
-  - Verified integrity of Python manifest
-  - Revert to Dev version after release (optional)
+  - Automate a changelog for every release
+  - Pre-publish to test server and verify the install and import of dist asset(s)
+  - Commit a message with hashes of dist file(s)
+  - Annotate the git tag in standard format
+  - Create a GitHub release with changelog entry
+  - Verify url links in markdown and reStructuredText files
+  - Verify integrity of Python manifest
   - Forward port changelog entries into default branch
   - Dry run publish on CI
+  - Revert to Dev version after release (optional)
 
-- Prerequisites (see [checklist](#Checklist-for-Adoption) below for details):
+## Prerequisites 
+
+See [checklist](#Checklist-for-Adoption) below for details:
   - Markdown changelog
   - Bump version configuration (if using Python), for example [tbump](https://github.com/dmerejkowsky/tbump)
   - [Access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with access to target GitHub repo to run GitHub Actions.
@@ -28,33 +30,35 @@ A set of helper scripts and GitHub Actions to aid in automated releases of Pytho
 
 ## Typical Workflow
 
-- When ready to make a release, a fork of `jupyter-releaser` and go to the Actions panel
-- Select the `Draft Changelog` workflow
-- Run the workflow with the version spec (usually the new version number)
+When ready to make a release:
+
+1. Fork the `jupyter-releaser` repo and go to the Actions panel
+2. Select the `Draft Changelog` workflow
+3. Run the workflow with the version spec (usually the new version number)
 
 <!-- TODO: Add Draft Changelog workflow screenshot here -->
 
-- When the run completes, review the changelog PR that was opened, making any desired edits
+4. When the run completes, review the changelog PR that was opened and make any desired edits.
 
 <!-- TODO: Add Changelog PR screenshot here -->
 
-- Merge the PR
-- Return to the Actions panel in the `jupyter-releaser` fork
-- Select the `Draft Release` workflow
+5. Merge the PR
+6. Return to the Actions panel in the `jupyter-releaser` fork
+7. Select the `Draft Release` workflow
 
 <!-- TODO: Add Draft Release workflow screenshot here -->
 
-- Run the workflow with the same version spec as before, and an optional post version spec if you want to go back to a dev version in the target branch.
-- When the workflow completes, go to the releases page in the target repository and verify that the new draft release is there with the correct changelog and dist files.
-- Copy the url of the draft release.
-- Run the `Publish Release` workflow from the `jupyter-releaser` fork.
+8. Run the workflow with the same version spec as before, and optionally, a post version spec if you want to go back to a dev version in the target branch.
+9. When the workflow completes, go to the releases page in the target repository and verify that the new draft release is there with the correct changelog and dist files.
+10. Copy the url of the draft release.
+11. Run the `Publish Release` workflow from the `jupyter-releaser` fork.
 
 <!-- TODO: Add Publish Release workflow screenshot here -->
 
 <!-- TODO: Add Github release image here -->
 
-- If the release was on a backport branch, a forward port PR will have been opened against
-  the default branch with the new changelog entry. Review and merge this PR.
+12. If the release was on a backport branch, a forward port PR will have been opened against
+    the default branch with the new changelog entry. Review and merge this PR.
 
 <!-- TODO: Add forward port PR image here -->
 
@@ -77,20 +81,26 @@ To install the latest release locally, make sure you have
 
 ## Configuration
 
+### Command Options and Environment Variables
 All of the commands support CLI and Environment Variable Overrides.
 The environment variables are defined by the `envvar` parameters in the
 command options in `cli.py`. The environment variables unique to
 `jupyter-releaser` are prefixed with `RH_`. A list of all env variables can be seen
 by running `jupyter-releaser list-envvars`.
 
+### Default Values, Options, and Hooks
+
 The default values can also be overriden using a config file.
+
 Options can be overridden using the `options` section.
+
 You can also define hooks to run before and after
 commands in a `hooks` section. Hooks can be a shell command to run or
 a list of shell commands, and are specified to run `before-` or `after-`
 a command.
 Note: the only invalid hook name is `before-prep-git`, since a checkout of the target repository is not yet available at that point.
 
+### Configuration File Priority
 This is where `jupyter-releaser` looks for configuration (first one found is used):
 
 ```code
@@ -137,7 +147,7 @@ Example `package.json`:
 
 ## Checklist for Adoption
 
-Prep `jupyter_releaser` fork:
+A. Prep the `jupyter_releaser` fork:
 
 - [ ] Clone this repository onto your GitHub user account.
 - [ ] Add a [GitHub Access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with access to target GitHub repo to run GitHub Actions, saved as
@@ -145,7 +155,7 @@ Prep `jupyter_releaser` fork:
 - [ ] Add access tokens for the test [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github) stored as `TEST_PYPI_TOKEN`
 - [ ] If needed, add access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens), saved as `NPM_TOKEN`.
 
-Prep target repository:
+B. Prep target repository:
 
 - [ ] Switch to Markdown Changelog
   - We recommend [MyST](https://myst-parser.readthedocs.io/en/latest/?badge=latest), especially if some of your docs are in reStructuredText.
@@ -198,7 +208,9 @@ _Note_ The check release action needs `contents: write` [permission](https://doc
 - When running the `Publish Release` Workflow, an automatic PR is generated for the default branch
   in the target repo, positioned in the appropriate place in the changelog.
 
-## Workflow Details
+## Workflows
+
+Detailed workflows are available to draft a changelog, draft a release, publish a release, and check a release.
 
 ### Draft ChangeLog Workflow
 
