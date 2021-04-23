@@ -2,14 +2,11 @@ name: Check Release
 on:
   push:
     branches: ["*"]
+
 jobs:
   check_release:
     runs-on: ubuntu-latest
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.8.0
-        with:
-          access_token: ${{ github.token }}
       - name: Checkout
         uses: actions/checkout@v1
       - name: Install Python
@@ -47,4 +44,4 @@ jobs:
           TWINE_PASSWORD: ${{ secrets.TEST_PYPI_TOKEN }}
         uses: ./.github/actions/check-release
         with:
-          token: ${{ secrets.GH_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}

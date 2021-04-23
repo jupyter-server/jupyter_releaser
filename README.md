@@ -22,8 +22,8 @@ A set of helper scripts and GitHub Actions to aid in automated releases of Pytho
 - Prerequisites (see [checklist](#Checklist-for-Adoption) below for details):
   - Markdown changelog
   - Bump version configuration (if using Python), for example [tbump](https://github.com/dmerejkowsky/tbump)
-  - [Access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with access to target GitHub repo to run GitHub Actions
-  - Access token for the test [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github) stored as `TEST_PYPI_TOKEN`
+  - [Access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with access to target GitHub repo to run GitHub Actions.
+  - Access token for the test [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github)
   - If needed, access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens).
 
 ## Typical Workflow
@@ -137,13 +137,13 @@ Example `package.json`:
 
 ## Checklist for Adoption
 
-Prep `jupyter_releaser`:
+Prep `jupyter_releaser` fork:
 
 - [ ] Clone this repository onto your GitHub user account.
-- [ ] [GitHub Access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with access to target GitHub repo to run GitHub Actions, saved as
-      `GITHUB_TOKEN` in the [repository secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository).
-- [ ] Access tokens for the test [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github) stored as `TEST_PYPI_TOKEN`
-- [ ] If needed, access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens).
+- [ ] Add a [GitHub Access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with access to target GitHub repo to run GitHub Actions, saved as
+      `GITHUB_ADMIN_TOKEN` in the [repository secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository).
+- [ ] Add access tokens for the test [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github) stored as `TEST_PYPI_TOKEN`
+- [ ] If needed, add access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens), saved as `NPM_TOKEN`.
 
 Prep target repository:
 
@@ -187,7 +187,6 @@ version_info = get_version_info(__version__)
 ```
 
 - [ ] Optionally add [configuration](#Configuration) to the target repository if non-standard options or hooks are needed.
-- [ ] Optionally add workflow for `cancel` to cancel previous workflow runs when a new one is started - see [cancel.yml](./.github/workflows/cancel.yml)
 - [ ] If desired, add `check_release` job, changelog, and `tbump` support to other active release branches
 - [ ] Try out the `Draft Changelog` and `Draft Release` process against a fork of the target repo first so you don't accidentally push tags and GitHub releases to the source repository.
 

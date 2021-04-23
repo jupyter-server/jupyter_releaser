@@ -45,7 +45,7 @@ jobs:
           TWINE_REPOSITORY_URL: https://test.pypi.org/legacy/
         uses: ./.github/actions/publish-release
         with:
-          token: ${{ secrets.GH_TOKEN }}
+          token: ${{ secrets.GITHUB_ADMIN_TOKEN }}
           release_url: ${{ github.event.inputs.release_url }}
       - name: "** Next Step **"
         run: |
