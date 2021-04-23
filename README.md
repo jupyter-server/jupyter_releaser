@@ -8,25 +8,26 @@
 
 This project should help maintainers reduce toil and save time in the release process by enforcing best practices to:
 
-  - Automate a changelog for every release
-  - Pre-publish to test server and verify the install and import of dist asset(s)
-  - Commit a message with hashes of dist file(s)
-  - Annotate the git tag in standard format
-  - Create a GitHub release with changelog entry
-  - Verify url links in markdown and reStructuredText files
-  - Verify integrity of Python manifest
-  - Forward port changelog entries into default branch
-  - Dry run publish on CI
-  - Revert to Dev version after release (optional)
+- Automate a changelog for every release
+- Pre-publish to test server and verify the install and import of dist asset(s)
+- Commit a message with hashes of dist file(s)
+- Annotate the git tag in standard format
+- Create a GitHub release with changelog entry
+- Verify url links in markdown and reStructuredText files
+- Verify integrity of Python manifest
+- Forward port changelog entries into default branch
+- Dry run publish on CI
+- Revert to Dev version after release (optional)
 
-## Prerequisites 
+## Prerequisites
 
 See [checklist](#Checklist-for-Adoption) below for details:
-  - Markdown changelog
-  - Bump version configuration (if using Python), for example [tbump](https://github.com/dmerejkowsky/tbump)
-  - [Access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with access to target GitHub repo to run GitHub Actions.
-  - Access token for the test [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github)
-  - If needed, access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens).
+
+- Markdown changelog
+- Bump version configuration (if using Python), for example [tbump](https://github.com/dmerejkowsky/tbump)
+- [Access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with access to target GitHub repo to run GitHub Actions.
+- Access token for the test [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github)
+- If needed, access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens).
 
 ## Typical Workflow
 
@@ -82,6 +83,7 @@ To install the latest release locally, make sure you have
 ## Configuration
 
 ### Command Options and Environment Variables
+
 All of the commands support CLI and Environment Variable Overrides.
 The environment variables are defined by the `envvar` parameters in the
 command options in `cli.py`. The environment variables unique to
@@ -101,6 +103,7 @@ a command.
 Note: the only invalid hook name is `before-prep-git`, since a checkout of the target repository is not yet available at that point.
 
 ### Configuration File Priority
+
 This is where `jupyter-releaser` looks for configuration (first one found is used):
 
 ```code
