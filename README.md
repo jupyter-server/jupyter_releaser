@@ -141,7 +141,7 @@ Prep `jupyter_releaser` fork:
 
 - [ ] Clone this repository onto your GitHub user account.
 - [ ] Add a [GitHub Access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with access to target GitHub repo to run GitHub Actions, saved as
-      `GITHUB_ADMIN_TOKEN` in the [repository secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository).
+      `ADMIN_GITHUB_TOKEN` in the [repository secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository).
 - [ ] Add access tokens for the test [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github) stored as `TEST_PYPI_TOKEN`
 - [ ] If needed, add access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens), saved as `NPM_TOKEN`.
 
@@ -176,6 +176,8 @@ version_info = get_version_info(__version__)
   with:
     token: ${{ secrets.GITHUB_TOKEN }}
 ```
+
+_Note_ The check release action needs `contents: write` [permission](https://docs.github.com/en/actions/reference/authentication-in-a-workflow#modifying-the-permissions-for-the-github_token).
 
 - [ ] Update or add `RELEASE.md` that describes the onboarding and release process, e.g.
 

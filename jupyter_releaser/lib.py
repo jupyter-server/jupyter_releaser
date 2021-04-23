@@ -53,11 +53,11 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
 
     ignored = []
     for spec in ignore_glob:
-        cmd += f" --ignore-glob {spec}"
+        cmd += f' --ignore-glob "{spec}"'
         ignored.extend(glob(spec, recursive=True))
 
     for spec in ignore_links:
-        cmd += f" --check-links-ignore {spec}"
+        cmd += f' --check-links-ignore "{spec}"'
 
     cmd += " --ignore node_modules"
 
@@ -67,7 +67,7 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
         matched = glob(f"**/*{ext}", recursive=True)
         files.extend(m for m in matched if not m in ignored)
 
-    cmd += " " + " ".join(files)
+    cmd += ' "' + '" "'.join(files) + '"'
 
     try:
         util.run(cmd)

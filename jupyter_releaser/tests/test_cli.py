@@ -250,6 +250,9 @@ def test_check_links(py_package, runner):
     foo = Path(util.CHECKOUT_NAME) / "FOO.md"
     foo.write_text("http://127.0.0.1:5555")
 
+    bar = Path(util.CHECKOUT_NAME) / "BAR BAZ.md"
+    bar.write_text("")
+
     runner(["check-links", "--ignore-glob", "FOO.md"])
 
 
