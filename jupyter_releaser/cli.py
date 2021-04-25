@@ -62,12 +62,18 @@ class ReleaseHelperGroup(click.Group):
             if param.envvar and os.environ.get(param.envvar):
                 continue
             name = param.name
-            if name in options:
+            if name in options or name.replace("_", "-") in options:
                 arg = f"--{name.replace('_', '-')}"
                 # Defer to cli overrides
                 if arg not in ctx.args:
-                    ctx.args.append(arg)
-                    ctx.args.append(options[name])
+                    val = options.get(name, options.get(name.replace("_", "-")))
+                    if isinstance(val, list):
+                        for v in val:
+                            ctx.args.append(arg)
+                            ctx.args.append(v)
+                    else:
+                        ctx.args.append(arg)
+                        ctx.args.append(val)
 
         # Handle before hooks
         before = f"before-{cmd_name}"
@@ -330,11 +336,6 @@ def check_manifest():
 @click.option(
     "--ignore-links",
     multiple=True,
-    default=[
-        "https://github.com/.*/(pull|issues)/.*",
-        "https://github.com/search?",
-        "http://localhost.*",
-    ],
     help="Ignore links based on regex pattern(s)",
 )
 @click.option(
