@@ -56,6 +56,12 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
         cmd += f' --ignore-glob "{spec}"'
         ignored.extend(glob(spec, recursive=True))
 
+    ignore_links = list(ignore_links) + [
+        "https://github.com/.*/(pull|issues)/.*",
+        "https://github.com/search?",
+        "http://localhost.*",
+    ]
+
     for spec in ignore_links:
         cmd += f' --check-links-ignore "{spec}"'
 
@@ -67,12 +73,14 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
         matched = glob(f"**/*{ext}", recursive=True)
         files.extend(m for m in matched if not m in ignored)
 
-    cmd += ' "' + '" "'.join(files) + '"'
-
-    try:
-        util.run(cmd)
-    except Exception:
-        util.run(cmd + " --lf")
+    for f in files:
+        file_cmd = cmd + f' "{f}"'
+        try:
+            util.run(file_cmd)
+        except Exception as e:
+            # Return code 5 means no tests were run (no links found)
+            if e.returncode != 5:
+                util.run(file_cmd + " --lf")
 
 
 def draft_changelog(version_spec, branch, repo, auth, dry_run):
