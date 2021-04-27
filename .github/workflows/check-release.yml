@@ -3,17 +3,16 @@ on:
   push:
     branches: ["*"]
 
-permissions:
-  contents: write
-
 jobs:
   check_release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - name: Install Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v2
         with:
           python-version: 3.9
           architecture: "x64"
@@ -22,7 +21,7 @@ jobs:
         run: |
           echo "::set-output name=dir::$(pip cache dir)"
       - name: Cache pip
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ${{ steps.pip-cache.outputs.dir }}
           key: ${{ runner.os }}-pip-${{ hashFiles('setup.cfg') }}
@@ -43,8 +42,6 @@ jobs:
         run: |
           pip install -e .
       - name: Check Release
-        env:
-          TWINE_PASSWORD: ${{ secrets.TEST_PYPI_TOKEN }}
         uses: ./.github/actions/check-release
         with:
           token: ${{ secrets.GITHUB_TOKEN }}

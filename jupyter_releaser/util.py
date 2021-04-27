@@ -52,20 +52,19 @@ def run(cmd, **kwargs):
 
     try:
         output = check_output(parts, **kwargs).decode("utf-8").strip()
-        print(output)
+        log(output)
         return output
     except CalledProcessError as e:
         if quiet:
-            print(
-                "stderr:\n", e.stderr.decode("utf-8").strip(), "\n\n", file=sys.stderr
-            )
-        print("stdout:\n", e.output.decode("utf-8").strip(), "\n\n", file=sys.stderr)
+            log("stderr:\n", e.stderr.decode("utf-8").strip(), "\n\n")
+        log("stdout:\n", e.output.decode("utf-8").strip(), "\n\n")
         raise e
 
 
-def log(output, **kwargs):
+def log(*outputs, **kwargs):
     """Log an output to stderr"""
-    print(output, file=sys.stderr, **kwargs)
+    kwargs.setdefault("file", sys.stderr)
+    print(*outputs, **kwargs)
 
 
 def get_branch():

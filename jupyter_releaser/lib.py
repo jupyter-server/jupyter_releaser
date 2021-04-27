@@ -1,14 +1,18 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
+import atexit
 import os
 import os.path as osp
 import re
+import shlex
 import shutil
 import sys
 import uuid
 from datetime import datetime
 from glob import glob
 from pathlib import Path
+from subprocess import PIPE
+from subprocess import Popen
 from tempfile import TemporaryDirectory
 
 import requests
@@ -348,6 +352,25 @@ def publish_release(
     """Publish release asset(s) and finalize GitHub release"""
     util.log(f"Publishing {release_url} in with dry run: {dry_run}")
 
+    if dry_run:
+        # Start local pypi server with no auth, allowing overwrites,
+        # in a temporary directory
+        temp_dir = TemporaryDirectory()
+        cmd = f"pypi-server -p 8081  -P . -a . -o  -v {temp_dir.name}"
+        proc = Popen(shlex.split(cmd), stderr=PIPE)
+        # Wait for the server to start
+        while True:
+            line = proc.stderr.readline().decode("utf-8").strip()
+            util.log(line)
+            if "Listening on" in line:
+                break
+        atexit.register(proc.kill)
+        atexit.register(temp_dir.cleanup)
+        twine_cmd = "twine upload --repository-url=http://localhost:8081"
+        os.environ["TWINE_USERNAME"] = "foo"
+        os.environ["TWINE_PASSWORD"] = "bar"
+        npm_cmd = "npm publish --dry-run"
+
     match = parse_release_url(release_url)
 
     if npm_token:
@@ -387,7 +410,7 @@ def publish_release(
     util.actions_output("release_url", release.html_url)
 
 
-def prep_git(branch, repo, auth, username, url):
+def prep_git(branch, repo, auth, username, url, install=True):
     """Set up git"""
     repo = repo or util.get_repo()
 
@@ -409,7 +432,7 @@ def prep_git(branch, repo, auth, username, url):
     checkout_dir = os.environ.get("RH_CHECKOUT_DIR", util.CHECKOUT_NAME)
     checkout_exists = False
     if osp.exists(osp.join(checkout_dir, ".git")):
-        print("Git checkout already exists", file=sys.stderr)
+        util.log("Git checkout already exists")
         checkout_exists = True
 
     if not checkout_exists:
@@ -440,7 +463,7 @@ def prep_git(branch, repo, auth, username, url):
     util.run(f"git checkout {branch}")
 
     # Install the package with test deps
-    if util.SETUP_PY.exists():
+    if util.SETUP_PY.exists() and install:
         util.run('pip install ".[test]"')
 
     os.chdir(orig_dir)
@@ -459,8 +482,10 @@ def forwardport_changelog(
     tag = release.tag_name
 
     repo = f'{match["owner"]}/{match["repo"]}'
+
     # We want to target the main branch
-    branch = prep_git(None, repo, auth, username, git_url)
+    orig_dir = os.getcwd()
+    branch = prep_git(None, repo, auth, username, git_url, install=False)
     os.chdir(util.CHECKOUT_NAME)
 
     # Bail if the tag has been merged to the branch
@@ -520,3 +545,7 @@ def forwardport_changelog(
     pr = make_changelog_pr(
         auth, branch, repo, title, commit_message, body, dry_run=dry_run
     )
+
+    # Clean up after ourselves
+    os.chdir(orig_dir)
+    shutil.rmtree(util.CHECKOUT_NAME)

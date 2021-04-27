@@ -184,8 +184,6 @@ version_info = get_version_info(__version__)
 - name: Check Release
   if: ${{ matrix.python-version == '3.9' }}
   uses: jupyter-server/jupyter_releaser/.github/actions/check-release@v1
-  env:
-    TWINE_PASSWORD: ${{ secrets.TEST_PYPI_TOKEN }}
   with:
     token: ${{ secrets.GITHUB_TOKEN }}
 ```

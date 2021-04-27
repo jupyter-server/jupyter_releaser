@@ -35,7 +35,7 @@ class ReleaseHelperGroup(click.Group):
                             envvars[param.name] = param.envvar
 
             for key in sorted(envvars):
-                print(f"{key.replace('_', '-')}: {envvars[key]}")
+                util.log(f"{key.replace('_', '-')}: {envvars[key]}")
 
             return
 
@@ -52,9 +52,9 @@ class ReleaseHelperGroup(click.Group):
         options = config.get("options", {})
 
         # Print a separation header
-        print(f'\n\n{"-" * 50}')
-        print(cmd_name)
-        print(f'{"-" * 50}\n\n')
+        util.log(f'\n\n{"-" * 50}')
+        util.log(cmd_name)
+        util.log(f'{"-" * 50}\n\n')
 
         # Handle all of the parameters
         for param in self.commands[cmd_name].get_params(ctx):
@@ -412,7 +412,6 @@ def draft_release(
 @main.command()
 @add_options(auth_options)
 @click.argument("release-url", nargs=1)
-@use_checkout_dir()
 def delete_release(auth, release_url):
     """Delete a draft GitHub release by url to the release page"""
     lib.delete_release(auth, release_url)
