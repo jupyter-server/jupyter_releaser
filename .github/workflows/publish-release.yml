@@ -14,24 +14,12 @@ jobs:
         with:
           access_token: ${{ github.token }}
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - name: Install Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v2
         with:
           python-version: 3.9
           architecture: "x64"
-      - name: Get pip cache dir
-        id: pip-cache
-        run: |
-          echo "::set-output name=dir::$(pip cache dir)"
-      - name: Cache pip
-        uses: actions/cache@v1
-        with:
-          path: ${{ steps.pip-cache.outputs.dir }}
-          key: ${{ runner.os }}-pip-${{ hashFiles('setup.cfg') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-            ${{ runner.os }}-pip-
       - name: Upgrade packaging dependencies
         run: |
           pip install --upgrade pip setuptools wheel --user
