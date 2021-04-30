@@ -187,9 +187,9 @@ def format(changelog):
     return re.sub(r"\n\n+$", r"\n", changelog)
 
 
-def check_entry(ref, repo, auth, changelog_path, resolve_backports, output):
+def check_entry(branch, repo, auth, changelog_path, resolve_backports, output):
     """Check changelog entry"""
-    ref = ref or util.get_branch()
+    branch = branch or util.get_branch()
 
     # Get the new version
     version = util.get_version()
@@ -211,7 +211,7 @@ def check_entry(ref, repo, auth, changelog_path, resolve_backports, output):
     repo = repo or util.get_repo()
 
     raw_entry = get_version_entry(
-        f"origin/{ref}",
+        f"origin/{branch}",
         repo,
         version,
         auth=auth,
