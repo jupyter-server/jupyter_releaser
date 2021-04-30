@@ -138,7 +138,6 @@ def build_entry(branch, repo, auth, changelog_path, resolve_backports):
         raise ValueError("Insert marker appears more than once in changelog")
 
     # Get changelog entry
-    # for a pull request, use the target branch
     entry = get_version_entry(
         f"origin/{branch}",
         repo,
