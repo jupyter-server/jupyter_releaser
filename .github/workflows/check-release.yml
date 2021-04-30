@@ -2,12 +2,12 @@ name: Check Release
 on:
   push:
     branches: ["*"]
+  pull_request:
+    branches: ["*"]
 
 jobs:
   check_release:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -35,6 +35,8 @@ jobs:
           key: ${{ runner.os }}-linkcheck-${{ hashFiles('**/.md') }}-md-links
           restore-keys: |
             ${{ runner.os }}-linkcheck-
+      - name: Print env
+        run: env
       - name: Upgrade packaging dependencies
         run: |
           pip install --upgrade pip setuptools wheel --user
