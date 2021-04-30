@@ -37,6 +37,9 @@ runs:
         # Install Jupyter Releaser from git unless we are testing Releaser itself
         export repo_name=$(echo ${GITHUB_REPOSITORY} | cut -d'/' -f 2)
         echo "repo name: ${repo_name}"
+        if [ ${repo_name} !=  "jupyter_releaser" ]; then
+           pip install git+https://github.com/jupyter-server/jupyter_releaser.git
+        fi
 
         # Draft Changelog
         python -m jupyter_releaser.actions.draft_changelog
