@@ -51,9 +51,18 @@ def test_get_changelog_version_entry(py_package, mocker):
 
     mocked_gen = mocker.patch("jupyter_releaser.changelog.generate_activity_md")
     mocked_gen.return_value = testutil.CHANGELOG_ENTRY
-    resp = changelog.get_version_entry("foo", "bar/baz", version)
+    branch = "foo"
+    resp = changelog.get_version_entry(branch, "bar/baz", version)
+    until = util.run(f'git --no-pager log -n 1 origin/{branch} --pretty=format:"%H"')
+    until = until.replace("%", "")
     mocked_gen.assert_called_with(
-        "bar/baz", since="v0.0.1", kind="pr", branch="foo", heading_level=2, auth=None
+        "bar/baz",
+        since="v0.0.1",
+        kind="pr",
+        branch=branch,
+        heading_level=2,
+        auth=None,
+        until=until,
     )
 
     assert f"## {version}" in resp
@@ -61,10 +70,16 @@ def test_get_changelog_version_entry(py_package, mocker):
 
     mocked_gen.return_value = testutil.CHANGELOG_ENTRY
     resp = changelog.get_version_entry(
-        "foo", "bar/baz", version, resolve_backports=True, auth="bizz"
+        branch, "bar/baz", version, resolve_backports=True, auth="bizz"
     )
     mocked_gen.assert_called_with(
-        "bar/baz", since="v0.0.1", kind="pr", branch="foo", heading_level=2, auth="bizz"
+        "bar/baz",
+        since="v0.0.1",
+        until=until,
+        kind="pr",
+        branch=branch,
+        heading_level=2,
+        auth="bizz",
     )
 
     assert f"## {version}" in resp

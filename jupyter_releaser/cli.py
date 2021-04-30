@@ -125,7 +125,9 @@ version_cmd_options = [
     )
 ]
 
+
 branch_options = [
+    click.option("--ref", envvar="RH_REF", help="The source reference"),
     click.option("--branch", envvar="RH_BRANCH", help="The target branch"),
     click.option("--repo", envvar="RH_REPOSITORY", help="The git repo"),
 ]
@@ -216,9 +218,9 @@ def list_envvars():
 @add_options(auth_options)
 @add_options(username_options)
 @add_options(git_url_options)
-def prep_git(branch, repo, auth, username, git_url):
+def prep_git(ref, branch, repo, auth, username, git_url):
     """Prep git and env variables and bump version"""
-    lib.prep_git(branch, repo, auth, username, git_url)
+    lib.prep_git(ref, branch, repo, auth, username, git_url)
 
 
 @main.command()
@@ -233,7 +235,7 @@ def bump_version(version_spec, version_cmd):
 @main.command()
 @add_options(changelog_options)
 @use_checkout_dir()
-def build_changelog(branch, repo, auth, changelog_path, resolve_backports):
+def build_changelog(ref, branch, repo, auth, changelog_path, resolve_backports):
     """Build changelog entry"""
     changelog.build_entry(branch, repo, auth, changelog_path, resolve_backports)
 
@@ -244,7 +246,7 @@ def build_changelog(branch, repo, auth, changelog_path, resolve_backports):
 @add_options(auth_options)
 @add_options(dry_run_options)
 @use_checkout_dir()
-def draft_changelog(version_spec, branch, repo, auth, dry_run):
+def draft_changelog(version_spec, ref, branch, repo, auth, dry_run):
     """Create a changelog entry PR"""
     lib.draft_changelog(version_spec, branch, repo, auth, dry_run)
 
@@ -255,7 +257,7 @@ def draft_changelog(version_spec, branch, repo, auth, dry_run):
     "--output", envvar="RH_CHANGELOG_OUTPUT", help="The output file for changelog entry"
 )
 @use_checkout_dir()
-def check_changelog(branch, repo, auth, changelog_path, resolve_backports, output):
+def check_changelog(ref, branch, repo, auth, changelog_path, resolve_backports, output):
     """Check changelog entry"""
     changelog.check_entry(branch, repo, auth, changelog_path, resolve_backports, output)
 
@@ -357,7 +359,6 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
 
 
 @main.command()
-@add_options(branch_options)
 @add_options(dist_dir_options)
 @click.option(
     "--no-git-tag-workspace",
@@ -365,9 +366,9 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
     help="Whether to skip tagging npm workspace packages",
 )
 @use_checkout_dir()
-def tag_release(branch, repo, dist_dir, no_git_tag_workspace):
+def tag_release(dist_dir, no_git_tag_workspace):
     """Create release commit and tag"""
-    lib.tag_release(branch, repo, dist_dir, no_git_tag_workspace)
+    lib.tag_release(dist_dir, no_git_tag_workspace)
 
 
 @main.command()
@@ -385,6 +386,7 @@ def tag_release(branch, repo, dist_dir, no_git_tag_workspace):
 @click.argument("assets", nargs=-1)
 @use_checkout_dir()
 def draft_release(
+    ref,
     branch,
     repo,
     auth,
@@ -397,6 +399,7 @@ def draft_release(
 ):
     """Publish Draft GitHub release"""
     lib.draft_release(
+        ref,
         branch,
         repo,
         auth,
@@ -421,37 +424,42 @@ def delete_release(auth, release_url):
 @add_options(auth_options)
 @add_options(dist_dir_options)
 @add_options(dry_run_options)
-@click.argument("release_url", nargs=1)
+@click.argument("release-url", nargs=1)
 def extract_release(auth, dist_dir, dry_run, release_url):
     """Download and verify assets from a draft GitHub release"""
     lib.extract_release(auth, dist_dir, dry_run, release_url)
 
 
 @main.command()
-@add_options(auth_options)
 @add_options(dist_dir_options)
-@click.option("--npm_token", help="A token for the npm release", envvar="NPM_TOKEN")
+@click.option("--npm-token", help="A token for the npm release", envvar="NPM_TOKEN")
 @click.option(
-    "--npm_cmd",
+    "--npm-cmd",
     help="The command to run for npm release",
     envvar="RH_NPM_COMMAND",
     default="npm publish",
 )
 @click.option(
-    "--twine_cmd",
+    "--twine-cmd",
     help="The twine to run for Python release",
     envvar="TWINE_COMMAND",
     default="twine upload",
 )
+@click.option("--use-checkout-dir", help="Use the checkout directory", is_flag=True)
 @add_options(dry_run_options)
-@click.argument("release_url", nargs=1)
-def publish_release(
-    auth, dist_dir, npm_token, npm_cmd, twine_cmd, dry_run, release_url
-):
-    """Publish release asset(s) and finalize GitHub release"""
-    lib.publish_release(
-        auth, dist_dir, npm_token, npm_cmd, twine_cmd, dry_run, release_url
+def publish_assets(dist_dir, npm_token, npm_cmd, twine_cmd, dry_run, use_checkout_dir):
+    """Publish release asset(s)"""
+    lib.publish_assets(
+        dist_dir, npm_token, npm_cmd, twine_cmd, dry_run, use_checkout_dir
     )
+
+
+@main.command()
+@add_options(auth_options)
+@click.argument("release-url", nargs=1)
+def publish_release(auth, release_url):
+    """Publish GitHub release"""
+    lib.publish_release(auth, release_url)
 
 
 @main.command()
@@ -461,13 +469,13 @@ def publish_release(
 @add_options(changelog_path_options)
 @add_options(dry_run_options)
 @add_options(git_url_options)
-@click.argument("release_url")
+@click.argument("release-url")
 def forwardport_changelog(
-    auth, branch, repo, username, changelog_path, dry_run, git_url, release_url
+    auth, ref, branch, repo, username, changelog_path, dry_run, git_url, release_url
 ):
     """Forwardport Changelog Entries to the Default Branch"""
     lib.forwardport_changelog(
-        auth, branch, repo, username, changelog_path, dry_run, git_url, release_url
+        auth, ref, branch, repo, username, changelog_path, dry_run, git_url, release_url
     )
 
 

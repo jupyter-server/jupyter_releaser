@@ -42,6 +42,7 @@ runs:
         export RH_VERSION_SPEC=${{ inputs.version_spec }}
         export RH_CHANGELOG=${{ inputs.changelog }}
         export RH_DRY_RUN=${{ inputs.dry_run }}
+        export RH_REF=${GITHUB_REF}
 
         # Draft Changelog
         pip install -q jupyter-releaser

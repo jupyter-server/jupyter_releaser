@@ -56,6 +56,7 @@ def test_prep_git_full(py_package, tmp_path, mocker, runner):
     """Full GitHub Actions simulation (Push)"""
 
     env = dict(
+        RH_REF="refs/pull/42",
         RH_BRANCH="foo",
         GITHUB_ACTIONS="true",
         RH_REPOSITORY="baz/bar",
@@ -78,9 +79,10 @@ def test_prep_git_full(py_package, tmp_path, mocker, runner):
             call('git config --global user.name "GitHub Action"'),
             call("git init .jupyter_releaser_checkout"),
             call("git remote add origin https://snuffy:abc123@github.com/baz/bar.git"),
-            call("git fetch origin foo"),
             call("git fetch origin --tags"),
-            call("git checkout foo"),
+            call("git fetch origin +refs/pull/42:refs/pull/42"),
+            call("git fetch origin refs/pull/42"),
+            call("git checkout -B foo refs/pull/42"),
         ]
     )
 
@@ -124,6 +126,7 @@ npm-cmd: RH_NPM_COMMAND
 npm-token: NPM_TOKEN
 output: RH_CHANGELOG_OUTPUT
 post-version-spec: RH_POST_VERSION_SPEC
+ref: RH_REF
 repo: RH_REPOSITORY
 resolve-backports: RH_RESOLVE_BACKPORTS
 test-cmd: RH_NPM_TEST_COMMAND
@@ -329,7 +332,7 @@ def test_tag_release(py_package, runner, build_mock, git_prep):
 def test_draft_release_dry_run(py_dist, mocker, runner, open_mock, git_prep):
     # Publish the release - dry run
     runner(["draft-release", "--dry-run", "--post-version-spec", "1.1.0.dev0"])
-    assert len(open_mock.call_args) == 2
+    open_mock.assert_not_called()
 
 
 def test_draft_release_final(npm_dist, runner, mocker, open_mock, git_prep):
@@ -361,7 +364,7 @@ def test_delete_release(npm_dist, runner, mocker, open_mock, git_prep):
         MockHTTPResponse(),
         MockHTTPResponse(),
     ]
-    result = runner(["draft-release", "--dry-run"])
+    result = runner(["draft-release"])
     assert len(open_mock.call_args) == 2
 
     url = ""
@@ -467,9 +470,7 @@ def test_extract_dist_npm(npm_dist, runner, mocker, open_mock, tmp_path):
 @pytest.mark.skipif(
     os.name == "nt", reason="pypiserver does not start properly on Windows"
 )
-def test_publish_release_py(py_package, runner, mocker, open_mock, git_prep):
-    open_mock.side_effect = [MockHTTPResponse([REPO_DATA]), MockHTTPResponse()]
-
+def test_publish_assets_py(py_package, runner, mocker, git_prep):
     # Create the dist files
     changelog_entry = mock_changelog_entry(py_package, runner, mocker)
     run("python -m build .", cwd=util.CHECKOUT_NAME)
@@ -486,26 +487,42 @@ def test_publish_release_py(py_package, runner, mocker, open_mock, git_prep):
     mock_run = mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
 
     dist_dir = py_package / util.CHECKOUT_NAME / "dist"
-    runner(["publish-release", HTML_URL, "--dist-dir", dist_dir, "--dry-run"])
-    assert len(open_mock.call_args) == 2
+    runner(["publish-assets", "--dist-dir", dist_dir, "--dry-run"])
     assert called == 2, called
 
 
-def test_publish_release_npm(npm_dist, runner, mocker, open_mock):
-    open_mock.side_effect = [MockHTTPResponse([REPO_DATA]), MockHTTPResponse()]
+def test_publish_assets_npm(npm_dist, runner, mocker):
     dist_dir = npm_dist / util.CHECKOUT_NAME / "dist"
+    orig_run = util.run
+    called = 0
+
+    def wrapped(cmd, **kwargs):
+        nonlocal called
+        if cmd.startswith("npm publish --dry-run"):
+            called += 1
+        return orig_run(cmd, **kwargs)
+
+    mock_run = mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
+
     runner(
         [
-            "publish-release",
-            HTML_URL,
-            "--npm_token",
+            "publish-assets",
+            "--npm-token",
             "abc",
-            "--npm_cmd",
+            "--npm-cmd",
             "npm publish --dry-run",
             "--dist-dir",
             dist_dir,
         ]
     )
+
+    assert called == 3, called
+
+
+def test_publish_release(npm_dist, runner, mocker, open_mock):
+    open_mock.side_effect = [MockHTTPResponse([REPO_DATA]), MockHTTPResponse()]
+    dist_dir = npm_dist / util.CHECKOUT_NAME / "dist"
+    runner(["publish-release", HTML_URL])
     assert len(open_mock.call_args) == 2
 
 

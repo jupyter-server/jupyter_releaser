@@ -42,6 +42,7 @@ runs:
         if [ ! -z ${{ inputs.branch }} ]; then
           export RH_BRANCH=${{ inputs.branch }}
         fi
+        export RH_REF=${GITHUB_REF}
         export RH_VERSION_SPEC=${{ inputs.version_spec }}
         export RH_CHANGELOG=${{ inputs.changelog }}
         export RH_POST_VERSION_SPEC=${{ inputs.post_version_spec }}

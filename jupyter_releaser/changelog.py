@@ -69,8 +69,17 @@ def get_version_entry(branch, repo, version, *, auth=None, resolve_backports=Fal
     branch = branch.split("/")[-1]
     util.log(f"Getting changes to {repo} since {since} on branch {branch}...")
 
+    until = util.run(f'git --no-pager log -n 1 origin/{branch} --pretty=format:"%H"')
+    until = until.replace("%", "")
+
     md = generate_activity_md(
-        repo, since=since, kind="pr", heading_level=2, auth=auth, branch=branch
+        repo,
+        since=since,
+        until=until,
+        kind="pr",
+        heading_level=2,
+        auth=auth,
+        branch=branch,
     )
 
     if not md:
@@ -113,8 +122,8 @@ def get_version_entry(branch, repo, version, *, auth=None, resolve_backports=Fal
 
 def build_entry(branch, repo, auth, changelog_path, resolve_backports):
     """Build a python version entry"""
-    repo = repo or util.get_repo()
     branch = branch or util.get_branch()
+    repo = repo or util.get_repo()
 
     # Get the new version
     version = util.get_version()
@@ -129,7 +138,6 @@ def build_entry(branch, repo, auth, changelog_path, resolve_backports):
         raise ValueError("Insert marker appears more than once in changelog")
 
     # Get changelog entry
-
     entry = get_version_entry(
         f"origin/{branch}",
         repo,
@@ -200,6 +208,7 @@ def check_entry(branch, repo, auth, changelog_path, resolve_backports, output):
     final_entry = changelog[start + len(START_MARKER) : end]
 
     repo = repo or util.get_repo()
+
     raw_entry = get_version_entry(
         f"origin/{branch}",
         repo,
