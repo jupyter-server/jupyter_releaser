@@ -31,6 +31,8 @@ runs:
         export RH_DRY_RUN=${{ inputs.dry_run }}
         export release_url=${{ inputs.release_url }}
 
+        # Install Jupyter Releaser from git
+        pip install -q git+https://github.com/jupyter-server/jupyter_releaser.git@v1
+
         # Publish release
-        pip install -q jupyter-releaser
         python -m jupyter_releaser.actions.publish_release

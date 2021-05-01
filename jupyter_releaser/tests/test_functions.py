@@ -53,16 +53,8 @@ def test_get_changelog_version_entry(py_package, mocker):
     mocked_gen.return_value = testutil.CHANGELOG_ENTRY
     branch = "foo"
     resp = changelog.get_version_entry(branch, "bar/baz", version)
-    until = util.run(f'git --no-pager log -n 1 origin/{branch} --pretty=format:"%H"')
-    until = until.replace("%", "")
     mocked_gen.assert_called_with(
-        "bar/baz",
-        since="v0.0.1",
-        kind="pr",
-        branch=branch,
-        heading_level=2,
-        auth=None,
-        until=until,
+        "bar/baz", since="v0.0.1", kind="pr", branch=branch, heading_level=2, auth=None
     )
 
     assert f"## {version}" in resp
@@ -75,7 +67,6 @@ def test_get_changelog_version_entry(py_package, mocker):
     mocked_gen.assert_called_with(
         "bar/baz",
         since="v0.0.1",
-        until=until,
         kind="pr",
         branch=branch,
         heading_level=2,

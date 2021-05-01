@@ -29,12 +29,9 @@ jobs:
       - name: Upgrade packaging dependencies
         run: |
           pip install --upgrade pip setuptools wheel --user
-      - name: Install Dependencies
-        run: |
-          pip install -e .
       - name: Draft Changelog
         id: draft-changelog
-        uses: ./.github/actions/draft-changelog
+        uses: jupyter-server/jupyter_server/.github/actions/draft-changelog@v1
         with:
           token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
           version_spec: ${{ github.event.inputs.version_spec }}

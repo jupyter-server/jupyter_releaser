@@ -48,5 +48,8 @@ runs:
         export RH_POST_VERSION_SPEC=${{ inputs.post_version_spec }}
         export RH_DRY_RUN=${{ inputs.dry_run }}
 
+        # Install Jupyter Releaser from git
+        pip install -q git+https://github.com/jupyter-server/jupyter_releaser.git@v1
+
         # Draft Release
         python -m jupyter_releaser.actions.draft_release
