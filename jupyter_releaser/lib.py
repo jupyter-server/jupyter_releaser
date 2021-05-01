@@ -128,11 +128,13 @@ def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=F
     pr_branch = f"changelog-{uuid.uuid1().hex}"
 
     if not dry_run:
-        util.run("git --no-pager diff")
-        util.run("git stash")
+        dirty = util.run("git --no-pager diff --stat") != ""
+        if dirty:
+            util.run("git stash")
         util.run(f"git fetch origin {branch}")
         util.run(f"git checkout -b {pr_branch} origin/{branch}")
-        util.run("git stash apply")
+        if dirty:
+            util.run("git stash apply")
 
     # Add a commit with the message
     util.run(commit_message)
@@ -363,6 +365,8 @@ def publish_assets(dist_dir, npm_token, npm_cmd, twine_cmd, dry_run, use_checkou
         os.environ["TWINE_USERNAME"] = "foo"
         os.environ["TWINE_PASSWORD"] = "bar"
         npm_cmd = "npm publish --dry-run"
+    else:
+        os.environ.setdefault("TWINE_USERNAME", "__token__")
 
     if npm_token:
         npm.handle_auth_token(npm_token)

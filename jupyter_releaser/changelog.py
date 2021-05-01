@@ -75,7 +75,6 @@ def get_version_entry(branch, repo, version, *, auth=None, resolve_backports=Fal
     md = generate_activity_md(
         repo,
         since=since,
-        until=until,
         kind="pr",
         heading_level=2,
         auth=auth,
@@ -87,6 +86,7 @@ def get_version_entry(branch, repo, version, *, auth=None, resolve_backports=Fal
         return f"## {version}\n\nNo merged PRs"
 
     entry = md.replace("[full changelog]", "[Full Changelog]")
+    entry = entry.replace("...None", f"...{until}")
 
     entry = entry.splitlines()[2:]
 

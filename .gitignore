@@ -130,3 +130,6 @@ dmypy.json
 
 # Local git checkout
 .jupyter_releaser_checkout
+
+# macOS
+.DS_Store

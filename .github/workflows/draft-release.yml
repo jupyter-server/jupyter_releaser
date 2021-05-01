@@ -35,12 +35,9 @@ jobs:
       - name: Upgrade packaging dependencies
         run: |
           pip install --upgrade pip setuptools wheel --user
-      - name: Install Dependencies
-        run: |
-          pip install -e .
       - name: Create Draft GitHub Release
         id: draft-release
-        uses: ./.github/actions/draft-release
+        uses: jupyter-server/release_helper/.github/actions/draft-release@v1
         with:
           token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
           target: ${{ github.event.inputs.target }}
