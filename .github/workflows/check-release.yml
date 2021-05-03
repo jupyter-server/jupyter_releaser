@@ -16,6 +16,10 @@ jobs:
         with:
           python-version: 3.9
           architecture: "x64"
+      - name: Install node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14.x"
       - name: Get pip cache dir
         id: pip-cache
         run: |

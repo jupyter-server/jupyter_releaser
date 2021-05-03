@@ -26,12 +26,16 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           architecture: "x64"
+      - name: Install node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14.x"
       - name: Upgrade packaging dependencies
         run: |
           pip install --upgrade pip setuptools wheel --user
       - name: Draft Changelog
         id: draft-changelog
-        uses: jupyter-server/jupyter_server/.github/actions/draft-changelog@v1
+        uses: jupyter-server/jupyter_releaser/.github/actions/draft-changelog@v1
         with:
           token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
           version_spec: ${{ github.event.inputs.version_spec }}
