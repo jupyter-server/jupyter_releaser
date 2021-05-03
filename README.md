@@ -37,26 +37,62 @@ When ready to make a release:
 2. Select the `Draft Changelog` workflow
 3. Run the workflow with the version spec (usually the new version number)
 
-<!-- TODO: Add Draft Changelog workflow screenshot here -->
+<p align="center">
+<img src="media/draft_changelog_workflow.png" alt="Draft Changelog Workflow"
+	title="Draft Changelog Workflow" width="50%"/>
+</p>
 
 4. When the run completes, review the changelog PR that was opened and make any desired edits.
 
-<!-- TODO: Add Changelog PR screenshot here -->
+<p align="center">
+<img src="media/draft_changelog_next_step.png" alt="Draft Changelog Next Step"
+	title="Draft Changelog Next Step" width="50%"/>
+</p>
+
+<p align="center">
+<img src="media/draft_changelog_pr.png" alt="Draft Changelog Pull Request"
+	title="Draft Changelog Pull Request" width="50%"/>
+</p>
 
 5. Merge the PR
 6. Return to the Actions panel in the `jupyter-releaser` fork
 7. Select the `Draft Release` workflow
 
-<!-- TODO: Add Draft Release workflow screenshot here -->
+<p align="center">
+<img src="media/draft_release_workflow.png" alt="Draft Release Workflow"
+	title="Draft Release Workflow" width="50%"/>
+</p>
 
 8. Run the workflow with the same version spec as before, and optionally, a post version spec if you want to go back to a dev version in the target branch.
 9. When the workflow completes, go to the releases page in the target repository and verify that the new draft release is there with the correct changelog and dist files.
+
+<p align="center">
+<img src="media/draft_release_next_step.png" alt="Draft Release Next Step"
+	title="Draft Release Workflow" width="50%"/>
+</p>
+
+<p align="center">
+<img src="media/draft_github_release.png" alt="Draft GitHub Release"
+	title="Draft GitHub Release" width="50%"/>
+</p>
+
 10. Copy the url of the draft release.
 11. Run the `Publish Release` workflow from the `jupyter-releaser` fork.
 
-<!-- TODO: Add Publish Release workflow screenshot here -->
+<p align="center">
+<img src="media/publish_release_workflow.png" alt="Publish Release Workflow"
+	title="Publish Release Workflow" width="50%"/>
+</p>
 
-<!-- TODO: Add Github release image here -->
+<p align="center">
+<img src="media/publish_release_next_step.png" alt="Publish Release Next Step"
+	title="Publish Release Next Step" width="50%"/>
+</p>
+
+<p align="center">
+<img src="media/final_github_release.png" alt="Final GitHub Release"
+	title="Final GitHub Release" width="50%"/>
+</p>
 
 12. If the release was on a backport branch, a forward port PR will have been opened against
     the default branch with the new changelog entry. Review and merge this PR.
