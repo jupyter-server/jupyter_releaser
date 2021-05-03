@@ -459,7 +459,7 @@ def prep_git(ref, branch, repo, auth, username, url, install=True):
     ref = ref or ""
 
     # Make sure we have *all* tags
-    util.run("git fetch origin --tags")
+    util.run("git fetch origin --tags --force")
 
     # Handle the ref
     if ref.startswith("refs/pull/"):
@@ -566,7 +566,7 @@ def forwardport_changelog(
     body = title
 
     pr = make_changelog_pr(
-        auth, ref, branch, repo, title, commit_message, body, dry_run=dry_run
+        auth, branch, repo, title, commit_message, body, dry_run=dry_run
     )
 
     # Clean up after ourselves

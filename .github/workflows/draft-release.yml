@@ -32,12 +32,16 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           architecture: "x64"
+      - name: Install node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14.x"
       - name: Upgrade packaging dependencies
         run: |
           pip install --upgrade pip setuptools wheel --user
       - name: Create Draft GitHub Release
         id: draft-release
-        uses: jupyter-server/release_helper/.github/actions/draft-release@v1
+        uses: jupyter-server/jupyter_releaser/.github/actions/draft-release@v1
         with:
           token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
           target: ${{ github.event.inputs.target }}
