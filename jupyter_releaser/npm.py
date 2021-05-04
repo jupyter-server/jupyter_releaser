@@ -131,10 +131,13 @@ def extract_package(path):
     return data
 
 
-def handle_auth_token(npm_token):
-    """Handle token auth for npm registry"""
+def handle_npm_config(npm_token):
+    """Handle npm_config"""
     npmrc = Path(".npmrc")
-    text = "//registry.npmjs.org/:_authToken={npm_token}"
+    registry = os.environ.get("NPM_REGISTRY", "registry.npmjs.org")
+    text = f"registry={registry}"
+    if npm_token:
+        text += f"\n///{registry}:_authToken={npm_token}"
     if npmrc.exists():
         text = npmrc.read_text(encoding="utf-8") + text
     npmrc.write_text(text, encoding="utf-8")

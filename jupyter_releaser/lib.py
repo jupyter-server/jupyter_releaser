@@ -1,6 +1,5 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
-import atexit
 import os
 import os.path as osp
 import re
@@ -11,8 +10,6 @@ import uuid
 from datetime import datetime
 from glob import glob
 from pathlib import Path
-from subprocess import PIPE
-from subprocess import Popen
 from tempfile import TemporaryDirectory
 
 import requests
@@ -350,26 +347,17 @@ def publish_assets(dist_dir, npm_token, npm_cmd, twine_cmd, dry_run, use_checkou
     if dry_run:
         # Start local pypi server with no auth, allowing overwrites,
         # in a temporary directory
-        temp_dir = TemporaryDirectory()
-        cmd = f"pypi-server -p 8081  -P . -a . -o  -v {temp_dir.name}"
-        proc = Popen(shlex.split(cmd), stderr=PIPE)
-        # Wait for the server to start
-        while True:
-            line = proc.stderr.readline().decode("utf-8").strip()
-            util.log(line)
-            if "Listening on" in line:
-                break
-        atexit.register(proc.kill)
-        atexit.register(temp_dir.cleanup)
-        twine_cmd = "twine upload --repository-url=http://localhost:8081"
-        os.environ["TWINE_USERNAME"] = "foo"
-        os.environ["TWINE_PASSWORD"] = "bar"
+        if len(glob(f"{dist_dir}/*.whl")):
+            python.start_local_pypi()
+            twine_cmd = "twine upload --repository-url=http://localhost:8081"
+            os.environ["TWINE_USERNAME"] = "foo"
+            os.environ["TWINE_PASSWORD"] = "bar"
         npm_cmd = "npm publish --dry-run"
     else:
         os.environ.setdefault("TWINE_USERNAME", "__token__")
 
-    if npm_token:
-        npm.handle_auth_token(npm_token)
+    if len(glob(f"{dist_dir}/*.tgz")):
+        npm.handle_npm_config(npm_token)
 
     found = False
     for path in glob(f"{dist_dir}/*.*"):
