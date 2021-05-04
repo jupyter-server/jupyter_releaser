@@ -26,7 +26,7 @@ See [checklist](#Checklist-for-Adoption) below for details:
 - Markdown changelog
 - Bump version configuration (if using Python), for example [tbump](https://github.com/dmerejkowsky/tbump)
 - [Access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with access to target GitHub repo to run GitHub Actions.
-- Access token for the test [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github)
+- Access token for the [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github)
 - If needed, access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens).
 
 ## Typical Workflow
@@ -191,7 +191,9 @@ A. Prep the `jupyter_releaser` fork:
 - [ ] Clone this repository onto your GitHub user account.
 - [ ] Add a [GitHub Access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with access to target GitHub repo to run GitHub Actions, saved as
       `ADMIN_GITHUB_TOKEN` in the [repository secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository).
-- [ ] Add access tokens for the test [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github) stored as `TEST_PYPI_TOKEN`
+- [ ] Add access token for the [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github) stored as `PYPI_TOKEN`.
+      _Note_ For security reasons, it is recommended that you scope the access
+      to a single repository, and update the value of `PYPI_TOKEN` for each repository that you are releasing.
 - [ ] If needed, add access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens), saved as `NPM_TOKEN`.
 
 B. Prep target repository:
@@ -204,14 +206,21 @@ B. Prep target repository:
 - [ ] Add [tbump](https://github.com/tankerhq/tbump) support if using Python - see example metadata in [pyproject.toml](./pyproject.toml)
   - We recommend putting `setuptools` metadata in `setup.cfg` and using `version attr: <package_name>.__version__`, see example [`setup.cfg`](./setup.cfg)
   - See documentation on `setup.cfg` [metadata](https://setuptools.readthedocs.io/en/latest/userguide/declarative_config.html)
-  - If previously providing `version_info`, use `get_version_info` from `jupyter_packaging`, since `tbump` requires the intact version string, e.g.
+  - If previously providing `version_info`, use a snippet like the one below, since `tbump` requires the intact version string, e.g.
 
 ```python
-from jupyter_packaging import get_version_info
+import re
 
 # Version string must appear intact for tbump versioning
 __version__ = '1.4.0.dev0'
-version_info = get_version_info(__version__)
+
+# Build up version_info tuple for backwards compatibility
+pattern = r'(?P<major>\d+).(?P<minor>\d+).(?P<patch>\d+)(?P<rest>.*)'
+match = re.match(pattern, __version__)
+parts = [int(match[part]) for part in ['major', 'minor', 'patch']]
+if match['rest']:
+  parts.append(match['rest'])
+version_info = tuple(parts)
 ```
 
 - [ ] Add a GitHub Actions CI step to run the `check_release` action. For example:
@@ -238,6 +247,7 @@ _Note_ The check release action needs `contents: write` [permission](https://doc
 - [ ] Optionally add [configuration](#Configuration) to the target repository if non-standard options or hooks are needed.
 - [ ] If desired, add `check_release` job, changelog, and `tbump` support to other active release branches
 - [ ] Try out the `Draft Changelog` and `Draft Release` process against a fork of the target repo first so you don't accidentally push tags and GitHub releases to the source repository.
+- [ ] Try the `Publish Release` process using a prerelease version before publishing a final version.
 
 ## Backport Branches
 
@@ -303,14 +313,13 @@ Detailed workflows are available to draft a changelog, draft a release, publish 
 ### Check Release Workflow
 
 - Runs on CI in the target repository to verify compatibility and release-ability.
-- Runs the `Draft Changelog`, `Draft Release`, and `Publish Release` actions in dry run mode
-- Publishes to the Test PyPI server
-- Deletes the Release
+- Runs the `Draft Changelog` and `Draft Release` actions in dry run mode
+- Publishes to the local PyPI server and/or dry-run `npm publish`.
 - Does not make PRs or push git changes
 
-## Troubleshooting
+## FAQs
 
-### Changelog gets out of sync
+### My changelog is out of sync
 
 Create a new manual PR to fix the PR and re-orient the changelog entry markers.
 
@@ -318,3 +327,8 @@ Create a new manual PR to fix the PR and re-orient the changelog entry markers.
 
 The release will fail to push commits because it will not be up to date. Delete the pushed tags and re-start with "Draft Changelog" to
 pick up the new PR.
+
+## How to keep fork of Jupyter Releaser up to date
+
+The manual workflow files target the `@v1` actions in the source repository, which means that as long as
+the workflow files themselves are up to date, you will always be running the most up to date actions.

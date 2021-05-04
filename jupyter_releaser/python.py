@@ -1,10 +1,14 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
+import atexit
 import os
 import os.path as osp
 import re
+import shlex
 from glob import glob
 from pathlib import Path
+from subprocess import PIPE
+from subprocess import Popen
 from tempfile import TemporaryDirectory
 
 from jupyter_releaser import util
@@ -54,3 +58,18 @@ def check_dist(dist_file, test_cmd=""):
         util.run(f"{bin_path}/python -m pip install -U pip")
         util.run(f"{bin_path}/pip install -q {dist_file}")
         util.run(f"{bin_path}/{test_cmd}")
+
+
+def start_local_pypi():
+    """Start a local PyPI server"""
+    temp_dir = TemporaryDirectory()
+    cmd = f"pypi-server -p 8081  -P . -a . -o  -v {temp_dir.name}"
+    proc = Popen(shlex.split(cmd), stderr=PIPE)
+    # Wait for the server to start
+    while True:
+        line = proc.stderr.readline().decode("utf-8").strip()
+        util.log(line)
+        if "Listening on" in line:
+            break
+    atexit.register(proc.kill)
+    atexit.register(temp_dir.cleanup)
