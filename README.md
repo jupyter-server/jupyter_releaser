@@ -38,19 +38,19 @@ When ready to make a release:
 3. Run the workflow with the version spec (usually the new version number)
 
 <p align="center">
-<img src="media/draft_changelog_workflow.png" alt="Draft Changelog Workflow"
+<img src="https://raw.githubusercontent.com/jupyter-server/jupyter_releaser/master/media/draft_changelog_workflow.png" alt="Draft Changelog Workflow"
 	title="Draft Changelog Workflow" width="50%"/>
 </p>
 
 4. When the run completes, review the changelog PR that was opened and make any desired edits.
 
 <p align="center">
-<img src="media/draft_changelog_next_step.png" alt="Draft Changelog Next Step"
+<img src="https://raw.githubusercontent.com/jupyter-server/jupyter_releaser/master/media/draft_changelog_next_step.png" alt="Draft Changelog Next Step"
 	title="Draft Changelog Next Step" width="50%"/>
 </p>
 
 <p align="center">
-<img src="media/draft_changelog_pr.png" alt="Draft Changelog Pull Request"
+<img src="https://raw.githubusercontent.com/jupyter-server/jupyter_releaser/master/media/draft_changelog_pr.png" alt="Draft Changelog Pull Request"
 	title="Draft Changelog Pull Request" width="50%"/>
 </p>
 
@@ -59,7 +59,7 @@ When ready to make a release:
 7. Select the `Draft Release` workflow
 
 <p align="center">
-<img src="media/draft_release_workflow.png" alt="Draft Release Workflow"
+<img src="https://raw.githubusercontent.com/jupyter-server/jupyter_releaser/master/media/draft_release_workflow.png" alt="Draft Release Workflow"
 	title="Draft Release Workflow" width="50%"/>
 </p>
 
@@ -67,12 +67,12 @@ When ready to make a release:
 9. When the workflow completes, go to the releases page in the target repository and verify that the new draft release is there with the correct changelog and dist files.
 
 <p align="center">
-<img src="media/draft_release_next_step.png" alt="Draft Release Next Step"
+<img src="https://raw.githubusercontent.com/jupyter-server/jupyter_releaser/master/media/draft_release_next_step.png" alt="Draft Release Next Step"
 	title="Draft Release Workflow" width="50%"/>
 </p>
 
 <p align="center">
-<img src="media/draft_github_release.png" alt="Draft GitHub Release"
+<img src="https://raw.githubusercontent.com/jupyter-server/jupyter_releaser/master/media/draft_github_release.png" alt="Draft GitHub Release"
 	title="Draft GitHub Release" width="50%"/>
 </p>
 
@@ -80,17 +80,17 @@ When ready to make a release:
 11. Run the `Publish Release` workflow from the `jupyter-releaser` fork.
 
 <p align="center">
-<img src="media/publish_release_workflow.png" alt="Publish Release Workflow"
+<img src="https://raw.githubusercontent.com/jupyter-server/jupyter_releaser/master/media/publish_release_workflow.png" alt="Publish Release Workflow"
 	title="Publish Release Workflow" width="50%"/>
 </p>
 
 <p align="center">
-<img src="media/publish_release_next_step.png" alt="Publish Release Next Step"
+<img src="https://raw.githubusercontent.com/jupyter-server/jupyter_releaser/master/media/publish_release_next_step.png" alt="Publish Release Next Step"
 	title="Publish Release Next Step" width="50%"/>
 </p>
 
 <p align="center">
-<img src="media/final_github_release.png" alt="Final GitHub Release"
+<img src="https://raw.githubusercontent.com/jupyter-server/jupyter_releaser/master/media/final_github_release.png" alt="Final GitHub Release"
 	title="Final GitHub Release" width="50%"/>
 </p>
 
@@ -98,7 +98,7 @@ When ready to make a release:
     the default branch with the new changelog entry. Review and merge this PR.
 
 <p align="center">
-<img src="media/forwardport_pr.png" alt="Forward Port PR"
+<img src="https://raw.githubusercontent.com/jupyter-server/jupyter_releaser/master/media/forwardport_pr.png" alt="Forward Port PR"
 	title="Forward Port PR" width="50%"/>
 </p>
 
