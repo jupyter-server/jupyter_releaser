@@ -97,7 +97,10 @@ When ready to make a release:
 12. If the release was on a backport branch, a forward port PR will have been opened against
     the default branch with the new changelog entry. Review and merge this PR.
 
-<!-- TODO: Add forward port PR image here -->
+<p align="center">
+<img src="media/forwardport_pr.png" alt="Forward Port PR"
+	title="Forward Port PR" width="50%"/>
+</p>
 
 ## Installation
 
