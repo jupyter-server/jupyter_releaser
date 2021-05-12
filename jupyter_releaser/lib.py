@@ -84,7 +84,7 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
                 util.run(file_cmd + " --lf")
 
 
-def draft_changelog(version_spec, branch, repo, auth, dry_run):
+def draft_changelog(version_spec, branch, repo, since, auth, dry_run):
     """Create a changelog entry PR"""
     repo = repo or util.get_repo()
     branch = branch or util.get_branch()
@@ -105,7 +105,7 @@ def draft_changelog(version_spec, branch, repo, auth, dry_run):
     if util.PACKAGE_JSON.exists():
         body += npm.get_package_versions(version)
 
-    body += '\n\nAfter merging this PR run the "Draft Release" Workflow with the following inputs'
+    body += '\n\nAfter merging this PR run the "Draft Release" Workflow on your fork of `jupyter_releaser` with the following inputs'
     body += f"""
 | Input  | Value |
 | ------------- | ------------- |
@@ -113,6 +113,8 @@ def draft_changelog(version_spec, branch, repo, auth, dry_run):
 | Branch  | {branch}  |
 | Version Spec | {version_spec} |
 """
+    if since:
+        body += "| Since | {since} |"
     util.log(body)
 
     make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=dry_run)

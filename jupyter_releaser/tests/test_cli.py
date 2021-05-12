@@ -129,6 +129,7 @@ post-version-spec: RH_POST_VERSION_SPEC
 ref: RH_REF
 repo: RH_REPOSITORY
 resolve-backports: RH_RESOLVE_BACKPORTS
+since: RH_SINCE
 test-cmd: RH_NPM_TEST_COMMAND
 twine-cmd: TWINE_COMMAND
 username: GITHUB_ACTOR

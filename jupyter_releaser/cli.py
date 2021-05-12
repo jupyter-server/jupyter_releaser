@@ -170,10 +170,20 @@ changelog_path_options = [
     ),
 ]
 
+since_options = [
+    click.option(
+        "--since",
+        envvar="RH_SINCE",
+        default=None,
+        help="Use PRs with activity since this date or git reference",
+    )
+]
+
 changelog_options = (
     branch_options
     + auth_options
     + changelog_path_options
+    + since_options
     + [
         click.option(
             "--resolve-backports",
@@ -235,20 +245,21 @@ def bump_version(version_spec, version_cmd):
 @main.command()
 @add_options(changelog_options)
 @use_checkout_dir()
-def build_changelog(ref, branch, repo, auth, changelog_path, resolve_backports):
+def build_changelog(ref, branch, repo, auth, changelog_path, since, resolve_backports):
     """Build changelog entry"""
-    changelog.build_entry(branch, repo, auth, changelog_path, resolve_backports)
+    changelog.build_entry(branch, repo, auth, changelog_path, since, resolve_backports)
 
 
 @main.command()
 @add_options(version_spec_options)
 @add_options(branch_options)
+@add_options(since_options)
 @add_options(auth_options)
 @add_options(dry_run_options)
 @use_checkout_dir()
-def draft_changelog(version_spec, ref, branch, repo, auth, dry_run):
+def draft_changelog(version_spec, ref, branch, repo, since, auth, dry_run):
     """Create a changelog entry PR"""
-    lib.draft_changelog(version_spec, branch, repo, auth, dry_run)
+    lib.draft_changelog(version_spec, branch, repo, since, auth, dry_run)
 
 
 @main.command()
@@ -257,9 +268,13 @@ def draft_changelog(version_spec, ref, branch, repo, auth, dry_run):
     "--output", envvar="RH_CHANGELOG_OUTPUT", help="The output file for changelog entry"
 )
 @use_checkout_dir()
-def check_changelog(ref, branch, repo, auth, changelog_path, resolve_backports, output):
+def check_changelog(
+    ref, branch, repo, auth, changelog_path, since, resolve_backports, output
+):
     """Check changelog entry"""
-    changelog.check_entry(branch, repo, auth, changelog_path, resolve_backports, output)
+    changelog.check_entry(
+        branch, repo, auth, changelog_path, since, resolve_backports, output
+    )
 
 
 @main.command()
