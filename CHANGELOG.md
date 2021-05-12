@@ -22,10 +22,8 @@
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-05-04..2021-05-05&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2021-05-04..2021-05-05&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-05-04..2021-05-05&type=Issues)
 
-
 <!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.0.1
 
 Initial Version
-
