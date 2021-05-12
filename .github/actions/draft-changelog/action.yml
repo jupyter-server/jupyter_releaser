@@ -21,6 +21,9 @@ inputs:
     description: "If set, do not make a PR"
     default: "false"
     required: false
+  since:
+    description: Use PRs with activity since this date or git reference
+    required: false
 outputs:
   pr_url:
     description: "The URL of the Changelog Pull Request"
@@ -43,6 +46,7 @@ runs:
         export RH_CHANGELOG=${{ inputs.changelog }}
         export RH_DRY_RUN=${{ inputs.dry_run }}
         export RH_REF=${GITHUB_REF}
+        export RH_SINCE=${{ inputs.since }}
 
         # Install Jupyter Releaser from git
         pip install -q git+https://github.com/jupyter-server/jupyter_releaser.git@v1

@@ -14,6 +14,9 @@ on:
       post_version_spec:
         description: "Post Version Specifier"
         required: false
+      since:
+        description: Use PRs with activity since this date or git reference
+        required: false
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -48,6 +51,7 @@ jobs:
           branch: ${{ github.event.inputs.branch }}
           version_spec: ${{ github.event.inputs.version_spec }}
           post_version_spec: ${{ github.event.inputs.post_version_spec }}
+          since: ${{ github.event.inputs.since }}
       - name: "** Next Step **"
         run: |
           echo "Run the "Publish Release" Workflow with Release Url:"

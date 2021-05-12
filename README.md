@@ -35,7 +35,8 @@ When ready to make a release:
 
 1. Fork the `jupyter-releaser` repo and go to the Actions panel
 2. Select the `Draft Changelog` workflow
-3. Run the workflow with the version spec (usually the new version number)
+3. Run the workflow with the version spec (usually the new version number). If making a final release after
+   a prerelease series, you may wish to use the "until" parameter to include all the PRs since the last final release.
 
 <p align="center">
 <img src="media/draft_changelog_workflow.png" alt="Draft Changelog Workflow"
@@ -63,7 +64,7 @@ When ready to make a release:
 	title="Draft Release Workflow" width="50%"/>
 </p>
 
-8. Run the workflow with the same version spec as before, and optionally, a post version spec if you want to go back to a dev version in the target branch.
+8. Run the workflow with the same version spec as before, and optionally, a post version spec if you want to go back to a dev version in the target branch. Make sure to use the same "until" parameter used in "Draft Changelog", if applicable.
 9. When the workflow completes, go to the releases page in the target repository and verify that the new draft release is there with the correct changelog and dist files.
 
 <p align="center">

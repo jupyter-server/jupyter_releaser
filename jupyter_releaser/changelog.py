@@ -40,7 +40,9 @@ def format_pr_entry(target, number, auth=None):
     return f"- {title} [#{number}]({url}) ([@{user_name}]({user_url}))"
 
 
-def get_version_entry(branch, repo, version, *, auth=None, resolve_backports=False):
+def get_version_entry(
+    branch, repo, version, *, since=None, auth=None, resolve_backports=False
+):
     """Get a changelog for the changes since the last tag on the given branch.
 
     Parameters
@@ -51,6 +53,8 @@ def get_version_entry(branch, repo, version, *, auth=None, resolve_backports=Fal
         The GitHub owner/repo
     version : str
         The new version
+    since: str
+        Use PRs with activity since this date or git reference
     auth : str, optional
         The GitHub authorization token
     resolve_backports: bool, optional
@@ -65,7 +69,7 @@ def get_version_entry(branch, repo, version, *, auth=None, resolve_backports=Fal
     if not tags:  # pragma: no cover
         raise ValueError(f"No tags found on branch {branch}")
 
-    since = tags.splitlines()[0]
+    since = since or tags.splitlines()[0]
     branch = branch.split("/")[-1]
     util.log(f"Getting changes to {repo} since {since} on branch {branch}...")
 
@@ -120,7 +124,7 @@ def get_version_entry(branch, repo, version, *, auth=None, resolve_backports=Fal
     return output
 
 
-def build_entry(branch, repo, auth, changelog_path, resolve_backports):
+def build_entry(branch, repo, auth, changelog_path, since, resolve_backports):
     """Build a python version entry"""
     branch = branch or util.get_branch()
     repo = repo or util.get_repo()
@@ -142,6 +146,7 @@ def build_entry(branch, repo, auth, changelog_path, resolve_backports):
         f"origin/{branch}",
         repo,
         version,
+        since=since,
         auth=auth,
         resolve_backports=resolve_backports,
     )
@@ -186,7 +191,7 @@ def format(changelog):
     return re.sub(r"\n\n+$", r"\n", changelog)
 
 
-def check_entry(branch, repo, auth, changelog_path, resolve_backports, output):
+def check_entry(branch, repo, auth, changelog_path, since, resolve_backports, output):
     """Check changelog entry"""
     branch = branch or util.get_branch()
 
@@ -213,6 +218,7 @@ def check_entry(branch, repo, auth, changelog_path, resolve_backports, output):
         f"origin/{branch}",
         repo,
         version,
+        since=since,
         auth=auth,
         resolve_backports=resolve_backports,
     )
