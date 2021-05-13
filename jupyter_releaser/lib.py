@@ -114,7 +114,7 @@ def draft_changelog(version_spec, branch, repo, since, auth, dry_run):
 | Version Spec | {version_spec} |
 """
     if since:
-        body += "| Since | {since} |"
+        body += f"| Since | {since} |"
     util.log(body)
 
     make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=dry_run)
