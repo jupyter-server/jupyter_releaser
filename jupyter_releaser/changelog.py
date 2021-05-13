@@ -167,7 +167,7 @@ def insert_entry(changelog, entry, version=None):
         changelog.index(START_MARKER) : changelog.index(END_MARKER) + len(END_MARKER)
     ]
 
-    if f"# {version}" in prev_entry:
+    if f"# {version}\n" in prev_entry:
         lines = new_entry.splitlines()
         old_lines = prev_entry.splitlines()
         for ind, line in enumerate(lines):
