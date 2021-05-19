@@ -25,6 +25,12 @@ runs:
         export RH_DRY_RUN=true
         export RH_REF=${GITHUB_REF}
 
+        # check for npm-only package
+        if [[ ! -f setup.py && -f package.json ]]; then
+            export RH_VERSION_SPEC=patch
+            export RH_POST_VERSION_SPEC=
+        fi
+
         if [ ! -z ${GITHUB_BASE_REF} ]; then
           echo "Using GITHUB_BASE_REF: ${GITHUB_BASE_REF}"
           export RH_BRANCH=${GITHUB_BASE_REF}
