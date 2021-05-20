@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.1.4
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v0.1.3...73cacdd8fc99c7d1a197b245a702ddd1605329f7))
+
+### Maintenance and upkeep improvements
+
+- More Cleanup in Preparation for Usage with Lumino [#27](https://github.com/jupyter-server/jupyter_releaser/pull/27) ([@jtpio](https://github.com/jtpio))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-05-19&to=2021-05-20&type=c))
+
+[@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-05-19..2021-05-20&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.1.3
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v0.1.2...666df24d9e3885d468072c5f8b0dca93df1ef777))
@@ -15,8 +31,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-05-13&to=2021-05-19&type=c))
 
 [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-05-13..2021-05-19&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.1.2
 
