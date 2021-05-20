@@ -60,7 +60,6 @@ def git_repo(tmp_path):
 
     run("git add .")
     run('git commit -m "foo"')
-    run("git tag v0.0.1")
     run(f"git remote add origin {util.normalize_path(tmp_path)}")
     run("git push origin foo")
     run("git remote set-head origin foo")

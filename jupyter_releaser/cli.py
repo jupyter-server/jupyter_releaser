@@ -255,11 +255,16 @@ def build_changelog(ref, branch, repo, auth, changelog_path, since, resolve_back
 @add_options(branch_options)
 @add_options(since_options)
 @add_options(auth_options)
+@add_options(changelog_path_options)
 @add_options(dry_run_options)
 @use_checkout_dir()
-def draft_changelog(version_spec, ref, branch, repo, since, auth, dry_run):
+def draft_changelog(
+    version_spec, ref, branch, repo, since, auth, changelog_path, dry_run
+):
     """Create a changelog entry PR"""
-    lib.draft_changelog(version_spec, branch, repo, since, auth, dry_run)
+    lib.draft_changelog(
+        version_spec, branch, repo, since, auth, changelog_path, dry_run
+    )
 
 
 @main.command()
