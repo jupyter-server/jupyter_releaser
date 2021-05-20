@@ -72,7 +72,7 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
     files = []
     for ext in [".md", ".rst", ".ipynb"]:
         matched = glob(f"**/*{ext}", recursive=True)
-        files.extend(m for m in matched if not m in ignored)
+        files.extend(m for m in matched if not m in ignored and "node_modules" not in m)
 
     for f in files:
         file_cmd = cmd + f' "{f}"'
@@ -84,7 +84,7 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
                 util.run(file_cmd + " --lf")
 
 
-def draft_changelog(version_spec, branch, repo, since, auth, dry_run):
+def draft_changelog(version_spec, branch, repo, since, auth, changelog_path, dry_run):
     """Create a changelog entry PR"""
     repo = repo or util.get_repo()
     branch = branch or util.get_branch()
@@ -96,6 +96,9 @@ def draft_changelog(version_spec, branch, repo, since, auth, dry_run):
 
     # Check out any unstaged files from version bump
     util.run("git checkout -- .")
+
+    current = changelog.extract_current(changelog_path)
+    util.log(f"\n\nCurrent Changelog Entry:\n{current}")
 
     title = f"{changelog.PR_PREFIX} for {version} on {branch}"
     commit_message = f'git commit -a -m "{title}"'

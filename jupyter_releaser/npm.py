@@ -152,7 +152,14 @@ def get_package_versions(version):
         message += f'\nnpm version: {data["name"]}: {data["version"]}'
     if "workspaces" in data:
         message += "\nnpm workspace versions:"
-        packages = data["workspaces"].get("packages", [])
+
+        if isinstance(data["workspaces"], dict):
+            packages = []
+            for value in data["workspaces"].values():
+                packages.extend(value)
+        else:
+            packages = data["workspaces"]
+
         for pattern in packages:
             for path in glob(pattern, recursive=True):
                 text = Path(path).joinpath("package.json").read_text()
