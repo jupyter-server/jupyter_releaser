@@ -295,19 +295,14 @@ def build_python(dist_dir):
 
 @main.command()
 @add_options(dist_dir_options)
-@click.option(
-    "--test-cmd",
-    envvar="RH_PY_TEST_COMMAND",
-    help="The command to run in the test venvs",
-)
 @use_checkout_dir()
-def check_python(dist_dir, test_cmd):
+def check_python(dist_dir):
     """Check Python dist files"""
     for dist_file in glob(f"{dist_dir}/*"):
         if Path(dist_file).suffix not in [".gz", ".whl"]:
             util.log(f"Skipping non-python dist file {dist_file}")
             continue
-        python.check_dist(dist_file, test_cmd=test_cmd)
+        python.check_dist(dist_file)
 
 
 @main.command()
@@ -324,18 +319,13 @@ def build_npm(package, dist_dir):
 
 @main.command()
 @add_options(dist_dir_options)
-@click.option(
-    "--test-cmd",
-    envvar="RH_NPM_TEST_COMMAND",
-    help="The command to run in isolated install.",
-)
 @use_checkout_dir()
-def check_npm(dist_dir, test_cmd):
+def check_npm(dist_dir):
     """Check npm package"""
     if not osp.exists("./package.json"):
         util.log("Skipping check-npm since there is no package.json file")
         return
-    npm.check_dist(dist_dir, test_cmd=test_cmd)
+    npm.check_dist(dist_dir)
 
 
 @main.command()
