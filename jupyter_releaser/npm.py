@@ -42,8 +42,7 @@ def build_dist(package, dist_dir):
 
     if "workspaces" in data:
         all_data = dict()
-        packages = data["workspaces"].get("packages", [])
-        for pattern in packages:
+        for pattern in _get_workspace_packages(data):
             for path in glob(osp.join(basedir, pattern), recursive=True):
                 path = Path(path)
                 package_json = path / "package.json"
@@ -91,16 +90,18 @@ def extract_dist(dist_dir, target):
         tar.extractall(target)
         tar.close()
 
+        if "main" in data:
+            main = osp.join(target, "package", data["main"])
+            if not osp.exists(main):
+                raise ValueError(f"{name} is missing 'main' file {data['main']}")
+
         shutil.move(str(target / "package"), str(pkg_dir))
 
     return names
 
 
-def check_dist(dist_dir, test_cmd=None):
+def check_dist(dist_dir):
     """Check npm dist file(s) in a dist dir"""
-    if not test_cmd:
-        test_cmd = "node index.js"
-
     tmp_dir = Path(TemporaryDirectory().name)
     os.makedirs(tmp_dir)
 
@@ -113,11 +114,6 @@ def check_dist(dist_dir, test_cmd=None):
     install_str = " ".join(f"./staging/{name}" for name in names)
 
     util.run(f"npm install {install_str}", cwd=tmp_dir)
-
-    text = "\n".join([f'require("{name}")' for name in names])
-    tmp_dir.joinpath("index.js").write_text(text, encoding="utf-8")
-
-    util.run(test_cmd, cwd=tmp_dir)
 
     shutil.rmtree(str(tmp_dir), ignore_errors=True)
 
@@ -152,15 +148,7 @@ def get_package_versions(version):
         message += f'\nnpm version: {data["name"]}: {data["version"]}'
     if "workspaces" in data:
         message += "\nnpm workspace versions:"
-
-        if isinstance(data["workspaces"], dict):
-            packages = []
-            for value in data["workspaces"].values():
-                packages.extend(value)
-        else:
-            packages = data["workspaces"]
-
-        for pattern in packages:
+        for pattern in _get_workspace_packages(data):
             for path in glob(pattern, recursive=True):
                 text = Path(path).joinpath("package.json").read_text()
                 data = json.loads(text)
@@ -178,8 +166,7 @@ def tag_workspace_packages():
     if not "workspaces" in data:
         return
 
-    packages = data["workspaces"].get("packages", [])
-    for pattern in packages:
+    for pattern in _get_workspace_packages(data):
         for path in glob(pattern, recursive=True):
             sub_package_json = Path(path) / "package.json"
             sub_data = json.loads(sub_package_json.read_text(encoding="utf-8"))
@@ -188,3 +175,14 @@ def tag_workspace_packages():
                 util.log(f"Skipping existing tag {tag_name}")
             else:
                 util.run(f"git tag {tag_name}")
+
+
+def _get_workspace_packages(data):
+    """Get the workspace packages for a package given package data"""
+    if isinstance(data["workspaces"], dict):
+        packages = []
+        for value in data["workspaces"].values():
+            packages.extend(value)
+    else:
+        packages = data["workspaces"]
+    return packages
