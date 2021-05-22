@@ -22,6 +22,7 @@ PYPROJECT = Path("pyproject.toml")
 SETUP_PY = Path("setup.py")
 SETUP_CFG = Path("setup.cfg")
 PACKAGE_JSON = Path("package.json")
+YARN_LOCK = Path("yarn.lock")
 jupyter_releaser_CONFIG = Path(".jupyter-releaser.toml")
 
 BUF_SIZE = 65536

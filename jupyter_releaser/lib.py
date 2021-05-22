@@ -478,9 +478,20 @@ def prep_git(ref, branch, repo, auth, username, url, install=True):
     else:
         util.run(checkout_cmd)
 
-    # Install the package with test deps
-    if util.SETUP_PY.exists() and install:
-        util.run('pip install ".[test]"')
+    # Install the package
+    if install:
+        # install python package with test deps
+        if util.SETUP_PY.exists():
+            util.run('pip install ".[test]"')
+
+        # prefer yarn if yarn lock exists
+        elif util.YARN_LOCK.exists():
+            util.run("npm install -g yarn")
+            util.run("yarn")
+
+        # npm install otherwise
+        elif util.PACKAGE_JSON.exists():
+            util.run("npm install")
 
     os.chdir(orig_dir)
 
