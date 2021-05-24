@@ -9,9 +9,6 @@
 ### Maintenance and upkeep improvements
 
 - Properly install NPM Packages [#31](https://github.com/jupyter-server/jupyter_releaser/pull/31) ([@jtpio](https://github.com/jtpio))
-
-### Other merged PRs
-
 - Use Releaser to Tag Itself [#32](https://github.com/jupyter-server/jupyter_releaser/pull/32) ([@afshin](https://github.com/afshin))
 
 ### Contributors to this release
