@@ -2,6 +2,23 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.1.6
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v0.1.5...1466f348fdaccd6f079f8278f213ca7611011f54))
+
+### Maintenance and upkeep improvements
+
+- Properly install NPM Packages [#31](https://github.com/jupyter-server/jupyter_releaser/pull/31) ([@jtpio](https://github.com/jtpio))
+- Use Releaser to Tag Itself [#32](https://github.com/jupyter-server/jupyter_releaser/pull/32) ([@afshin](https://github.com/afshin))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-05-21&to=2021-05-24&type=c))
+
+[@afshin](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Aafshin+updated%3A2021-05-21..2021-05-24&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-05-21..2021-05-24&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.1.5
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v0.1.4...6499aa163689c110b50ed9e8345969581908d4d9))
@@ -15,8 +32,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-05-20&to=2021-05-21&type=c))
 
 [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-05-20..2021-05-21&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.1.4
 
