@@ -131,8 +131,8 @@ def handle_npm_config(npm_token):
     """Handle npm_config"""
     npmrc = Path(".npmrc")
     registry = os.environ.get("NPM_REGISTRY", "https://registry.npmjs.org/")
-    registry = registry.replace('https:', '')
-    registry = registry.replace('http:', '')
+    registry = registry.replace("https:", "")
+    registry = registry.replace("http:", "")
     text = f"registry={registry}"
     if npm_token:
         text += f"\n{registry}:_authToken={npm_token}"
