@@ -24,7 +24,7 @@ def build_dist(package, dist_dir):
 
     if osp.isdir(package):
         basedir = package
-        tarball = osp.join(package, util.run("npm pack", cwd=package).split('\n')[-1])
+        tarball = osp.join(package, util.run("npm pack", cwd=package).split("\n")[-1])
     else:
         basedir = osp.dirname(package)
         tarball = package
