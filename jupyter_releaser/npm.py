@@ -127,9 +127,9 @@ def extract_package(path):
     return data
 
 
-def handle_npm_config(npm_token):
+def handle_npm_config(npm_token, dist_dir):
     """Handle npm_config"""
-    npmrc = Path(".npmrc")
+    npmrc = Path(dist_dir) / Path(".npmrc")
     registry = os.environ.get("NPM_REGISTRY", "https://registry.npmjs.org/")
     text = f"registry={registry}"
     if npm_token:
