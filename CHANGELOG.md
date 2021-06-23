@@ -2,6 +2,23 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.1.9
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...15c962b0750ff879276ccfeb0b2ab660eff6315b))
+
+### Bugs fixed
+
+- Write .npmrc to dist_dir [#43](https://github.com/jupyter-server/jupyter_releaser/pull/43) ([@jtpio](https://github.com/jtpio))
+- Remove extra dollar sign for registry inputs [#41](https://github.com/jupyter-server/jupyter_releaser/pull/41) ([@jtpio](https://github.com/jtpio))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-06-23&to=2021-06-23&type=c))
+
+[@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-06-23..2021-06-23&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.1.8
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...0e521a279197eddae5a1a0373849c389e0324cdb))
@@ -16,8 +33,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-06-16&to=2021-06-23&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-06-16..2021-06-23&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2021-06-16..2021-06-23&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-06-16..2021-06-23&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.1.7
 
