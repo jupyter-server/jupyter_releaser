@@ -145,7 +145,7 @@ def get_package_versions(version):
     """Get the formatted list of npm package names and versions"""
     message = ""
     data = json.loads(PACKAGE_JSON.read_text(encoding="utf-8"))
-    if data["version"] != version:
+    if data.get("version", "") != version:
         message += f"\nPython version: {version}"
         message += f'\nnpm version: {data["name"]}: {data["version"]}'
     if "workspaces" in data:
