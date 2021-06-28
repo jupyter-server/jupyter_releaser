@@ -155,7 +155,7 @@ def get_package_versions(version):
             for path in glob(pattern, recursive=True):
                 text = Path(path).joinpath("package.json").read_text()
                 data = json.loads(text)
-                message += f'\n{data["name"]}: {npm_version}'
+                message += f'\n{data["name"]}: {data.get("version", "")}'
     return message
 
 
