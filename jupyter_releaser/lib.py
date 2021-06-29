@@ -486,7 +486,8 @@ def prep_git(ref, branch, repo, auth, username, url, install=True):
 
         # prefer yarn if yarn lock exists
         elif util.YARN_LOCK.exists():
-            util.run("npm install -g yarn")
+            if not shutil.which("yarn"):
+                util.run("npm install -g yarn")
             util.run("yarn")
 
         # npm install otherwise
