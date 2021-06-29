@@ -2,6 +2,23 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.1.10
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...f15fa653aee8112842e564870a35a123bb3a5c7c))
+
+### Bugs fixed
+
+- Handle already published workspace packages [#49](https://github.com/jupyter-server/jupyter_releaser/pull/49) ([@blink1073](https://github.com/blink1073))
+- Install yarn if it is not already installed [#47](https://github.com/jupyter-server/jupyter_releaser/pull/47) ([@jtpio](https://github.com/jtpio))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-06-23&to=2021-06-29&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-06-23..2021-06-29&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2021-06-23..2021-06-29&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-06-23..2021-06-29&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.1.9
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...15c962b0750ff879276ccfeb0b2ab660eff6315b))
@@ -16,8 +33,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-06-23&to=2021-06-23&type=c))
 
 [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-06-23..2021-06-23&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.1.8
 
