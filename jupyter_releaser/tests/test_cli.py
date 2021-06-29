@@ -519,6 +519,35 @@ def test_publish_assets_npm(npm_dist, runner, mocker):
     assert called == 3, called
 
 
+def test_publish_assets_npm_exists(npm_dist, runner, mocker):
+    dist_dir = npm_dist / util.CHECKOUT_NAME / "dist"
+    called = 0
+
+    def wrapped(cmd, **kwargs):
+        nonlocal called
+        if cmd.startswith("npm publish --dry-run"):
+            err = CalledProcessError(1, "foo")
+            err.stderr = "EPUBLISHCONFLICT".encode("UTF-8")
+            called += 1
+            raise err
+
+    mock_run = mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
+
+    runner(
+        [
+            "publish-assets",
+            "--npm-token",
+            "abc",
+            "--npm-cmd",
+            "npm publish --dry-run",
+            "--dist-dir",
+            dist_dir,
+        ]
+    )
+
+    assert called == 3, called
+
+
 def test_publish_release(npm_dist, runner, mocker, open_mock):
     open_mock.side_effect = [MockHTTPResponse([REPO_DATA]), MockHTTPResponse()]
     dist_dir = npm_dist / util.CHECKOUT_NAME / "dist"
