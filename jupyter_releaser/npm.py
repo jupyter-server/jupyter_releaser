@@ -145,16 +145,17 @@ def get_package_versions(version):
     """Get the formatted list of npm package names and versions"""
     message = ""
     data = json.loads(PACKAGE_JSON.read_text(encoding="utf-8"))
-    if data["version"] != version:
+    npm_version = data.get("version", "")
+    if npm_version != version:
         message += f"\nPython version: {version}"
-        message += f'\nnpm version: {data["name"]}: {data["version"]}'
+        message += f'\nnpm version: {data["name"]}: {npm_version}'
     if "workspaces" in data:
         message += "\nnpm workspace versions:"
         for pattern in _get_workspace_packages(data):
             for path in glob(pattern, recursive=True):
                 text = Path(path).joinpath("package.json").read_text()
                 data = json.loads(text)
-                message += f'\n{data["name"]}: {data["version"]}'
+                message += f'\n{data["name"]}: {data.get("version", "")}'
     return message
 
 
