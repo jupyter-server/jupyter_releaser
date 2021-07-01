@@ -106,7 +106,7 @@ def get_version():
     if SETUP_PY.exists():
         return run("python setup.py --version")
     elif PACKAGE_JSON.exists():
-        return json.loads(PACKAGE_JSON.read_text(encoding="utf-8"))["version"]
+        return json.loads(PACKAGE_JSON.read_text(encoding="utf-8")).get("version", "")
     else:  # pragma: no cover
         raise ValueError("No version identifier could be found!")
 
