@@ -2,6 +2,23 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.1.12
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...38f772bac2e0e5321b8c56b4461b232a5d19f42e))
+
+### Bugs fixed
+
+- More fixups [#54](https://github.com/jupyter-server/jupyter_releaser/pull/54) ([@jtpio](https://github.com/jtpio))
+- Fix Handling of Workspace Packages [#53](https://github.com/jupyter-server/jupyter_releaser/pull/53) ([@jtpio](https://github.com/jtpio))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-07-02&to=2021-07-02&type=c))
+
+[@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2021-07-02..2021-07-02&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-07-02..2021-07-02&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.1.11
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...39b8e3b62242a6371caae3470bbca2a31b960640))
@@ -19,8 +36,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-06-29&to=2021-07-02&type=c))
 
 [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-06-29..2021-07-02&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.1.10
 
