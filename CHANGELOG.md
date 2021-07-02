@@ -2,6 +2,26 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.1.11
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...39b8e3b62242a6371caae3470bbca2a31b960640))
+
+### Enhancements made
+
+- Handle missing version from package.json in `get_version` [#51](https://github.com/jupyter-server/jupyter_releaser/pull/51) ([@jtpio](https://github.com/jtpio))
+
+### Bugs fixed
+
+- Handle missing `version` from `package.json` [#46](https://github.com/jupyter-server/jupyter_releaser/pull/46) ([@jtpio](https://github.com/jtpio))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-06-29&to=2021-07-02&type=c))
+
+[@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-06-29..2021-07-02&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.1.10
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...f15fa653aee8112842e564870a35a123bb3a5c7c))
@@ -16,8 +36,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-06-23&to=2021-06-29&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-06-23..2021-06-29&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2021-06-23..2021-06-29&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-06-23..2021-06-29&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.1.9
 
