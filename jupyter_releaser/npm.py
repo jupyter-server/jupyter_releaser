@@ -166,12 +166,17 @@ def tag_workspace_packages():
 
     data = json.loads(PACKAGE_JSON.read_text(encoding="utf-8"))
     tags = util.run("git tag").splitlines()
-    if not "workspaces" in data:
+    if "workspaces" not in data:
         return
 
     for pattern in _get_workspace_packages(data):
         for path in glob(pattern, recursive=True):
-            sub_package_json = Path(path) / "package.json"
+            sub_package = Path(path)
+            if not sub_package.is_dir():
+                continue
+            sub_package_json = sub_package / "package.json"
+            if not sub_package_json.exists():
+                continue
             sub_data = json.loads(sub_package_json.read_text(encoding="utf-8"))
             tag_name = f"{sub_data['name']}@{sub_data['version']}"
             if tag_name in tags:
