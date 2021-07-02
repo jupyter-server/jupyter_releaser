@@ -100,7 +100,7 @@ def extract_dist(dist_dir, target):
     return names
 
 
-def check_dist(dist_dir):
+def check_dist(dist_dir, install_options):
     """Check npm dist file(s) in a dist dir"""
     tmp_dir = Path(TemporaryDirectory().name)
     os.makedirs(tmp_dir)
@@ -113,7 +113,7 @@ def check_dist(dist_dir):
 
     install_str = " ".join(f"./staging/{name}" for name in names)
 
-    util.run(f"npm install {install_str}", cwd=tmp_dir)
+    util.run(f"npm install {install_options} {install_str}", cwd=tmp_dir)
 
     shutil.rmtree(str(tmp_dir), ignore_errors=True)
 

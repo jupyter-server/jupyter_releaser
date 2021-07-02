@@ -194,6 +194,15 @@ changelog_options = (
     ]
 )
 
+npm_install_options = [
+    click.option(
+        "--npm-install-options",
+        envvar="RH_NPM_INSTALL_OPTIONS",
+        default="",
+        help="Options to pass when calling npm install",
+    )
+]
+
 
 def add_options(options):
     """Add extracted common options to a click command"""
@@ -319,13 +328,14 @@ def build_npm(package, dist_dir):
 
 @main.command()
 @add_options(dist_dir_options)
+@add_options(npm_install_options)
 @use_checkout_dir()
-def check_npm(dist_dir):
+def check_npm(dist_dir, npm_install_options):
     """Check npm package"""
     if not osp.exists("./package.json"):
         util.log("Skipping check-npm since there is no package.json file")
         return
-    npm.check_dist(dist_dir)
+    npm.check_dist(dist_dir, npm_install_options)
 
 
 @main.command()
@@ -434,10 +444,11 @@ def delete_release(auth, release_url):
 @add_options(auth_options)
 @add_options(dist_dir_options)
 @add_options(dry_run_options)
+@add_options(npm_install_options)
 @click.argument("release-url", nargs=1)
-def extract_release(auth, dist_dir, dry_run, release_url):
+def extract_release(auth, dist_dir, dry_run, release_url, npm_install_options):
     """Download and verify assets from a draft GitHub release"""
-    lib.extract_release(auth, dist_dir, dry_run, release_url)
+    lib.extract_release(auth, dist_dir, dry_run, release_url, npm_install_options)
 
 
 @main.command()

@@ -123,6 +123,7 @@ dist-dir: RH_DIST_DIR
 dry-run: RH_DRY_RUN
 links-expire: RH_LINKS_EXPIRE
 npm-cmd: RH_NPM_COMMAND
+npm-install-options: RH_NPM_INSTALL_OPTIONS
 npm-token: NPM_TOKEN
 output: RH_CHANGELOG_OUTPUT
 post-version-spec: RH_POST_VERSION_SPEC
