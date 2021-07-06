@@ -17,6 +17,7 @@ from subprocess import check_output
 from subprocess import PIPE
 
 import toml
+from pkg_resources import parse_version
 
 PYPROJECT = Path("pyproject.toml")
 SETUP_PY = Path("setup.py")
@@ -175,6 +176,14 @@ def bump_version(version_spec, version_cmd=""):
 
     if not version_cmd:  # pragma: no cover
         raise ValueError("Please specify a version bump command to run")
+
+    # Assign default values if not version spec was given
+    if not version_spec:
+        if "tbump" in version_cmd:
+            version = parse_version(get_version())
+            version_spec = f"{version.major}.{version.minor}.{version.micro + 1}"
+        else:
+            version_spec == "patch"
 
     # Bump the version
     run(f"{version_cmd} {version_spec}")
