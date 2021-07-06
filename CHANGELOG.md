@@ -2,6 +2,23 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.1.13
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...7bdc7f8698fab65bc7ac6247ac2f8d867feaeace))
+
+### Bugs fixed
+
+- Fix handling of default version bump [#57](https://github.com/jupyter-server/jupyter_releaser/pull/57) ([@blink1073](https://github.com/blink1073))
+- Fix handling of workspace paths [#56](https://github.com/jupyter-server/jupyter_releaser/pull/56) ([@blink1073](https://github.com/blink1073))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-07-02&to=2021-07-06&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-07-02..2021-07-06&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2021-07-02..2021-07-06&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.1.12
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...38f772bac2e0e5321b8c56b4461b232a5d19f42e))
@@ -16,8 +33,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-07-02&to=2021-07-02&type=c))
 
 [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2021-07-02..2021-07-02&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-07-02..2021-07-02&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.1.11
 
