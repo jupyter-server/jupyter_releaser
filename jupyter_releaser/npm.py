@@ -32,7 +32,7 @@ def build_dist(package, dist_dir):
     data = extract_package(tarball)
 
     # Move the tarball into the dist folder if public
-    if not data.get("private", False) == True:
+    if not data.get("private", False):
         shutil.move(str(tarball), str(dest))
     elif osp.isdir(package):
         os.remove(tarball)
@@ -42,17 +42,13 @@ def build_dist(package, dist_dir):
 
     if "workspaces" in data:
         all_data = dict()
-        for pattern in _get_workspace_packages(data):
-            for path in glob(osp.join(basedir, pattern), recursive=True):
-                path = Path(path)
-                package_json = path / "package.json"
-                if not osp.exists(package_json):
-                    continue
-                data = json.loads(package_json.read_text(encoding="utf-8"))
-                if data.get("private", False) == True:
-                    continue
-                data["__path__"] = path
-                all_data[data["name"]] = data
+        for path in _get_workspace_packages(data):
+            package_json = path / "package.json"
+            data = json.loads(package_json.read_text(encoding="utf-8"))
+            if data.get("private", False):
+                continue
+            data["__path__"] = path
+            all_data[data["name"]] = data
 
         i = 0
         for (name, data) in sorted(all_data.items()):
@@ -151,11 +147,10 @@ def get_package_versions(version):
         message += f'\nnpm version: {data["name"]}: {npm_version}'
     if "workspaces" in data:
         message += "\nnpm workspace versions:"
-        for pattern in _get_workspace_packages(data):
-            for path in glob(pattern, recursive=True):
-                text = Path(path).joinpath("package.json").read_text()
-                data = json.loads(text)
-                message += f'\n{data["name"]}: {data.get("version", "")}'
+        for path in _get_workspace_packages(data):
+            text = path.joinpath("package.json").read_text(encoding="utf-8")
+            data = json.loads(text)
+            message += f'\n{data["name"]}: {data.get("version", "")}'
     return message
 
 
@@ -169,7 +164,27 @@ def tag_workspace_packages():
     if "workspaces" not in data:
         return
 
-    for pattern in _get_workspace_packages(data):
+    for path in _get_workspace_packages(data):
+        sub_package_json = path / "package.json"
+        sub_data = json.loads(sub_package_json.read_text(encoding="utf-8"))
+        tag_name = f"{sub_data['name']}@{sub_data['version']}"
+        if tag_name in tags:
+            util.log(f"Skipping existing tag {tag_name}")
+        else:
+            util.run(f"git tag {tag_name}")
+
+
+def _get_workspace_packages(data):
+    """Get the workspace package paths for a package given package data"""
+    if isinstance(data["workspaces"], dict):
+        patterns = []
+        for value in data["workspaces"].values():
+            patterns.extend(value)
+    else:
+        patterns = data["workspaces"]
+
+    paths = []
+    for pattern in patterns:
         for path in glob(pattern, recursive=True):
             sub_package = Path(path)
             if not sub_package.is_dir():
@@ -177,20 +192,6 @@ def tag_workspace_packages():
             sub_package_json = sub_package / "package.json"
             if not sub_package_json.exists():
                 continue
-            sub_data = json.loads(sub_package_json.read_text(encoding="utf-8"))
-            tag_name = f"{sub_data['name']}@{sub_data['version']}"
-            if tag_name in tags:
-                util.log(f"Skipping existing tag {tag_name}")
-            else:
-                util.run(f"git tag {tag_name}")
+            paths.append(sub_package)
 
-
-def _get_workspace_packages(data):
-    """Get the workspace packages for a package given package data"""
-    if isinstance(data["workspaces"], dict):
-        packages = []
-        for value in data["workspaces"].values():
-            packages.extend(value)
-    else:
-        packages = data["workspaces"]
-    return packages
+    return paths
