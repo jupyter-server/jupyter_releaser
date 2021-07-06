@@ -183,7 +183,7 @@ def bump_version(version_spec, version_cmd=""):
             version = parse_version(get_version())
             version_spec = f"{version.major}.{version.minor}.{version.micro + 1}"
         else:
-            version_spec == "patch"
+            version_spec = "patch"
 
     # Bump the version
     run(f"{version_cmd} {version_spec}")
