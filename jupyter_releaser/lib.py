@@ -94,7 +94,11 @@ def draft_changelog(version_spec, branch, repo, since, auth, changelog_path, dry
         raise ValueError(f"Tag v{version} already exists")
 
     # Check out any unstaged files from version bump
-    util.run("git checkout -- .")
+    # If this is an automated changelog PR, there may be no effective changes
+    try:
+        util.run("git checkout -- .")
+    except CalledProcessError as e:
+        util.log(str(e))
 
     current = changelog.extract_current(changelog_path)
     util.log(f"\n\nCurrent Changelog Entry:\n{current}")
