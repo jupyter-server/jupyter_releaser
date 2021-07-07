@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.1.15
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...320c5afa519310c98caf5cb548df2dcd49e5b7a5))
+
+### Bugs fixed
+
+- Handle the case where there are no changes in changelog [#61](https://github.com/jupyter-server/jupyter_releaser/pull/61) ([@blink1073](https://github.com/blink1073))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-07-06&to=2021-07-07&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-07-06..2021-07-07&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.1.14
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...0c977a12197f0947c1dbdbf983beda1b97535b58))
@@ -15,8 +31,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-07-06&to=2021-07-06&type=c))
 
 [@afshin](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Aafshin+updated%3A2021-07-06..2021-07-06&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.1.13
 
