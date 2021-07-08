@@ -99,6 +99,7 @@ def draft_changelog(version_spec, branch, repo, since, auth, changelog_path, dry
         util.run("git checkout -- .")
     except CalledProcessError as e:
         util.log(str(e))
+        return
 
     current = changelog.extract_current(changelog_path)
     util.log(f"\n\nCurrent Changelog Entry:\n{current}")

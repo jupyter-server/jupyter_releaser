@@ -112,6 +112,7 @@ def test_create_release_commit_hybrid(py_package, build_mock):
 def test_bump_version(py_package):
     for spec in ["1.0.1", "1.0.1.dev1", "1.0.3a4"]:
         util.bump_version(spec)
+        util.run("git commit -a -m 'bump version'")
         assert util.get_version() == spec
 
 
