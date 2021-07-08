@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.1.16
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...e168f06434523529be27b5d95cfead16f9c69577))
+
+### Bugs fixed
+
+- Pin versions [#65](https://github.com/jupyter-server/jupyter_releaser/pull/65) ([@afshin](https://github.com/afshin))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-07-08&to=2021-07-08&type=c))
+
+[@afshin](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Aafshin+updated%3A2021-07-08..2021-07-08&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.1.15
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...a8b6700aa6b6a2e642894e9fbe0f486ff1b14ca5))
@@ -16,8 +32,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-07-06&to=2021-07-08&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-07-06..2021-07-08&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2021-07-06..2021-07-08&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-07-06..2021-07-08&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.1.14
 
