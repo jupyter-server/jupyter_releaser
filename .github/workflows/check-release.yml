@@ -4,6 +4,8 @@ on:
     branches: ["*"]
   pull_request:
     branches: ["*"]
+  schedule:
+    - cron: "0 0 * * *"
 
 jobs:
   check_release:

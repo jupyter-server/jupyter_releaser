@@ -145,7 +145,8 @@ def create_release_commit(version, dist_dir="dist"):
         path = normalize_path(path)
         sha256 = compute_sha256(path)
         shas[path] = sha256
-        cmd += f' -m "{path}: {sha256}"'
+        name = osp.basename(path)
+        cmd += f' -m "{name}: {sha256}"'
 
     run(cmd)
 
