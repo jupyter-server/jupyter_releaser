@@ -33,11 +33,13 @@ runs:
         fi
 
         # Install Jupyter Releaser from git unless we are testing Releaser itself
-        export repo_name=$(echo ${GITHUB_REPOSITORY} | cut -d'/' -f 2)
-        echo "repo name: ${repo_name}"
-        if [ ${repo_name} !=  "jupyter_releaser" ]; then
+        export RH_REPO_NAME=$(echo ${GITHUB_REPOSITORY} | cut -d'/' -f 2)
+        echo "repo name: ${RH_REPO_NAME}"
+        if [ ${RH_REPO_NAME} !=  "jupyter_releaser" ]; then
            pip install git+https://github.com/jupyter-server/jupyter_releaser.git
         fi
+
+        export RH_IS_CHECK_RELEASE=true
 
         # Draft Changelog
         python -m jupyter_releaser.actions.draft_changelog
