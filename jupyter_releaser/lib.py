@@ -65,7 +65,7 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
     for spec in ignore_links:
         cmd += f' --check-links-ignore "{spec}"'
 
-    cmd += " --ignore node_modules"
+    cmd += " --ignore-glob node_modules"
 
     # Gather all of the markdown, RST, and ipynb files
     files = []
@@ -369,7 +369,7 @@ def publish_assets(dist_dir, npm_token, npm_cmd, twine_cmd, dry_run, use_checkou
         npm.handle_npm_config(npm_token, dist_dir)
 
     found = False
-    for path in glob(f"{dist_dir}/*.*"):
+    for path in sorted(glob(f"{dist_dir}/*.*")):
         name = Path(path).name
         suffix = Path(path).suffix
         if suffix in [".gz", ".whl"]:
