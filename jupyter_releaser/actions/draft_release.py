@@ -8,7 +8,7 @@ from jupyter_releaser.util import CHECKOUT_NAME
 from jupyter_releaser.util import log
 from jupyter_releaser.util import run
 
-check_release = os.environ.get("RH_IS_CHECK_RELEASE").lower() == "true"
+check_release = os.environ.get("RH_IS_CHECK_RELEASE", "").lower() == "true"
 
 if check_release:
     log("Handling Check Release action")
