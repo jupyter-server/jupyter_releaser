@@ -2,6 +2,27 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.2.2
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...5d92c21f03bd5300e11cd89ce1dd044c4bcda12b))
+
+### Enhancements made
+
+- Use Async Output Where Possible [#76](https://github.com/jupyter-server/jupyter_releaser/pull/76) ([@jtpio](https://github.com/jtpio))
+
+### Bugs fixed
+
+- Better Handling of Already Existing Packages [#77](https://github.com/jupyter-server/jupyter_releaser/pull/77) ([@jtpio](https://github.com/jtpio))
+- Handle commit message failure [#75](https://github.com/jupyter-server/jupyter_releaser/pull/75) ([@jtpio](https://github.com/jtpio))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-07-16&to=2021-07-19&type=c))
+
+[@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2021-07-16..2021-07-19&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-07-16..2021-07-19&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.2.1
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...b543ce51f0260babc1aa942e0ad643991d413d86))
@@ -15,8 +36,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-07-16&to=2021-07-16&type=c))
 
 [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-07-16..2021-07-16&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.2.0
 
