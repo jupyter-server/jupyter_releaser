@@ -82,9 +82,11 @@ def _run_win(cmd, **kwargs):
         log(output)
         return output
     except CalledProcessError as e:
+        e.output = e.output.decode("utf-8")
         if quiet:
-            log("stderr:\n", e.stderr.decode("utf-8").strip(), "\n\n")
-        log("stdout:\n", e.output.decode("utf-8").strip(), "\n\n")
+            e.stderr = e.stderr.decode("utf-8")
+            log("stderr:\n", e.stderr.strip(), "\n\n")
+        log("stdout:\n", e.output.strip(), "\n\n")
         raise e
 
 
