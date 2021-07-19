@@ -384,8 +384,13 @@ def publish_assets(dist_dir, npm_token, npm_cmd, twine_cmd, dry_run, use_checkou
             try:
                 util.run(f"{npm_cmd} {name}", cwd=dist_dir, quiet=True)
             except CalledProcessError as e:
-                if "EPUBLISHCONFLICT" not in e.stderr.decode("utf-8"):
-                    raise e
+                stderr = e.stderr.decode("utf-8")
+                if (
+                    "EPUBLISHCONFLICT" in stderr
+                    or "previously published versions" in stderr
+                ):
+                    continue
+                raise e
             found = True
         else:
             util.log(f"Nothing to upload for {name}")

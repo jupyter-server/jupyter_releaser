@@ -527,10 +527,11 @@ def test_publish_assets_npm_exists(npm_dist, runner, mocker):
     def wrapped(cmd, **kwargs):
         nonlocal called
         if cmd.startswith("npm publish --dry-run"):
-            err = CalledProcessError(1, "foo")
-            err.stderr = "EPUBLISHCONFLICT".encode("UTF-8")
             called += 1
-            raise err
+            if called == 0:
+                err = CalledProcessError(1, "foo")
+                err.stderr = "EPUBLISHCONFLICT".encode("UTF-8")
+                raise err
 
     mock_run = mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
 
@@ -545,6 +546,36 @@ def test_publish_assets_npm_exists(npm_dist, runner, mocker):
             dist_dir,
         ]
     )
+
+    assert called == 3, called
+
+
+def test_publish_assets_npm_all_exists(npm_dist, runner, mocker):
+    dist_dir = npm_dist / util.CHECKOUT_NAME / "dist"
+    called = 0
+
+    def wrapped(cmd, **kwargs):
+        nonlocal called
+        if cmd.startswith("npm publish --dry-run"):
+            called += 1
+            err = CalledProcessError(1, "foo")
+            err.stderr = "previously published versions".encode("UTF-8")
+            raise err
+
+    mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
+
+    with pytest.raises(ValueError):
+        runner(
+            [
+                "publish-assets",
+                "--npm-token",
+                "abc",
+                "--npm-cmd",
+                "npm publish --dry-run",
+                "--dist-dir",
+                dist_dir,
+            ]
+        )
 
     assert called == 3, called
 
