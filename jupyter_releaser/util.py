@@ -19,6 +19,8 @@ from subprocess import PIPE
 import toml
 from pkg_resources import parse_version
 
+from jupyter_releaser.tee import run as tee
+
 PYPROJECT = Path("pyproject.toml")
 SETUP_PY = Path("setup.py")
 SETUP_CFG = Path("setup.cfg")
@@ -39,9 +41,32 @@ RELEASE_API_PATTERN = "https://api.github.com/repos/(?P<owner>[^/]+)/(?P<repo>[^
 
 def run(cmd, **kwargs):
     """Run a command as a subprocess and get the output as a string"""
+    if sys.platform.startswith("win"):
+        # Async subprocesses do not work well on Windows, use standard
+        # subprocess methods
+        return _run_win(cmd, **kwargs)
+
+    quiet = kwargs.get("quiet")
+    kwargs.setdefault("echo", True)
+    kwargs.setdefault("check", True)
+
+    try:
+        process = tee(cmd, **kwargs)
+        return (process.stdout or "").strip()
+    except CalledProcessError as e:
+        if quiet:
+            if e.stderr:
+                log("stderr:\n", e.stderr.strip(), "\n\n")
+            if e.stdout:
+                log("stdout:\n", e.stdout.strip(), "\n\n")
+        raise e
+
+
+def _run_win(cmd, **kwargs):
+    """Run a command as a subprocess and get the output as a string"""
     quiet = kwargs.pop("quiet", False)
     if not quiet:
-        log(f"+ {cmd}")
+        log(f"> {cmd}")
     else:
         kwargs.setdefault("stderr", PIPE)
 

@@ -3,6 +3,7 @@
 import os
 import shutil
 from pathlib import Path
+from subprocess import CalledProcessError
 
 from jupyter_releaser.util import CHECKOUT_NAME
 from jupyter_releaser.util import log
@@ -21,8 +22,10 @@ if check_release:
     # Remove the checkout
     shutil.rmtree(CHECKOUT_NAME)
 
-    # Re-install the parent dir if it was overshadowed
-    if os.environ.get("RH_REPO_NAME") == "jupyter_releaser":
+    # Re-install jupyter-releaser if it was overshadowed
+    try:
+        run("jupyter-releaser --help")
+    except CalledProcessError:
         run("pip install -e .")
 
 run("jupyter-releaser prep-git")
