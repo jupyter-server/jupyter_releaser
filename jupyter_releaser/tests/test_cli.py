@@ -530,7 +530,7 @@ def test_publish_assets_npm_exists(npm_dist, runner, mocker):
             called += 1
             if called == 0:
                 err = CalledProcessError(1, "foo")
-                err.stderr = "EPUBLISHCONFLICT".encode("UTF-8")
+                err.stderr = "EPUBLISHCONFLICT"
                 raise err
 
     mock_run = mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
@@ -559,7 +559,7 @@ def test_publish_assets_npm_all_exists(npm_dist, runner, mocker):
         if cmd.startswith("npm publish --dry-run"):
             called += 1
             err = CalledProcessError(1, "foo")
-            err.stderr = "previously published versions".encode("UTF-8")
+            err.stderr = "previously published versions"
             raise err
 
     mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
