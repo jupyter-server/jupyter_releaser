@@ -143,7 +143,11 @@ def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=F
             util.run("git stash apply")
 
     # Add a commit with the message
-    util.run(commit_message)
+    try:
+        util.run(commit_message)
+    except CalledProcessError as e:
+        util.log(str(e))
+        return
 
     # Create the pull
     owner, repo_name = repo.split("/")
