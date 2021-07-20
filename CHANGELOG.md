@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.2.4
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...bea9fc265b8616eb10ea1b330388507b43ef155c))
+
+### Bugs fixed
+
+- Fix installing the releaser in the check release workflow [#82](https://github.com/jupyter-server/jupyter_releaser/pull/82) ([@jtpio](https://github.com/jtpio))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-07-19&to=2021-07-20&type=c))
+
+[@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-07-19..2021-07-20&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.2.3
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...02cd1089a0181e783f8e640f5138d34ce8de3d5f))
@@ -15,8 +31,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-07-19&to=2021-07-19&type=c))
 
 [@afshin](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Aafshin+updated%3A2021-07-19..2021-07-19&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.2.2
 
