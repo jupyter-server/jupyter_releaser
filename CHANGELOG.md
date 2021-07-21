@@ -2,6 +2,30 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.3.0
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...3ce39f01e9171098afe19b98b9838f1cc71a64fa))
+
+### Enhancements made
+
+- Add ability to skip steps [#84](https://github.com/jupyter-server/jupyter_releaser/pull/84) ([@blink1073](https://github.com/blink1073))
+
+### Bugs fixed
+
+- Allow after-prep-git to work [#85](https://github.com/jupyter-server/jupyter_releaser/pull/85) ([@blink1073](https://github.com/blink1073))
+
+### Maintenance and upkeep improvements
+
+- Add extra changelog check before push [#86](https://github.com/jupyter-server/jupyter_releaser/pull/86) ([@blink1073](https://github.com/blink1073))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-07-20&to=2021-07-21&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-07-20..2021-07-21&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2021-07-20..2021-07-21&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.2.4
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...bea9fc265b8616eb10ea1b330388507b43ef155c))
@@ -15,8 +39,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-07-19&to=2021-07-20&type=c))
 
 [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-07-19..2021-07-20&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.2.3
 
