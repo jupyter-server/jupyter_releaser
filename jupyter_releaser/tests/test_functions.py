@@ -139,7 +139,7 @@ def test_get_config_npm(npm_package):
 
 
 def test_get_config_file(git_repo):
-    config = util.jupyter_releaser_CONFIG
+    config = util.JUPYTER_RELEASER_CONFIG
     config.write_text(testutil.TOML_CONFIG, encoding="utf-8")
     config = util.read_config()
     assert config["hooks"]["before-build-python"] == "python setup.py --version"

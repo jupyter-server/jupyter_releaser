@@ -50,11 +50,16 @@ class ReleaseHelperGroup(click.Group):
         config = util.read_config()
         hooks = config.get("hooks", {})
         options = config.get("options", {})
+        skip = config.get("skip", [])
 
         # Print a separation header
         util.log(f'\n\n{"-" * 50}')
         util.log(cmd_name)
         util.log(f'{"-" * 50}\n\n')
+
+        if cmd_name in skip or cmd_name.replace("-", "_") in skip:
+            util.log("*** Skipping based on skip config")
+            return
 
         # Handle all of the parameters
         for param in self.commands[cmd_name].get_params(ctx):
