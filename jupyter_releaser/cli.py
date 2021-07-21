@@ -88,6 +88,12 @@ class ReleaseHelperGroup(click.Group):
         super().invoke(ctx)
 
         # Handle after hooks
+
+        # Re-read config if we just did a git checkout
+        if cmd_name == "prep-git":
+            config = util.read_config()
+            hooks = config.get("hooks", {})
+
         after = f"after-{cmd_name}"
         if after in hooks:
             after_hooks = hooks[after]
