@@ -127,11 +127,14 @@ command options in `cli.py`. The environment variables unique to
 `jupyter-releaser` are prefixed with `RH_`. A list of all env variables can be seen
 by running `jupyter-releaser list-envvars`.
 
-### Default Values, Options, and Hooks
+### Default Values, Options, Skip, and Hooks
 
 The default values can also be overriden using a config file.
 
 Options can be overridden using the `options` section.
+
+You can skip one or more commands using a `skip` section, which is a list of
+commands to skip.
 
 You can also define hooks to run before and after
 commands in a `hooks` section. Hooks can be a shell command to run or
@@ -153,7 +156,9 @@ Example `.jupyter-releaser.toml`:
 
 ```toml
 [options]
-dist_dir = mydist
+dist_dir = "mydist"
+
+skip = ["check-links"]
 
 [hooks]
 before-tag-version = "npm run pre:tag:script"
@@ -163,7 +168,10 @@ Example `pyproject.toml` section:
 
 ```toml
 [tools.jupyter-releaser.options]
-dist_dir = mydist
+dist_dir = "mydist"
+
+[tools.jupyter-releaser]
+skip = ["check-links"]
 
 [tools.jupyter-releaser.hooks]
 after-build-python = ["python scripts/cleanup.py", "python scripts/send_email.py"]
@@ -178,6 +186,7 @@ Example `package.json`:
     "options": {
       "dist_dir": "mydist"
     },
+    "skip": ["check-manifest"],
     "hooks": {
       "before-publish-dist": "npm run pre:publish:dist"
     }

@@ -26,7 +26,7 @@ SETUP_PY = Path("setup.py")
 SETUP_CFG = Path("setup.cfg")
 PACKAGE_JSON = Path("package.json")
 YARN_LOCK = Path("yarn.lock")
-jupyter_releaser_CONFIG = Path(".jupyter-releaser.toml")
+JUPYTER_RELEASER_CONFIG = Path(".jupyter-releaser.toml")
 
 BUF_SIZE = 65536
 TBUMP_CMD = "tbump --non-interactive --only-patch"
@@ -245,8 +245,8 @@ def actions_output(name, value):
 
 def read_config():
     """Read the jupyter-releaser config data"""
-    if jupyter_releaser_CONFIG.exists():
-        return toml.loads(jupyter_releaser_CONFIG.read_text(encoding="utf-8"))
+    if JUPYTER_RELEASER_CONFIG.exists():
+        return toml.loads(JUPYTER_RELEASER_CONFIG.read_text(encoding="utf-8"))
 
     if PYPROJECT.exists():
         data = toml.loads(PYPROJECT.read_text(encoding="utf-8"))

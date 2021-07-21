@@ -230,6 +230,19 @@ def test_draft_changelog_full(py_package, mocker, runner, open_mock, git_prep):
     open_mock.assert_called_once()
 
 
+def test_draft_changelog_skip(py_package, mocker, runner, open_mock, git_prep):
+    mock_changelog_entry(py_package, runner, mocker)
+
+    pyproject_path = Path(util.CHECKOUT_NAME) / "pyproject.toml"
+    pyproject = util.toml.loads(pyproject_path.read_text(encoding="utf-8"))
+    pyproject["tool"] = {"jupyter-releaser": dict()}
+    pyproject["tool"]["jupyter-releaser"]["skip"] = ["draft-changelog"]
+    pyproject_path.write_text(util.toml.dumps(pyproject), encoding="utf-8")
+
+    runner(["draft-changelog", "--version-spec", VERSION_SPEC])
+    open_mock.assert_not_called()
+
+
 def test_draft_changelog_dry_run(npm_package, mocker, runner, git_prep):
     mock_changelog_entry(npm_package, runner, mocker)
     runner(["draft-changelog", "--dry-run", "--version-spec", VERSION_SPEC])
@@ -588,7 +601,7 @@ def test_publish_release(npm_dist, runner, mocker, open_mock):
 
 
 def test_config_file(py_package, runner, mocker, git_prep):
-    config = Path(util.CHECKOUT_NAME) / util.jupyter_releaser_CONFIG
+    config = Path(util.CHECKOUT_NAME) / util.JUPYTER_RELEASER_CONFIG
     config.write_text(TOML_CONFIG, encoding="utf-8")
 
     orig_run = util.run
@@ -613,7 +626,7 @@ def test_config_file(py_package, runner, mocker, git_prep):
 
 
 def test_config_file_env_override(py_package, runner, mocker, git_prep):
-    config = Path(util.CHECKOUT_NAME) / util.jupyter_releaser_CONFIG
+    config = Path(util.CHECKOUT_NAME) / util.JUPYTER_RELEASER_CONFIG
     config.write_text(TOML_CONFIG, encoding="utf-8")
 
     orig_run = util.run
@@ -639,7 +652,7 @@ def test_config_file_env_override(py_package, runner, mocker, git_prep):
 
 
 def test_config_file_cli_override(py_package, runner, mocker, git_prep):
-    config = Path(util.CHECKOUT_NAME) / util.jupyter_releaser_CONFIG
+    config = Path(util.CHECKOUT_NAME) / util.JUPYTER_RELEASER_CONFIG
     config.write_text(TOML_CONFIG, encoding="utf-8")
 
     orig_run = util.run
