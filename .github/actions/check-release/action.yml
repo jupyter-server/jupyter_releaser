@@ -29,7 +29,7 @@ runs:
         else
           # e.g refs/head/foo or refs/tag/bar
           echo "Using GITHUB_REF: ${GITHUB_REF}"
-          export RH_BRANCH=$(echo ${GITHUB_REF} | cut -d'/' -f 3)
+          export RH_BRANCH=$(echo ${GITHUB_REF} | cut -d'/' -f 3-)
         fi
 
         # Install Jupyter Releaser from git unless we are testing Releaser itself
