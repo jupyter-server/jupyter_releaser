@@ -243,6 +243,13 @@ def actions_output(name, value):
         print(f"::set-output name={name}::{value}")
 
 
+def get_latest_tag(branch):
+    """Get the default 'since' value for a branch"""
+    tags = run(f"git --no-pager tag --sort=-creatordate --merged {branch}")
+    if tags:
+        return tags.splitlines()[0]
+
+
 def read_config():
     """Read the jupyter-releaser config data"""
     if JUPYTER_RELEASER_CONFIG.exists():

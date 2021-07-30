@@ -65,10 +65,7 @@ def get_version_entry(
     str
         A formatted changelog entry with markers
     """
-    if not since:
-        tags = util.run(f"git --no-pager tag --sort=-creatordate --merged {branch}")
-        if tags:
-            since = tags.splitlines()[0]
+    since = since or util.get_latest_tag(branch)
 
     branch = branch.split("/")[-1]
     util.log(f"Getting changes to {repo} since {since} on branch {branch}...")

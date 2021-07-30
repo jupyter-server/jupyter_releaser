@@ -6,6 +6,7 @@ from pathlib import Path
 from subprocess import CalledProcessError
 
 from jupyter_releaser.util import CHECKOUT_NAME
+from jupyter_releaser.util import get_latest_tag
 from jupyter_releaser.util import log
 from jupyter_releaser.util import run
 
@@ -38,6 +39,14 @@ if check_release:
     Path(changelog_location).write_text(changelog_text)
 
 run("jupyter-releaser check-changelog")
+
+# Capture the "since" argument in case we add tags before the second
+# "Check Changelog"
+curr_dir = os.getcwd()
+os.chdir(CHECKOUT_NAME)
+os.environ.setdefault("RH_SINCE", get_latest_tag(os.environ["RH_BRANCH"]))
+os.chdir(curr_dir)
+
 # Make sure npm comes before python in case it produces
 # files for the python package
 run("jupyter-releaser build-npm")

@@ -86,6 +86,8 @@ class ReleaseHelperGroup(click.Group):
             before_hooks = hooks[before]
             if isinstance(before_hooks, str):
                 before_hooks = [before_hooks]
+            if before_hooks:
+                util.log(f"\nRunning hooks for {before}")
             for hook in before_hooks:
                 util.run(hook)
 
@@ -104,6 +106,8 @@ class ReleaseHelperGroup(click.Group):
             after_hooks = hooks[after]
             if isinstance(after_hooks, str):
                 after_hooks = [after_hooks]
+            if after_hooks:
+                util.log(f"\nRunning hooks for {after}")
             for hook in after_hooks:
                 util.run(hook)
 
