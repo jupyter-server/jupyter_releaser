@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.3.3
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...671445e0f441005b8b4134c80976d3f20ebade31))
+
+### Bugs fixed
+
+- Fix Handling of Tag Lock [#93](https://github.com/jupyter-server/jupyter_releaser/pull/93) ([@afshin](https://github.com/afshin))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-07-30&to=2021-07-30&type=c))
+
+[@afshin](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Aafshin+updated%3A2021-07-30..2021-07-30&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.3.2
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...ffe52ea6acd21f0e7fac0c1da5a9880c81989c75))
@@ -15,8 +31,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-07-27&to=2021-07-30&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-07-27..2021-07-30&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.3.1
 
