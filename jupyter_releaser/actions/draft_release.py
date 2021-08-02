@@ -36,7 +36,7 @@ run("jupyter-releaser prep-git")
 # Do this before bumping the version
 curr_dir = os.getcwd()
 os.chdir(CHECKOUT_NAME)
-os.environ.setdefault("RH_SINCE", get_latest_tag(os.environ["RH_BRANCH"]))
+os.environ.setdefault("RH_SINCE", get_latest_tag(os.environ["RH_BRANCH"] or ""))
 os.chdir(curr_dir)
 
 run("jupyter-releaser bump-version")
