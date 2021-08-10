@@ -47,4 +47,4 @@ runs:
         python -m jupyter_releaser.actions.draft_release
 
         # Publish Assets
-        jupyter-releaser publish-assets --use-checkout-dir
+        jupyter-releaser publish-assets

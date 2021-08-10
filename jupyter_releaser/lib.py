@@ -77,11 +77,11 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
     for f in files:
         file_cmd = cmd + f' "{f}"'
         try:
-            util.run(file_cmd)
+            util.run(file_cmd, shell=False)
         except Exception as e:
             # Return code 5 means no tests were run (no links found)
             if e.returncode != 5:
-                util.run(file_cmd + " --lf")
+                util.run(file_cmd + " --lf", shell=False)
 
 
 def draft_changelog(version_spec, branch, repo, since, auth, changelog_path, dry_run):
@@ -272,7 +272,11 @@ def extract_release(auth, dist_dir, dry_run, release_url, npm_install_options):
     owner, repo = match["owner"], match["repo"]
     gh = GhApi(owner=owner, repo=repo, token=auth)
     release = util.release_for_url(gh, release_url)
+    branch = release.target_commitish
     assets = release.assets
+
+    # Prepare a git checkout
+    prep_git(None, branch, f"{owner}/{repo}", auth, None, None)
 
     # Clean the dist folder
     dist = Path(dist_dir)
@@ -303,7 +307,6 @@ def extract_release(auth, dist_dir, dry_run, release_url, npm_install_options):
     if dry_run:
         return
 
-    branch = release.target_commitish
     tag_name = release.tag_name
 
     sha = None
@@ -313,17 +316,10 @@ def extract_release(auth, dist_dir, dry_run, release_url, npm_install_options):
     if sha is None:
         raise ValueError("Could not find tag")
 
-    # Run a git checkout
-    # Fetch the branch
-    # Get the commmit message for the branch
+    # Get the commmit message for the tag
     commit_message = ""
-    with TemporaryDirectory() as td:
-        url = gh.repos.get().html_url
-        util.run(f"git clone {url} local", cwd=td)
-        checkout = osp.join(td, "local")
-        if not osp.exists(url):
-            util.run(f"git fetch origin {branch}", cwd=checkout)
-        commit_message = util.run(f"git log --format=%B -n 1 {sha}", cwd=checkout)
+    checkout = osp.join(os.getcwd(), util.CHECKOUT_NAME)
+    commit_message = util.run(f"git log --format=%B -n 1 {sha}", cwd=checkout)
 
     for asset in assets:
         # Check the sha against the published sha
@@ -351,13 +347,8 @@ def parse_release_url(release_url):
     return match
 
 
-def publish_assets(dist_dir, npm_token, npm_cmd, twine_cmd, dry_run, use_checkout_dir):
+def publish_assets(dist_dir, npm_token, npm_cmd, twine_cmd, dry_run):
     """Publish release asset(s)"""
-    if use_checkout_dir:
-        if not osp.exists(util.CHECKOUT_NAME):
-            raise ValueError("Please run prep-git first")
-        os.chdir(util.CHECKOUT_NAME)
-
     if dry_run:
         # Start local pypi server with no auth, allowing overwrites,
         # in a temporary directory
@@ -424,14 +415,14 @@ def publish_release(auth, release_url):
     util.actions_output("release_url", release.html_url)
 
 
-def prep_git(ref, branch, repo, auth, username, url, install=True):
+def prep_git(ref, branch, repo, auth, username, url):
     """Set up git"""
     repo = repo or util.get_repo()
 
     user_name = ""
     try:
         user_name = util.run("git config --global user.email")
-    except Exception as e:
+    except Exception:
         pass
 
     if not user_name:
@@ -498,20 +489,19 @@ def prep_git(ref, branch, repo, auth, username, url, install=True):
         util.run(checkout_cmd)
 
     # Install the package
-    if install:
-        # install python package in editable mode with test deps
-        if util.SETUP_PY.exists():
-            util.run('pip install -q -e ".[test]"')
+    # install python package in editable mode with test deps
+    if util.SETUP_PY.exists():
+        util.run('pip install -q -e ".[test]"')
 
-        # prefer yarn if yarn lock exists
-        elif util.YARN_LOCK.exists():
-            if not shutil.which("yarn"):
-                util.run("npm install -g yarn")
-            util.run("yarn")
+    # prefer yarn if yarn lock exists
+    elif util.YARN_LOCK.exists():
+        if not shutil.which("yarn"):
+            util.run("npm install -g yarn")
+        util.run("yarn")
 
-        # npm install otherwise
-        elif util.PACKAGE_JSON.exists():
-            util.run("npm install")
+    # npm install otherwise
+    elif util.PACKAGE_JSON.exists():
+        util.run("npm install")
 
     os.chdir(orig_dir)
 
@@ -519,7 +509,7 @@ def prep_git(ref, branch, repo, auth, username, url, install=True):
 
 
 def forwardport_changelog(
-    auth, ref, branch, repo, username, changelog_path, dry_run, git_url, release_url
+    auth, ref, branch, repo, username, changelog_path, dry_run, release_url
 ):
     """Forwardport Changelog Entries to the Default Branch"""
     # Set up the git repo with the branch
@@ -527,13 +517,14 @@ def forwardport_changelog(
     gh = GhApi(owner=match["owner"], repo=match["repo"], token=auth)
     release = util.release_for_url(gh, release_url)
     tag = release.tag_name
+    source_branch = release.target_commitish
 
     repo = f'{match["owner"]}/{match["repo"]}'
 
-    # We want to target the main branch
-    orig_dir = os.getcwd()
-    branch = prep_git(None, None, repo, auth, username, git_url, install=False)
-    os.chdir(util.CHECKOUT_NAME)
+    # switch to main branch here
+    branch = branch or util.get_default_branch()
+    util.run(f"git fetch origin {branch}")
+    util.run(f"git checkout {branch}")
 
     # Bail if the tag has been merged to the branch
     tags = util.run(f"git --no-pager tag --merged {branch}", quiet=True)
@@ -594,5 +585,4 @@ def forwardport_changelog(
     )
 
     # Clean up after ourselves
-    os.chdir(orig_dir)
-    shutil.rmtree(util.CHECKOUT_NAME)
+    util.run(f"git checkout {source_branch}")

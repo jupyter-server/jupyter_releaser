@@ -24,6 +24,7 @@ from jupyter_releaser import util
 from jupyter_releaser.tests.util import CHANGELOG_ENTRY
 from jupyter_releaser.tests.util import create_npm_package
 from jupyter_releaser.tests.util import create_python_package
+from jupyter_releaser.tests.util import get_log
 from jupyter_releaser.tests.util import HTML_URL
 from jupyter_releaser.tests.util import mock_changelog_entry
 from jupyter_releaser.tests.util import MockHTTPResponse
@@ -40,6 +41,11 @@ from jupyter_releaser.util import run
 def test_prep_git_simple(py_package, runner):
     """Standard local run with no env variables."""
     result = runner(["prep-git", "--git-url", py_package], env=dict(GITHUB_ACTIONS=""))
+
+    log = get_log()
+    assert "before-prep-git" not in log
+    assert "after-prep-git" in log
+
     os.chdir(util.CHECKOUT_NAME)
     assert util.get_branch() == "bar", util.get_branch()
 
@@ -90,6 +96,11 @@ def test_prep_git_full(py_package, tmp_path, mocker, runner):
 def test_bump_version(npm_package, runner):
     runner(["prep-git", "--git-url", npm_package])
     runner(["bump-version", "--version-spec", "1.0.1-rc0"])
+
+    log = get_log()
+    assert "before-bump-version" in log
+    assert "after-bump-version" in log
+
     os.chdir(util.CHECKOUT_NAME)
     version = util.get_version()
     assert version == "1.0.1-rc0"
@@ -150,6 +161,10 @@ def test_build_changelog(py_package, mocker, runner):
     mocked_gen = mocker.patch("jupyter_releaser.changelog.generate_activity_md")
     mocked_gen.return_value = CHANGELOG_ENTRY
     runner(["build-changelog", "--changelog-path", changelog_path])
+
+    log = get_log()
+    assert "before-build-changelog" in log
+    assert "after-build-changelog" in log
 
     changelog_path = Path(util.CHECKOUT_NAME) / "CHANGELOG.md"
     text = changelog_path.read_text(encoding="utf-8")
@@ -227,17 +242,21 @@ def test_build_changelog_backport(py_package, mocker, runner, open_mock):
 def test_draft_changelog_full(py_package, mocker, runner, open_mock, git_prep):
     mock_changelog_entry(py_package, runner, mocker)
     runner(["draft-changelog", "--version-spec", VERSION_SPEC])
+
+    log = get_log()
+    assert "before-draft-changelog" in log
+    assert "after-draft-changelog" in log
+
     open_mock.assert_called_once()
 
 
 def test_draft_changelog_skip(py_package, mocker, runner, open_mock, git_prep):
     mock_changelog_entry(py_package, runner, mocker)
 
-    pyproject_path = Path(util.CHECKOUT_NAME) / "pyproject.toml"
-    pyproject = util.toml.loads(pyproject_path.read_text(encoding="utf-8"))
-    pyproject["tool"] = {"jupyter-releaser": dict()}
-    pyproject["tool"]["jupyter-releaser"]["skip"] = ["draft-changelog"]
-    pyproject_path.write_text(util.toml.dumps(pyproject), encoding="utf-8")
+    config_path = Path(util.CHECKOUT_NAME) / util.JUPYTER_RELEASER_CONFIG
+    config = util.toml.loads(config_path.read_text(encoding="utf-8"))
+    config["skip"] = ["draft-changelog"]
+    config_path.write_text(util.toml.dumps(config), encoding="utf-8")
 
     runner(["draft-changelog", "--version-spec", VERSION_SPEC])
     open_mock.assert_not_called()
@@ -260,15 +279,19 @@ def test_check_links(py_package, runner):
     text += "\nhttps://apod.nasa.gov/apod/astropix.html"
     readme.write_text(text, encoding="utf-8")
 
-    pyproject = util.toml.loads(util.PYPROJECT.read_text(encoding="utf-8"))
-    pyproject["tool"] = {"jupyter-releaser": dict()}
-    pyproject["tool"]["jupyter-releaser"]["options"] = {"ignore-glob": ["FOO.md"]}
-    util.PYPROJECT.write_text(util.toml.dumps(pyproject), encoding="utf-8")
+    config = Path(util.JUPYTER_RELEASER_CONFIG)
+    config_data = util.toml.loads(config.read_text(encoding="utf-8"))
+    config_data["options"] = {"ignore-glob": ["FOO.md"]}
+    config.write_text(util.toml.dumps(config_data), encoding="utf-8")
 
     util.run("git commit -a -m 'update files'")
 
     runner(["prep-git", "--git-url", py_package])
     runner(["check-links"])
+
+    log = get_log()
+    assert "before-check-links" in log
+    assert "after-check-links" in log
 
     foo = Path(util.CHECKOUT_NAME) / "FOO.md"
     foo.write_text("http://127.0.0.1:5555")
@@ -290,6 +313,10 @@ def test_check_changelog(py_package, tmp_path, mocker, runner, git_prep):
         ["check-changelog", "--changelog-path", changelog_entry, "--output", output],
     )
 
+    log = get_log()
+    assert "before-check-changelog" in log
+    assert "after-check-changelog" in log
+
     output = Path(util.CHECKOUT_NAME) / output
     assert PR_ENTRY in output.read_text(encoding="utf-8")
     changelog_entry = Path(util.CHECKOUT_NAME) / changelog_entry
@@ -300,6 +327,10 @@ def test_check_changelog(py_package, tmp_path, mocker, runner, git_prep):
 
 def test_build_python(py_package, runner, build_mock, git_prep):
     runner(["build-python"])
+
+    log = get_log()
+    assert "before-build-python" in log
+    assert "after-build-python" in log
 
 
 def test_build_python_setup(py_package, runner, git_prep):
@@ -315,10 +346,23 @@ def test_check_python(py_package, runner, build_mock, git_prep):
     runner(["build-python"])
     runner(["check-python"])
 
+    log = get_log()
+    assert "before-check-python" in log
+    assert "after-check-python" in log
+
 
 def test_handle_npm(npm_package, runner, git_prep):
     runner(["build-npm"])
+
+    log = get_log()
+    assert "before-build-npm" in log
+    assert "after-build-npm" in log
+
     runner(["check-npm"])
+
+    log = get_log()
+    assert "before-check-npm" in log
+    assert "after-check-npm" in log
 
 
 def test_handle_npm_lerna(workspace_package, runner, git_prep):
@@ -328,6 +372,10 @@ def test_handle_npm_lerna(workspace_package, runner, git_prep):
 
 def test_check_manifest(py_package, runner, git_prep):
     runner(["check-manifest"])
+
+    log = get_log()
+    assert "before-check-manifest" in log
+    assert "after-check-manifest" in log
 
 
 def test_check_manifest_npm(npm_package, runner, git_prep):
@@ -342,11 +390,19 @@ def test_tag_release(py_package, runner, build_mock, git_prep):
     # Tag the release
     runner(["tag-release"])
 
+    log = get_log()
+    assert "before-tag-release" in log
+    assert "after-tag-release" in log
+
 
 def test_draft_release_dry_run(py_dist, mocker, runner, open_mock, git_prep):
     # Publish the release - dry run
     runner(["draft-release", "--dry-run", "--post-version-spec", "1.1.0.dev0"])
     open_mock.assert_not_called()
+
+    log = get_log()
+    assert "before-draft-release" in log
+    assert "after-draft-release" in log
 
 
 def test_draft_release_final(npm_dist, runner, mocker, open_mock, git_prep):
@@ -379,6 +435,7 @@ def test_delete_release(npm_dist, runner, mocker, open_mock, git_prep):
         MockHTTPResponse(),
     ]
     result = runner(["draft-release"])
+
     assert len(open_mock.call_args) == 2
 
     url = ""
@@ -396,6 +453,10 @@ def test_delete_release(npm_dist, runner, mocker, open_mock, git_prep):
     ]
     runner(["delete-release", url])
     assert len(open_mock.call_args) == 2
+
+    log = get_log()
+    assert "before-delete-release" in log
+    assert "after-delete-release" in log
 
 
 @pytest.mark.skipif(
@@ -440,8 +501,12 @@ def test_extract_dist_py(py_package, runner, mocker, open_mock, tmp_path, git_pr
     ]
 
     runner(["extract-release", HTML_URL])
-    assert len(open_mock.mock_calls) == 3
+    assert len(open_mock.mock_calls) == 2
     assert len(get_mock.mock_calls) == len(dist_names) == 2
+
+    log = get_log()
+    assert "before-extract-release" not in log
+    assert "after-extract-release" in log
 
 
 @pytest.mark.skipif(
@@ -464,7 +529,7 @@ def test_extract_dist_npm(npm_dist, runner, mocker, open_mock, tmp_path):
     releases = [
         dict(
             tag_name=tag_name,
-            target_commitish="main",
+            target_commitish="foo",
             assets=[dict(name=dist_name, url=dist_name) for dist_name in dist_names],
         )
     ]
@@ -477,8 +542,12 @@ def test_extract_dist_npm(npm_dist, runner, mocker, open_mock, tmp_path):
     ]
 
     runner(["extract-release", HTML_URL])
-    assert len(open_mock.mock_calls) == 3
+    assert len(open_mock.mock_calls) == 2
     assert len(get_mock.mock_calls) == len(dist_names) == 3
+
+    log = get_log()
+    assert "before-extract-release" not in log
+    assert "after-extract-release" in log
 
 
 @pytest.mark.skipif(
@@ -503,6 +572,10 @@ def test_publish_assets_py(py_package, runner, mocker, git_prep):
     dist_dir = py_package / util.CHECKOUT_NAME / "dist"
     runner(["publish-assets", "--dist-dir", dist_dir, "--dry-run"])
     assert called == 2, called
+
+    log = get_log()
+    assert "before-publish-assets" in log
+    assert "after-publish-assets" in log
 
 
 def test_publish_assets_npm(npm_dist, runner, mocker):
@@ -597,49 +670,50 @@ def test_publish_release(npm_dist, runner, mocker, open_mock):
     open_mock.side_effect = [MockHTTPResponse([REPO_DATA]), MockHTTPResponse()]
     dist_dir = npm_dist / util.CHECKOUT_NAME / "dist"
     runner(["publish-release", HTML_URL])
+
+    log = get_log()
+    assert "before-publish-release" in log
+    assert "after-publish-release" in log
+
     assert len(open_mock.call_args) == 2
 
 
 def test_config_file(py_package, runner, mocker, git_prep):
+
     config = Path(util.CHECKOUT_NAME) / util.JUPYTER_RELEASER_CONFIG
-    config.write_text(TOML_CONFIG, encoding="utf-8")
+    config_data = util.toml.loads(config.read_text(encoding="utf-8"))
+    config_data["options"] = {"dist-dir": "foo"}
+    config.write_text(util.toml.dumps(config_data), encoding="utf-8")
 
     orig_run = util.run
-    hooked = 0
     called = False
 
     def wrapped(cmd, **kwargs):
-        nonlocal called, hooked
+        nonlocal called
         if cmd.startswith("python -m build --outdir foo"):
             called = True
-            return ""
-        if cmd.startswith("python setup.py"):
-            hooked += 1
             return ""
         return orig_run(cmd, **kwargs)
 
     mock_run = mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
 
     runner(["build-python"])
-    assert hooked == 3, hooked
     assert called
+
+    log = get_log()
+    assert "before-build-python" in log
+    assert "after-build-python" in log
 
 
 def test_config_file_env_override(py_package, runner, mocker, git_prep):
-    config = Path(util.CHECKOUT_NAME) / util.JUPYTER_RELEASER_CONFIG
-    config.write_text(TOML_CONFIG, encoding="utf-8")
 
     orig_run = util.run
     called = False
-    hooked = 0
 
     def wrapped(cmd, **kwargs):
-        nonlocal called, hooked
+        nonlocal called
         if cmd.startswith("python -m build --outdir bar"):
             called = True
-            return ""
-        if cmd.startswith("python setup.py"):
-            hooked += 1
             return ""
         return orig_run(cmd, **kwargs)
 
@@ -647,33 +721,32 @@ def test_config_file_env_override(py_package, runner, mocker, git_prep):
 
     os.environ["RH_DIST_DIR"] = "bar"
     runner(["build-python"])
-    assert hooked == 3, hooked
     assert called
+
+    log = get_log()
+    assert "before-build-python" in log
+    assert "after-build-python" in log
 
 
 def test_config_file_cli_override(py_package, runner, mocker, git_prep):
-    config = Path(util.CHECKOUT_NAME) / util.JUPYTER_RELEASER_CONFIG
-    config.write_text(TOML_CONFIG, encoding="utf-8")
-
     orig_run = util.run
     called = False
-    hooked = 0
 
     def wrapped(cmd, **kwargs):
-        nonlocal called, hooked
+        nonlocal called
         if cmd.startswith("python -m build --outdir bar"):
             called = True
-            return ""
-        if cmd.startswith("python setup.py"):
-            hooked += 1
             return ""
         return orig_run(cmd, **kwargs)
 
     mock_run = mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
 
     runner(["build-python", "--dist-dir", "bar"])
-    assert hooked == 3, hooked
     assert called
+
+    log = get_log()
+    assert "before-build-python" in log
+    assert "after-build-python" in log
 
 
 def test_forwardport_changelog_no_new(npm_package, runner, mocker, open_mock, git_prep):
@@ -688,18 +761,13 @@ def test_forwardport_changelog_no_new(npm_package, runner, mocker, open_mock, gi
     util.run(f"git tag v{VERSION_SPEC}", cwd=util.CHECKOUT_NAME)
 
     # Run the forwardport workflow against default branch
-    os.chdir(util.CHECKOUT_NAME)
-    url = os.getcwd()
-    runner(["forwardport-changelog", HTML_URL, "--git-url", url])
+    runner(["forwardport-changelog", HTML_URL])
 
-    assert len(open_mock.mock_calls) == 1
+    assert len(open_mock.mock_calls) == 2
 
-    expected = """
-<!-- <START NEW CHANGELOG ENTRY> -->
-
-## 1.0.1
-"""
-    assert expected in Path("CHANGELOG.md").read_text(encoding="utf-8")
+    log = get_log()
+    assert "before-forwardport-changelog" in log
+    assert "after-forwardport-changelog" in log
 
 
 def test_forwardport_changelog_has_new(
@@ -733,7 +801,7 @@ def test_forwardport_changelog_has_new(
     # Run the forwardport workflow against default branch
     url = osp.abspath(npm_package)
     os.chdir(npm_package)
-    runner(["forwardport-changelog", HTML_URL, "--git-url", url, "--branch", current])
+    runner(["forwardport-changelog", HTML_URL, "--branch", current])
 
     assert len(open_mock.call_args) == 2
     util.run(f"git checkout {current}", cwd=npm_package)

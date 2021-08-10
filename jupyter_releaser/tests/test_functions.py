@@ -117,30 +117,24 @@ def test_bump_version(py_package):
 
 
 def test_get_config_python(py_package):
+    Path(util.JUPYTER_RELEASER_CONFIG).unlink()
     text = util.PYPROJECT.read_text(encoding="utf-8")
     text = testutil.TOML_CONFIG.replace("\n[", "\n[tool.jupyter-releaser.")
     util.PYPROJECT.write_text(text, encoding="utf-8")
     config = util.read_config()
-    assert config["hooks"]["before-build-python"] == "python setup.py --version"
-    assert config["options"]["dist_dir"] == "foo"
+    assert "before-build-python" in config["hooks"]["before-build-python"]
 
 
 def test_get_config_npm(npm_package):
+    Path(util.JUPYTER_RELEASER_CONFIG).unlink()
     package_json = util.PACKAGE_JSON
     data = json.loads(package_json.read_text(encoding="utf-8"))
     data["jupyter-releaser"] = toml.loads(testutil.TOML_CONFIG)
-    package_json.write_text(json.dumps(data))
+    package_json.write_text(json.dumps(data), encoding="utf-8")
     config = util.read_config()
-    assert config["hooks"]["after-build-python"] == [
-        "python setup.py --version",
-        "python setup.py --name",
-    ]
-    assert config["options"]["dist_dir"] == "foo"
+    assert "before-build-npm" in config["hooks"]["before-build-npm"]
 
 
 def test_get_config_file(git_repo):
-    config = util.JUPYTER_RELEASER_CONFIG
-    config.write_text(testutil.TOML_CONFIG, encoding="utf-8")
     config = util.read_config()
-    assert config["hooks"]["before-build-python"] == "python setup.py --version"
-    assert config["options"]["dist_dir"] == "foo"
+    assert "before-build-python" in config["hooks"]["before-build-python"]

@@ -5,6 +5,7 @@ import shutil
 from pathlib import Path
 
 from jupyter_releaser import changelog
+from jupyter_releaser import cli
 from jupyter_releaser import util
 from jupyter_releaser.util import run
 
@@ -13,12 +14,11 @@ VERSION_SPEC = "1.0.1"
 
 TOML_CONFIG = """
 [hooks]
-before-build-python = "python setup.py --version"
-after-build-python = ["python setup.py --version", "python setup.py --name"]
-
-[options]
-dist_dir = "foo"
 """
+
+for name in cli.main.commands:
+    TOML_CONFIG += f"'before-{name}' = \"echo before-{name} >> 'log.txt'\"\n"
+    TOML_CONFIG += f"'after-{name}' = \"echo after-{name} >> 'log.txt'\"\n"
 
 PR_ENTRY = "Mention the required GITHUB_ACCESS_TOKEN [#1](https://github.com/executablebooks/github-activity/pull/1) ([@consideRatio](https://github.com/consideRatio))"
 
@@ -149,6 +149,11 @@ def create_npm_package(git_repo):
     run("git pull origin bar")
     run("git checkout bar")
     return git_repo
+
+
+def get_log():
+    log = Path(util.CHECKOUT_NAME) / "log.txt"
+    return log.read_text(encoding="utf-8").splitlines()
 
 
 def create_python_package(git_repo):
