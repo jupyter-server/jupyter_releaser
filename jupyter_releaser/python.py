@@ -55,7 +55,7 @@ def check_dist(dist_file, test_cmd=""):
         # Create the virtual env, upgrade pip,
         # install, and run test command
         util.run(f"python -m venv {env_path}")
-        util.run(f"{bin_path}/python -m pip install -U pip")
+        util.run(f"{bin_path}/python -m pip install -q -U pip")
         util.run(f"{bin_path}/pip install -q {dist_file}")
         util.run(f"{bin_path}/{test_cmd}")
 

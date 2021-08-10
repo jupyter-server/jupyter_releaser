@@ -47,6 +47,7 @@ def run(cmd, **kwargs):
         return _run_win(cmd, **kwargs)
 
     quiet = kwargs.get("quiet")
+    quiet_error = kwargs.get("quiet_error")
     kwargs.setdefault("echo", True)
     kwargs.setdefault("check", True)
 
@@ -54,7 +55,7 @@ def run(cmd, **kwargs):
         process = tee(cmd, **kwargs)
         return (process.stdout or "").strip()
     except CalledProcessError as e:
-        if quiet:
+        if quiet and not quiet_error:
             if e.stderr:
                 log("stderr:\n", e.stderr.strip(), "\n\n")
             if e.stdout:
@@ -245,7 +246,7 @@ def actions_output(name, value):
 
 def get_latest_tag(branch):
     """Get the default 'since' value for a branch"""
-    tags = run(f"git --no-pager tag --sort=-creatordate --merged {branch}")
+    tags = run(f"git --no-pager tag --sort=-creatordate --merged {branch}", quiet=True)
     if tags:
         return tags.splitlines()[0]
 

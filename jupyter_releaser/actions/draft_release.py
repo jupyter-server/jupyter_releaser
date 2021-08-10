@@ -5,10 +5,12 @@ import shutil
 from pathlib import Path
 from subprocess import CalledProcessError
 
+from jupyter_releaser.changelog import extract_current
 from jupyter_releaser.util import CHECKOUT_NAME
 from jupyter_releaser.util import get_latest_tag
 from jupyter_releaser.util import log
 from jupyter_releaser.util import run
+
 
 check_release = os.environ.get("RH_IS_CHECK_RELEASE", "").lower() == "true"
 
@@ -25,9 +27,9 @@ if check_release:
 
     # Re-install jupyter-releaser if it was overshadowed
     try:
-        run("jupyter-releaser --help")
+        run("jupyter-releaser --help", quiet=True, quiet_error=True)
     except CalledProcessError:
-        run("pip install -e .")
+        run("pip install -q -e .")
 
 run("jupyter-releaser prep-git")
 
@@ -36,7 +38,7 @@ run("jupyter-releaser prep-git")
 # Do this before bumping the version
 curr_dir = os.getcwd()
 os.chdir(CHECKOUT_NAME)
-os.environ.setdefault("RH_SINCE", get_latest_tag(os.environ["RH_BRANCH"] or ""))
+os.environ.setdefault("RH_SINCE", get_latest_tag(os.environ["RH_BRANCH"]) or "")
 os.chdir(curr_dir)
 
 run("jupyter-releaser bump-version")
@@ -44,8 +46,8 @@ run("jupyter-releaser bump-version")
 if check_release:
     # Override the changelog
     log("Patching the changelog")
-    log(changelog_text)
     Path(changelog_location).write_text(changelog_text)
+    log(extract_current(changelog_location))
 
 run("jupyter-releaser check-changelog")
 
