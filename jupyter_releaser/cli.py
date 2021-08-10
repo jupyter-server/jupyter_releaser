@@ -100,7 +100,8 @@ class ReleaseHelperGroup(click.Group):
         # Handle after hooks
 
         # Re-read config if we just did a git checkout
-        if cmd_name == "prep-git":
+        if cmd_name in ["prep-git", "extract-release"]:
+            os.chdir(util.CHECKOUT_NAME)
             config = util.read_config()
             hooks = config.get("hooks", {})
 
@@ -456,6 +457,7 @@ def draft_release(
 @main.command()
 @add_options(auth_options)
 @click.argument("release-url", nargs=1)
+@use_checkout_dir()
 def delete_release(auth, release_url):
     """Delete a draft GitHub release by url to the release page"""
     lib.delete_release(auth, release_url)
@@ -487,18 +489,17 @@ def extract_release(auth, dist_dir, dry_run, release_url, npm_install_options):
     envvar="TWINE_COMMAND",
     default="twine upload",
 )
-@click.option("--use-checkout-dir", help="Use the checkout directory", is_flag=True)
 @add_options(dry_run_options)
-def publish_assets(dist_dir, npm_token, npm_cmd, twine_cmd, dry_run, use_checkout_dir):
+@use_checkout_dir()
+def publish_assets(dist_dir, npm_token, npm_cmd, twine_cmd, dry_run):
     """Publish release asset(s)"""
-    lib.publish_assets(
-        dist_dir, npm_token, npm_cmd, twine_cmd, dry_run, use_checkout_dir
-    )
+    lib.publish_assets(dist_dir, npm_token, npm_cmd, twine_cmd, dry_run)
 
 
 @main.command()
 @add_options(auth_options)
 @click.argument("release-url", nargs=1)
+@use_checkout_dir()
 def publish_release(auth, release_url):
     """Publish GitHub release"""
     lib.publish_release(auth, release_url)
@@ -510,14 +511,14 @@ def publish_release(auth, release_url):
 @add_options(username_options)
 @add_options(changelog_path_options)
 @add_options(dry_run_options)
-@add_options(git_url_options)
 @click.argument("release-url")
+@use_checkout_dir()
 def forwardport_changelog(
-    auth, ref, branch, repo, username, changelog_path, dry_run, git_url, release_url
+    auth, ref, branch, repo, username, changelog_path, dry_run, release_url
 ):
     """Forwardport Changelog Entries to the Default Branch"""
     lib.forwardport_changelog(
-        auth, ref, branch, repo, username, changelog_path, dry_run, git_url, release_url
+        auth, ref, branch, repo, username, changelog_path, dry_run, release_url
     )
 
 

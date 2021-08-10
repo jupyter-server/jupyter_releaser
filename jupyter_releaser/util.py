@@ -70,6 +70,7 @@ def _run_win(cmd, **kwargs):
         log(f"> {cmd}")
     else:
         kwargs.setdefault("stderr", PIPE)
+    kwargs.setdefault("shell", True)
 
     parts = shlex.split(cmd)
     if "/" not in parts[0]:

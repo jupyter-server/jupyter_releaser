@@ -140,7 +140,7 @@ You can also define hooks to run before and after
 commands in a `hooks` section. Hooks can be a shell command to run or
 a list of shell commands, and are specified to run `before-` or `after-`
 a command.
-Note: the only invalid hook name is `before-prep-git`, since a checkout of the target repository is not yet available at that point.
+Note: the only unusable hook names are `before-prep-git` and `before-extract-release`, since a checkout of the target repository is not yet available at that point.
 
 ### Configuration File Priority
 
