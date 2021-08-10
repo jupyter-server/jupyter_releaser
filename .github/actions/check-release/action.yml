@@ -35,7 +35,7 @@ runs:
         # Install Jupyter Releaser from git unless we are testing Releaser itself
         if ! command -v jupyter-releaser &> /dev/null
         then
-            pip install git+https://github.com/jupyter-server/jupyter_releaser.git
+            pip install -q git+https://github.com/jupyter-server/jupyter_releaser.git
         fi
 
         export RH_IS_CHECK_RELEASE=true

@@ -35,7 +35,7 @@ def bump_version(version_spec, version_cmd):
 
     # Bail if tag already exists
     tag_name = f"v{version}"
-    if tag_name in util.run("git --no-pager tag").splitlines():
+    if tag_name in util.run("git --no-pager tag", quiet=True).splitlines():
         msg = f"Tag {tag_name} already exists!"
         msg += " To delete run: `git push --delete origin {tag_name}`"
         raise ValueError(msg)
@@ -49,6 +49,7 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
     os.makedirs(cache_dir, exist_ok=True)
     cmd = "pytest --noconftest --check-links --check-links-cache "
     cmd += f"--check-links-cache-expire-after {links_expire} "
+    cmd += "--disable-warnings --quiet "
     cmd += f"--check-links-cache-name {cache_dir}/check-release-links "
 
     ignored = []
@@ -89,7 +90,7 @@ def draft_changelog(version_spec, branch, repo, since, auth, changelog_path, dry
     branch = branch or util.get_branch()
     version = util.get_version()
 
-    tags = util.run("git --no-pager tag")
+    tags = util.run("git --no-pager tag", quiet=True)
     if f"v{version}" in tags.splitlines():
         raise ValueError(f"Tag v{version} already exists")
 
@@ -470,7 +471,7 @@ def prep_git(ref, branch, repo, auth, username, url, install=True):
     ref = ref or ""
 
     # Make sure we have *all* tags
-    util.run("git fetch origin --tags --force")
+    util.run("git fetch origin --tags --force --quiet")
 
     # Handle the ref
     if ref.startswith("refs/pull/"):
@@ -500,7 +501,7 @@ def prep_git(ref, branch, repo, auth, username, url, install=True):
     if install:
         # install python package in editable mode with test deps
         if util.SETUP_PY.exists():
-            util.run('pip install -e ".[test]"')
+            util.run('pip install -q -e ".[test]"')
 
         # prefer yarn if yarn lock exists
         elif util.YARN_LOCK.exists():
@@ -535,7 +536,7 @@ def forwardport_changelog(
     os.chdir(util.CHECKOUT_NAME)
 
     # Bail if the tag has been merged to the branch
-    tags = util.run(f"git --no-pager tag --merged {branch}")
+    tags = util.run(f"git --no-pager tag --merged {branch}", quiet=True)
     if tag in tags.splitlines():
         util.log(f"Skipping since tag is already merged into {branch}")
         return
