@@ -3,14 +3,12 @@
 import json
 import os
 import os.path as osp
-import traceback
 from pathlib import Path
 from urllib.request import OpenerDirector
 
 from click.testing import CliRunner
 from pytest import fixture
 
-from jupyter_releaser import changelog
 from jupyter_releaser import cli
 from jupyter_releaser import util
 from jupyter_releaser.tests import util as testutil

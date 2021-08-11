@@ -106,7 +106,7 @@ def get_branch():
     elif os.environ.get("GITHUB_REF"):
         # GitHub Action Push Event
         # e.g. refs/heads/feature-branch-1
-        branch = os.environ["GITHUB_REF"].split("/")[-1]
+        branch = "/".join(os.environ["GITHUB_REF"].split("/")[2:])
     else:
         branch = run("git branch --show-current")
     return branch

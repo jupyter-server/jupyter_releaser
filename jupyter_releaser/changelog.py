@@ -67,10 +67,9 @@ def get_version_entry(
     """
     since = since or util.get_latest_tag(branch)
 
-    branch = branch.split("/")[-1]
     util.log(f"Getting changes to {repo} since {since} on branch {branch}...")
 
-    until = util.run(f'git --no-pager log -n 1 origin/{branch} --pretty=format:"%H"')
+    until = util.run(f'git --no-pager log -n 1 {branch} --pretty=format:"%H"')
     until = until.replace("%", "")
 
     md = generate_activity_md(
