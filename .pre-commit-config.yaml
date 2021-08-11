@@ -22,3 +22,8 @@ repos:
       - id: check-case-conflict
       - id: check-executables-have-shebangs
       - id: requirements-txt-fixer
+  - repo: https://github.com/pre-commit/mirrors-pylint
+    rev: v3.0.0a3
+    hooks:
+      - id: pylint
+        args: [--disable=all, --enable=unused-import]

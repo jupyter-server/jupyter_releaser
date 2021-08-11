@@ -9,21 +9,12 @@ from glob import glob
 from pathlib import Path
 from subprocess import CalledProcessError
 from unittest.mock import call
-from unittest.mock import MagicMock
-from unittest.mock import patch
-from unittest.mock import PropertyMock
 
 import pytest
-from pytest import fixture
 
 from jupyter_releaser import changelog
-from jupyter_releaser import cli
-from jupyter_releaser import npm
-from jupyter_releaser import python
 from jupyter_releaser import util
 from jupyter_releaser.tests.util import CHANGELOG_ENTRY
-from jupyter_releaser.tests.util import create_npm_package
-from jupyter_releaser.tests.util import create_python_package
 from jupyter_releaser.tests.util import get_log
 from jupyter_releaser.tests.util import HTML_URL
 from jupyter_releaser.tests.util import mock_changelog_entry
@@ -31,7 +22,6 @@ from jupyter_releaser.tests.util import MockHTTPResponse
 from jupyter_releaser.tests.util import MockRequestResponse
 from jupyter_releaser.tests.util import PR_ENTRY
 from jupyter_releaser.tests.util import REPO_DATA
-from jupyter_releaser.tests.util import TOML_CONFIG
 from jupyter_releaser.tests.util import VERSION_SPEC
 from jupyter_releaser.util import bump_version
 from jupyter_releaser.util import normalize_path
@@ -56,6 +46,38 @@ def test_prep_git_pr(py_package, runner):
     result = runner(["prep-git", "--git-url", py_package], env=env)
     os.chdir(util.CHECKOUT_NAME)
     assert util.get_branch() == "foo", util.get_branch()
+
+
+def test_prep_git_tag(py_package, runner):
+    tag = "v0.1"
+    util.run(f"git tag {tag}")
+    result = runner(
+        ["prep-git", "--git-url", py_package],
+        env=dict(GITHUB_ACTIONS="", RH_REF=f"refs/tags/{tag}", RH_BRANCH=tag),
+    )
+
+    log = get_log()
+    assert "before-prep-git" not in log
+    assert "after-prep-git" in log
+
+    os.chdir(util.CHECKOUT_NAME)
+    assert util.get_branch() == tag, util.get_branch()
+
+
+def test_prep_git_slashes(py_package, runner):
+    branch = "a/b/c"
+    util.run(f"git checkout -b {branch} foo")
+    result = runner(
+        ["prep-git", "--git-url", py_package],
+        env=dict(GITHUB_ACTIONS="", RH_REF=f"refs/heads/{branch}", RH_BRANCH=branch),
+    )
+
+    log = get_log()
+    assert "before-prep-git" not in log
+    assert "after-prep-git" in log
+
+    os.chdir(util.CHECKOUT_NAME)
+    assert util.get_branch() == branch, util.get_branch()
 
 
 def test_prep_git_full(py_package, tmp_path, mocker, runner):
@@ -232,6 +254,37 @@ def test_build_changelog_backport(py_package, mocker, runner, open_mock):
     assert changelog.END_MARKER in text
 
     assert "- foo [#50](bar) ([@snuffy](baz))" in text, text
+
+    assert len(re.findall(changelog.START_MARKER, text)) == 1
+    assert len(re.findall(changelog.END_MARKER, text)) == 1
+
+    run("pre-commit run -a")
+
+
+def test_build_changelog_slashes(py_package, mocker, runner, open_mock):
+    branch = "a/b/c"
+    util.run(f"git checkout -b {branch} foo")
+    env = dict(RH_REF=f"refs/heads/{branch}", RH_BRANCH=branch)
+    run("pre-commit run -a")
+
+    changelog_path = "CHANGELOG.md"
+
+    runner(["prep-git", "--git-url", py_package], env=env)
+    runner(["bump-version", "--version-spec", VERSION_SPEC], env=env)
+
+    mocked_gen = mocker.patch("jupyter_releaser.changelog.generate_activity_md")
+    mocked_gen.return_value = CHANGELOG_ENTRY
+    runner(["build-changelog", "--changelog-path", changelog_path], env=env)
+
+    log = get_log()
+    assert "before-build-changelog" in log
+    assert "after-build-changelog" in log
+
+    changelog_path = Path(util.CHECKOUT_NAME) / "CHANGELOG.md"
+    text = changelog_path.read_text(encoding="utf-8")
+    assert changelog.START_MARKER in text
+    assert changelog.END_MARKER in text
+    assert PR_ENTRY in text
 
     assert len(re.findall(changelog.START_MARKER, text)) == 1
     assert len(re.findall(changelog.END_MARKER, text)) == 1
@@ -476,7 +529,7 @@ def test_extract_dist_py(py_package, runner, mocker, open_mock, tmp_path, git_pr
     shutil.move(f"{util.CHECKOUT_NAME}/dist", "staging")
 
     def helper(path, **kwargs):
-        return MockRequestResponse(f"staging/dist/{path}")
+        return MockRequestResponse(f"{py_package}/staging/dist/{path}")
 
     get_mock = mocker.patch("requests.get", side_effect=helper)
 
@@ -519,7 +572,7 @@ def test_extract_dist_npm(npm_dist, runner, mocker, open_mock, tmp_path):
     shutil.move(f"{util.CHECKOUT_NAME}/dist", "staging")
 
     def helper(path, **kwargs):
-        return MockRequestResponse(f"staging/dist/{path}")
+        return MockRequestResponse(f"{npm_dist}/staging/dist/{path}")
 
     get_mock = mocker.patch("requests.get", side_effect=helper)
 
