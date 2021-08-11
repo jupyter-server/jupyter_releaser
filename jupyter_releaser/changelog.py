@@ -41,7 +41,14 @@ def format_pr_entry(target, number, auth=None):
 
 
 def get_version_entry(
-    branch, repo, version, *, since=None, auth=None, resolve_backports=False
+    branch,
+    repo,
+    version,
+    *,
+    since=None,
+    auth=None,
+    resolve_backports=False,
+    remote="origin",
 ):
     """Get a changelog for the changes since the last tag on the given branch.
 
@@ -59,17 +66,25 @@ def get_version_entry(
         The GitHub authorization token
     resolve_backports: bool, optional
         Whether to resolve backports to the original PR
+    remote: str, optional
+        The remote target (default is origin)
 
     Returns
     -------
     str
         A formatted changelog entry with markers
     """
-    since = since or util.get_latest_tag(branch)
+
+    if not since:
+        tags = util.run(
+            f"git --no-pager tag --sort=-creatordate --merged {remote}/{branch}"
+        )
+        if tags:
+            since = tags.splitlines()[0]
 
     util.log(f"Getting changes to {repo} since {since} on branch {branch}...")
 
-    until = util.run(f'git --no-pager log -n 1 {branch} --pretty=format:"%H"')
+    until = util.run(f'git --no-pager log -n 1 {remote}/{branch} --pretty=format:"%H"')
     until = until.replace("%", "")
 
     md = generate_activity_md(
@@ -139,7 +154,7 @@ def build_entry(branch, repo, auth, changelog_path, since, resolve_backports):
 
     # Get changelog entry
     entry = get_version_entry(
-        f"origin/{branch}",
+        branch,
         repo,
         version,
         since=since,
@@ -211,7 +226,7 @@ def check_entry(branch, repo, auth, changelog_path, since, resolve_backports, ou
     repo = repo or util.get_repo()
 
     raw_entry = get_version_entry(
-        f"origin/{branch}",
+        branch,
         repo,
         version,
         since=since,
