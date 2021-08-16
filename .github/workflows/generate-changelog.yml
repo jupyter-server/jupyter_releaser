@@ -1,0 +1,61 @@
+name: Generate Changelog
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Target Owner/Repo
+        required: true
+      branch:
+        description: The branch or reference name to filter pull requests by
+        required: false
+      convert_to_rst:
+        description: Whether to convert to RST
+        required: false
+      since:
+        description: Use PRs with activity since this date or git reference
+        required: false
+      until:
+        description: Use PRs with activity until this date or git reference
+        required: false
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu]
+        python-version: ["3.9"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Install Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: "x64"
+      - name: Upgrade packaging dependencies
+        run: |
+          pip install --upgrade pip setuptools wheel --user
+      - name: Install the Python dependencies
+        run: |
+          sudo apt-get install pandoc
+          pip install pypandoc
+          pip install -e .
+      - name: List installed packages
+        run: |
+          pip freeze
+          pip check
+      - name: Generate the Changelog
+        env:
+          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          export INPUT_BRANCH=${{ github.event.inputs.branch }}
+          export INPUT_SINCE=${{ github.event.inputs.since }}
+          export INPUT_UNTIL=${{ github.event.inputs.until }}
+          export INPUT_CONVERT_TO_RST=${{ github.event.inputs.convert_to_rst }}
+          python -m jupyter_releaser.actions.generate-changelog ${{ github.event.inputs.target }}
+          cat changelog.md
+      - uses: actions/upload-artifact@v2
+        with:
+          name: changelog
+          path: changelog.md
