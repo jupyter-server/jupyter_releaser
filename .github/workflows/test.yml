@@ -120,6 +120,7 @@ jobs:
         run: |
           pytest -vv -s
       - name: Verify the Generate Changelog Action
+        if: ${{ matrix.os == 'ubuntu' }}
         env:
           GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TARGET: https://github.com/jupyter-server/jupyter_releaser
