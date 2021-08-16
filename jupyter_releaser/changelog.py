@@ -46,6 +46,7 @@ def get_version_entry(
     version,
     *,
     since=None,
+    until=None,
     auth=None,
     resolve_backports=False,
     remote="origin",
@@ -62,6 +63,8 @@ def get_version_entry(
         The new version
     since: str
         Use PRs with activity since this date or git reference
+    until: str, option
+        Use PRs until this date or git reference
     auth : str, optional
         The GitHub authorization token
     resolve_backports: bool, optional
@@ -84,7 +87,9 @@ def get_version_entry(
 
     util.log(f"Getting changes to {repo} since {since} on branch {branch}...")
 
-    until = util.run(f'git --no-pager log -n 1 {remote}/{branch} --pretty=format:"%H"')
+    until = until or util.run(
+        f'git --no-pager log -n 1 {remote}/{branch} --pretty=format:"%H"'
+    )
     until = until.replace("%", "")
 
     md = generate_activity_md(

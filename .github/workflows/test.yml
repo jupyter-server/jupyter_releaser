@@ -119,6 +119,16 @@ jobs:
         if: ${{ matrix.os != 'ubuntu' }}
         run: |
           pytest -vv -s
+      - name: Verify the Generate Changelog Action
+        env:
+          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TARGET: https://github.com/jupyter-server/jupyter_releaser
+          INPUT_BRANCH: master
+          INPUT_SINCE: v0.3.0
+          INPUT_UNTIL: v0.4.0
+        run: |
+          python -m jupyter_releaser.actions.generate-changelog ${{ env.TARGET }}
+          cat changelog.md
       - name: Coverage
         run: |
           codecov
