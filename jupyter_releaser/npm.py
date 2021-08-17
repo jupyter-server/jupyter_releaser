@@ -101,7 +101,7 @@ def check_dist(dist_dir, install_options):
     tmp_dir = Path(TemporaryDirectory().name)
     os.makedirs(tmp_dir)
 
-    util.run("npm init -y", cwd=tmp_dir)
+    util.run("npm init -y", cwd=tmp_dir, quiet=True)
     names = []
     staging = tmp_dir / "staging"
 
@@ -109,7 +109,7 @@ def check_dist(dist_dir, install_options):
 
     install_str = " ".join(f"./staging/{name}" for name in names)
 
-    util.run(f"npm install {install_options} {install_str}", cwd=tmp_dir)
+    util.run(f"npm install {install_options} {install_str}", cwd=tmp_dir, quiet=True)
 
     shutil.rmtree(str(tmp_dir), ignore_errors=True)
 
