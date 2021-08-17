@@ -372,7 +372,7 @@ def publish_assets(dist_dir, npm_token, npm_cmd, twine_cmd, dry_run):
         name = Path(path).name
         suffix = Path(path).suffix
         if suffix in [".gz", ".whl"]:
-            util.run(f"{twine_cmd} {name}", cwd=dist_dir)
+            util.retry(f"{twine_cmd} {name}", cwd=dist_dir)
             found = True
         elif suffix == ".tgz":
             # Ignore already published versions

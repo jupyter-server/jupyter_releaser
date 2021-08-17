@@ -10,6 +10,7 @@ import re
 import shlex
 import shutil
 import sys
+import time
 from glob import glob
 from pathlib import Path
 from subprocess import CalledProcessError
@@ -250,6 +251,18 @@ def get_latest_tag(branch):
     tags = run(f"git --no-pager tag --sort=-creatordate --merged {branch}", quiet=True)
     if tags:
         return tags.splitlines()[0]
+
+
+def retry(cmd, **kwargs):
+    """Run a command with retries"""
+    attempt = 0
+    while attempt < 3:
+        time.sleep(attempt)
+        try:
+            run(cmd, **kwargs)
+            return
+        except Exception:
+            attempt += 1
 
 
 def read_config():
