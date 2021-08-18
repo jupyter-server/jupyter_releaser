@@ -4,7 +4,7 @@
 
 ## 0.4.4
 
-([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...b93c650200b20bc6783ec64828f22f147f7b0000))
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...1d37638e62a2300bab78d39bf33897dfc5af7c81))
 
 ### Enhancements made
 
@@ -12,11 +12,14 @@
 
 ### Bugs fixed
 
+- Fix handling of "since" parameter [#110](https://github.com/jupyter-server/jupyter_releaser/pull/110) ([@fcollonval](https://github.com/fcollonval))
 - More Cleanup [#107](https://github.com/jupyter-server/jupyter_releaser/pull/107) ([@blink1073](https://github.com/blink1073))
 
 ### Maintenance and upkeep improvements
 
 - More Cleanup [#108](https://github.com/jupyter-server/jupyter_releaser/pull/108) ([@fcollonval](https://github.com/fcollonval))
+
+### Documentation improvements
 
 ### Contributors to this release
 
