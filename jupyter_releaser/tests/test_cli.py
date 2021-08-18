@@ -647,8 +647,6 @@ def test_publish_assets_npm(npm_dist, runner, mocker):
     runner(
         [
             "publish-assets",
-            "--npm-token",
-            "abc",
             "--npm-cmd",
             "npm publish --dry-run",
             "--dist-dir",

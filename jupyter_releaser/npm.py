@@ -134,6 +134,7 @@ def handle_npm_config(npm_token, dist_dir):
         text += f"\n{registry}:_authToken={npm_token}"
     if npmrc.exists():
         text = npmrc.read_text(encoding="utf-8") + text
+    util.log(f"writing npm config to {npmrc}:\n{text}")
     npmrc.write_text(text, encoding="utf-8")
 
 
