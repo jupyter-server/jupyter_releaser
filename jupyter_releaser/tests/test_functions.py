@@ -1,12 +1,14 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 import json
+import os
 import shutil
 from pathlib import Path
 
 import toml
 
 from jupyter_releaser import changelog
+from jupyter_releaser import npm
 from jupyter_releaser import util
 from jupyter_releaser.tests import util as testutil
 from jupyter_releaser.util import run
@@ -106,6 +108,12 @@ def test_create_release_commit_hybrid(py_package, build_mock):
     shas = util.create_release_commit(version)
     assert len(shas) == 2
     assert util.normalize_path("dist/foo-0.0.2a0.tar.gz") in shas
+
+
+def test_handle_npm_config(npm_package):
+    npm.handle_npm_config("abc", os.getcwd())
+    text = Path(".npmrc").read_text(encoding="utf-8")
+    assert "_authToken=abc" in text
 
 
 def test_bump_version(py_package):
