@@ -2,6 +2,30 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.4.4
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...b93c650200b20bc6783ec64828f22f147f7b0000))
+
+### Enhancements made
+
+- Add Generate Changelog Workflow [#106](https://github.com/jupyter-server/jupyter_releaser/pull/106) ([@fcollonval](https://github.com/fcollonval))
+
+### Bugs fixed
+
+- More Cleanup [#107](https://github.com/jupyter-server/jupyter_releaser/pull/107) ([@blink1073](https://github.com/blink1073))
+
+### Maintenance and upkeep improvements
+
+- More Cleanup [#108](https://github.com/jupyter-server/jupyter_releaser/pull/108) ([@fcollonval](https://github.com/fcollonval))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-08-11&to=2021-08-18&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-08-11..2021-08-18&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2021-08-11..2021-08-18&type=Issues) | [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2021-08-11..2021-08-18&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.4.3
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...80cf2677aa447988605d3bb84999856ba5ed685d))
@@ -15,8 +39,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-08-11&to=2021-08-11&type=c))
 
 [@afshin](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Aafshin+updated%3A2021-08-11..2021-08-11&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.4.2
 
