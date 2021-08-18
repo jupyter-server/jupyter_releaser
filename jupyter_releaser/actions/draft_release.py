@@ -33,8 +33,7 @@ if check_release:
 
 run("jupyter-releaser prep-git")
 
-# Capture the "since" argument in case we add tags before the second
-# "Check Changelog"
+# Capture the "since" argument in case we add tags befor checking changelog
 # Do this before bumping the version
 if not os.environ.get("RH_SINCE"):
     curr_dir = os.getcwd()
