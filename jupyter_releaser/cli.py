@@ -403,14 +403,26 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
 @main.command()
 @add_options(dist_dir_options)
 @click.option(
+    "--release-message",
+    envvar="RH_RELEASE_MESSAGE",
+    default="Publish {version}",
+    help="The message to use for the release commit",
+)
+@click.option(
+    "--tag-message",
+    envvar="RH_TAG_MESSAGE",
+    default="Release {tag_name}",
+    help="The message to use for the release tag",
+)
+@click.option(
     "--no-git-tag-workspace",
     is_flag=True,
     help="Whether to skip tagging npm workspace packages",
 )
 @use_checkout_dir()
-def tag_release(dist_dir, no_git_tag_workspace):
+def tag_release(dist_dir, release_message, tag_message, no_git_tag_workspace):
     """Create release commit and tag"""
-    lib.tag_release(dist_dir, no_git_tag_workspace)
+    lib.tag_release(dist_dir, release_message, tag_message, no_git_tag_workspace)
 
 
 @main.command()
@@ -425,6 +437,12 @@ def tag_release(dist_dir, no_git_tag_workspace):
     envvar="RH_POST_VERSION_SPEC",
     help="The post release version (usually dev)",
 )
+@click.option(
+    "--post-version-message",
+    default="Bumped version to {post_version}",
+    envvar="RH_POST_VERSION_MESSAGE",
+    help="The post release message",
+)
 @click.argument("assets", nargs=-1)
 @use_checkout_dir()
 def draft_release(
@@ -437,6 +455,7 @@ def draft_release(
     dist_dir,
     dry_run,
     post_version_spec,
+    post_version_message,
     assets,
 ):
     """Publish Draft GitHub release"""
@@ -450,6 +469,7 @@ def draft_release(
         dist_dir,
         dry_run,
         post_version_spec,
+        post_version_message,
         assets,
     )
 

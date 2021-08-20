@@ -169,19 +169,20 @@ def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=F
     util.actions_output("pr_url", pull.html_url)
 
 
-def tag_release(dist_dir, no_git_tag_workspace):
+def tag_release(dist_dir, release_message, tag_message, no_git_tag_workspace):
     """Create release commit and tag"""
     # Get the new version
     version = util.get_version()
 
     # Create the release commit
-    util.create_release_commit(version, dist_dir)
+    util.create_release_commit(version, release_message, dist_dir)
 
     # Create the annotated release tag
     tag_name = f"v{version}"
-    util.run(f'git tag {tag_name} -a -m "Release {tag_name}"')
+    tag_message = tag_message.format(tag_name=tag_name)
+    util.run(f'git tag {tag_name} -a -m "{tag_message}"')
 
-    # Create annotated release tags for workspace packages if given
+    # Create release tags for workspace packages if given
     if not no_git_tag_workspace:
         npm.tag_workspace_packages()
 
@@ -196,6 +197,7 @@ def draft_release(
     dist_dir,
     dry_run,
     post_version_spec,
+    post_version_message,
     assets,
 ):
     """Publish Draft GitHub release and handle post version bump"""
@@ -209,8 +211,7 @@ def draft_release(
     # Bump to post version if given
     if post_version_spec:
         post_version = bump_version(post_version_spec, version_cmd)
-
-        util.log(f"Bumped version to {post_version}")
+        util.log(post_version_message.format(post_version=post_version))
         util.run(f'git commit -a -m "Bump to {post_version}"')
 
     if dry_run:
