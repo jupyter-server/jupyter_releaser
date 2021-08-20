@@ -161,9 +161,11 @@ def compute_sha256(path):
     return sha256.hexdigest()
 
 
-def create_release_commit(version, dist_dir="dist"):
+def create_release_commit(version, release_message=None, dist_dir="dist"):
     """Generate a release commit that has the sha256 digests for the release files"""
-    cmd = f'git commit -am "Publish {version}" -m "SHA256 hashes:"'
+    release_message = release_message or "Publish {version}"
+    release_message = release_message.format(version=version)
+    cmd = f'git commit -am "{release_message}" -m "SHA256 hashes:"'
 
     shas = dict()
 

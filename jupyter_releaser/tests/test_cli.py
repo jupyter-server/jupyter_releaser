@@ -159,11 +159,14 @@ npm-cmd: RH_NPM_COMMAND
 npm-install-options: RH_NPM_INSTALL_OPTIONS
 npm-token: NPM_TOKEN
 output: RH_CHANGELOG_OUTPUT
+post-version-message: RH_POST_VERSION_MESSAGE
 post-version-spec: RH_POST_VERSION_SPEC
 ref: RH_REF
+release-message: RH_RELEASE_MESSAGE
 repo: RH_REPOSITORY
 resolve-backports: RH_RESOLVE_BACKPORTS
 since: RH_SINCE
+tag-message: RH_TAG_MESSAGE
 twine-cmd: TWINE_COMMAND
 username: GITHUB_ACTOR
 version-cmd: RH_VERSION_COMMAND
@@ -441,7 +444,15 @@ def test_tag_release(py_package, runner, build_mock, git_prep):
     # Create the dist files
     util.run("python -m build .", cwd=util.CHECKOUT_NAME)
     # Tag the release
-    runner(["tag-release"])
+    runner(
+        [
+            "tag-release",
+            "--release-message",
+            "hi {version}",
+            "--tag-message",
+            "no thanks",
+        ]
+    )
 
     log = get_log()
     assert "before-tag-release" in log
@@ -450,7 +461,16 @@ def test_tag_release(py_package, runner, build_mock, git_prep):
 
 def test_draft_release_dry_run(py_dist, mocker, runner, open_mock, git_prep):
     # Publish the release - dry run
-    runner(["draft-release", "--dry-run", "--post-version-spec", "1.1.0.dev0"])
+    runner(
+        [
+            "draft-release",
+            "--dry-run",
+            "--post-version-spec",
+            "1.1.0.dev0",
+            "--post-version-message",
+            "haha",
+        ]
+    )
     open_mock.assert_not_called()
 
     log = get_log()
