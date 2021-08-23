@@ -298,13 +298,19 @@ def extract_release(auth, dist_dir, dry_run, release_url, npm_install_options):
             with open(path, "wb") as f:
                 for chunk in r.iter_content(chunk_size=8192):
                     f.write(chunk)
-            suffix = Path(asset.name).suffix
-            if suffix in [".gz", ".whl"]:
-                python.check_dist(path)
-            elif suffix == ".tgz":
-                npm.check_dist(path, npm_install_options)
-            else:
-                util.log(f"Nothing to check for {asset.name}")
+
+    # Check all npm packages
+    npm.check_dist(dist, npm_install_options)
+
+    # Check python packages individually
+    for asset in assets:
+        suffix = Path(asset.name).suffix
+        if suffix in [".gz", ".whl"]:
+            python.check_dist(path)
+        elif suffix == ".tgz":
+            pass  # already handled
+        else:
+            util.log(f"Nothing to check for {asset.name}")
 
     # Skip sha validation for dry runs since the remote tag will not exist
     if dry_run:

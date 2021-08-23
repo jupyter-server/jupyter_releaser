@@ -41,7 +41,15 @@ def format_pr_entry(target, number, auth=None):
 
 
 def get_version_entry(
-    branch, repo, version, *, since=None, until=None, auth=None, resolve_backports=False
+    ref,
+    branch,
+    repo,
+    version,
+    *,
+    since=None,
+    until=None,
+    auth=None,
+    resolve_backports=False,
 ):
     """Get a changelog for the changes since the last tag on the given branch.
 
@@ -49,7 +57,9 @@ def get_version_entry(
     ----------
     branch : str
         The target branch
-    respo : str
+    ref: str
+        The source reference
+    repo : str
         The GitHub owner/repo
     version : str
         The new version
@@ -68,22 +78,22 @@ def get_version_entry(
         A formatted changelog entry with markers
     """
 
-    if not since:
+    if since:
         tags = util.run(
-            f"git --no-pager tag --sort=-creatordate --merged {branch}", quiet=True
+            f"git --no-pager tag --sort=-creatordate --merged {ref}", quiet=True
         )
         if tags:
             since = tags.splitlines()[0]
 
     util.log(f"Getting changes to {repo} since {since} on branch {branch}...")
 
-    until = until or util.run(f'git --no-pager log -n 1 {branch} --pretty=format:"%H"')
-
-    until = until.replace("%", "")
+    if until:
+        until = until.replace("%", "")
 
     md = generate_activity_md(
         repo,
         since=since,
+        until=until,
         kind="pr",
         heading_level=2,
         auth=auth,
@@ -129,7 +139,7 @@ def get_version_entry(
     return output
 
 
-def build_entry(branch, repo, auth, changelog_path, since, resolve_backports):
+def build_entry(ref, branch, repo, auth, changelog_path, since, resolve_backports):
     """Build a python version entry"""
     branch = branch or util.get_branch()
     repo = repo or util.get_repo()
@@ -148,6 +158,7 @@ def build_entry(branch, repo, auth, changelog_path, since, resolve_backports):
 
     # Get changelog entry
     entry = get_version_entry(
+        ref,
         branch,
         repo,
         version,
@@ -196,7 +207,9 @@ def format(changelog):
     return re.sub(r"\n\n+$", r"\n", changelog)
 
 
-def check_entry(branch, repo, auth, changelog_path, since, resolve_backports, output):
+def check_entry(
+    ref, branch, repo, auth, changelog_path, since, resolve_backports, output
+):
     """Check changelog entry"""
     branch = branch or util.get_branch()
 
@@ -220,6 +233,7 @@ def check_entry(branch, repo, auth, changelog_path, since, resolve_backports, ou
     repo = repo or util.get_repo()
 
     raw_entry = get_version_entry(
+        ref,
         branch,
         repo,
         version,

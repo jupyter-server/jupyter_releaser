@@ -49,13 +49,15 @@ jobs:
         env:
           GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          export INPUT_BRANCH=${{ github.event.inputs.branch }}
-          export INPUT_SINCE=${{ github.event.inputs.since }}
+          export RH_BRANCH=${{ github.event.inputs.branch }}
+          export RH_SINCE=${{ github.event.inputs.since }}
+          export RH_REF=refs/heads/${RH_BRANCH}
+          export RH_REPOSITORY=${{ github.event.inputs.target }}
           export INPUT_UNTIL=${{ github.event.inputs.until }}
           export INPUT_CONVERT_TO_RST=${{ github.event.inputs.convert_to_rst }}
-          python -m jupyter_releaser.actions.generate-changelog ${{ github.event.inputs.target }}
-          cat changelog.md
+          python -m jupyter_releaser.actions.generate-changelog
+          cat CHANGELOG_ENTRY.md
       - uses: actions/upload-artifact@v2
         with:
           name: changelog
-          path: changelog.md
+          path: CHANGELOG_ENTRY.md
