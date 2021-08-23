@@ -2,6 +2,30 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.4.6
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...070589d4661c6d6115e84d44d239eee8a780c30f))
+
+### Enhancements made
+
+- Allow to set commit message [#115](https://github.com/jupyter-server/jupyter_releaser/pull/115) ([@fcollonval](https://github.com/fcollonval))
+
+### Bugs fixed
+
+- Cleanup [#116](https://github.com/jupyter-server/jupyter_releaser/pull/116) ([@fcollonval](https://github.com/fcollonval))
+
+### Maintenance and upkeep improvements
+
+- Fix branch name used in CI [#114](https://github.com/jupyter-server/jupyter_releaser/pull/114) ([@afshin](https://github.com/afshin))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-08-18&to=2021-08-23&type=c))
+
+[@afshin](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Aafshin+updated%3A2021-08-18..2021-08-23&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2021-08-18..2021-08-23&type=Issues) | [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2021-08-18..2021-08-23&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.4.5
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...cb86e29f8b042bf0d16a6c7dcfdd4c6fc267937c))
@@ -15,8 +39,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-08-18&to=2021-08-18&type=c))
 
 [@afshin](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Aafshin+updated%3A2021-08-18..2021-08-18&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.4.4
 
