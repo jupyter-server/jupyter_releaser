@@ -4,7 +4,7 @@
 
 ## 0.4.6
 
-([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...070589d4661c6d6115e84d44d239eee8a780c30f))
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...6758413e8cc4c5dc4d68b0c3c758b412735cd753))
 
 ### Enhancements made
 
@@ -12,17 +12,20 @@
 
 ### Bugs fixed
 
+- Restore capture of since parameter [#118](https://github.com/jupyter-server/jupyter_releaser/pull/118) ([@fcollonval](https://github.com/fcollonval))
 - Cleanup [#116](https://github.com/jupyter-server/jupyter_releaser/pull/116) ([@fcollonval](https://github.com/fcollonval))
 
 ### Maintenance and upkeep improvements
 
 - Fix branch name used in CI [#114](https://github.com/jupyter-server/jupyter_releaser/pull/114) ([@afshin](https://github.com/afshin))
 
+### Documentation improvements
+
 ### Contributors to this release
 
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-08-18&to=2021-08-23&type=c))
 
-[@afshin](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Aafshin+updated%3A2021-08-18..2021-08-23&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2021-08-18..2021-08-23&type=Issues) | [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2021-08-18..2021-08-23&type=Issues)
+[@afshin](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Aafshin+updated%3A2021-08-18..2021-08-23&type=Issues) | [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-08-18..2021-08-23&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2021-08-18..2021-08-23&type=Issues) | [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2021-08-18..2021-08-23&type=Issues)
 
 <!-- <END NEW CHANGELOG ENTRY> -->
 
