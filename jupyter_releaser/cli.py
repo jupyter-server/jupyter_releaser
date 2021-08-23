@@ -278,7 +278,9 @@ def bump_version(version_spec, version_cmd):
 @use_checkout_dir()
 def build_changelog(ref, branch, repo, auth, changelog_path, since, resolve_backports):
     """Build changelog entry"""
-    changelog.build_entry(branch, repo, auth, changelog_path, since, resolve_backports)
+    changelog.build_entry(
+        ref, branch, repo, auth, changelog_path, since, resolve_backports
+    )
 
 
 @main.command()
@@ -309,7 +311,7 @@ def check_changelog(
 ):
     """Check changelog entry"""
     changelog.check_entry(
-        branch, repo, auth, changelog_path, since, resolve_backports, output
+        ref, branch, repo, auth, changelog_path, since, resolve_backports, output
     )
 
 
