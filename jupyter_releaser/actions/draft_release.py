@@ -7,6 +7,7 @@ from subprocess import CalledProcessError
 
 from jupyter_releaser.changelog import extract_current
 from jupyter_releaser.util import CHECKOUT_NAME
+from jupyter_releaser.util import get_latest_tag
 from jupyter_releaser.util import log
 from jupyter_releaser.util import run
 
@@ -31,6 +32,18 @@ if check_release:
         run("pip install -q -e .")
 
 run("jupyter-releaser prep-git")
+
+# Capture the "since" argument in case we add tags befor checking changelog
+# Do this before bumping the version
+if not os.environ.get("RH_SINCE"):
+    curr_dir = os.getcwd()
+    os.chdir(CHECKOUT_NAME)
+    since = get_latest_tag(os.environ["RH_BRANCH"]) or ""
+    if since:
+        log(f"Capturing {since} in RH_SINCE variable")
+        os.environ["RH_SINCE"] = since
+    os.chdir(curr_dir)
+
 run("jupyter-releaser bump-version")
 
 if check_release:
