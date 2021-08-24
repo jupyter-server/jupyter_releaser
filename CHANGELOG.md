@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.4.7
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...91e63d950ec8accad6066adece1fabb8741d6749))
+
+### Bugs fixed
+
+- Fix usage of since parameter [#120](https://github.com/jupyter-server/jupyter_releaser/pull/120) ([@fcollonval](https://github.com/fcollonval))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-08-23&to=2021-08-24&type=c))
+
+[@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2021-08-23..2021-08-24&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.4.6
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...6758413e8cc4c5dc4d68b0c3c758b412735cd753))
@@ -26,8 +42,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-08-18&to=2021-08-23&type=c))
 
 [@afshin](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Aafshin+updated%3A2021-08-18..2021-08-23&type=Issues) | [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-08-18..2021-08-23&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2021-08-18..2021-08-23&type=Issues) | [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2021-08-18..2021-08-23&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.4.5
 
