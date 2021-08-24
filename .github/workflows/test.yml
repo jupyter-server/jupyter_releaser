@@ -125,7 +125,7 @@ jobs:
           GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RH_REPOSITORY: jupyter-server/jupyter_releaser
           RH_BRANCH: master
-          RU_SINCE: v0.3.0
+          RH_SINCE: v0.3.0
           INPUT_UNTIL: v0.4.0
         run: |
           set -eux
@@ -133,7 +133,7 @@ jobs:
           cat CHANGELOG_ENTRY.md
           # Check for version entry in between the two versions and one outside
           cat CHANGELOG_ENTRY.md | grep -q "#95"
-          cat CHANGELOG_ENTRY.md | grep -q "compare/0.3.3...v0.4.0"
+          cat CHANGELOG_ENTRY.md | grep -q "compare/v0.3.0...v0.4.0"
       - name: Coverage
         run: |
           codecov
