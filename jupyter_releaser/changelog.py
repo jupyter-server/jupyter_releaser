@@ -78,9 +78,10 @@ def get_version_entry(
         A formatted changelog entry with markers
     """
 
-    if since:
+    if not since:
+        source = ref or branch
         tags = util.run(
-            f"git --no-pager tag --sort=-creatordate --merged {ref}", quiet=True
+            f"git --no-pager tag --sort=-creatordate --merged {source}", quiet=True
         )
         if tags:
             since = tags.splitlines()[0]
