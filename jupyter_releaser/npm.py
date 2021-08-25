@@ -123,17 +123,27 @@ def extract_package(path):
     return data
 
 
-def handle_npm_config(npm_token, dist_dir):
+def handle_npm_config(npm_token):
     """Handle npm_config"""
-    npmrc = Path(dist_dir) / Path(".npmrc")
+    npmrc = Path("~/.npmrc").expanduser()
     registry = os.environ.get("NPM_REGISTRY", "https://registry.npmjs.org/")
-    text = f"registry={registry}"
+    reg_entry = text = f"registry={registry}"
+    auth_entry = ""
     if npm_token:
-        registry = registry.replace("https:", "")
-        registry = registry.replace("http:", "")
-        text += f"\n{registry}:_authToken={npm_token}"
+        short_reg = registry.replace("https://", "//")
+        short_reg = short_reg.replace("http://", "//")
+        auth_entry = f"{short_reg}:_authToken={npm_token}"
+
+    # Handle existing config
     if npmrc.exists():
-        text = npmrc.read_text(encoding="utf-8") + text
+        text = npmrc.read_text(encoding="utf-8")
+        if reg_entry in text:
+            reg_entry = ""
+        if auth_entry in text:
+            auth_entry = ""
+
+    text += f"\n{reg_entry}\n{auth_entry}"
+    text = text.strip() + "\n"
     util.log(f"writing npm config to {npmrc}:\n{text}")
     npmrc.write_text(text, encoding="utf-8")
 

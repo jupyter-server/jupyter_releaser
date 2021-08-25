@@ -1,7 +1,6 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 import json
-import os
 import shutil
 from pathlib import Path
 
@@ -121,9 +120,16 @@ def test_create_release_commit_hybrid(py_package, build_mock):
 
 
 def test_handle_npm_config(npm_package):
-    npm.handle_npm_config("abc", os.getcwd())
-    text = Path(".npmrc").read_text(encoding="utf-8")
+    npmrc = Path("~/.npmrc").expanduser()
+    existed = npmrc.exists()
+    if existed:
+        npmrc_text = npmrc.read_text(encoding="utf-8")
+    npm.handle_npm_config("abc")
+    text = npmrc.read_text(encoding="utf-8")
     assert "_authToken=abc" in text
+
+    if existed:
+        npmrc.write_text(npmrc_text, encoding="utf-8")
 
 
 def test_bump_version(py_package):
