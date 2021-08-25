@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.5.0
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...a554583cff280384b701379772770907d08cd8f4))
+
+### Bugs fixed
+
+- Fix Extract Release Config and Npm Config Handling [#122](https://github.com/jupyter-server/jupyter_releaser/pull/122) ([@fcollonval](https://github.com/fcollonval))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-08-24&to=2021-08-25&type=c))
+
+[@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2021-08-24..2021-08-25&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.4.7
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...91e63d950ec8accad6066adece1fabb8741d6749))
@@ -15,8 +31,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-08-23&to=2021-08-24&type=c))
 
 [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2021-08-23..2021-08-24&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.4.6
 
