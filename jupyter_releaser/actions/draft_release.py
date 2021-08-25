@@ -63,6 +63,10 @@ run("jupyter-releaser check-python")
 run("jupyter-releaser check-manifest")
 run("jupyter-releaser check-links")
 run("jupyter-releaser tag-release")
+
 # Run check changelog again to make sure no new PRs have been merged
-run("jupyter-releaser check-changelog")
+# Skip if this is a check_release job
+if not check_release:
+    run("jupyter-releaser check-changelog")
+
 run("jupyter-releaser draft-release")
