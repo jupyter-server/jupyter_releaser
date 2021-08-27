@@ -126,7 +126,7 @@ jobs:
           RH_REPOSITORY: jupyter-server/jupyter_releaser
           RH_BRANCH: master
           RH_SINCE: v0.3.0
-          INPUT_UNTIL: v0.4.0
+          RH_UNTIL: v0.4.0
         run: |
           set -eux
           python -m jupyter_releaser.actions.generate-changelog
@@ -134,6 +134,14 @@ jobs:
           # Check for version entry in between the two versions and one outside
           cat CHANGELOG_ENTRY.md | grep -q "#95"
           cat CHANGELOG_ENTRY.md | grep -q "compare/v0.3.0...v0.4.0"
+          # make sure it works with different settings
+          export RH_SINCE=
+          export RH_UNTIL=
+          export RH_CONVERT_TO_RST=true
+          sudo apt-get install pandoc
+          pip install pypandoc
+          python -m jupyter_releaser.actions.generate-changelog
+          cat CHANGELOG_ENTRY.md
       - name: Coverage
         run: |
           codecov

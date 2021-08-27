@@ -7,7 +7,7 @@ on:
         required: true
       branch:
         description: The branch or reference name to filter pull requests by
-        required: false
+        required: true
       convert_to_rst:
         description: Whether to convert to RST
         required: false
@@ -53,8 +53,8 @@ jobs:
           export RH_SINCE=${{ github.event.inputs.since }}
           export RH_REF=refs/heads/${RH_BRANCH}
           export RH_REPOSITORY=${{ github.event.inputs.target }}
-          export INPUT_UNTIL=${{ github.event.inputs.until }}
-          export INPUT_CONVERT_TO_RST=${{ github.event.inputs.convert_to_rst }}
+          export RH_UNTIL=${{ github.event.inputs.until }}
+          export RH_CONVERT_TO_RST=${{ github.event.inputs.convert_to_rst }}
           python -m jupyter_releaser.actions.generate-changelog
           cat CHANGELOG_ENTRY.md
       - uses: actions/upload-artifact@v2
