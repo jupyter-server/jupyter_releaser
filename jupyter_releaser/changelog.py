@@ -65,7 +65,7 @@ def get_version_entry(
         The new version
     since: str
         Use PRs with activity since this date or git reference
-    until: str, option
+    until: str, optional
         Use PRs until this date or git reference
     auth : str, optional
         The GitHub authorization token
@@ -90,6 +90,8 @@ def get_version_entry(
 
     if until:
         until = until.replace("%", "")
+    else:
+        until = None
 
     md = generate_activity_md(
         repo,
