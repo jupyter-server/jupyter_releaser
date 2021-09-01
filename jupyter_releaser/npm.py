@@ -23,10 +23,8 @@ def build_dist(package, dist_dir):
         os.remove(pkg)
 
     if osp.isdir(package):
-        basedir = package
         tarball = osp.join(package, util.run("npm pack", cwd=package).split("\n")[-1])
     else:
-        basedir = osp.dirname(package)
         tarball = package
 
     data = extract_package(tarball)
@@ -41,22 +39,15 @@ def build_dist(package, dist_dir):
         return
 
     if "workspaces" in data:
-        all_data = dict()
+        paths = []
         for path in _get_workspace_packages(data):
             package_json = path / "package.json"
             data = json.loads(package_json.read_text(encoding="utf-8"))
             if data.get("private", False):
                 continue
-            data["__path__"] = path
-            all_data[data["name"]] = data
+            paths.append(str(osp.abspath(path)).replace(os.sep, "/"))
 
-        i = 0
-        for (name, data) in sorted(all_data.items()):
-            i += 1
-            path = data["__path__"]
-            util.log(f'({i}/{len(all_data)}) Packing {data["name"]}...')
-            tarball = path / util.run("npm pack", cwd=path, quiet=True)
-            shutil.move(str(tarball), str(dest))
+        util.run(f"npm pack {' '.join(paths)}", cwd=dest, quiet=True)
 
 
 def extract_dist(dist_dir, target):
@@ -171,7 +162,7 @@ def tag_workspace_packages():
         return
 
     data = json.loads(PACKAGE_JSON.read_text(encoding="utf-8"))
-    tags = util.run("git tag").splitlines()
+    tags = util.run("git tag", quiet=True).splitlines()
     if "workspaces" not in data:
         return
 
