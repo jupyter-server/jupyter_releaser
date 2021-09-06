@@ -240,7 +240,7 @@ def draft_release(
     release = gh.create_release(
         f"v{version}",
         branch,
-        f"Release v{version}",
+        f"v{version}",
         body,
         True,
         prerelease,
