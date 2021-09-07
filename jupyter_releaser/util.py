@@ -18,10 +18,12 @@ from subprocess import check_output
 from subprocess import PIPE
 
 import toml
+from jsonschema import Draft4Validator as Validator
 from pkg_resources import parse_version
 
 from jupyter_releaser.tee import run as tee
 
+HERE = osp.dirname(osp.abspath(__file__))
 PYPROJECT = Path("pyproject.toml")
 SETUP_PY = Path("setup.py")
 SETUP_CFG = Path("setup.cfg")
@@ -269,18 +271,21 @@ def retry(cmd, **kwargs):
 
 def read_config():
     """Read the jupyter-releaser config data"""
+    config = {}
     if JUPYTER_RELEASER_CONFIG.exists():
-        return toml.loads(JUPYTER_RELEASER_CONFIG.read_text(encoding="utf-8"))
+        config = toml.loads(JUPYTER_RELEASER_CONFIG.read_text(encoding="utf-8"))
 
-    if PYPROJECT.exists():
+    elif PYPROJECT.exists():
         data = toml.loads(PYPROJECT.read_text(encoding="utf-8"))
-        config = data.get("tool", {}).get("jupyter-releaser")
-        if config:
-            return config
+        config = data.get("tool", {}).get("jupyter-releaser") or {}
 
-    if PACKAGE_JSON.exists():
+    elif PACKAGE_JSON.exists():
         data = json.loads(PACKAGE_JSON.read_text(encoding="utf-8"))
         if "jupyter-releaser" in data:
-            return data["jupyter-releaser"]
+            config = data["jupyter-releaser"]
 
-    return {}
+    with open(osp.join(HERE, "schema.json")) as fid:
+        schema = json.load(fid)
+    validator = Validator(schema)
+    validator.validate(config)
+    return config

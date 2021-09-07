@@ -1,0 +1,49 @@
+{
+  "title": "Jupyter Releaser Metadata",
+  "version": "0.1.0",
+  "description": "Jupyter Releaser configuration metadata",
+  "properties": {
+    "skip": {
+      "title": "Skip Steps",
+      "description": "A list of steps to skip in actions",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "options": {
+      "title": "Overrides for default options",
+      "description": "Overrides for cli option names",
+      "additionalProperties": {
+        "anyOf": [
+          { "type": "string" },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "hooks": {
+      "title": "Action Step Hooks",
+      "description": "Hooks to run before or after action steps",
+      "patternProperties": {
+        "^(before|after)-.*$": {
+          "anyOf": [
+            { "type": "string" },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "type": "object"
+}
