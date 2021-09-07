@@ -42,13 +42,13 @@ RELEASE_API_PATTERN = "https://api.github.com/repos/(?P<owner>[^/]+)/(?P<repo>[^
 
 def run(cmd, **kwargs):
     """Run a command as a subprocess and get the output as a string"""
+    quiet_error = kwargs.pop("quiet_error", False)
     if sys.platform.startswith("win"):
         # Async subprocesses do not work well on Windows, use standard
         # subprocess methods
         return _run_win(cmd, **kwargs)
 
     quiet = kwargs.get("quiet")
-    quiet_error = kwargs.get("quiet_error")
     kwargs.setdefault("echo", True)
     kwargs.setdefault("check", True)
 

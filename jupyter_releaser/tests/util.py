@@ -146,7 +146,7 @@ def create_npm_package(git_repo):
     run('git commit -m "initial npm package"')
 
     run("git checkout foo")
-    run("git pull origin bar")
+    run("git pull origin bar", quiet=True)
     run("git checkout bar")
     return git_repo
 
@@ -187,7 +187,7 @@ def create_python_package(git_repo):
     run('git commit -m "initial python package"')
 
     run("git checkout foo")
-    run("git pull origin bar")
+    run("git pull origin bar", quiet=True)
     run("git checkout bar")
 
     return git_repo
