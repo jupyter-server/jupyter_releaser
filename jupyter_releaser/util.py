@@ -287,10 +287,10 @@ def read_config():
         if "jupyter-releaser" in data:
             config = data["jupyter-releaser"]
 
-    config = config or {}
     with open(osp.join(HERE, "schema.json")) as fid:
         schema = json.load(fid)
 
+    config = config or {}
     validator = Validator(schema)
     validator.validate(config)
     return config
