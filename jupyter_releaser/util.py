@@ -271,7 +271,8 @@ def retry(cmd, **kwargs):
 
 def read_config():
     """Read the jupyter-releaser config data"""
-    config = {}
+    config = None
+
     if JUPYTER_RELEASER_CONFIG.exists():
         config = toml.loads(JUPYTER_RELEASER_CONFIG.read_text(encoding="utf-8"))
 
@@ -286,6 +287,7 @@ def read_config():
         if "jupyter-releaser" in data:
             config = data["jupyter-releaser"]
 
+    config = config or {}
     with open(osp.join(HERE, "schema.json")) as fid:
         schema = json.load(fid)
 
