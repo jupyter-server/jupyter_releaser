@@ -22,14 +22,14 @@ def build_dist(dist_dir):
     # Clean the dist folder of existing npm tarballs
     os.makedirs(dist_dir, exist_ok=True)
     dest = Path(dist_dir)
-    for pkg in glob(f"{dist_dir}/*.gz") + glob(f"{dist_dir}/*.whl"):
+    for pkg in glob(f"{dest}/*.gz") + glob(f"{dest}/*.whl"):
         os.remove(pkg)
 
     if PYPROJECT.exists():
-        util.run(f"python -m build --outdir {dist_dir} .")
+        util.run(f"python -m build --outdir {dest} .", quiet=True)
     elif SETUP_PY.exists():
-        util.run(f"python setup.py sdist --dist-dir {dist_dir}")
-        util.run(f"python setup.py bdist_wheel --dist-dir {dist_dir}")
+        util.run(f"python setup.py sdist --dist-dir {dest}", quiet=True)
+        util.run(f"python setup.py bdist_wheel --dist-dir {dest}", quiet=True)
 
 
 def check_dist(dist_file, test_cmd=""):

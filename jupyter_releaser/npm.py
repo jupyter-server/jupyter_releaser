@@ -166,14 +166,17 @@ def tag_workspace_packages():
     if "workspaces" not in data:
         return
 
+    skipped = []
     for path in _get_workspace_packages(data):
         sub_package_json = path / "package.json"
         sub_data = json.loads(sub_package_json.read_text(encoding="utf-8"))
         tag_name = f"{sub_data['name']}@{sub_data['version']}"
         if tag_name in tags:
-            util.log(f"Skipping existing tag {tag_name}")
+            skipped.append(tag_name)
         else:
             util.run(f"git tag {tag_name}")
+    if skipped:
+        print(f"\nSkipped existing tags:\n{skipped}\n")
 
 
 def _get_workspace_packages(data):

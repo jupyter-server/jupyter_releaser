@@ -391,7 +391,9 @@ def publish_assets(dist_dir, npm_token, npm_cmd, twine_cmd, dry_run):
         elif suffix == ".tgz":
             # Ignore already published versions
             try:
-                util.run(f"{npm_cmd} {name}", cwd=dist_dir, quiet=True)
+                util.run(
+                    f"{npm_cmd} {name}", cwd=dist_dir, quiet=True, quiet_error=True
+                )
             except CalledProcessError as e:
                 stderr = e.stderr
                 if (

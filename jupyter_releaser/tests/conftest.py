@@ -93,7 +93,7 @@ def workspace_package(npm_package):
         new_dir = prev_dir / "packages" / name
         os.makedirs(new_dir)
         os.chdir(new_dir)
-        run("npm init -y")
+        run("npm init -y", quiet=True)
         index = new_dir / "index.js"
         index.write_text('console.log("hello")', encoding="utf-8")
         if name == "foo":
@@ -119,7 +119,7 @@ def py_dist(py_package, runner, mocker, build_mock, git_prep):
     changelog_entry = testutil.mock_changelog_entry(py_package, runner, mocker)
 
     # Create the dist files
-    util.run("python -m build .", cwd=util.CHECKOUT_NAME)
+    util.run("python -m build .", cwd=util.CHECKOUT_NAME, quiet=True)
 
     # Finalize the release
     runner(["tag-release"])
