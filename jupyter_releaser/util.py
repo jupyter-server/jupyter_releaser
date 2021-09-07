@@ -271,21 +271,26 @@ def retry(cmd, **kwargs):
 
 def read_config():
     """Read the jupyter-releaser config data"""
-    config = {}
+    config = None
+
     if JUPYTER_RELEASER_CONFIG.exists():
         config = toml.loads(JUPYTER_RELEASER_CONFIG.read_text(encoding="utf-8"))
 
-    elif PYPROJECT.exists():
+    if not config and PYPROJECT.exists():
         data = toml.loads(PYPROJECT.read_text(encoding="utf-8"))
-        config = data.get("tool", {}).get("jupyter-releaser") or {}
+        pyproject_config = data.get("tool", {}).get("jupyter-releaser")
+        if pyproject_config:
+            config = pyproject_config
 
-    elif PACKAGE_JSON.exists():
+    if not config and PACKAGE_JSON.exists():
         data = json.loads(PACKAGE_JSON.read_text(encoding="utf-8"))
         if "jupyter-releaser" in data:
             config = data["jupyter-releaser"]
 
     with open(osp.join(HERE, "schema.json")) as fid:
         schema = json.load(fid)
+
+    config = config or {}
     validator = Validator(schema)
     validator.validate(config)
     return config
