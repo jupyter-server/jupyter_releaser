@@ -42,6 +42,10 @@ RELEASE_HTML_PATTERN = (
 RELEASE_API_PATTERN = "https://api.github.com/repos/(?P<owner>[^/]+)/(?P<repo>[^/]+)/releases/tags/(?P<tag>.*)"
 
 
+schema = files("jupyter_releaser").joinpath("schema.json").read_text()
+schema = json.loads(schema)
+
+
 def run(cmd, **kwargs):
     """Run a command as a subprocess and get the output as a string"""
     quiet_error = kwargs.pop("quiet_error", False)
@@ -286,9 +290,6 @@ def read_config():
         data = json.loads(PACKAGE_JSON.read_text(encoding="utf-8"))
         if "jupyter-releaser" in data:
             config = data["jupyter-releaser"]
-
-    schema = files("jupyter_releaser").joinpath("schema.json").read_text()
-    schema = json.loads(schema)
 
     config = config or {}
     validator = Validator(schema)
