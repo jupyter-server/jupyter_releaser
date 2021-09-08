@@ -102,7 +102,11 @@ class ReleaseHelperGroup(click.Group):
         # Re-read config if we just did a git checkout
         if cmd_name in ["prep-git", "extract-release"]:
             os.chdir(util.CHECKOUT_NAME)
-            config = util.read_config()
+            try:
+                config = util.read_config()
+            except Exception as e:
+                util.log(str(e))
+                config = {}
             hooks = config.get("hooks", {})
 
         after = f"after-{cmd_name}"
