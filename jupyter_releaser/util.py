@@ -42,8 +42,8 @@ RELEASE_HTML_PATTERN = (
 RELEASE_API_PATTERN = "https://api.github.com/repos/(?P<owner>[^/]+)/(?P<repo>[^/]+)/releases/tags/(?P<tag>.*)"
 
 
-schema = files("jupyter_releaser").joinpath("schema.json").read_text()
-schema = json.loads(schema)
+SCHEMA = files("jupyter_releaser").joinpath("schema.json").read_text()
+SCHEMA = json.loads(SCHEMA)
 
 
 def run(cmd, **kwargs):
@@ -292,6 +292,6 @@ def read_config():
             config = data["jupyter-releaser"]
 
     config = config or {}
-    validator = Validator(schema)
+    validator = Validator(SCHEMA)
     validator.validate(config)
     return config
