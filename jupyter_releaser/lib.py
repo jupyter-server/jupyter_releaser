@@ -89,6 +89,11 @@ def draft_changelog(version_spec, branch, repo, since, auth, changelog_path, dry
     branch = branch or util.get_branch()
     version = util.get_version()
 
+    # Check for multiple versions
+    npm_versions = None
+    if util.PACKAGE_JSON.exists():
+        npm_versions = npm.get_package_versions(version)
+
     tags = util.run("git --no-pager tag", quiet=True)
     if f"v{version}" in tags.splitlines():
         raise ValueError(f"Tag v{version} already exists")
@@ -108,9 +113,8 @@ def draft_changelog(version_spec, branch, repo, since, auth, changelog_path, dry
     commit_message = f'git commit -a -m "{title}"'
     body = title
 
-    # Check for multiple versions
-    if util.PACKAGE_JSON.exists():
-        body += npm.get_package_versions(version)
+    if npm_versions:
+        body += npm_versions
 
     body += '\n\nAfter merging this PR run the "Draft Release" Workflow on your fork of `jupyter_releaser` with the following inputs'
     body += f"""
