@@ -169,7 +169,9 @@ def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=F
     util.actions_output("pr_url", pull.html_url)
 
 
-def tag_release(dist_dir, release_message, tag_message, no_git_tag_workspace):
+def tag_release(
+    dist_dir, release_message, tag_format, tag_message, no_git_tag_workspace
+):
     """Create release commit and tag"""
     # Get the new version
     version = util.get_version()
@@ -178,8 +180,8 @@ def tag_release(dist_dir, release_message, tag_message, no_git_tag_workspace):
     util.create_release_commit(version, release_message, dist_dir)
 
     # Create the annotated release tag
-    tag_name = f"v{version}"
-    tag_message = tag_message.format(tag_name=tag_name)
+    tag_name = tag_format.format(version=version)
+    tag_message = tag_message.format(tag_name=tag_name, version=version)
     util.run(f'git tag {tag_name} -a -m "{tag_message}"')
 
     # Create release tags for workspace packages if given
