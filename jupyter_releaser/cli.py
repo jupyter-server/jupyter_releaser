@@ -345,7 +345,7 @@ def check_python(dist_dir):
 def build_npm(package, dist_dir):
     """Build npm package"""
     if not osp.exists("./package.json"):
-        util.log("Skipping check-npm since there is no package.json file")
+        util.log("Skipping build-npm since there is no package.json file")
         return
     npm.build_dist(package, dist_dir)
 
@@ -411,6 +411,12 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
     help="The message to use for the release commit",
 )
 @click.option(
+    "--tag-format",
+    envvar="RH_TAG_FORMAT",
+    default="v{version}",
+    help="The format to use for the release tag",
+)
+@click.option(
     "--tag-message",
     envvar="RH_TAG_MESSAGE",
     default="Release {tag_name}",
@@ -422,9 +428,13 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
     help="Whether to skip tagging npm workspace packages",
 )
 @use_checkout_dir()
-def tag_release(dist_dir, release_message, tag_message, no_git_tag_workspace):
+def tag_release(
+    dist_dir, release_message, tag_format, tag_message, no_git_tag_workspace
+):
     """Create release commit and tag"""
-    lib.tag_release(dist_dir, release_message, tag_message, no_git_tag_workspace)
+    lib.tag_release(
+        dist_dir, release_message, tag_format, tag_message, no_git_tag_workspace
+    )
 
 
 @main.command()
