@@ -36,7 +36,8 @@ jobs:
       - name: Publish Release
         id: publish-release
         env:
-          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+          PYPI_TOKEN_MAP: ${{ secrets.PYPI_TOKEN_MAP }}
           TWINE_USERNAME: __token__
           TWINE_REGISTRY: ${{ github.event.inputs.pypi_registry }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

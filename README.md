@@ -203,7 +203,13 @@ A. Prep the `jupyter_releaser` fork:
       `ADMIN_GITHUB_TOKEN` in the [repository secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository).
 - [ ] Add access token for the [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github) stored as `PYPI_TOKEN`.
       _Note_ For security reasons, it is recommended that you scope the access
-      to a single repository, and update the value of `PYPI_TOKEN` for each repository that you are releasing.
+      to a single repository, and use a variable called `PYPI_TOKEN_MAP` that is formatted as follows:
+
+      ```
+      owner1/repo1,token1
+      owner2/repo2,token2
+      ```
+
 - [ ] If needed, add access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens), saved as `NPM_TOKEN`.
 
 B. Prep target repository:
