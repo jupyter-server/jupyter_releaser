@@ -83,7 +83,9 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
                 util.run(file_cmd + " --lf", shell=False)
 
 
-def draft_changelog(version_spec, branch, repo, since, auth, changelog_path, dry_run):
+def draft_changelog(
+    version_spec, branch, repo, since, since_last_stable, auth, changelog_path, dry_run
+):
     """Create a changelog entry PR"""
     repo = repo or util.get_repo()
     branch = branch or util.get_branch()
@@ -124,7 +126,9 @@ def draft_changelog(version_spec, branch, repo, since, auth, changelog_path, dry
 | Branch  | {branch}  |
 | Version Spec | {version_spec} |
 """
-    if since:
+    if since_last_stable:
+        body += "| Since Last Stable | true |"
+    elif since:
         body += f"| Since | {since} |"
     util.log(body)
 

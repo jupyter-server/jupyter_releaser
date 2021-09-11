@@ -17,6 +17,9 @@ on:
       since:
         description: Use PRs with activity since this date or git reference
         required: false
+      since_last_stable:
+        description: Use PRs with activity since the last stable git tag
+        required: false
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -52,6 +55,7 @@ jobs:
           version_spec: ${{ github.event.inputs.version_spec }}
           post_version_spec: ${{ github.event.inputs.post_version_spec }}
           since: ${{ github.event.inputs.since }}
+          since_last_stable: ${{ github.event.intputs.since_last_stable }}
       - name: "** Next Step **"
         run: |
           echo "Run the "Publish Release" Workflow with Release Url:"

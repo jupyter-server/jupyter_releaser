@@ -166,6 +166,7 @@ release-message: RH_RELEASE_MESSAGE
 repo: RH_REPOSITORY
 resolve-backports: RH_RESOLVE_BACKPORTS
 since: RH_SINCE
+since-last-stable: RH_SINCE_LAST_STABLE
 tag-format: RH_TAG_FORMAT
 tag-message: RH_TAG_MESSAGE
 twine-cmd: TWINE_COMMAND
@@ -315,13 +316,23 @@ def test_draft_changelog_skip(py_package, mocker, runner, open_mock, git_prep):
     config["skip"] = ["draft-changelog"]
     config_path.write_text(util.toml.dumps(config), encoding="utf-8")
 
-    runner(["draft-changelog", "--version-spec", VERSION_SPEC])
+    runner(["draft-changelog", "--version-spec", VERSION_SPEC, "--since", "foo"])
     open_mock.assert_not_called()
 
 
 def test_draft_changelog_dry_run(npm_package, mocker, runner, git_prep):
     mock_changelog_entry(npm_package, runner, mocker)
-    runner(["draft-changelog", "--dry-run", "--version-spec", VERSION_SPEC])
+    os.environ["RH_SINCE_LAST_STABLE"] = "true"
+    runner(
+        [
+            "draft-changelog",
+            "--dry-run",
+            "--version-spec",
+            VERSION_SPEC,
+            "--since-last-stable",
+        ]
+    )
+    del os.environ["RH_SINCE_LAST_STABLE"]
 
 
 def test_draft_changelog_lerna(workspace_package, mocker, runner, open_mock, git_prep):
