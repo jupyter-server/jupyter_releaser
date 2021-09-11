@@ -198,7 +198,13 @@ since_options = [
         envvar="RH_SINCE",
         default=None,
         help="Use PRs with activity since this date or git reference",
-    )
+    ),
+    click.option(
+        "--since-last-stable",
+        is_flag=True,
+        envvar="RH_SINCE_LAST_STABLE",
+        help="Use PRs with activity since the last stable git tag",
+    ),
 ]
 
 changelog_options = (
@@ -276,10 +282,19 @@ def bump_version(version_spec, version_cmd):
 @main.command()
 @add_options(changelog_options)
 @use_checkout_dir()
-def build_changelog(ref, branch, repo, auth, changelog_path, since, resolve_backports):
+def build_changelog(
+    ref, branch, repo, auth, changelog_path, since, since_last_stable, resolve_backports
+):
     """Build changelog entry"""
     changelog.build_entry(
-        ref, branch, repo, auth, changelog_path, since, resolve_backports
+        ref,
+        branch,
+        repo,
+        auth,
+        changelog_path,
+        since,
+        since_last_stable,
+        resolve_backports,
     )
 
 
@@ -292,11 +307,26 @@ def build_changelog(ref, branch, repo, auth, changelog_path, since, resolve_back
 @add_options(dry_run_options)
 @use_checkout_dir()
 def draft_changelog(
-    version_spec, ref, branch, repo, since, auth, changelog_path, dry_run
+    version_spec,
+    ref,
+    branch,
+    repo,
+    since,
+    since_last_stable,
+    auth,
+    changelog_path,
+    dry_run,
 ):
     """Create a changelog entry PR"""
     lib.draft_changelog(
-        version_spec, branch, repo, since, auth, changelog_path, dry_run
+        version_spec,
+        branch,
+        repo,
+        since,
+        since_last_stable,
+        auth,
+        changelog_path,
+        dry_run,
     )
 
 
@@ -307,11 +337,27 @@ def draft_changelog(
 )
 @use_checkout_dir()
 def check_changelog(
-    ref, branch, repo, auth, changelog_path, since, resolve_backports, output
+    ref,
+    branch,
+    repo,
+    auth,
+    changelog_path,
+    since,
+    since_last_stable,
+    resolve_backports,
+    output,
 ):
     """Check changelog entry"""
     changelog.check_entry(
-        ref, branch, repo, auth, changelog_path, since, resolve_backports, output
+        ref,
+        branch,
+        repo,
+        auth,
+        changelog_path,
+        since,
+        since_last_stable,
+        resolve_backports,
+        output,
     )
 
 

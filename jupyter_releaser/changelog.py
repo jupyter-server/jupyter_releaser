@@ -47,6 +47,7 @@ def get_version_entry(
     version,
     *,
     since=None,
+    since_last_stable=None,
     until=None,
     auth=None,
     resolve_backports=False,
@@ -65,6 +66,8 @@ def get_version_entry(
         The new version
     since: str
         Use PRs with activity since this date or git reference
+    since_last_stable:
+        Use PRs with activity since the last stable git tag
     until: str, optional
         Use PRs until this date or git reference
     auth : str, optional
@@ -77,14 +80,7 @@ def get_version_entry(
     str
         A formatted changelog entry with markers
     """
-
-    if not since:
-        source = ref or branch
-        tags = util.run(
-            f"git --no-pager tag --sort=-creatordate --merged {source}", quiet=True
-        )
-        if tags:
-            since = tags.splitlines()[0]
+    since = since or _get_since(ref or branch, since_last_stable)
 
     util.log(f"Getting changes to {repo} since {since} on branch {branch}...")
 
@@ -142,7 +138,9 @@ def get_version_entry(
     return output
 
 
-def build_entry(ref, branch, repo, auth, changelog_path, since, resolve_backports):
+def build_entry(
+    ref, branch, repo, auth, changelog_path, since, since_last_stable, resolve_backports
+):
     """Build a python version entry"""
     branch = branch or util.get_branch()
     repo = repo or util.get_repo()
@@ -166,6 +164,7 @@ def build_entry(ref, branch, repo, auth, changelog_path, since, resolve_backport
         repo,
         version,
         since=since,
+        since_last_stable=since_last_stable,
         auth=auth,
         resolve_backports=resolve_backports,
     )
@@ -211,7 +210,15 @@ def format(changelog):
 
 
 def check_entry(
-    ref, branch, repo, auth, changelog_path, since, resolve_backports, output
+    ref,
+    branch,
+    repo,
+    auth,
+    changelog_path,
+    since,
+    since_last_stable,
+    resolve_backports,
+    output,
 ):
     """Check changelog entry"""
     branch = branch or util.get_branch()
@@ -241,6 +248,7 @@ def check_entry(
         repo,
         version,
         since=since,
+        since_last_stable=since_last_stable,
         auth=auth,
         resolve_backports=resolve_backports,
     )
@@ -282,3 +290,23 @@ def extract_current(changelog_path):
         if start != -1 and end != -1:
             body = changelog[start + len(START_MARKER) : end]
     return body
+
+
+def _get_since(source, since_last_stable=False):
+    """Get the appropriate since reference or None"""
+    tags = util.run(
+        f"git --no-pager tag --sort=-creatordate --merged {source}", quiet=True
+    )
+    if not tags:
+        return
+
+    tags = tags.splitlines()
+
+    if since_last_stable:
+        stable_tag = re.compile(r"\d\.\d\.\d$")
+        tags = [t for t in tags if re.search(stable_tag, t)]
+        if not tags:
+            return
+        return tags[0]
+
+    return tags[0]
