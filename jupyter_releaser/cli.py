@@ -567,11 +567,27 @@ def extract_release(auth, dist_dir, dry_run, release_url, npm_install_options):
     envvar="TWINE_COMMAND",
     default="twine upload",
 )
+@click.option(
+    "--npm-registry",
+    help="The npm registry to target for publishing",
+    envvar="NPM_REGISTRY",
+    default="https://registry.npmjs.org/",
+)
+@click.option(
+    "--twine-registry",
+    help="The pypi register to target for publishing",
+    envvar="TWINE_REGISTRY",
+    default="https://pypi.org/simple/",
+)
 @add_options(dry_run_options)
 @use_checkout_dir()
-def publish_assets(dist_dir, npm_token, npm_cmd, twine_cmd, dry_run):
+def publish_assets(
+    dist_dir, npm_token, npm_cmd, twine_cmd, npm_registry, twine_registry, dry_run
+):
     """Publish release asset(s)"""
-    lib.publish_assets(dist_dir, npm_token, npm_cmd, twine_cmd, dry_run)
+    lib.publish_assets(
+        dist_dir, npm_token, npm_cmd, twine_cmd, npm_registry, twine_registry, dry_run
+    )
 
 
 @main.command()
