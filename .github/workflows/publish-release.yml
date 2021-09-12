@@ -5,12 +5,6 @@ on:
       release_url:
         description: "The URL of the draft GitHub release"
         required: true
-      pypi_registry:
-        description: "The PYPI registry"
-        default: https://pypi.org/simple/
-      npm_registry:
-        description: "The npm registry"
-        default: https://registry.npmjs.org/
 jobs:
   publish_release:
     runs-on: ubuntu-latest
@@ -39,9 +33,7 @@ jobs:
           PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
           PYPI_TOKEN_MAP: ${{ secrets.PYPI_TOKEN_MAP }}
           TWINE_USERNAME: __token__
-          TWINE_REGISTRY: ${{ github.event.inputs.pypi_registry }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_REGISTRY: ${{ github.event.inputs.npm_registry }}
         uses: jupyter-server/jupyter_releaser/.github/actions/publish-release@v1
         with:
           token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
