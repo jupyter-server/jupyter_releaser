@@ -20,6 +20,10 @@ on:
       since_last_stable:
         description: Use PRs with activity since the last stable git tag
         required: false
+      auto_publish:
+        description: Whether to automatically run the Auto Publish workflow
+        default: true
+        required: false
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -45,6 +49,7 @@ jobs:
       - name: Upgrade packaging dependencies
         run: |
           pip install --upgrade pip setuptools wheel --user
+
       - name: Create Draft GitHub Release
         id: draft-release
         uses: jupyter-server/jupyter_releaser/.github/actions/draft-release@v1
@@ -56,7 +61,28 @@ jobs:
           post_version_spec: ${{ github.event.inputs.post_version_spec }}
           since: ${{ github.event.inputs.since }}
           since_last_stable: ${{ github.event.intputs.since_last_stable }}
+
+      - name: "Store Auto Publish URL"
+        run: |
+          if [ ${{ github.events.inputs.auto_publish }} == 'true']; then
+            echo ${{ steps.draft-release.outputs.release_url }} > "draft-release-url.txt"
+          else:
+            echo "Skipping auto publish"
+            echo "" > "draft-release-url.txt"
+          fi
+
+      - name: "Upload Auto Publish URL"
+        uses: actions/upload-artifact@v2
+        with:
+          name: draft-release-url
+          path: |
+            draft-release-url.txt
+
       - name: "** Next Step **"
         run: |
-          echo "Run the "Publish Release" Workflow with Release Url:"
-          echo ${{ steps.draft-release.outputs.release_url }}
+          if [ ${{ github.events.inputs.auto_publish }} == 'true']; then
+            echo "Wait for the 'Auto Publish workflow to complete';
+          else
+            echo "Run the "Publish Release" Workflow with Release Url:"
+            echo ${{ steps.draft-release.outputs.release_url }}
+          fi
