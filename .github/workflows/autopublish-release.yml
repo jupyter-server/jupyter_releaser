@@ -1,0 +1,81 @@
+# See https://securitylab.github.com/research/github-actions-preventing-pwn-requests/ for an example using this strategy
+name: Auto Publish Release
+on:
+workflow_run:
+  workflows: ["Draft Release"]
+  types:
+    - completed
+
+jobs:
+  publish_release:
+    runs-on: ubuntu-latest
+    if: >
+      ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+          architecture: "x64"
+      - name: Install node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14.x"
+      - name: Upgrade packaging dependencies
+        run: |
+          pip install --upgrade pip setuptools wheel --user
+
+      - name: Download Draft Release URL artifact
+        uses: actions/github-script@v3.1.0
+        with:
+          script: |
+            var artifacts = await github.actions.listWorkflowRunArtifacts({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               run_id: ${{github.event.workflow_run.id }},
+            });
+            var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "draft-release-url"
+            })[0];
+            var download = await github.actions.downloadArtifact({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               artifact_id: matchArtifact.id,
+               archive_format: 'zip',
+            });
+            var fs = require('fs');
+            fs.writeFileSync('${{github.workspace}}/url.zip', Buffer.from(download.data));
+
+      - name: Extract Draft Release URL
+        id: draft-release-url
+        run: |
+          unzip url.zip
+          echo "::set-output name=url::$(cat draft-release-url.txt)"
+
+      - name: Publish Release
+        id: publish-release
+        if: ${{ steps.draft-release-url.outputs.url !== "" }}
+        env:
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+          PYPI_TOKEN_MAP: ${{ secrets.PYPI_TOKEN_MAP }}
+          TWINE_USERNAME: __token__
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        uses: jupyter-server/jupyter_releaser/.github/actions/publish-release@v1
+        with:
+          token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+          release_url: ${{ steps.draft-release-url.outputs.url }}
+
+      - name: "** Next Step **"
+        run: |
+          if [ ${{ steps.draft-release-url.outputs.url }} ];then
+            echo "Verify the final release"
+            echo ${{ steps.publish-release.outputs.release_url }}
+            if [ ! -z "${{ steps.publish-release.outputs.pr_url }}" ]; then
+               echo "Merge the forwardport PR"
+               echo ${{ steps.publish-release.outputs.pr_url }}
+            fi
+          else
+            echo "No Action Needed, Skipped Auto Publish"
+          fi
