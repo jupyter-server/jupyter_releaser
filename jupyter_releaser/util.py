@@ -264,13 +264,15 @@ def get_latest_tag(branch):
 def retry(cmd, **kwargs):
     """Run a command with retries"""
     attempt = 0
-    while attempt < 3:
+    while True:
         time.sleep(attempt)
         try:
             run(cmd, **kwargs)
             return
-        except Exception:
+        except Exception as e:
             attempt += 1
+            if attempt == 3:
+                raise e
 
 
 def read_config():
