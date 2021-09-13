@@ -11,7 +11,7 @@ run(f"jupyter-releaser extract-release {release_url}")
 run(f"jupyter-releaser forwardport-changelog {release_url}")
 
 # Extract the pypi token
-twine_pwd = os.environ.get("PYPI_TOKEN")
+twine_pwd = os.environ.get("PYPI_TOKEN", "")
 pypi_token_map = os.environ.get("PYPI_TOKEN_MAP", "").replace(r"\n", "\n")
 if pypi_token_map:
     pwd = os.getcwd()
@@ -22,7 +22,7 @@ if pypi_token_map:
         if name == repo_name:
             twine_pwd = token
     os.chdir(pwd)
-os.environ["TWINE_PASSWORD"] = token
+os.environ["TWINE_PASSWORD"] = twine_pwd
 
 run("jupyter-releaser publish-assets")
 run(f"jupyter-releaser publish-release {release_url}")
