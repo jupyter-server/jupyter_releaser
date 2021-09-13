@@ -1,4 +1,4 @@
-name: Draft Release
+name: Full Release
 on:
   workflow_dispatch:
     inputs:
@@ -20,6 +20,7 @@ on:
       since_last_stable:
         description: Use PRs with activity since the last stable git tag
         required: false
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -57,7 +58,31 @@ jobs:
           post_version_spec: ${{ github.event.inputs.post_version_spec }}
           since: ${{ github.event.inputs.since }}
           since_last_stable: ${{ github.event.intputs.since_last_stable }}
+
+      - name: Publish Release
+        id: publish-release
+        env:
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+          PYPI_TOKEN_MAP: ${{ secrets.PYPI_TOKEN_MAP }}
+          TWINE_USERNAME: __token__
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        uses: jupyter-server/jupyter_releaser/.github/actions/publish-release@v1
+        with:
+          token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+          release_url: ${{ steps.draft-release.outputs.release_url }}
+
       - name: "** Next Step **"
+        if: ${{ success() }}
         run: |
-          echo "Run the "Publish Release" Workflow with Release Url:"
+          echo "Verify the final release"
+          echo ${{ steps.publish-release.outputs.release_url }}
+          if [ ! -z "${{ steps.publish-release.outputs.pr_url }}" ]; then
+             echo "Merge the forwardport PR"
+             echo ${{ steps.publish-release.outputs.pr_url }}
+          fi
+
+      - name: "** Failure Message **"
+        if: ${{ failure() }}
+        run: |
+          echo "Failed to Publish the Draft Release Url:"
           echo ${{ steps.draft-release.outputs.release_url }}
