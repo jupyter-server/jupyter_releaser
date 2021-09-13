@@ -2,6 +2,31 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.7.0
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...b8d9eec5e08b99e3ed6afc57366d7a6d9b3bda47))
+
+### Enhancements made
+
+- Move registry options to settings [#152](https://github.com/jupyter-server/jupyter_releaser/pull/152) ([@jtpio](https://github.com/jtpio))
+- Enable Auto Publish [#149](https://github.com/jupyter-server/jupyter_releaser/pull/149) ([@jtpio](https://github.com/jtpio))
+- Add Since Last Stable Option for Changelog [#147](https://github.com/jupyter-server/jupyter_releaser/pull/147) ([@jtpio](https://github.com/jtpio))
+- Add support for PYPI token map [#146](https://github.com/jupyter-server/jupyter_releaser/pull/146) ([@jtpio](https://github.com/jtpio))
+- Make tag name configurable [#145](https://github.com/jupyter-server/jupyter_releaser/pull/145) ([@blink1073](https://github.com/blink1073))
+
+### Bugs fixed
+
+- Simpler Solution for Full Publish [#153](https://github.com/jupyter-server/jupyter_releaser/pull/153) ([@jtpio](https://github.com/jtpio))
+- Fix auto publish workflow indent [#151](https://github.com/jupyter-server/jupyter_releaser/pull/151) ([@jtpio](https://github.com/jtpio))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-09-09&to=2021-09-13&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-09-09..2021-09-13&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2021-09-09..2021-09-13&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-09-09..2021-09-13&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.6.2
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...0272fbfdf1027fe5519565084167bc07757211a7))
@@ -15,8 +40,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-09-08&to=2021-09-09&type=c))
 
 [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-09-08..2021-09-09&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.6.1
 
