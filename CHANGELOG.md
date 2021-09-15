@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.7.3
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...98d6e21224c6a39e2e1467e1b4a2bd9d95448cb4))
+
+### Merged PRs
+
+- Cleanup [#161](https://github.com/jupyter-server/jupyter_releaser/pull/161) ([@jtpio](https://github.com/jtpio))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-09-13&to=2021-09-15&type=c))
+
+[@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-09-13..2021-09-15&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.7.2
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...6e91f54d41029666078bdfad0b7e1957d092ca1d))
@@ -15,8 +31,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-09-13&to=2021-09-13&type=c))
 
 [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-09-13..2021-09-13&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.7.1
 
