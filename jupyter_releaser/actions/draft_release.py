@@ -38,7 +38,8 @@ run("jupyter-releaser prep-git")
 if not os.environ.get("RH_SINCE"):
     curr_dir = os.getcwd()
     os.chdir(CHECKOUT_NAME)
-    since = get_latest_tag(os.environ["RH_BRANCH"]) or ""
+    since_last_stable = os.environ.get("RH_SINCE_LAST_STABLE")
+    since = get_latest_tag(os.environ["RH_BRANCH"], since_last_stable)
     if since:
         log(f"Capturing {since} in RH_SINCE variable")
         os.environ["RH_SINCE"] = since

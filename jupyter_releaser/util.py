@@ -254,11 +254,22 @@ def actions_output(name, value):
         print(f"::set-output name={name}::{value}")
 
 
-def get_latest_tag(branch):
+def get_latest_tag(source, since_last_stable=False):
     """Get the default 'since' value for a branch"""
-    tags = run(f"git --no-pager tag --sort=-creatordate --merged {branch}", quiet=True)
-    if tags:
-        return tags.splitlines()[0]
+    tags = run(f"git --no-pager tag --sort=-creatordate --merged {source}", quiet=True)
+    if not tags:
+        return ""
+
+    tags = tags.splitlines()
+
+    if since_last_stable:
+        stable_tag = re.compile(r"\d\.\d\.\d$")
+        tags = [t for t in tags if re.search(stable_tag, t)]
+        if not tags:
+            return ""
+        return tags[0]
+
+    return tags[0]
 
 
 def retry(cmd, **kwargs):

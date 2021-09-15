@@ -80,7 +80,7 @@ def get_version_entry(
     str
         A formatted changelog entry with markers
     """
-    since = since or _get_since(ref or branch, since_last_stable)
+    since = since or util.get_latest_tag(ref or branch, since_last_stable)
 
     util.log(f"Getting changes to {repo} since {since} on branch {branch}...")
 
@@ -290,23 +290,3 @@ def extract_current(changelog_path):
         if start != -1 and end != -1:
             body = changelog[start + len(START_MARKER) : end]
     return body
-
-
-def _get_since(source, since_last_stable=False):
-    """Get the appropriate since reference or None"""
-    tags = util.run(
-        f"git --no-pager tag --sort=-creatordate --merged {source}", quiet=True
-    )
-    if not tags:
-        return
-
-    tags = tags.splitlines()
-
-    if since_last_stable:
-        stable_tag = re.compile(r"\d\.\d\.\d$")
-        tags = [t for t in tags if re.search(stable_tag, t)]
-        if not tags:
-            return
-        return tags[0]
-
-    return tags[0]
