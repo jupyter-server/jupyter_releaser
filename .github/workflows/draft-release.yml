@@ -56,7 +56,7 @@ jobs:
           version_spec: ${{ github.event.inputs.version_spec }}
           post_version_spec: ${{ github.event.inputs.post_version_spec }}
           since: ${{ github.event.inputs.since }}
-          since_last_stable: ${{ github.event.intputs.since_last_stable }}
+          since_last_stable: ${{ github.event.inputs.since_last_stable }}
       - name: "** Next Step **"
         run: |
           echo "Run the "Publish Release" Workflow with Release Url:"

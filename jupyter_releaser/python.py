@@ -60,6 +60,30 @@ def check_dist(dist_file, test_cmd=""):
         util.run(f"{bin_path}/{test_cmd}")
 
 
+def get_pypi_token(release_url):
+    """Get the PyPI token
+
+    Note: Do not print the token in CI since it will not be sanitized
+    if it comes from the PYPI_TOKEN_MAP"""
+    twine_pwd = os.environ.get("PYPI_TOKEN", "")
+    pypi_token_map = os.environ.get("PYPI_TOKEN_MAP", "").replace(r"\n", "\n")
+    if pypi_token_map and release_url:
+        parts = release_url.replace("https://github.com/", "").split("/")
+        repo_name = f"{parts[0]}/{parts[1]}"
+        util.log(f"Looking for PYPI token for {repo_name} in token map")
+        for line in pypi_token_map.splitlines():
+            name, _, token = line.partition(",")
+            if name == repo_name:
+                twine_pwd = token
+                util.log("Found PYPI token")
+    elif twine_pwd:
+        util.log("Using PYPI token from PYPI_TOKEN")
+    else:
+        util.log("PYPI token not found")
+
+    return twine_pwd
+
+
 def start_local_pypi():
     """Start a local PyPI server"""
     temp_dir = TemporaryDirectory()

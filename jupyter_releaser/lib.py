@@ -373,11 +373,27 @@ def parse_release_url(release_url):
 
 
 def publish_assets(
-    dist_dir, npm_token, npm_cmd, twine_cmd, npm_registry, twine_registry, dry_run
+    dist_dir,
+    npm_token,
+    npm_cmd,
+    twine_cmd,
+    npm_registry,
+    twine_registry,
+    dry_run,
+    release_url,
 ):
     """Publish release asset(s)"""
     os.environ["NPM_REGISTRY"] = npm_registry
     os.environ["TWINE_REGISTRY"] = twine_registry
+    twine_token = ""
+
+    if len(glob(f"{dist_dir}/*.tgz")):
+        npm.handle_npm_config(npm_token)
+        if npm_token:
+            util.run("npm whoami")
+
+    if len(glob(f"{dist_dir}/*.whl")):
+        twine_token = python.get_pypi_token(release_url)
 
     if dry_run:
         # Start local pypi server with no auth, allowing overwrites,
@@ -386,22 +402,21 @@ def publish_assets(
             python.start_local_pypi()
             twine_cmd = "twine upload --repository-url=http://0.0.0.0:8081"
             os.environ["TWINE_USERNAME"] = "foo"
-            os.environ["TWINE_PASSWORD"] = "bar"
+            twine_token = twine_token or "bar"
         npm_cmd = "npm publish --dry-run"
     else:
         os.environ.setdefault("TWINE_USERNAME", "__token__")
-
-    if len(glob(f"{dist_dir}/*.tgz")):
-        npm.handle_npm_config(npm_token)
-        if npm_token:
-            util.run("npm whoami")
 
     found = False
     for path in sorted(glob(f"{dist_dir}/*.*")):
         name = Path(path).name
         suffix = Path(path).suffix
         if suffix in [".gz", ".whl"]:
-            util.retry(f"{twine_cmd} {name}", cwd=dist_dir)
+            env = os.environ.copy()
+            env["TWINE_PASSWORD"] = twine_token
+            # NOTE: Do not print the env since a twine token extracted from
+            # a PYPI_TOKEN_MAP will not be sanitized in output
+            util.retry(f"{twine_cmd} {name}", cwd=dist_dir, env=env)
             found = True
         elif suffix == ".tgz":
             # Ignore already published versions
