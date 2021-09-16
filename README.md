@@ -251,6 +251,16 @@ version_info = tuple(parts)
 
 _Note_ The check release action needs `contents: write` [permission](https://docs.github.com/en/actions/reference/authentication-in-a-workflow#modifying-the-permissions-for-the-github_token).
 
+- [ ] If you would like the release assets to be uploaded as artifacts, add the following step after the `check_release` action:
+
+```yaml
+- name: Upload Distributions
+  uses: actions/upload-artifact@v2
+  with:
+    name: jupyter-releaser-dist-${{ github.run_number }}
+    path: .jupyter_releaser_checkout/dist
+```
+
 - [ ] Update or add `RELEASE.md` that describes the onboarding and release process, e.g.
 
 ```markdown
