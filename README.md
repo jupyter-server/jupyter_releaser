@@ -257,8 +257,8 @@ _Note_ The check release action needs `contents: write` [permission](https://doc
 - name: Upload Distributions
   uses: actions/upload-artifact@v2
   with:
-      name: jupyter-releaser-dist-${{ github.run_number }}
-      path: .jupyter_releaser_checkout/dist
+    name: jupyter-releaser-dist-${{ github.run_number }}
+    path: .jupyter_releaser_checkout/dist
 ```
 
 - [ ] Update or add `RELEASE.md` that describes the onboarding and release process, e.g.
