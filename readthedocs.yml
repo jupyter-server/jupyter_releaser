@@ -1,0 +1,11 @@
+version: 2
+sphinx:
+  configuration: docs/source/conf.py
+conda:
+  environment: docs/environment.yml
+python:
+  version: "3.8"
+  install:
+    # install jupyter_releaser itself
+    - method: pip
+      path: .

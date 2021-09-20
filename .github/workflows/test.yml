@@ -145,3 +145,45 @@ jobs:
       - name: Coverage
         run: |
           codecov
+
+  docs:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 2
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup conda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-update-conda: true
+          activate-environment: jupyter_releaser_documentation
+          environment-file: docs/environment.yml
+          python-version: "3.9"
+          auto-activate-base: false
+      - name: Get pip cache dir
+        id: pip-cache
+        run: |
+          echo "::set-output name=dir::$(pip cache dir)"
+      - name: Cache pip
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('setup.cfg') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-${{ matrix.python-version }}-
+            ${{ runner.os }}-pip-
+      - name: Cache conda
+        uses: actions/cache@v2
+        with:
+          path: ~/conda_pkgs_dir
+          key: ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{
+            hashFiles('docs/environment.yml') }}
+      - name: Build docs
+        run: |
+          set -eux
+          pip install .
+          pushd docs
+          make html
+          popd

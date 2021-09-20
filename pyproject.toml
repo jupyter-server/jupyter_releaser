@@ -19,6 +19,9 @@ tag_template = "v{new_version}"
 [[tool.tbump.file]]
 src = "jupyter_releaser/__init__.py"
 
+[[tool.tbump.file]]
+src = "docs/source/conf.py"
+
 [tool.jupyter-releaser]
 skip = ["check-links"]
 

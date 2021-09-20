@@ -1,0 +1,11 @@
+name: jupyter_releaser_documentation
+channels:
+  - conda-forge
+dependencies:
+  - python=3.9
+  - sphinx
+  - sphinx-copybutton
+  - pip
+  - myst-parser
+  - pip:
+      - pydata_sphinx_theme
