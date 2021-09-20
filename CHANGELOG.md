@@ -2,6 +2,7 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+
 ## 0.7.4
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...ccd4eb7cfa280079745730af7c5d7b297f243801))
