@@ -72,5 +72,5 @@ html_context = {
 
 
 def setup(app):
-    dest = osp.join(HERE, "changelog.md")
+    dest = osp.join(HERE, "reference", "changelog.md")
     shutil.copy(osp.join(HERE, "..", "..", "CHANGELOG.md"), dest)

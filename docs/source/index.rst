@@ -1,12 +1,14 @@
-Welcome to Jupyter Releaser's documentation!
-============================================
+Jupyter Releaser
+================
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-   changelog
-
+   get_started/index
+   how_to_guides/index
+   reference/index
+   background/index
 
 
 Indices and tables
