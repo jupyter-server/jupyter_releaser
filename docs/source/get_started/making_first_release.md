@@ -74,5 +74,7 @@ already uses Jupyter Releaser.
   ![Full Release Workflow Next Step](../images/publish_release_next_step.png)
 
 - **Note** If the publish portion fails you can attempt to publish the draft GitHub release given by the URL in the "\*\* Failure Message \*\*" using the "Publish Release" workflow.
+- **Note** GitHub Actions caches the secrets used on a given workflow run. So if you run into an auth issue, you'll
+  need to run a new workflow instead of re-running the existing workflow.
 - Review and merge the forward-port PR if applicable
 - Announce the release on appropriate channels

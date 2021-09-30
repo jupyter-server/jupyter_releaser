@@ -32,7 +32,13 @@ version = ".".join(release.split(".")[:2])
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ["myst_parser"]
+extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.napoleon",
+    "myst_parser",
+    "sphinx_click",
+]
 
 myst_enable_extensions = ["html_image"]
 
@@ -51,6 +57,9 @@ exclude_patterns = []
 # a list of builtin themes.
 #
 html_theme = "pydata_sphinx_theme"
+
+html_logo = "_static/images/logo/logo.svg"
+html_favicon = "_static/images/logo/favicon.svg"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -74,3 +83,4 @@ html_context = {
 def setup(app):
     dest = osp.join(HERE, "reference", "changelog.md")
     shutil.copy(osp.join(HERE, "..", "..", "CHANGELOG.md"), dest)
+    app.add_css_file("custom.css")
