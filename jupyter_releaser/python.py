@@ -74,8 +74,8 @@ def get_pypi_token(release_url):
         for line in pypi_token_map.splitlines():
             name, _, token = line.partition(",")
             if name == repo_name:
-                twine_pwd = token
-                util.log("Found PYPI token")
+                twine_pwd = token.strip()
+                util.log(f"Found PYPI token in map ending in {twine_pwd[-5:]}")
     elif twine_pwd:
         util.log("Using PYPI token from PYPI_TOKEN")
     else:
