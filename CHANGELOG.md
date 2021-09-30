@@ -2,6 +2,29 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.7.5
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...7edf4b97fb2ca2105192a599cbf7155f9c6fa58c))
+
+### Bugs fixed
+
+- Debug token map handling [#173](https://github.com/jupyter-server/jupyter_releaser/pull/173) ([@blink1073](https://github.com/blink1073))
+
+### Documentation improvements
+
+- Add generated docs and logos [#172](https://github.com/jupyter-server/jupyter_releaser/pull/172) ([@blink1073](https://github.com/blink1073))
+- Reorganize docs [#171](https://github.com/jupyter-server/jupyter_releaser/pull/171) ([@blink1073](https://github.com/blink1073))
+- Add Sphinx Docs [#166](https://github.com/jupyter-server/jupyter_releaser/pull/166) ([@jtpio](https://github.com/jtpio))
+- Document uploading release assets as artifacts [#165](https://github.com/jupyter-server/jupyter_releaser/pull/165) ([@jtpio](https://github.com/jtpio))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-09-15&to=2021-09-30&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-09-15..2021-09-30&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2021-09-15..2021-09-30&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-09-15..2021-09-30&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.7.4
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...ccd4eb7cfa280079745730af7c5d7b297f243801))
@@ -15,8 +38,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-09-15&to=2021-09-15&type=c))
 
 [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-09-15..2021-09-15&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.7.3
 
