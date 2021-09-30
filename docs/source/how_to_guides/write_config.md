@@ -27,7 +27,7 @@ Note: the only unusable hook names are `before-prep-git` and `before-extract-rel
 
 This is where `jupyter-releaser` looks for configuration (first one found is used):
 
-```code
+```
     .jupyter-releaser.toml
     pyproject.toml (in the tools.jupyter-releaser section )
     package.json (in the jupyter-releaser property)

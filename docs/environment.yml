@@ -9,3 +9,5 @@ dependencies:
   - myst-parser
   - pip:
       - pydata_sphinx_theme
+      - numpydoc
+      - sphinx-click
