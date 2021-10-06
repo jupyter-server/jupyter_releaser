@@ -140,10 +140,11 @@ async def _stream_subprocess(args: str, **kwargs: Any) -> CompletedProcess:
 
 
 def run(args: Union[str, List[str]], **kwargs: Any) -> CompletedProcess:
-    """Drop-in replacement for subprocerss.run that behaves like tee.
+    """Drop-in replacement for subprocess.run that behaves like tee.
     Extra arguments added by our version:
     echo: False - Prints command before executing it.
     quiet: False - Avoid printing output
+    show_cwd: False - Prints the current working directory.
     """
     if isinstance(args, str):
         cmd = args
@@ -158,7 +159,11 @@ def run(args: Union[str, List[str]], **kwargs: Any) -> CompletedProcess:
     if kwargs.get("echo", False):
         # This is modified from the default implementation since
         # we want all output to be interleved on the same stream
-        print(f"COMMAND: {cmd}", file=sys.stderr)
+        prefix = "COMMAND"
+        if kwargs.pop("show_cwd", False):
+            prefix += f" (in '{os.getcwd()}')"
+        prefix += ":"
+        print(f"{prefix} {cmd}", file=sys.stderr)
 
     loop = asyncio.get_event_loop()
     result = loop.run_until_complete(_stream_subprocess(cmd, **kwargs))

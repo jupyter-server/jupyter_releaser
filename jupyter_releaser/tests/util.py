@@ -45,10 +45,12 @@ CHANGELOG_ENTRY = f"""
 [@betatim](https://github.com/search?q=repo%3Aexecutablebooks%2Fgithub-activity+involves%3Abetatim+updated%3A2019-09-01..2019-11-01&type=Issues) | [@choldgraf](https://github.com/search?q=repo%3Aexecutablebooks%2Fgithub-activity+involves%3Acholdgraf+updated%3A2019-09-01..2019-11-01&type=Issues) | [@consideRatio](https://github.com/search?q=repo%3Aexecutablebooks%2Fgithub-activity+involves%3AconsideRatio+updated%3A2019-09-01..2019-11-01&type=Issues)
 """
 
-SETUP_CFG_TEMPLATE = """
+
+def setup_cfg_template(package_name="foo"):
+    return f"""
 [metadata]
-name = foo
-version = attr: foo.__version__
+name = {package_name}
+version = attr: {package_name}.__version__
 description = My package description
 long_description = file: README.md
 long_description_content_type = text/markdown
@@ -60,19 +62,29 @@ url = https://foo.com
 [options]
 zip_safe = False
 include_package_data = True
-py_modules = foo
+py_modules = {package_name}
 """
+
 
 SETUP_PY_TEMPLATE = """__import__("setuptools").setup()\n"""
 
 
-PYPROJECT_TEMPLATE = """
+def pyproject_template(sub_packages=[]):
+    res = """
 [build-system]
 requires = ["setuptools>=40.8.0", "wheel"]
 build-backend = "setuptools.build_meta"
 """
+    if sub_packages:
+        res += f"""
+[tools.jupyter-releaser.options]
+python_packages = {sub_packages}
+"""
+    return res
+
 
 PY_MODULE_TEMPLATE = '__version__ = "0.0.1"\n'
+
 
 TBUMP_BASE_TEMPLATE = r"""
 [version]
@@ -87,10 +99,13 @@ message_template = "Bump to {new_version}"
 tag_template = "v{new_version}"
 """
 
-TBUMP_PY_TEMPLATE = """
+
+def tbump_py_template(package_name="foo"):
+    return f"""
 [[file]]
-src = "foo.py"
+src = "{package_name}.py"
 """
+
 
 TBUMP_NPM_TEMPLATE = """
 [[file]]
@@ -156,33 +171,55 @@ def get_log():
     return log.read_text(encoding="utf-8").splitlines()
 
 
-def create_python_package(git_repo):
-    setuppy = git_repo / "setup.py"
-    setuppy.write_text(SETUP_PY_TEMPLATE, encoding="utf-8")
+def create_python_package(git_repo, multi=False):
+    def write_files(git_repo, sub_packages=[], package_name="foo"):
+        setuppy = git_repo / "setup.py"
+        setuppy.write_text(SETUP_PY_TEMPLATE, encoding="utf-8")
 
-    setuppy = git_repo / "setup.cfg"
-    setuppy.write_text(SETUP_CFG_TEMPLATE, encoding="utf-8")
+        setuppy = git_repo / "setup.cfg"
+        setuppy.write_text(setup_cfg_template(package_name), encoding="utf-8")
 
-    tbump = git_repo / "tbump.toml"
-    tbump.write_text(TBUMP_BASE_TEMPLATE + TBUMP_PY_TEMPLATE, encoding="utf-8")
+        tbump = git_repo / "tbump.toml"
+        tbump.write_text(
+            TBUMP_BASE_TEMPLATE + tbump_py_template(package_name),
+            encoding="utf-8",
+        )
 
-    pyproject = git_repo / "pyproject.toml"
-    pyproject.write_text(PYPROJECT_TEMPLATE, encoding="utf-8")
+        pyproject = git_repo / "pyproject.toml"
+        pyproject.write_text(pyproject_template(sub_packages), encoding="utf-8")
 
-    foopy = git_repo / "foo.py"
-    foopy.write_text(PY_MODULE_TEMPLATE, encoding="utf-8")
+        foopy = git_repo / f"{package_name}.py"
+        foopy.write_text(PY_MODULE_TEMPLATE, encoding="utf-8")
 
-    manifest = git_repo / "MANIFEST.in"
-    manifest.write_text(MANIFEST_TEMPLATE, encoding="utf-8")
+        manifest = git_repo / "MANIFEST.in"
+        manifest.write_text(MANIFEST_TEMPLATE, encoding="utf-8")
 
-    here = Path(__file__).parent
-    text = here.parent.parent.joinpath(".pre-commit-config.yaml").read_text(
-        encoding="utf-8"
-    )
+        here = Path(__file__).parent
+        text = here.parent.parent.joinpath(".pre-commit-config.yaml").read_text(
+            encoding="utf-8"
+        )
 
-    pre_commit = git_repo / ".pre-commit-config.yaml"
-    pre_commit.write_text(text, encoding="utf-8")
+        pre_commit = git_repo / ".pre-commit-config.yaml"
+        pre_commit.write_text(text, encoding="utf-8")
 
+    sub_packages = []
+    if multi:
+        packages = [{"abs_path": git_repo, "rel_path": "."}]
+        for i in range(2):
+            sub_package = Path(f"sub_package{i}")
+            sub_packages.append(str(sub_package))
+            packages.append(
+                {
+                    "abs_path": git_repo / sub_package,
+                    "rel_path": sub_package,
+                }
+            )
+            sub_package.mkdir()
+            write_files(git_repo / sub_package, package_name=f"foo{i}")
+            run(f"git add {sub_package}")
+            run(f'git commit -m "initial python {sub_package}"')
+
+    write_files(git_repo, sub_packages=sub_packages)
     run("git add .")
     run('git commit -m "initial python package"')
 
@@ -190,7 +227,10 @@ def create_python_package(git_repo):
     run("git pull origin bar", quiet=True)
     run("git checkout bar")
 
-    return git_repo
+    if multi:
+        return packages
+    else:
+        return git_repo
 
 
 class MockHTTPResponse:

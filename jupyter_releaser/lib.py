@@ -381,6 +381,7 @@ def publish_assets(
     twine_registry,
     dry_run,
     release_url,
+    python_package,
 ):
     """Publish release asset(s)"""
     os.environ["NPM_REGISTRY"] = npm_registry
@@ -393,7 +394,7 @@ def publish_assets(
             util.run("npm whoami")
 
     if len(glob(f"{dist_dir}/*.whl")):
-        twine_token = python.get_pypi_token(release_url)
+        twine_token = python.get_pypi_token(release_url, python_package)
 
     if dry_run:
         # Start local pypi server with no auth, allowing overwrites,

@@ -23,9 +23,16 @@ A. Prep the `jupyter_releaser` fork:
       _Note_ For security reasons, it is recommended that you scope the access
       to a single repository, and use a variable called `PYPI_TOKEN_MAP` that is formatted as follows:
 
-      ```
+      ```text
       owner1/repo1,token1
       owner2/repo2,token2
+      ```
+
+      If you have multiple Python packages in one repository, you can point to them as follows:
+
+      ```text
+      owner1/repo1/path/to/package1,token1
+      owner1/repo1/path/to/package2,token1
       ```
 
 - [ ] If needed, add access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens), saved as `NPM_TOKEN`.

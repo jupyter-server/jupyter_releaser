@@ -162,6 +162,7 @@ npm-token: NPM_TOKEN
 output: RH_CHANGELOG_OUTPUT
 post-version-message: RH_POST_VERSION_MESSAGE
 post-version-spec: RH_POST_VERSION_SPEC
+python-packages: RH_PYTHON_PACKAGES
 ref: RH_REF
 release-message: RH_RELEASE_MESSAGE
 repo: RH_REPOSITORY
@@ -590,6 +591,64 @@ def test_extract_dist_py(py_package, runner, mocker, open_mock, tmp_path, git_pr
     runner(["extract-release", HTML_URL])
     assert len(open_mock.mock_calls) == 2
     assert len(get_mock.mock_calls) == len(dist_names) == 2
+
+    log = get_log()
+    assert "before-extract-release" not in log
+    assert "after-extract-release" in log
+
+
+@pytest.mark.skipif(
+    os.name == "nt" and sys.version_info.major == 3 and sys.version_info.minor < 8,
+    reason="See https://bugs.python.org/issue26660",
+)
+def test_extract_dist_multipy(
+    py_multipackage, runner, mocker, open_mock, tmp_path, git_prep
+):
+    git_repo = py_multipackage[0]["abs_path"]
+    changelog_entry = mock_changelog_entry(git_repo, runner, mocker)
+
+    # Create the dist files
+    dist_dir = normalize_path(Path(util.CHECKOUT_NAME).resolve() / "dist")
+    for package in py_multipackage:
+        run(
+            f"python -m build . -o {dist_dir}",
+            cwd=Path(util.CHECKOUT_NAME) / package["rel_path"],
+        )
+
+    # Finalize the release
+    runner(["tag-release"])
+
+    os.makedirs("staging")
+    shutil.move(f"{util.CHECKOUT_NAME}/dist", "staging")
+
+    def helper(path, **kwargs):
+        return MockRequestResponse(f"{git_repo}/staging/dist/{path}")
+
+    get_mock = mocker.patch("requests.get", side_effect=helper)
+
+    tag_name = f"v{VERSION_SPEC}"
+
+    dist_names = [osp.basename(f) for f in glob("staging/dist/*.*")]
+    releases = [
+        dict(
+            tag_name=tag_name,
+            target_commitish=util.get_branch(),
+            assets=[dict(name=dist_name, url=dist_name) for dist_name in dist_names],
+        )
+    ]
+    sha = run("git rev-parse HEAD", cwd=util.CHECKOUT_NAME)
+
+    tags = [dict(ref=f"refs/tags/{tag_name}", object=dict(sha=sha))]
+    url = normalize_path(osp.join(os.getcwd(), util.CHECKOUT_NAME))
+    open_mock.side_effect = [
+        MockHTTPResponse(releases),
+        MockHTTPResponse(tags),
+        MockHTTPResponse(dict(html_url=url)),
+    ]
+
+    runner(["extract-release", HTML_URL])
+    assert len(open_mock.mock_calls) == 2
+    assert len(get_mock.mock_calls) == len(dist_names) == 2 * len(py_multipackage)
 
     log = get_log()
     assert "before-extract-release" not in log

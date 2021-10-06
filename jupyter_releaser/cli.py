@@ -171,6 +171,16 @@ dist_dir_options = [
     )
 ]
 
+python_packages_options = [
+    click.option(
+        "--python-packages",
+        envvar="RH_PYTHON_PACKAGES",
+        default=["."],
+        multiple=True,
+        help="The list of paths to Python packages",
+    )
+]
+
 dry_run_options = [
     click.option(
         "--dry-run", is_flag=True, envvar="RH_DRY_RUN", help="Run as a dry run"
@@ -273,10 +283,15 @@ def prep_git(ref, branch, repo, auth, username, git_url):
 @main.command()
 @add_options(version_spec_options)
 @add_options(version_cmd_options)
+@add_options(python_packages_options)
 @use_checkout_dir()
-def bump_version(version_spec, version_cmd):
+def bump_version(version_spec, version_cmd, python_packages):
     """Prep git and env variables and bump version"""
-    lib.bump_version(version_spec, version_cmd)
+    prev_dir = os.getcwd()
+    for python_package in python_packages:
+        os.chdir(python_package)
+        lib.bump_version(version_spec, version_cmd)
+        os.chdir(prev_dir)
 
 
 @main.command()
@@ -363,13 +378,24 @@ def check_changelog(
 
 @main.command()
 @add_options(dist_dir_options)
+@add_options(python_packages_options)
 @use_checkout_dir()
-def build_python(dist_dir):
+def build_python(dist_dir, python_packages):
     """Build Python dist files"""
-    if not util.PYPROJECT.exists() and not util.SETUP_PY.exists():
-        util.log("Skipping build-python since there are no python package files")
-        return
-    python.build_dist(dist_dir)
+    prev_dir = os.getcwd()
+    clean = True
+    for python_package in python_packages:
+        os.chdir(python_package)
+        if not util.PYPROJECT.exists() and not util.SETUP_PY.exists():
+            util.log(
+                f"Skipping build-python in {python_package} since there are no python package files"
+            )
+        else:
+            python.build_dist(
+                Path(os.path.relpath(".", python_package)) / dist_dir, clean=clean
+            )
+            clean = False
+        os.chdir(prev_dir)
 
 
 @main.command()
@@ -580,6 +606,7 @@ def extract_release(auth, dist_dir, dry_run, release_url, npm_install_options):
     default="https://pypi.org/simple/",
 )
 @add_options(dry_run_options)
+@add_options(python_packages_options)
 @click.argument("release-url", nargs=1, required=False)
 @use_checkout_dir()
 def publish_assets(
@@ -591,18 +618,21 @@ def publish_assets(
     twine_registry,
     dry_run,
     release_url,
+    python_packages,
 ):
     """Publish release asset(s)"""
-    lib.publish_assets(
-        dist_dir,
-        npm_token,
-        npm_cmd,
-        twine_cmd,
-        npm_registry,
-        twine_registry,
-        dry_run,
-        release_url,
-    )
+    for python_package in python_packages:
+        lib.publish_assets(
+            dist_dir,
+            npm_token,
+            npm_cmd,
+            twine_cmd,
+            npm_registry,
+            twine_registry,
+            dry_run,
+            release_url,
+            python_package,
+        )
 
 
 @main.command()
