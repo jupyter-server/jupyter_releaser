@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.7.6
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...0c3494dde2690badcf44a437e93ed2da45f4dfb3))
+
+### Bugs fixed
+
+- Escape the npm version string in PR text [#177](https://github.com/jupyter-server/jupyter_releaser/pull/177) ([@blink1073](https://github.com/blink1073))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-09-30&to=2021-10-07&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-09-30..2021-10-07&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2021-09-30..2021-10-07&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-09-30..2021-10-07&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.7.5
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...7edf4b97fb2ca2105192a599cbf7155f9c6fa58c))
@@ -22,8 +38,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-09-15&to=2021-09-30&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-09-15..2021-09-30&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2021-09-15..2021-09-30&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-09-15..2021-09-30&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.7.4
 
