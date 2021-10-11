@@ -116,7 +116,7 @@ def draft_changelog(
     body = title
 
     if npm_versions:
-        body += f"```\n{npm_versions}\n```"
+        body += f"\n```\n{npm_versions}\n```"
 
     body += '\n\nAfter merging this PR run the "Full Release" Workflow on your fork of `jupyter_releaser` with the following inputs'
     body += f"""
