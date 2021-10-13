@@ -11,6 +11,10 @@ inputs:
     description: "If set, do not push permanent changes"
     default: "false"
     required: false
+  steps_to_skip:
+    description: comma-separated list of steps to steps_to_skip
+    required: false
+
 outputs:
   release_url:
     description: "The html URL of the GitHub release"
@@ -18,6 +22,7 @@ outputs:
   pr_url:
     description: "The html URL of the forwardport PR if applicable"
     value: ${{ steps.publish-release.outputs.pr_url }}
+
 runs:
   using: "composite"
   steps:
@@ -30,6 +35,7 @@ runs:
         export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
         export RH_DRY_RUN=${{ inputs.dry_run }}
         export release_url=${{ inputs.release_url }}
+        export RH_STEPS_TO_SKIP=${{ inputs.steps_to_skip }}
 
         # Install Jupyter Releaser from git
         pip install -q git+https://github.com/jupyter-server/jupyter_releaser.git@v1

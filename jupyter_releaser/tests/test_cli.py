@@ -311,7 +311,7 @@ def test_draft_changelog_full(py_package, mocker, runner, open_mock, git_prep):
     open_mock.assert_called_once()
 
 
-def test_draft_changelog_skip(py_package, mocker, runner, open_mock, git_prep):
+def test_draft_changelog_skip_config(py_package, mocker, runner, open_mock, git_prep):
     mock_changelog_entry(py_package, runner, mocker)
 
     config_path = Path(util.CHECKOUT_NAME) / util.JUPYTER_RELEASER_CONFIG
@@ -321,6 +321,19 @@ def test_draft_changelog_skip(py_package, mocker, runner, open_mock, git_prep):
 
     runner(["draft-changelog", "--version-spec", VERSION_SPEC, "--since", "foo"])
     open_mock.assert_not_called()
+
+
+def test_draft_changelog_skip_environ(py_package, mocker, runner, open_mock, git_prep):
+    mock_changelog_entry(py_package, runner, mocker)
+
+    config_path = Path(util.CHECKOUT_NAME) / util.JUPYTER_RELEASER_CONFIG
+    config = util.toml.loads(config_path.read_text(encoding="utf-8"))
+    os.environ["RH_STEPS_TO_SKIP"] = "draft-changelog,other-fake-step"
+    config_path.write_text(util.toml.dumps(config), encoding="utf-8")
+
+    runner(["draft-changelog", "--version-spec", VERSION_SPEC, "--since", "foo"])
+    open_mock.assert_not_called()
+    del os.environ["RH_STEPS_TO_SKIP"]
 
 
 def test_draft_changelog_dry_run(npm_package, mocker, runner, git_prep):
