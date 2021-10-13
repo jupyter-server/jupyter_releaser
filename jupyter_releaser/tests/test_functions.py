@@ -1,6 +1,7 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 import json
+import os
 import shutil
 from pathlib import Path
 
@@ -28,6 +29,16 @@ def test_get_version_python(py_package):
     assert util.get_version() == "0.0.1"
     util.bump_version("0.0.2a0")
     assert util.get_version() == "0.0.2a0"
+
+
+def test_get_version_multipython(py_multipackage):
+    prev_dir = os.getcwd()
+    for package in py_multipackage:
+        os.chdir(package["rel_path"])
+        assert util.get_version() == "0.0.1"
+        util.bump_version("0.0.2a0")
+        assert util.get_version() == "0.0.2a0"
+        os.chdir(prev_dir)
 
 
 def test_get_version_npm(npm_package):

@@ -76,6 +76,11 @@ def py_package(git_repo):
 
 
 @fixture
+def py_multipackage(git_repo):
+    return testutil.create_python_package(git_repo, multi=True)
+
+
+@fixture
 def npm_package(git_repo):
     return testutil.create_npm_package(git_repo)
 

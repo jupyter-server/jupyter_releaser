@@ -72,6 +72,7 @@ def run(cmd, **kwargs):
 
 def _run_win(cmd, **kwargs):
     """Run a command as a subprocess and get the output as a string"""
+    kwargs.pop("show_cwd", False)
     quiet = kwargs.pop("quiet", False)
     if not quiet:
         log(f"> {cmd}")

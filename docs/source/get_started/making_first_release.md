@@ -23,6 +23,13 @@ already uses Jupyter Releaser.
     owner2/repo2,token2
     ```
 
+    If you have multiple Python packages in one repository, you can point to them as follows:
+
+    ```text
+    owner1/repo1/path/to/package1,token1
+    owner1/repo1/path/to/package2,token1
+    ```
+
 - If the repo generates npm release(s), add access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens), saved as `NPM_TOKEN` in "Secrets".
 
 ## Draft Changelog
