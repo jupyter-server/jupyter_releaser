@@ -2,6 +2,27 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.8.0
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...391fbc44a68747280ab323958f2fd57ba76cc37c))
+
+### Enhancements made
+
+- Add ability to skip steps [#180](https://github.com/jupyter-server/jupyter_releaser/pull/180) ([@blink1073](https://github.com/blink1073))
+- Handle multiple Python packages [#176](https://github.com/jupyter-server/jupyter_releaser/pull/176) ([@davidbrochart](https://github.com/davidbrochart))
+
+### Bugs fixed
+
+- Fix escaping of the changelog comment [#179](https://github.com/jupyter-server/jupyter_releaser/pull/179) ([@jtpio](https://github.com/jtpio))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-10-07&to=2021-10-14&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-10-07..2021-10-14&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2021-10-07..2021-10-14&type=Issues) | [@davidbrochart](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Adavidbrochart+updated%3A2021-10-07..2021-10-14&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-10-07..2021-10-14&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.7.6
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...0c3494dde2690badcf44a437e93ed2da45f4dfb3))
@@ -15,8 +36,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-09-30&to=2021-10-07&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-09-30..2021-10-07&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2021-09-30..2021-10-07&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-09-30..2021-10-07&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.7.5
 
