@@ -5,6 +5,9 @@ on:
       release_url:
         description: "The URL of the draft GitHub release"
         required: true
+      steps_to_skip:
+        description: comma-separated list of steps to steps_to_skip
+        required: false
 jobs:
   publish_release:
     runs-on: ubuntu-latest
@@ -38,6 +41,7 @@ jobs:
         with:
           token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
           release_url: ${{ github.event.inputs.release_url }}
+          steps_to_skip: ${{ github.event.inputs.steps_to_skip }}
       - name: "** Next Step **"
         run: |
           echo "Verify the final release"

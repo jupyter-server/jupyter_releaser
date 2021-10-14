@@ -20,6 +20,9 @@ on:
       since_last_stable:
         description: Use PRs with activity since the last stable git tag
         required: false
+      steps_to_skip:
+        description: comma-separated list of steps to steps_to_skip
+        required: false
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -57,6 +60,7 @@ jobs:
           post_version_spec: ${{ github.event.inputs.post_version_spec }}
           since: ${{ github.event.inputs.since }}
           since_last_stable: ${{ github.event.inputs.since_last_stable }}
+          steps_to_skip: ${{ github.event.inputs.steps_to_skip }}
       - name: "** Next Step **"
         run: |
           echo "Run the "Publish Release" Workflow with Release Url:"
