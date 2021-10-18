@@ -2,11 +2,13 @@
 # Distributed under the terms of the Modified BSD License.
 import os
 
+from jupyter_releaser.actions.common import setup
 from jupyter_releaser.util import CHECKOUT_NAME
 from jupyter_releaser.util import get_latest_tag
 from jupyter_releaser.util import log
 from jupyter_releaser.util import run
 
+setup()
 run("jupyter-releaser prep-git")
 
 # Capture the "since" argument in case we add tags befor checking changelog

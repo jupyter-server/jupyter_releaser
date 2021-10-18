@@ -38,6 +38,9 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - name: install-releaser
+      uses: ./.github/actions/install-releaser
+
     - shell: bash
       id: draft-release
       run: |
@@ -49,16 +52,12 @@ runs:
         if [ ! -z ${{ inputs.branch }} ]; then
           export RH_BRANCH=${{ inputs.branch }}
         fi
-        export RH_REF=${GITHUB_REF}
         export RH_VERSION_SPEC=${{ inputs.version_spec }}
         export RH_POST_VERSION_SPEC=${{ inputs.post_version_spec }}
         export RH_DRY_RUN=${{ inputs.dry_run }}
         export RH_SINCE=${{ inputs.since }}
         export RH_SINCE_LAST_STABLE=${{ inputs.since_last_stable }}
         export RH_STEPS_TO_SKIP=${{ inputs.steps_to_skip }}
-
-        # Install Jupyter Releaser from git
-        pip install -q git+https://github.com/jupyter-server/jupyter_releaser.git@v1
 
         # Draft Release
         python -m jupyter_releaser.actions.draft_release

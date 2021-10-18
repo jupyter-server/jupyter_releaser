@@ -12,24 +12,12 @@ jobs:
   publish_release:
     runs-on: ubuntu-latest
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.8.0
-        with:
-          access_token: ${{ github.token }}
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Install Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-          architecture: "x64"
-      - name: Install node
-        uses: actions/setup-node@v2
-        with:
-          node-version: "14.x"
-      - name: Upgrade packaging dependencies
-        run: |
-          pip install --upgrade pip setuptools wheel --user
+
+      - name: Setup
+        uses: ./.github/actions/common
+
       - name: Publish Release
         id: publish-release
         env:
@@ -37,11 +25,12 @@ jobs:
           PYPI_TOKEN_MAP: ${{ secrets.PYPI_TOKEN_MAP }}
           TWINE_USERNAME: __token__
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        uses: jupyter-server/jupyter_releaser/.github/actions/publish-release@v1
+        uses: ./.github/actions/publish-release
         with:
           token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
           release_url: ${{ github.event.inputs.release_url }}
           steps_to_skip: ${{ github.event.inputs.steps_to_skip }}
+
       - name: "** Next Step **"
         run: |
           echo "Verify the final release"

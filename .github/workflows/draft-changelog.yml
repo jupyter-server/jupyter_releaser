@@ -27,21 +27,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Install Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
-          architecture: "x64"
-      - name: Install node
-        uses: actions/setup-node@v2
-        with:
-          node-version: "14.x"
-      - name: Upgrade packaging dependencies
-        run: |
-          pip install --upgrade pip setuptools wheel --user
+
+      - name: Setup
+        uses: ./.github/actions/common
+
       - name: Draft Changelog
         id: draft-changelog
-        uses: jupyter-server/jupyter_releaser/.github/actions/draft-changelog@v1
+        uses: ./.github/actions/draft-changelog
         with:
           token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
           version_spec: ${{ github.event.inputs.version_spec }}
@@ -49,6 +41,7 @@ jobs:
           branch: ${{ github.event.inputs.branch }}
           since: ${{ github.event.inputs.since }}
           since_last_stable: ${{ github.event.inputs.since_last_stable }}
+
       - name: "** Next Step **"
         run: |
           echo "Review PR: ${{ steps.draft-changelog.outputs.pr_url }}"

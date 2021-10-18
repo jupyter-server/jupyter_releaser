@@ -462,7 +462,7 @@ def check_manifest():
 @click.option(
     "--cache-file",
     envvar="RH_CACHE_FILE",
-    default="~/.cache/pytest-link-check",
+    default="~/.cache/releaser-link-check",
     help="The cache file to use",
 )
 @click.option(
