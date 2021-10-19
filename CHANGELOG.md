@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.9.1
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...6a7cb67964d7ae5f881389081fbddca98cc2bdca))
+
+### Bugs fixed
+
+- Fix Check Release and Check Links Actions [#184](https://github.com/jupyter-server/jupyter_releaser/pull/184) ([@blink1073](https://github.com/blink1073))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-10-19&to=2021-10-19&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-10-19..2021-10-19&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.9.0
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...6cd54f1097a01ac69d9c0212a1a37828950c8895))
@@ -15,8 +31,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-10-14&to=2021-10-19&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-10-14..2021-10-19&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-10-14..2021-10-19&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.8.0
 
