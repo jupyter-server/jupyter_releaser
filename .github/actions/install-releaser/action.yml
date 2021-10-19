@@ -1,0 +1,14 @@
+name: "Install Releaser"
+description: "Ensure Releaser is Installed"
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      id: install-releaser
+      run: |
+        set -eux
+        # Install Jupyter Releaser from git unless we are testing Releaser itself
+        if ! command -v jupyter-releaser &> /dev/null
+        then
+            pip install -q git+https://github.com/jupyter-server/jupyter_releaser.git@v1
+        fi

@@ -11,40 +11,32 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - shell: bash
-      id: draft-release
-      run: |
-        set -eux
+    - name: install-releaser
+      uses: ./.github/actions/install-releaser
 
-        # Set up env variables
-        export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
-        export RH_REPOSITORY=${GITHUB_REPOSITORY}
-        export RH_CHANGELOG=${{ inputs.changelog }}
-        export RH_DRY_RUN=true
-        export RH_REF=${GITHUB_REF}
+    - name: draft-changelog
+      uses: ./.github/actions/draft-changelog
+      env:
+        RH_IS_CHECK_RELEASE: "true"
+      with:
+        dry_run: true
+        token: ${{ inputs.token }}
+        changelog: ${{ inputs.changelog }}
 
-        if [ ! -z ${GITHUB_BASE_REF} ]; then
-          echo "Using GITHUB_BASE_REF: ${GITHUB_BASE_REF}"
-          export RH_BRANCH=${GITHUB_BASE_REF}
-        else
-          # e.g refs/head/foo or refs/tag/bar
-          echo "Using GITHUB_REF: ${GITHUB_REF}"
-          export RH_BRANCH=$(echo ${GITHUB_REF} | cut -d'/' -f 3-)
-        fi
+    - name: draft-release
+      uses: ./.github/actions/draft-release
+      env:
+        RH_IS_CHECK_RELEASE: "true"
+      with:
+        dry_run: true
+        token: ${{ inputs.token }}
+        changelog: ${{ inputs.changelog }}
 
-        # Install Jupyter Releaser from git unless we are testing Releaser itself
-        if ! command -v jupyter-releaser &> /dev/null
-        then
-            pip install -q git+https://github.com/jupyter-server/jupyter_releaser.git@v1
-        fi
-
-        export RH_IS_CHECK_RELEASE=true
-
-        # Draft Changelog
-        python -m jupyter_releaser.actions.draft_changelog
-
-        # Draft Release
-        python -m jupyter_releaser.actions.draft_release
-
-        # Publish Assets
-        jupyter-releaser publish-assets
+    - name: publish-release
+      uses: ./.github/actions/publish-release
+      env:
+        RH_IS_CHECK_RELEASE: "true"
+      with:
+        dry_run: true
+        token: ${{ inputs.token }}
+        release_url: ""

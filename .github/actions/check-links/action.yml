@@ -3,29 +3,19 @@ description: "Run a link check function for a repo"
 runs:
   using: "composite"
   steps:
+    - name: install-releaser
+      uses: ./.github/actions/install-releaser
+
+    - name: Cache checked links
+      uses: actions/cache@v2
+      with:
+        path: ~/.cache/releaser-link-check
+        key: ${{ runner.os }}-releaser-linkcheck-${{ hashFiles('**/*.md', '**/*.rst') }}-links
+        restore-keys: |
+          ${{ runner.os }}-releaser-linkcheck-
+
     - shell: bash
       id: check-links
       run: |
         set -eux
-
-        # Set up env variables
-        export RH_REPOSITORY=${GITHUB_REPOSITORY}
-        export RH_REF=${GITHUB_REF}
-
-        if [ ! -z ${GITHUB_BASE_REF} ]; then
-          echo "Using GITHUB_BASE_REF: ${GITHUB_BASE_REF}"
-          export RH_BRANCH=${GITHUB_BASE_REF}
-        else
-          # e.g refs/head/foo or refs/tag/bar
-          echo "Using GITHUB_REF: ${GITHUB_REF}"
-          export RH_BRANCH=$(echo ${GITHUB_REF} | cut -d'/' -f 3-)
-        fi
-
-        # Install Jupyter Releaser from git unless we are testing Releaser itself
-        if ! command -v jupyter-releaser &> /dev/null
-        then
-            pip install -q git+https://github.com/jupyter-server/jupyter_releaser.git
-        fi
-
-        jupyter-releaser prep-git
-        jupyter-releaser check-links --force
+        python -m jupyter_releaser.actions.check_links

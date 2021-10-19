@@ -33,35 +33,12 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Get pip cache dir
-        id: pip-cache
-        run: |
-          echo "::set-output name=dir::$(pip cache dir)"
-      - name: Cache pip
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.pip-cache.outputs.dir }}
-          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('setup.cfg') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-${{ matrix.python-version }}-
-            ${{ runner.os }}-pip-
-      - name: Install the Python dependencies
-        run: |
-          pip install -e .[test] codecov
-      - name: Cache checked links
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/pytest-link-check
-          key: ${{ runner.os }}-linkcheck-${{ hashFiles('**/*.md') }}-md-links
-          restore-keys: |
-            ${{ runner.os }}-linkcheck-
-      - name: Install the Python dependencies
-        run: |
-          pip install -e .[test] codecov
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup
+        uses: ./.github/actions/common
+
       - name: Check Links
         uses: ./.github/actions/check-links
 
@@ -73,52 +50,26 @@ jobs:
         os: [ubuntu, windows, macos]
         python-version: ["3.7", "3.9"]
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.8.0
-        with:
-          access_token: ${{ github.token }}
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Install Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
-          architecture: "x64"
-      - name: Set up Node
-        uses: actions/setup-node@v2
-        with:
-          node-version: "14.x"
-      - run: git --version
-      - name: Upgrade packaging dependencies
-        run: |
-          pip install --upgrade pip setuptools wheel --user
-      - name: Get pip cache dir
-        id: pip-cache
-        run: |
-          echo "::set-output name=dir::$(pip cache dir)"
-      - name: Cache pip
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.pip-cache.outputs.dir }}
-          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('setup.cfg') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-${{ matrix.python-version }}-
-            ${{ runner.os }}-pip-
-      - name: Install the Python dependencies
+
+      - name: Setup
+        uses: ./.github/actions/common
+
+      - name: Install the Test dependencies
         run: |
           pip install -e .[test] codecov
-      - name: List installed packages
-        run: |
-          pip freeze
-          pip check
+
       - name: Run the tests with coverage on Ubuntu
         if: ${{ matrix.os == 'ubuntu' }}
         run: |
           pytest -vv --cov jupyter_releaser --cov-branch --cov-report term-missing:skip-covered
+
       - name: Run the tests on Windows and macOS
         if: ${{ matrix.os != 'ubuntu' }}
         run: |
           pytest -vv -s
+
       - name: Verify the Generate Changelog Action
         if: ${{ matrix.os == 'ubuntu' }}
         env:
@@ -142,18 +93,24 @@ jobs:
           pip install pypandoc
           python -m jupyter_releaser.actions.generate-changelog
           cat CHANGELOG_ENTRY.md
+
       - name: Coverage
         run: |
           codecov
 
   docs:
     runs-on: ubuntu-20.04
-    timeout-minutes: 2
+    timeout-minutes: 5
     defaults:
       run:
         shell: bash -l {0}
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup
+        uses: ./.github/actions/common
+
       - name: Setup conda
         uses: conda-incubator/setup-miniconda@v2
         with:
@@ -162,24 +119,14 @@ jobs:
           environment-file: docs/environment.yml
           python-version: "3.9"
           auto-activate-base: false
-      - name: Get pip cache dir
-        id: pip-cache
-        run: |
-          echo "::set-output name=dir::$(pip cache dir)"
-      - name: Cache pip
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.pip-cache.outputs.dir }}
-          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('setup.cfg') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-${{ matrix.python-version }}-
-            ${{ runner.os }}-pip-
+
       - name: Cache conda
         uses: actions/cache@v2
         with:
           path: ~/conda_pkgs_dir
           key: ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{
             hashFiles('docs/environment.yml') }}
+
       - name: Build docs
         run: |
           set -eux

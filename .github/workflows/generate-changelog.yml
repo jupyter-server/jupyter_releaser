@@ -19,32 +19,23 @@ on:
         required: false
 jobs:
   build:
-    runs-on: ${{ matrix.os }}-latest
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu]
         python-version: ["3.9"]
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
-      - name: Install Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
-        with:
-          python-version: ${{ matrix.python-version }}
-          architecture: "x64"
-      - name: Upgrade packaging dependencies
-        run: |
-          pip install --upgrade pip setuptools wheel --user
-      - name: Install the Python dependencies
+        uses: actions/checkout@v2
+
+      - name: Setup
+        uses: ./.github/actions/common
+
+      - name: Install the Extra Python dependencies
         run: |
           sudo apt-get install pandoc
           pip install pypandoc
-          pip install -e .
-      - name: List installed packages
-        run: |
-          pip freeze
-          pip check
+
       - name: Generate the Changelog
         env:
           GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -57,6 +48,7 @@ jobs:
           export RH_CONVERT_TO_RST=${{ github.event.inputs.convert_to_rst }}
           python -m jupyter_releaser.actions.generate-changelog
           cat CHANGELOG_ENTRY.md
+
       - uses: actions/upload-artifact@v2
         with:
           name: changelog

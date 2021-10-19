@@ -5,12 +5,14 @@ import shutil
 from pathlib import Path
 from subprocess import CalledProcessError
 
+from jupyter_releaser.actions.common import setup
 from jupyter_releaser.changelog import extract_current
 from jupyter_releaser.util import CHECKOUT_NAME
 from jupyter_releaser.util import get_latest_tag
 from jupyter_releaser.util import log
 from jupyter_releaser.util import run
 
+setup()
 
 check_release = os.environ.get("RH_IS_CHECK_RELEASE", "").lower() == "true"
 
