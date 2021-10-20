@@ -22,6 +22,7 @@ runs:
         dry_run: true
         token: ${{ inputs.token }}
         changelog: ${{ inputs.changelog }}
+        version_spec: ${{ env.RH_VERSION_SPEC }}
 
     - name: draft-release
       uses: jupyter-server/jupyter_releaser/.github/actions/draft-release@v1
@@ -31,6 +32,7 @@ runs:
         dry_run: true
         token: ${{ inputs.token }}
         changelog: ${{ inputs.changelog }}
+        version_spec: ${{ env.RH_VERSION_SPEC }}
 
     - name: publish-release
       uses: jupyter-server/jupyter_releaser/.github/actions/publish-release@v1
