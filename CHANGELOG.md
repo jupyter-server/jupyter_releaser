@@ -2,6 +2,26 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.9.2
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...dd219deac5b308dc68e36e1661921771237b03c1))
+
+### Bugs fixed
+
+- Make all of the actions use v1 tag internally [#187](https://github.com/jupyter-server/jupyter_releaser/pull/187) ([@blink1073](https://github.com/blink1073))
+
+### Documentation improvements
+
+- Clarify scopes needed for admin token [#186](https://github.com/jupyter-server/jupyter_releaser/pull/186) ([@blink1073](https://github.com/blink1073))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-10-19&to=2021-10-20&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-10-19..2021-10-20&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2021-10-19..2021-10-20&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.9.1
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...6a7cb67964d7ae5f881389081fbddca98cc2bdca))
@@ -15,8 +35,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-10-19&to=2021-10-19&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-10-19..2021-10-19&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.9.0
 
