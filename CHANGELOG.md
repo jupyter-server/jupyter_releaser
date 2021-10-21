@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.9.4
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...6daa3cc0f156ac390e17fe9a5b03395226022149))
+
+### Bugs fixed
+
+- Skip branch setup on publish [#192](https://github.com/jupyter-server/jupyter_releaser/pull/192) ([@jtpio](https://github.com/jtpio))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-10-20&to=2021-10-21&type=c))
+
+[@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-10-20..2021-10-21&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.9.3
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...25c6e9b61ea383e086e6ff25f4d73b8cbeb26d0d))
@@ -15,8 +31,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-10-20&to=2021-10-20&type=c))
 
 [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-10-20..2021-10-20&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.9.2
 
