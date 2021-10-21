@@ -9,7 +9,9 @@ default_branch = get_default_branch()
 
 if release_url:
     run(f"jupyter-releaser extract-release {release_url}")
-    run(f"jupyter-releaser forwardport-changelog {release_url} --branch {default_branch}")
+    run(
+        f"jupyter-releaser forwardport-changelog {release_url} --branch {default_branch}"
+    )
 
 run(f"jupyter-releaser publish-assets {release_url}")
 
