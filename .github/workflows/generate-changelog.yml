@@ -18,7 +18,7 @@ on:
         description: Use PRs with activity until this date or git reference
         required: false
 jobs:
-  build:
+  generate_changelog:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false

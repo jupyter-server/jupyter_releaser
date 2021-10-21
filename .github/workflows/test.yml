@@ -42,7 +42,7 @@ jobs:
       - name: Check Links
         uses: ./.github/actions/check-links
 
-  build:
+  test:
     runs-on: ${{ matrix.os }}-latest
     strategy:
       fail-fast: false

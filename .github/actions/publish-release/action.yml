@@ -12,7 +12,7 @@ inputs:
     default: "false"
     required: false
   steps_to_skip:
-    description: comma-separated list of steps to steps_to_skip
+    description: Comma separated list of steps to skip
     required: false
 
 outputs:

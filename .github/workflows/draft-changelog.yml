@@ -18,7 +18,7 @@ on:
         description: Use PRs with activity since the last stable git tag
         required: false
 jobs:
-  changelog:
+  draft_changelog:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
