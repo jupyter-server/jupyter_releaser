@@ -2,7 +2,8 @@
 # Distributed under the terms of the Modified BSD License.
 import os
 
-from jupyter_releaser.util import get_default_branch, run
+from jupyter_releaser.util import get_default_branch
+from jupyter_releaser.util import run
 
 release_url = os.environ["release_url"]
 default_branch = get_default_branch()
