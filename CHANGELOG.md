@@ -2,6 +2,26 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.9.5
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...95b14a79f2f59b0c31e2230a3b407c674007cacb))
+
+### Bugs fixed
+
+- Remove default branch logic [#195](https://github.com/jupyter-server/jupyter_releaser/pull/195) ([@jtpio](https://github.com/jtpio))
+
+### Maintenance and upkeep improvements
+
+- Clean up actions and workflows [#194](https://github.com/jupyter-server/jupyter_releaser/pull/194) ([@blink1073](https://github.com/blink1073))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-10-21&to=2021-10-22&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-10-21..2021-10-22&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2021-10-21..2021-10-22&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-10-21..2021-10-22&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.9.4
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...6daa3cc0f156ac390e17fe9a5b03395226022149))
@@ -15,8 +35,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-10-20&to=2021-10-21&type=c))
 
 [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-10-20..2021-10-21&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.9.3
 
