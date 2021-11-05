@@ -178,14 +178,19 @@ def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=F
 
 
 def tag_release(
-    dist_dir, release_message, tag_format, tag_message, no_git_tag_workspace
+    dist_dir,
+    python_packages,
+    release_message,
+    tag_format,
+    tag_message,
+    no_git_tag_workspace,
 ):
     """Create release commit and tag"""
     # Get the new version
     version = util.get_version()
 
     # Create the release commit
-    util.create_release_commit(version, release_message, dist_dir)
+    util.create_release_commit(version, release_message, dist_dir, python_packages)
 
     # Create the annotated release tag
     tag_name = tag_format.format(version=version)
@@ -209,11 +214,16 @@ def draft_release(
     post_version_spec,
     post_version_message,
     assets,
+    python_packages,
 ):
     """Publish Draft GitHub release and handle post version bump"""
     branch = branch or util.get_branch()
     repo = repo or util.get_repo()
-    assets = assets or glob(f"{dist_dir}/*")
+    assets = assets or [
+        path
+        for python_package in python_packages
+        for path in glob(f"{python_package}/{dist_dir}/*")
+    ]
     version = util.get_version()
     body = changelog.extract_current(changelog_path)
     prerelease = util.is_prerelease(version)
@@ -276,7 +286,9 @@ def delete_release(auth, release_url):
     gh.repos.delete_release(release.id)
 
 
-def extract_release(auth, dist_dir, dry_run, release_url, npm_install_options):
+def extract_release(
+    auth, dist_dir, python_packages, dry_run, release_url, npm_install_options
+):
     """Download and verify assets from a draft GitHub release"""
     match = parse_release_url(release_url)
     owner, repo = match["owner"], match["repo"]
@@ -296,23 +308,26 @@ def extract_release(auth, dist_dir, dry_run, release_url, npm_install_options):
     options = config.get("options", {})
     npm_install_options = npm_install_options or options.get("npm-install-options", "")
 
-    # Clean the dist folder
-    dist = Path(dist_dir)
-    if dist.exists():
-        shutil.rmtree(dist, ignore_errors=True)
-    os.makedirs(dist)
+    for python_package in python_packages:
+        # Clean the dist folder
+        dist = Path(python_package) / dist_dir
+        if dist.exists():
+            shutil.rmtree(dist, ignore_errors=True)
+        os.makedirs(dist)
 
-    # Fetch, validate, and publish assets
-    for asset in assets:
-        util.log(f"Fetching {asset.name}...")
-        url = asset.url
-        headers = dict(Authorization=f"token {auth}", Accept="application/octet-stream")
-        path = dist / asset.name
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            with open(path, "wb") as f:
-                for chunk in r.iter_content(chunk_size=8192):
-                    f.write(chunk)
+        # Fetch, validate, and publish assets
+        for asset in assets:
+            util.log(f"Fetching {asset.name}...")
+            url = asset.url
+            headers = dict(
+                Authorization=f"token {auth}", Accept="application/octet-stream"
+            )
+            path = python_package / dist / asset.name
+            with requests.get(url, headers=headers, stream=True) as r:
+                r.raise_for_status()
+                with open(path, "wb") as f:
+                    for chunk in r.iter_content(chunk_size=8192):
+                        f.write(chunk)
 
     # Check all npm packages
     npm.check_dist(dist, npm_install_options)
@@ -372,26 +387,17 @@ def parse_release_url(release_url):
     return match
 
 
-def publish_assets(
+def publish_assets_py(
     dist_dir,
-    npm_token,
-    npm_cmd,
     twine_cmd,
-    npm_registry,
     twine_registry,
     dry_run,
     release_url,
     python_package,
 ):
-    """Publish release asset(s)"""
-    os.environ["NPM_REGISTRY"] = npm_registry
+    """Publish release asset(s) to PyPI"""
     os.environ["TWINE_REGISTRY"] = twine_registry
     twine_token = ""
-
-    if len(glob(f"{dist_dir}/*.tgz")):
-        npm.handle_npm_config(npm_token)
-        if npm_token:
-            util.run("npm whoami")
 
     if len(glob(f"{dist_dir}/*.whl")):
         twine_token = python.get_pypi_token(release_url, python_package)
@@ -404,7 +410,6 @@ def publish_assets(
             twine_cmd = "twine upload --repository-url=http://0.0.0.0:8081"
             os.environ["TWINE_USERNAME"] = "foo"
             twine_token = twine_token or "bar"
-        npm_cmd = "npm publish --dry-run"
     else:
         os.environ.setdefault("TWINE_USERNAME", "__token__")
 
@@ -418,6 +423,42 @@ def publish_assets(
             # NOTE: Do not print the env since a twine token extracted from
             # a PYPI_TOKEN_MAP will not be sanitized in output
             util.retry(f"{twine_cmd} {name}", cwd=dist_dir, env=env)
+            found = True
+        elif suffix == ".tgz":
+            # done in publish_assets_npm
+            found = True
+        else:
+            util.log(f"Nothing to upload for {name}")
+
+    if not found:  # pragma: no cover
+        raise ValueError("No assets published, refusing to finalize release")
+
+
+def publish_assets_npm(
+    dist_dir,
+    npm_token,
+    npm_cmd,
+    npm_registry,
+    dry_run,
+    release_url,
+):
+    """Publish release asset(s)"""
+    os.environ["NPM_REGISTRY"] = npm_registry
+
+    if len(glob(f"{dist_dir}/*.tgz")):
+        npm.handle_npm_config(npm_token)
+        if npm_token:
+            util.run("npm whoami")
+
+    if dry_run:
+        npm_cmd = "npm publish --dry-run"
+
+    found = False
+    for path in sorted(glob(f"{dist_dir}/*.*")):
+        name = Path(path).name
+        suffix = Path(path).suffix
+        if suffix in [".gz", ".whl"]:
+            # done in publish_assets_py
             found = True
         elif suffix == ".tgz":
             # Ignore already published versions

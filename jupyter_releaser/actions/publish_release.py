@@ -10,7 +10,8 @@ if release_url:
     run(f"jupyter-releaser extract-release {release_url}")
     run(f"jupyter-releaser forwardport-changelog {release_url}")
 
-run(f"jupyter-releaser publish-assets {release_url}")
+run(f"jupyter-releaser publish-assets-py {release_url}")
+run(f"jupyter-releaser publish-assets-npm {release_url}")
 
 if release_url:
     run(f"jupyter-releaser publish-release {release_url}")

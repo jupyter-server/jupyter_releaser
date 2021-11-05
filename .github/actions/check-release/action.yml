@@ -16,10 +16,10 @@ runs:
   using: "composite"
   steps:
     - name: install-releaser
-      uses: jupyter-server/jupyter_releaser/.github/actions/install-releaser@v1
+      uses: davidbrochart/jupyter_releaser/.github/actions/install-releaser@fix_multipy
 
     - name: draft-changelog
-      uses: jupyter-server/jupyter_releaser/.github/actions/draft-changelog@v1
+      uses: davidbrochart/jupyter_releaser/.github/actions/draft-changelog@fix_multipy
       env:
         RH_IS_CHECK_RELEASE: "true"
       with:
@@ -29,7 +29,7 @@ runs:
         version_spec: ${{ inputs.version_spec }}
 
     - name: draft-release
-      uses: jupyter-server/jupyter_releaser/.github/actions/draft-release@v1
+      uses: davidbrochart/jupyter_releaser/.github/actions/draft-release@fix_multipy
       env:
         RH_IS_CHECK_RELEASE: "true"
       with:
@@ -39,7 +39,7 @@ runs:
         version_spec: ${{ inputs.version_spec }}
 
     - name: publish-release
-      uses: jupyter-server/jupyter_releaser/.github/actions/publish-release@v1
+      uses: davidbrochart/jupyter_releaser/.github/actions/publish-release@fix_multipy
       env:
         RH_IS_CHECK_RELEASE: "true"
       with:
