@@ -6,6 +6,7 @@ import os.path as osp
 import re
 import shlex
 from glob import glob
+from pathlib import Path
 from subprocess import PIPE
 from subprocess import Popen
 from tempfile import TemporaryDirectory
@@ -16,18 +17,20 @@ PYPROJECT = util.PYPROJECT
 SETUP_PY = util.SETUP_PY
 
 
-def build_dist(dist_dir):
+def build_dist(dist_dir, clean=True):
     """Build the python dist files into a dist folder"""
-    # Clean the dist folder of existing Python packages
+    # Clean the dist folder of existing npm tarballs
     os.makedirs(dist_dir, exist_ok=True)
-    for pkg in glob(f"{dist_dir}/*.gz") + glob(f"{dist_dir}/*.whl"):
-        os.remove(pkg)
+    dest = Path(dist_dir)
+    if clean:
+        for pkg in glob(f"{dest}/*.gz") + glob(f"{dest}/*.whl"):
+            os.remove(pkg)
 
     if PYPROJECT.exists():
-        util.run(f"python -m build --outdir {dist_dir} .", quiet=True, show_cwd=True)
+        util.run(f"python -m build --outdir {dest} .", quiet=True, show_cwd=True)
     elif SETUP_PY.exists():
-        util.run(f"python setup.py sdist --dist-dir {dist_dir}", quiet=True)
-        util.run(f"python setup.py bdist_wheel --dist-dir {dist_dir}", quiet=True)
+        util.run(f"python setup.py sdist --dist-dir {dest}", quiet=True)
+        util.run(f"python setup.py bdist_wheel --dist-dir {dest}", quiet=True)
 
 
 def check_dist(dist_file, test_cmd=""):

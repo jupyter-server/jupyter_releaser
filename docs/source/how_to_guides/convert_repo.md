@@ -28,11 +28,11 @@ A. Prep the `jupyter_releaser` fork:
   owner2/repo2,token2
   ```
 
-  If you have multiple Python packages in one repository, you can point to them as follows:
+  If you have multiple Python packages in the same repository, you can point to them as follows:
 
   ```text
   owner1/repo1/path/to/package1,token1
-  owner1/repo1/path/to/package2,token1
+  owner1/repo1/path/to/package2,token2
   ```
 
 - [ ] If needed, add access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens), saved as `NPM_TOKEN`.

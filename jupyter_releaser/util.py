@@ -168,9 +168,7 @@ def compute_sha256(path):
     return sha256.hexdigest()
 
 
-def create_release_commit(
-    version, release_message=None, dist_dir="dist", python_packages=["."]
-):
+def create_release_commit(version, release_message=None, dist_dir="dist"):
     """Generate a release commit that has the sha256 digests for the release files"""
     release_message = release_message or "Publish {version}"
     release_message = release_message.format(version=version)
@@ -178,16 +176,7 @@ def create_release_commit(
 
     shas = dict()
 
-    python_packages = [
-        "" if python_package == "." else f"{python_package}/"
-        for python_package in python_packages
-    ]
-
-    files = [
-        path
-        for python_package in python_packages
-        for path in glob(f"{python_package}{dist_dir}/*")
-    ]
+    files = glob(f"{dist_dir}/*")
     if not files:  # pragma: no cover
         raise ValueError("Missing distribution files")
 

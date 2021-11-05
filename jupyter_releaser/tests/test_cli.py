@@ -732,12 +732,12 @@ def test_publish_assets_py(py_package, runner, mocker, git_prep):
     mock_run = mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
 
     dist_dir = py_package / util.CHECKOUT_NAME / "dist"
-    runner(["publish-assets-py", "--dist-dir", dist_dir, "--dry-run", HTML_URL])
+    runner(["publish-assets", "--dist-dir", dist_dir, "--dry-run", HTML_URL])
     assert called == 2, called
 
     log = get_log()
-    assert "before-publish-assets-py" in log
-    assert "after-publish-assets-py" in log
+    assert "before-publish-assets" in log
+    assert "after-publish-assets" in log
 
 
 def test_publish_assets_npm(npm_dist, runner, mocker):
@@ -754,13 +754,7 @@ def test_publish_assets_npm(npm_dist, runner, mocker):
     mock_run = mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
 
     runner(
-        [
-            "publish-assets-npm",
-            "--npm-cmd",
-            "npm publish --dry-run",
-            "--dist-dir",
-            dist_dir,
-        ]
+        ["publish-assets", "--npm-cmd", "npm publish --dry-run", "--dist-dir", dist_dir]
     )
 
     assert called == 3, called
@@ -783,7 +777,7 @@ def test_publish_assets_npm_exists(npm_dist, runner, mocker):
 
     runner(
         [
-            "publish-assets-npm",
+            "publish-assets",
             "--npm-token",
             "abc",
             "--npm-cmd",
@@ -814,7 +808,7 @@ def test_publish_assets_npm_all_exists(npm_dist, runner, mocker):
     with pytest.raises(ValueError):
         runner(
             [
-                "publish-assets-npm",
+                "publish-assets",
                 "--npm-token",
                 "abc",
                 "--npm-cmd",

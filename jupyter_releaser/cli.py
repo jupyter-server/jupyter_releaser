@@ -180,7 +180,7 @@ python_packages_options = [
         envvar="RH_PYTHON_PACKAGES",
         default=["."],
         multiple=True,
-        help="The list of paths to Python packages",
+        help='The list of strings of the form "path_to_package:name_of_package"',
     )
 ]
 
@@ -291,7 +291,7 @@ def prep_git(ref, branch, repo, auth, username, git_url):
 def bump_version(version_spec, version_cmd, python_packages):
     """Prep git and env variables and bump version"""
     prev_dir = os.getcwd()
-    for python_package in python_packages:
+    for python_package in [p.split(":")[0] for p in python_packages]:
         os.chdir(python_package)
         lib.bump_version(version_spec, version_cmd)
         os.chdir(prev_dir)
@@ -386,32 +386,31 @@ def check_changelog(
 def build_python(dist_dir, python_packages):
     """Build Python dist files"""
     prev_dir = os.getcwd()
-    for python_package in python_packages:
+    clean = True
+    for python_package in [p.split(":")[0] for p in python_packages]:
         os.chdir(python_package)
         if not util.PYPROJECT.exists() and not util.SETUP_PY.exists():
             util.log(
                 f"Skipping build-python in {python_package} since there are no python package files"
             )
         else:
-            python.build_dist(dist_dir)
+            python.build_dist(
+                Path(os.path.relpath(".", python_package)) / dist_dir, clean=clean
+            )
+            clean = False
         os.chdir(prev_dir)
 
 
 @main.command()
 @add_options(dist_dir_options)
-@add_options(python_packages_options)
 @use_checkout_dir()
-def check_python(dist_dir, python_packages):
+def check_python(dist_dir):
     """Check Python dist files"""
-    prev_dir = os.getcwd()
-    for python_package in python_packages:
-        os.chdir(python_package)
-        for dist_file in glob(f"{dist_dir}/*"):
-            if Path(dist_file).suffix not in [".gz", ".whl"]:
-                util.log(f"Skipping non-python dist file {dist_file}")
-                continue
-            python.check_dist(dist_file)
-        os.chdir(prev_dir)
+    for dist_file in glob(f"{dist_dir}/*"):
+        if Path(dist_file).suffix not in [".gz", ".whl"]:
+            util.log(f"Skipping non-python dist file {dist_file}")
+            continue
+        python.check_dist(dist_file)
 
 
 @main.command()
@@ -480,7 +479,6 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
 
 @main.command()
 @add_options(dist_dir_options)
-@add_options(python_packages_options)
 @click.option(
     "--release-message",
     envvar="RH_RELEASE_MESSAGE",
@@ -506,21 +504,11 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
 )
 @use_checkout_dir()
 def tag_release(
-    dist_dir,
-    python_packages,
-    release_message,
-    tag_format,
-    tag_message,
-    no_git_tag_workspace,
+    dist_dir, release_message, tag_format, tag_message, no_git_tag_workspace
 ):
     """Create release commit and tag"""
     lib.tag_release(
-        dist_dir,
-        python_packages,
-        release_message,
-        tag_format,
-        tag_message,
-        no_git_tag_workspace,
+        dist_dir, release_message, tag_format, tag_message, no_git_tag_workspace
     )
 
 
@@ -531,7 +519,6 @@ def tag_release(
 @add_options(version_cmd_options)
 @add_options(dist_dir_options)
 @add_options(dry_run_options)
-@add_options(python_packages_options)
 @click.option(
     "--post-version-spec",
     envvar="RH_POST_VERSION_SPEC",
@@ -557,7 +544,6 @@ def draft_release(
     post_version_spec,
     post_version_message,
     assets,
-    python_packages,
 ):
     """Publish Draft GitHub release"""
     lib.draft_release(
@@ -572,7 +558,6 @@ def draft_release(
         post_version_spec,
         post_version_message,
         assets,
-        python_packages,
     )
 
 
@@ -588,58 +573,12 @@ def delete_release(auth, release_url):
 @main.command()
 @add_options(auth_options)
 @add_options(dist_dir_options)
-@add_options(python_packages_options)
 @add_options(dry_run_options)
 @add_options(npm_install_options)
 @click.argument("release-url", nargs=1)
-def extract_release(
-    auth, dist_dir, python_packages, dry_run, release_url, npm_install_options
-):
+def extract_release(auth, dist_dir, dry_run, release_url, npm_install_options):
     """Download and verify assets from a draft GitHub release"""
-    lib.extract_release(
-        auth, dist_dir, python_packages, dry_run, release_url, npm_install_options
-    )
-
-
-@main.command()
-@add_options(dist_dir_options)
-@click.option(
-    "--twine-cmd",
-    help="The twine to run for Python release",
-    envvar="TWINE_COMMAND",
-    default="twine upload",
-)
-@click.option(
-    "--twine-registry",
-    help="The pypi register to target for publishing",
-    envvar="TWINE_REGISTRY",
-    default="https://pypi.org/simple/",
-)
-@add_options(dry_run_options)
-@add_options(python_packages_options)
-@click.argument("release-url", nargs=1, required=False)
-@use_checkout_dir()
-def publish_assets_py(
-    dist_dir,
-    twine_cmd,
-    twine_registry,
-    dry_run,
-    release_url,
-    python_packages,
-):
-    """Publish release asset(s) to PyPI"""
-    prev_dir = os.getcwd()
-    for python_package in python_packages:
-        os.chdir(python_package)
-        lib.publish_assets_py(
-            dist_dir,
-            twine_cmd,
-            twine_registry,
-            dry_run,
-            release_url,
-            python_package,
-        )
-        os.chdir(prev_dir)
+    lib.extract_release(auth, dist_dir, dry_run, release_url, npm_install_options)
 
 
 @main.command()
@@ -652,31 +591,51 @@ def publish_assets_py(
     default="npm publish",
 )
 @click.option(
+    "--twine-cmd",
+    help="The twine to run for Python release",
+    envvar="TWINE_COMMAND",
+    default="twine upload",
+)
+@click.option(
     "--npm-registry",
     help="The npm registry to target for publishing",
     envvar="NPM_REGISTRY",
     default="https://registry.npmjs.org/",
 )
+@click.option(
+    "--twine-registry",
+    help="The pypi register to target for publishing",
+    envvar="TWINE_REGISTRY",
+    default="https://pypi.org/simple/",
+)
 @add_options(dry_run_options)
+@add_options(python_packages_options)
 @click.argument("release-url", nargs=1, required=False)
 @use_checkout_dir()
-def publish_assets_npm(
+def publish_assets(
     dist_dir,
     npm_token,
     npm_cmd,
+    twine_cmd,
     npm_registry,
+    twine_registry,
     dry_run,
     release_url,
+    python_packages,
 ):
-    """Publish release asset(s) to NPM"""
-    lib.publish_assets_npm(
-        dist_dir,
-        npm_token,
-        npm_cmd,
-        npm_registry,
-        dry_run,
-        release_url,
-    )
+    """Publish release asset(s)"""
+    for python_package in python_packages:
+        lib.publish_assets(
+            dist_dir,
+            npm_token,
+            npm_cmd,
+            twine_cmd,
+            npm_registry,
+            twine_registry,
+            dry_run,
+            release_url,
+            python_package,
+        )
 
 
 @main.command()
