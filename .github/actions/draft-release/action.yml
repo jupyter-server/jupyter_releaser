@@ -39,7 +39,7 @@ runs:
   using: "composite"
   steps:
     - name: install-releaser
-      uses: davidbrochart/jupyter_releaser/.github/actions/install-releaser@fix_multipy
+      uses: jupyter-server/jupyter_releaser/.github/actions/install-releaser@v1
 
     - shell: bash
       id: draft-release

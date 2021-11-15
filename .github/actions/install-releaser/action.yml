@@ -10,5 +10,5 @@ runs:
         # Install Jupyter Releaser from git unless we are testing Releaser itself
         if ! command -v jupyter-releaser &> /dev/null
         then
-            pip install -q git+https://github.com/davidbrochart/jupyter_releaser.git@fix_multipy
+            pip install -q git+https://github.com/jupyter-server/jupyter_releaser.git@v1
         fi
