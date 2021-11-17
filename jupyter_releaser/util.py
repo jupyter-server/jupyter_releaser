@@ -172,13 +172,13 @@ def create_release_commit(version, release_message=None, dist_dir="dist"):
     """Generate a release commit that has the sha256 digests for the release files"""
     release_message = release_message or "Publish {version}"
     release_message = release_message.format(version=version)
-    cmd = f'git commit -am "{release_message}" -m "SHA256 hashes:"'
+    cmd = f'git commit -am "{release_message}"'
 
     shas = dict()
 
     files = glob(f"{dist_dir}/*")
-    if not files:  # pragma: no cover
-        raise ValueError("Missing distribution files")
+    if files:  # pragma: no cover
+        cmd += ' -m "SHA256 hashes:"'
 
     for path in sorted(files):
         path = normalize_path(path)
