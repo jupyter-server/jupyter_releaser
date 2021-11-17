@@ -178,7 +178,7 @@ def create_release_commit(version, release_message=None, dist_dir="dist"):
 
     files = glob(f"{dist_dir}/*")
     if files:  # pragma: no cover
-        cmd += ' -m "SHA256 hashes:'
+        cmd += ' -m "SHA256 hashes:"'
 
     for path in sorted(files):
         path = normalize_path(path)
