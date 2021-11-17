@@ -2,6 +2,26 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.9.6
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...0fbfbdf2bd2c52763d82b45c5cf863b78ee6093d))
+
+### Enhancements made
+
+- Allow for a single private package [#205](https://github.com/jupyter-server/jupyter_releaser/pull/205) ([@blink1073](https://github.com/blink1073))
+
+### Maintenance
+
+- Fix PR formatting [#198](https://github.com/jupyter-server/jupyter_releaser/pull/198) ([@krassowski](https://github.com/krassowski))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-10-22&to=2021-11-17&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-10-22..2021-11-17&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2021-10-22..2021-11-17&type=Issues) | [@krassowski](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2021-10-22..2021-11-17&type=Issues) | [@welcome](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Awelcome+updated%3A2021-10-22..2021-11-17&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.9.5
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...95b14a79f2f59b0c31e2230a3b407c674007cacb))
@@ -19,8 +39,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-10-21&to=2021-10-22&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-10-21..2021-10-22&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2021-10-21..2021-10-22&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-10-21..2021-10-22&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.9.4
 
