@@ -805,19 +805,18 @@ def test_publish_assets_npm_all_exists(npm_dist, runner, mocker):
 
     mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
 
-    with pytest.raises(ValueError):
-        runner(
-            [
-                "publish-assets",
-                "--npm-token",
-                "abc",
-                "--npm-cmd",
-                "npm publish --dry-run",
-                "--dist-dir",
-                dist_dir,
-                HTML_URL,
-            ]
-        )
+    runner(
+        [
+            "publish-assets",
+            "--npm-token",
+            "abc",
+            "--npm-cmd",
+            "npm publish --dry-run",
+            "--dist-dir",
+            dist_dir,
+            HTML_URL,
+        ]
+    )
 
     assert called == 3, called
 

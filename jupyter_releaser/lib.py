@@ -437,9 +437,6 @@ def publish_assets(
         else:
             util.log(f"Nothing to upload for {name}")
 
-    if not found:  # pragma: no cover
-        raise ValueError("No assets published, refusing to finalize release")
-
 
 def publish_release(auth, release_url):
     """Publish GitHub release"""
