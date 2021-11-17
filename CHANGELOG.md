@@ -10,9 +10,9 @@
 
 - Allow for a single private package [#205](https://github.com/jupyter-server/jupyter_releaser/pull/205) ([@blink1073](https://github.com/blink1073))
 
-### Other merged PRs
+### Maintenance
 
-- [squash] Fix formatting [#198](https://github.com/jupyter-server/jupyter_releaser/pull/198) ([@krassowski](https://github.com/krassowski))
+- Fix PR formatting [#198](https://github.com/jupyter-server/jupyter_releaser/pull/198) ([@krassowski](https://github.com/krassowski))
 
 ### Contributors to this release
 
