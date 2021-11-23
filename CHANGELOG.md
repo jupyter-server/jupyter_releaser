@@ -2,6 +2,26 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.9.8
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...1bc9790061ba61de52ee3dba5c55a5bffc34a682))
+
+### Bugs fixed
+
+- Fix multi python package publishing [#201](https://github.com/jupyter-server/jupyter_releaser/pull/201) ([@davidbrochart](https://github.com/davidbrochart))
+
+### Maintenance and upkeep improvements
+
+- Enforce labels on PRs [#209](https://github.com/jupyter-server/jupyter_releaser/pull/209) ([@blink1073](https://github.com/blink1073))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-11-17&to=2021-11-23&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-11-17..2021-11-23&type=Issues) | [@davidbrochart](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Adavidbrochart+updated%3A2021-11-17..2021-11-23&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.9.7
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...6f2947e69a2532979b1834276a9da1e7ebda6afc))
@@ -15,8 +35,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-11-17&to=2021-11-17&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-11-17..2021-11-17&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.9.6
 
