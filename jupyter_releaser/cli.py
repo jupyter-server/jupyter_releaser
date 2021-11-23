@@ -180,7 +180,7 @@ python_packages_options = [
         envvar="RH_PYTHON_PACKAGES",
         default=["."],
         multiple=True,
-        help="The list of paths to Python packages",
+        help='The list of strings of the form "path_to_package:name_of_package"',
     )
 ]
 
@@ -291,7 +291,7 @@ def prep_git(ref, branch, repo, auth, username, git_url):
 def bump_version(version_spec, version_cmd, python_packages):
     """Prep git and env variables and bump version"""
     prev_dir = os.getcwd()
-    for python_package in python_packages:
+    for python_package in [p.split(":")[0] for p in python_packages]:
         os.chdir(python_package)
         lib.bump_version(version_spec, version_cmd)
         os.chdir(prev_dir)
@@ -387,7 +387,7 @@ def build_python(dist_dir, python_packages):
     """Build Python dist files"""
     prev_dir = os.getcwd()
     clean = True
-    for python_package in python_packages:
+    for python_package in [p.split(":")[0] for p in python_packages]:
         os.chdir(python_package)
         if not util.PYPROJECT.exists() and not util.SETUP_PY.exists():
             util.log(

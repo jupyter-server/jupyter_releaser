@@ -393,8 +393,15 @@ def publish_assets(
         if npm_token:
             util.run("npm whoami")
 
+    res = python_package.split(":")
+    python_package_path = res[0]
+    if len(res) == 2:
+        python_package_name = res[1].replace("-", "_")
+    else:
+        python_package_name = ""
+
     if len(glob(f"{dist_dir}/*.whl")):
-        twine_token = python.get_pypi_token(release_url, python_package)
+        twine_token = python.get_pypi_token(release_url, python_package_path)
 
     if dry_run:
         # Start local pypi server with no auth, allowing overwrites,
@@ -413,12 +420,15 @@ def publish_assets(
         name = Path(path).name
         suffix = Path(path).suffix
         if suffix in [".gz", ".whl"]:
-            env = os.environ.copy()
-            env["TWINE_PASSWORD"] = twine_token
-            # NOTE: Do not print the env since a twine token extracted from
-            # a PYPI_TOKEN_MAP will not be sanitized in output
-            util.retry(f"{twine_cmd} {name}", cwd=dist_dir, env=env)
-            found = True
+            if name.startswith(
+                python_package_name
+            ):  # FIXME: not enough to know it's the right package
+                env = os.environ.copy()
+                env["TWINE_PASSWORD"] = twine_token
+                # NOTE: Do not print the env since a twine token extracted from
+                # a PYPI_TOKEN_MAP will not be sanitized in output
+                util.retry(f"{twine_cmd} {name}", cwd=dist_dir, env=env)
+                found = True
         elif suffix == ".tgz":
             # Ignore already published versions
             try:
