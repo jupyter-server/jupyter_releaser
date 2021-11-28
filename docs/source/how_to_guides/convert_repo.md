@@ -52,7 +52,7 @@ B. Prep target repository:
 ```toml
 [[tool.tbump.file]]
 src = "jupyter_server/_version.py"
-version_template = '({major}, {minor}, {micro}, "{channel}", "{release}")'
+version_template = '({major}, {minor}, {patch}, "{channel}", "{release}")'
 
 [[tool.tbump.field]]
 name = "channel"
