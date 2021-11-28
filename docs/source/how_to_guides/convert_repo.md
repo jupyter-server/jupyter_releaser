@@ -47,21 +47,20 @@ B. Prep target repository:
 - [ ] Add [tbump](https://github.com/tankerhq/tbump) support if using Python - see example metadata in [pyproject.toml](https://github.com/jupyter-server/jupyter_releaser/blob/master/pyproject.toml)
   - We recommend putting `setuptools` metadata in `setup.cfg` and using `version attr: <package_name>.__version__`, see example [`setup.cfg`](https://github.com/jupyter-server/jupyter_releaser/blob/master/setup.cfg)
   - See documentation on `setup.cfg` [metadata](https://setuptools.readthedocs.io/en/latest/userguide/declarative_config.html)
-  - If previously providing `version_info`, use a snippet like the one below, since `tbump` requires the intact version string, e.g.
+  - If previously providing `version_info` like `version_info = (1, 7, 0, '.dev', '0')`, use tbump config like the one below:
 
-```python
-import re
+```toml
+[[tool.tbump.file]]
+src = "jupyter_server/_version.py"
+version_template = '({major}, {minor}, {patch}, "{channel}", "{release}")'
 
-# Version string must appear intact for tbump versioning
-__version__ = '1.4.0.dev0'
+[[tool.tbump.field]]
+name = "channel"
+default = ""
 
-# Build up version_info tuple for backwards compatibility
-pattern = r'(?P<major>\d+).(?P<minor>\d+).(?P<patch>\d+)(?P<rest>.*)'
-match = re.match(pattern, __version__)
-parts = [int(match[part]) for part in ['major', 'minor', 'patch']]
-if match['rest']:
-  parts.append(match['rest'])
-version_info = tuple(parts)
+[[tool.tbump.field]]
+name = "release"
+default = ""
 ```
 
 - [ ] Add a GitHub Actions CI step to run the `check_release` action. For example:
@@ -85,6 +84,9 @@ _Note_ The check release action needs `contents: write` [permission](https://doc
     name: jupyter-releaser-dist-${{ github.run_number }}
     path: .jupyter_releaser_checkout/dist
 ```
+
+- [ ] Add a workflow that uses the [`enforce-label`](https://github.com/jupyterlab/maintainer-tools#enforce-labels) action from `jupyterlab/maintainer-tools` to ensure that all PRs have on of the triage labels used to
+      categorize the changelog.
 
 - [ ] Update or add `RELEASE.md` that describes the onboarding and release process, e.g.
 
