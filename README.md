@@ -23,7 +23,6 @@ To install the latest release locally, make sure you have
 
 See the [adoption docs](https://jupyter-releaser.readthedocs.io/en/latest/how_to_guides/convert_repo.html).
 
-
 ## Workflows
 
 Detailed workflows are available to draft a changelog, draft a release, publish a release, and check a release.
