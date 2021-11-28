@@ -85,6 +85,9 @@ _Note_ The check release action needs `contents: write` [permission](https://doc
     path: .jupyter_releaser_checkout/dist
 ```
 
+- [ ] Add a workflow that uses the [`enforce-label`](https://github.com/jupyterlab/maintainer-tools#enforce-labels) action from `jupyterlab/maintainer-tools` to ensure that all PRs have on of the triage labels used to
+categorize the changelog.
+
 - [ ] Update or add `RELEASE.md` that describes the onboarding and release process, e.g.
 
 ## Release Workflow
