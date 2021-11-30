@@ -13,6 +13,8 @@ from subprocess import CalledProcessError
 import requests
 from ghapi.core import GhApi
 from pkg_resources import parse_version
+from pkginfo import SDist
+from pkginfo import Wheel
 
 from jupyter_releaser import changelog
 from jupyter_releaser import npm
@@ -420,9 +422,12 @@ def publish_assets(
         name = Path(path).name
         suffix = Path(path).suffix
         if suffix in [".gz", ".whl"]:
-            if name.startswith(
-                python_package_name
-            ):  # FIXME: not enough to know it's the right package
+            if suffix == ".gz":
+                dist = SDist
+            else:
+                dist = Wheel
+            pkg = dist(path)
+            if not python_package_name or python_package_name == pkg.name:
                 env = os.environ.copy()
                 env["TWINE_PASSWORD"] = twine_token
                 # NOTE: Do not print the env since a twine token extracted from
