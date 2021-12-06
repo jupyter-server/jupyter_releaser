@@ -6,7 +6,7 @@ on:
         description: "The owner/repo GitHub target"
         required: true
       branch:
-        description: The branch to target"
+        description: "The branch to target"
         required: true
       version_spec:
         description: "New Version Spec"
