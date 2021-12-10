@@ -149,7 +149,7 @@ def get_package_versions(version):
         message += f'\nnpm version: {data["name"]}: {npm_version}'
     if "workspaces" in data:
         message += "\nnpm workspace versions:"
-        for path in _get_workspace_packages(data):
+        for path in sorted(_get_workspace_packages(data)):
             text = path.joinpath("package.json").read_text(encoding="utf-8")
             data = json.loads(text)
             message += f'\n{data["name"]}: {data.get("version", "")}'
