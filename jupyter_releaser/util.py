@@ -217,13 +217,23 @@ def bump_version(version_spec, version_cmd=""):
     if not version_cmd:  # pragma: no cover
         raise ValueError("Please specify a version bump command to run")
 
-    # Assign default values if not version spec was given
+    # Assign default values if no version spec was given
     if not version_spec:
         if "tbump" in version_cmd:
-            version = parse_version(get_version())
-            version_spec = f"{version.major}.{version.minor}.{version.micro + 1}"
+            version_spec = "next"
         else:
             version_spec = "patch"
+
+    # Add some convenience options on top of "tbump"
+    if "tbump" in version_cmd:
+        v = parse_version(get_version())
+        if version_spec == "next":
+            if v.is_prerelease:
+                version_spec = f"{v.major}.{v.minor}.{v.micro}{v.pre[0]}{v.pre[1] + 1}"
+            else:
+                version_spec = f"{v.major}.{v.minor}.{v.micro + 1}"
+        elif version_spec == "patch":
+            version_spec = f"{v.major}.{v.minor}.{v.micro + 1}"
 
     # Bump the version
     run(f"{version_cmd} {version_spec}")
