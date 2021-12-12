@@ -3,10 +3,11 @@ from pathlib import Path
 
 from jupyter_releaser.changelog import get_version_entry
 from jupyter_releaser.util import CHECKOUT_NAME
+from jupyter_releaser.util import get_branch
 from jupyter_releaser.util import run
 
 target = os.environ.get("RH_REPOSITORY")
-branch = os.environ.get("RH_BRANCH")
+branch = os.environ.get("RH_BRANCH", "<default>")
 ref = os.environ.get("RH_REF")
 since = os.environ.get("RH_SINCE")
 until = os.environ.get("RH_UNTIL")
@@ -18,6 +19,7 @@ print("branch:", branch)
 print("convert to rst:", convert_to_rst)
 
 run("jupyter-releaser prep-git")
+branch = get_branch()
 orig_dir = os.getcwd()
 os.chdir(CHECKOUT_NAME)
 output = get_version_entry(ref, branch, target, "current", since=since, until=until)

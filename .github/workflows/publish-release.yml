@@ -6,8 +6,7 @@ on:
         description: "The URL of the draft GitHub release"
         required: true
       steps_to_skip:
-        description: comma-separated list of steps to steps_to_skip
-        required: false
+        description: comma-separated list of steps to skip
 jobs:
   publish_release:
     runs-on: ubuntu-latest

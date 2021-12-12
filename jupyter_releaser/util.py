@@ -108,16 +108,7 @@ def log(*outputs, **kwargs):
 
 def get_branch():
     """Get the appropriate git branch"""
-    if os.environ.get("GITHUB_HEAD_REF"):
-        # GitHub Action PR Event
-        branch = os.environ["GITHUB_HEAD_REF"]
-    elif os.environ.get("GITHUB_REF"):
-        # GitHub Action Push Event
-        # e.g. refs/heads/feature-branch-1
-        branch = "/".join(os.environ["GITHUB_REF"].split("/")[2:])
-    else:
-        branch = run("git branch --show-current")
-    return branch
+    return run("git branch --show-current")
 
 
 def get_default_branch():
@@ -267,6 +258,7 @@ def actions_output(name, value):
 
 def get_latest_tag(source, since_last_stable=False):
     """Get the default 'since' value for a branch"""
+    source = source or get_branch()
     tags = run(f"git --no-pager tag --sort=-creatordate --merged {source}", quiet=True)
     if not tags:
         return ""

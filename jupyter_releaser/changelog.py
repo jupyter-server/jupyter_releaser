@@ -80,6 +80,7 @@ def get_version_entry(
     str
         A formatted changelog entry with markers
     """
+    branch = branch or util.get_branch()
     since = since or util.get_latest_tag(ref or branch, since_last_stable)
 
     util.log(f"Getting changes to {repo} since {since} on branch {branch}...")
