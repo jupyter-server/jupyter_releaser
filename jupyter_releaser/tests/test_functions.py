@@ -175,6 +175,14 @@ def test_bump_version(py_package):
         util.bump_version(spec)
         util.run("git commit -a -m 'bump version'")
         assert util.get_version() == spec
+    util.bump_version("1.0.2")
+    util.bump_version("next")
+    assert util.get_version() == "1.0.3"
+    util.bump_version("patch")
+    assert util.get_version() == "1.0.4"
+    util.bump_version("1.0.3a5")
+    util.bump_version("next")
+    assert util.get_version() == "1.0.3a6"
 
 
 def test_get_config_python(py_package):
