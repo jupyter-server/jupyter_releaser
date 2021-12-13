@@ -139,6 +139,7 @@ def draft_changelog(
 
 def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=False):
     repo = repo or util.get_repo()
+    branch = branch or util.get_branch()
 
     # Make a new branch with a uuid suffix
     pr_branch = f"changelog-{uuid.uuid1().hex}"

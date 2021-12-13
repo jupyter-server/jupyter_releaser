@@ -7,16 +7,12 @@ on:
         required: true
       branch:
         description: The branch or reference name to filter pull requests by
-        required: true
       convert_to_rst:
         description: Whether to convert to RST
-        required: false
       since:
         description: Use PRs with activity since this date or git reference
-        required: false
       until:
         description: Use PRs with activity until this date or git reference
-        required: false
 jobs:
   generate_changelog:
     runs-on: ubuntu-latest
