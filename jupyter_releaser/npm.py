@@ -199,4 +199,4 @@ def _get_workspace_packages(data):
                 continue
             paths.append(sub_package)
 
-    return paths
+    return sorted(paths)
