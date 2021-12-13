@@ -2,6 +2,39 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.10.0
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...1c4b528e27af0b594807f6ee0b27e190d25a4936))
+
+### Enhancements made
+
+- Make branch and version spec optional [#223](https://github.com/jupyter-server/jupyter_releaser/pull/223) ([@blink1073](https://github.com/blink1073))
+- Add 'next' convenience for tbump [#221](https://github.com/jupyter-server/jupyter_releaser/pull/221) ([@blink1073](https://github.com/blink1073))
+- Sort the list of workspace package versions [#218](https://github.com/jupyter-server/jupyter_releaser/pull/218) ([@jtpio](https://github.com/jtpio))
+- Improve Python multi-package handling [#216](https://github.com/jupyter-server/jupyter_releaser/pull/216) ([@davidbrochart](https://github.com/davidbrochart))
+- Remove empty documentation entry [#211](https://github.com/jupyter-server/jupyter_releaser/pull/211) ([@blink1073](https://github.com/blink1073))
+
+### Bugs fixed
+
+- Fix default branch handling and update UX [#224](https://github.com/jupyter-server/jupyter_releaser/pull/224) ([@blink1073](https://github.com/blink1073))
+
+### Maintenance and upkeep improvements
+
+- Fix missing quote in Draft Changelog [#217](https://github.com/jupyter-server/jupyter_releaser/pull/217) ([@jtpio](https://github.com/jtpio))
+- Cleanup Docs and Base Setup Action [#214](https://github.com/jupyter-server/jupyter_releaser/pull/214) ([@blink1073](https://github.com/blink1073))
+
+- Beautify rendering of the configuration file list [#220](https://github.com/jupyter-server/jupyter_releaser/pull/220) ([@krassowski](https://github.com/krassowski))
+- Fix a typo (missing `=`) [#219](https://github.com/jupyter-server/jupyter_releaser/pull/219) ([@krassowski](https://github.com/krassowski))
+- Cleanup Docs and Base Setup Action [#214](https://github.com/jupyter-server/jupyter_releaser/pull/214) ([@blink1073](https://github.com/blink1073))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-11-23&to=2021-12-13&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-11-23..2021-12-13&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2021-11-23..2021-12-13&type=Issues) | [@davidbrochart](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Adavidbrochart+updated%3A2021-11-23..2021-12-13&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-11-23..2021-12-13&type=Issues) | [@krassowski](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2021-11-23..2021-12-13&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.9.8
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...1bc9790061ba61de52ee3dba5c55a5bffc34a682))
@@ -19,8 +52,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-11-17&to=2021-11-23&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-11-17..2021-11-23&type=Issues) | [@davidbrochart](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Adavidbrochart+updated%3A2021-11-17..2021-11-23&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.9.7
 
