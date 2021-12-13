@@ -6,9 +6,10 @@ on:
         description: "The owner/repo GitHub target"
         required: true
       branch:
-        description: "The branch to target"
+        description: "The branch to target (defaults to default branch)"
       version_spec:
-        description: "New Version Specifier"
+        description: "New Version Spec"
+        default: "next"
       post_version_spec:
         description: "Post Version Specifier"
       since:

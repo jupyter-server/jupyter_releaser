@@ -6,9 +6,10 @@ on:
         description: "The owner/repo GitHub target"
         required: true
       branch:
-        description: "The branch to target"
+        description: "The branch to target (defaults to default branch)"
       version_spec:
         description: "New Version Spec"
+        default: "next"
       since:
         description: Use PRs with activity since this date or git reference
       since_last_stable:
