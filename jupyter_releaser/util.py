@@ -219,7 +219,9 @@ def bump_version(version_spec, version_cmd=""):
     if "tbump" in version_cmd:
         v = parse_version(get_version())
         if version_spec == "next":
-            if v.is_prerelease:
+            if v.is_devrelease:
+                version_spec = f"{v.major}.{v.minor}.{v.micro}.dev{v.dev + 1}"
+            elif v.is_prerelease:
                 version_spec = f"{v.major}.{v.minor}.{v.micro}{v.pre[0]}{v.pre[1] + 1}"
             else:
                 version_spec = f"{v.major}.{v.minor}.{v.micro + 1}"
