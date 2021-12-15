@@ -125,14 +125,11 @@ def get_version_entry(
     entry = "\n".join(entry).strip()
 
     # Remove empty documentation entry if only automated changelogs were there
-    if "# Documentation improvements\n\n" in entry:
+    if (
+        "# Documentation improvements" in entry
+        and not "# Documentation improvements\n\n-" in entry
+    ):
         entry = re.sub(r"#+ Documentation improvements\n\n", "", entry)
-
-    # Replace "*" unordered list marker with "-" since this is what
-    # Prettier uses
-    # TODO: remove after github_activity 0.1.4+ is available
-    entry = re.sub(r"^\* ", "- ", entry)
-    entry = re.sub(r"\n\* ", "\n- ", entry)
 
     output = f"""
 ## {version}
