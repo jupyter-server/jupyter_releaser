@@ -75,7 +75,7 @@ html_theme_options = {
 html_context = {
     "github_user": "jupyterlab",  # Username
     "github_repo": "jupyterlab_server",  # Repo name
-    "github_version": "master",  # Version
+    "github_version": "main",  # Version
     "doc_path": "/docs/source/",  # Path in the checkout to the docs root
 }
 
