@@ -38,7 +38,7 @@ You can also invoke the pre-commit hook manually at any time with
 pre-commit run
 ```
 
-Once you have done this, you can launch the master branch of Jupyter Releaser
+Once you have done this, you can launch the main branch of Jupyter Releaser
 from any directory in your system with::
 
 ```bash
