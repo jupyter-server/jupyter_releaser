@@ -1,7 +1,7 @@
 name: Tests
 on:
   push:
-    branches: ["master"]
+    branches: ["main"]
   pull_request:
     branches: ["*"]
 jobs:
@@ -75,7 +75,6 @@ jobs:
         env:
           GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RH_REPOSITORY: jupyter-server/jupyter_releaser
-          RH_BRANCH: master
           RH_SINCE: v0.3.0
           RH_UNTIL: v0.4.0
         run: |
