@@ -133,7 +133,7 @@ def get_repo():
 def get_version():
     """Get the current package version"""
     if SETUP_PY.exists():
-        return run("python setup.py --version").split("\n")[-1])
+        return run("python setup.py --version").split("\n")[-1]
     elif PACKAGE_JSON.exists():
         return json.loads(PACKAGE_JSON.read_text(encoding="utf-8")).get("version", "")
     else:  # pragma: no cover
