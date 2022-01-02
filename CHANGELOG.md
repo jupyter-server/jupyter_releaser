@@ -2,6 +2,27 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.10.3
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...96bf7211a29b2bf4ad5484e797f7b96e6ff70f34))
+
+### Enhancements made
+
+- Use the last line of the `python setup.py --version` command to get the Python version [#232](https://github.com/jupyter-server/jupyter_releaser/pull/232) ([@jtpio](https://github.com/jtpio))
+
+### Maintenance and upkeep improvements
+
+- Run CI on Python 3.10 [#234](https://github.com/jupyter-server/jupyter_releaser/pull/234) ([@jtpio](https://github.com/jtpio))
+- Update to the new `main` default branch [#233](https://github.com/jupyter-server/jupyter_releaser/pull/233) ([@jtpio](https://github.com/jtpio))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-12-15&to=2022-01-02&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-12-15..2022-01-02&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-12-15..2022-01-02&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.10.2
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...233f676c93ffddcbef3f651cb9e8a49f4254c25d))
@@ -15,8 +36,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-12-14&to=2021-12-15&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-12-14..2021-12-15&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.10.1
 
