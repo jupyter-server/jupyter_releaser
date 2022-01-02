@@ -81,8 +81,8 @@ jobs:
           set -eux
           python -m jupyter_releaser.actions.generate-changelog
           cat CHANGELOG_ENTRY.md
-          # Check for version entry in between the two versions and one outside
-          cat CHANGELOG_ENTRY.md | grep -q "#95"
+          # Check for version entry contents
+          cat CHANGELOG_ENTRY.md | grep -q "#234"
           cat CHANGELOG_ENTRY.md | grep -q "compare/${RH_SINCE}...${RH_UNTIL}"
           # make sure it works with different settings
           export RH_SINCE=
