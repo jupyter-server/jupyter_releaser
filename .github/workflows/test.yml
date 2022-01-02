@@ -75,15 +75,15 @@ jobs:
         env:
           GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RH_REPOSITORY: jupyter-server/jupyter_releaser
-          RH_SINCE: v0.3.0
-          RH_UNTIL: v0.4.0
+          RH_SINCE: v0.10.2
+          RH_UNTIL: v0.10.3
         run: |
           set -eux
           python -m jupyter_releaser.actions.generate-changelog
           cat CHANGELOG_ENTRY.md
           # Check for version entry in between the two versions and one outside
           cat CHANGELOG_ENTRY.md | grep -q "#95"
-          cat CHANGELOG_ENTRY.md | grep -q "compare/v0.10.2...v0.10.3"
+          cat CHANGELOG_ENTRY.md | grep -q "compare/${RH_SINCE}...${RH_UNTIL}"
           # make sure it works with different settings
           export RH_SINCE=
           export RH_UNTIL=
