@@ -163,6 +163,7 @@ output: RH_CHANGELOG_OUTPUT
 post-version-message: RH_POST_VERSION_MESSAGE
 post-version-spec: RH_POST_VERSION_SPEC
 python-packages: RH_PYTHON_PACKAGES
+python-target: RH_PYTHON_TARGET
 ref: RH_REF
 release-message: RH_RELEASE_MESSAGE
 repo: RH_REPOSITORY
