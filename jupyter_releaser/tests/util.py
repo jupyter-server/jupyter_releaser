@@ -180,7 +180,9 @@ def create_python_package(git_repo, multi=False, not_matching_name=False):
         setuppy.write_text(SETUP_PY_TEMPLATE, encoding="utf-8")
 
         setuppy = git_repo / "setup.cfg"
-        setuppy.write_text(setup_cfg_template(package_name, module_name), encoding="utf-8")
+        setuppy.write_text(
+            setup_cfg_template(package_name, module_name), encoding="utf-8"
+        )
 
         tbump = git_repo / "tbump.toml"
         tbump.write_text(
@@ -223,7 +225,7 @@ def create_python_package(git_repo, multi=False, not_matching_name=False):
             write_files(
                 git_repo / sub_package,
                 package_name=package_name,
-                module_name=module_name
+                module_name=module_name,
             )
             run(f"git add {sub_package}")
             run(f'git commit -m "initial python {sub_package}"')
@@ -234,7 +236,7 @@ def create_python_package(git_repo, multi=False, not_matching_name=False):
         git_repo,
         sub_packages=sub_packages,
         package_name=package_name,
-        module_name=module_name
+        module_name=module_name,
     )
     run("git add .")
     run('git commit -m "initial python package"')

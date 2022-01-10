@@ -189,7 +189,7 @@ python_target_options = [
         "--python-target",
         envvar="RH_PYTHON_TARGET",
         default="",
-        help="The Python package import to check for; default to the Python package name."
+        help="The Python package import to check for; default to the Python package name.",
     )
 ]
 
