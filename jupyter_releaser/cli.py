@@ -184,6 +184,15 @@ python_packages_options = [
     )
 ]
 
+python_target_options = [
+    click.option(
+        "--python-target",
+        envvar="RH_PYTHON_TARGET",
+        default="",
+        help="The Python package import to check for; default to the Python package name."
+    )
+]
+
 dry_run_options = [
     click.option(
         "--dry-run", is_flag=True, envvar="RH_DRY_RUN", help="Run as a dry run"
@@ -403,14 +412,16 @@ def build_python(dist_dir, python_packages):
 
 @main.command()
 @add_options(dist_dir_options)
+@add_options(python_target_options)
 @use_checkout_dir()
-def check_python(dist_dir):
+def check_python(dist_dir, python_target):
     """Check Python dist files"""
     for dist_file in glob(f"{dist_dir}/*"):
         if Path(dist_file).suffix not in [".gz", ".whl"]:
             util.log(f"Skipping non-python dist file {dist_file}")
             continue
-        python.check_dist(dist_file)
+        test_cmd = f'python -c "import {python_target}"' if python_target else ""
+        python.check_dist(dist_file, test_cmd)
 
 
 @main.command()

@@ -7,7 +7,7 @@ import re
 import shlex
 from glob import glob
 from pathlib import Path
-from subprocess import PIPE
+from subprocess import PIPE, CalledProcessError
 from subprocess import Popen
 from tempfile import TemporaryDirectory
 
@@ -58,7 +58,12 @@ def check_dist(dist_file, test_cmd=""):
         util.run(f"python -m venv {env_path}")
         util.run(f"{bin_path}/python -m pip install -q -U pip")
         util.run(f"{bin_path}/pip install -q {dist_file}")
-        util.run(f"{bin_path}/{test_cmd}")
+        try:
+            util.run(f"{bin_path}/{test_cmd}")
+        except CalledProcessError as e:
+            if test_cmd == "":
+                util.log('You may need to set "python_target" to an appropriate Python package name in the config file.')
+            raise e
 
 
 def get_pypi_token(release_url, python_package):

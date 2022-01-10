@@ -81,6 +81,11 @@ def py_multipackage(git_repo):
 
 
 @fixture
+def py_package_different_names(git_repo):
+    return testutil.create_python_package(git_repo, not_matching_name=True)
+
+
+@fixture
 def npm_package(git_repo):
     return testutil.create_npm_package(git_repo)
 

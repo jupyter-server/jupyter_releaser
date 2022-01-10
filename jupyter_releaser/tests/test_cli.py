@@ -435,6 +435,16 @@ def test_check_python(py_package, runner, build_mock, git_prep):
     assert "after-check-python" in log
 
 
+def test_check_python_different_names(monkeypatch, py_package_different_names, runner, build_mock, git_prep):
+    monkeypatch.setenv("RH_PYTHON_TARGET", "foobar")
+    runner(["build-python"])
+    runner(["check-python"])
+
+    log = get_log()
+    assert "before-check-python" in log
+    assert "after-check-python" in log
+
+
 def test_handle_npm(npm_package, runner, git_prep):
     runner(["build-npm"])
 
