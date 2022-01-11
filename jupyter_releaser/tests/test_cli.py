@@ -152,6 +152,7 @@ auth: GITHUB_ACCESS_TOKEN
 branch: RH_BRANCH
 cache-file: RH_CACHE_FILE
 changelog-path: RH_CHANGELOG
+check-imports: RH_CHECK_IMPORTS
 dist-dir: RH_DIST_DIR
 dry-run: RH_DRY_RUN
 links-expire: RH_LINKS_EXPIRE
@@ -163,7 +164,6 @@ output: RH_CHANGELOG_OUTPUT
 post-version-message: RH_POST_VERSION_MESSAGE
 post-version-spec: RH_POST_VERSION_SPEC
 python-packages: RH_PYTHON_PACKAGES
-check-imports: RH_CHECK_IMPORTS
 ref: RH_REF
 release-message: RH_RELEASE_MESSAGE
 repo: RH_REPOSITORY
