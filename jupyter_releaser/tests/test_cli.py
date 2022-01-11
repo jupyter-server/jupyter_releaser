@@ -163,7 +163,7 @@ output: RH_CHANGELOG_OUTPUT
 post-version-message: RH_POST_VERSION_MESSAGE
 post-version-spec: RH_POST_VERSION_SPEC
 python-packages: RH_PYTHON_PACKAGES
-python-target: RH_PYTHON_TARGET
+check-imports: RH_CHECK_IMPORTS
 ref: RH_REF
 release-message: RH_RELEASE_MESSAGE
 repo: RH_REPOSITORY
@@ -439,7 +439,7 @@ def test_check_python(py_package, runner, build_mock, git_prep):
 def test_check_python_different_names(
     monkeypatch, py_package_different_names, runner, build_mock, git_prep
 ):
-    monkeypatch.setenv("RH_PYTHON_TARGET", "foobar")
+    monkeypatch.setenv("RH_CHECK_IMPORTS", "foobar")
     runner(["build-python"])
     runner(["check-python"])
 
