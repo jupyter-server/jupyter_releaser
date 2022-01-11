@@ -152,6 +152,7 @@ auth: GITHUB_ACCESS_TOKEN
 branch: RH_BRANCH
 cache-file: RH_CACHE_FILE
 changelog-path: RH_CHANGELOG
+check-imports: RH_CHECK_IMPORTS
 dist-dir: RH_DIST_DIR
 dry-run: RH_DRY_RUN
 links-expire: RH_LINKS_EXPIRE
@@ -427,6 +428,18 @@ def test_build_python_npm(npm_package, runner, build_mock, git_prep):
 
 
 def test_check_python(py_package, runner, build_mock, git_prep):
+    runner(["build-python"])
+    runner(["check-python"])
+
+    log = get_log()
+    assert "before-check-python" in log
+    assert "after-check-python" in log
+
+
+def test_check_python_different_names(
+    monkeypatch, py_package_different_names, runner, build_mock, git_prep
+):
+    monkeypatch.setenv("RH_CHECK_IMPORTS", "foobar")
     runner(["build-python"])
     runner(["check-python"])
 

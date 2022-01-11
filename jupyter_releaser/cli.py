@@ -184,6 +184,16 @@ python_packages_options = [
     )
 ]
 
+check_imports_options = [
+    click.option(
+        "--check-imports",
+        envvar="RH_CHECK_IMPORTS",
+        default=[],
+        multiple=True,
+        help="The Python packages import to check for; default to the Python package name.",
+    )
+]
+
 dry_run_options = [
     click.option(
         "--dry-run", is_flag=True, envvar="RH_DRY_RUN", help="Run as a dry run"
@@ -403,14 +413,16 @@ def build_python(dist_dir, python_packages):
 
 @main.command()
 @add_options(dist_dir_options)
+@add_options(check_imports_options)
 @use_checkout_dir()
-def check_python(dist_dir):
+def check_python(dist_dir, check_imports):
     """Check Python dist files"""
     for dist_file in glob(f"{dist_dir}/*"):
         if Path(dist_file).suffix not in [".gz", ".whl"]:
             util.log(f"Skipping non-python dist file {dist_file}")
             continue
-        python.check_dist(dist_file)
+
+        python.check_dist(dist_file, python_imports=check_imports)
 
 
 @main.command()

@@ -7,6 +7,7 @@ import re
 import shlex
 from glob import glob
 from pathlib import Path
+from subprocess import CalledProcessError
 from subprocess import PIPE
 from subprocess import Popen
 from tempfile import TemporaryDirectory
@@ -33,16 +34,22 @@ def build_dist(dist_dir, clean=True):
         util.run(f"python setup.py bdist_wheel --dist-dir {dest}", quiet=True)
 
 
-def check_dist(dist_file, test_cmd=""):
+def check_dist(dist_file, test_cmd="", python_imports=None):
     """Check a Python package locally (not as a cli)"""
     dist_file = util.normalize_path(dist_file)
     util.run(f"twine check {dist_file}")
 
-    if not test_cmd:
+    test_commands = []
+
+    if test_cmd:
+        test_commands.append(test_cmd)
+    elif python_imports is not None:
+        test_commands.extend([f'python -c "import {name}"' for name in python_imports])
+    else:
         # Get the package name from the dist file name
         name = re.match(r"(\S+)-\d", osp.basename(dist_file)).groups()[0]
         name = name.replace("-", "_")
-        test_cmd = f'python -c "import {name}"'
+        test_commands.append(f'python -c "import {name}"')
 
     # Create venvs to install dist file
     # run the test command in the venv
@@ -58,7 +65,15 @@ def check_dist(dist_file, test_cmd=""):
         util.run(f"python -m venv {env_path}")
         util.run(f"{bin_path}/python -m pip install -q -U pip")
         util.run(f"{bin_path}/pip install -q {dist_file}")
-        util.run(f"{bin_path}/{test_cmd}")
+        try:
+            for cmd in test_commands:
+                util.run(f"{bin_path}/{cmd}")
+        except CalledProcessError as e:
+            if test_cmd == "":
+                util.log(
+                    'You may need to set "check_imports" to appropriate Python package names in the config file.'
+                )
+            raise e
 
 
 def get_pypi_token(release_url, python_package):
