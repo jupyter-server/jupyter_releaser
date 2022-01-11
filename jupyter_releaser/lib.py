@@ -52,6 +52,8 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
     cmd += f"--check-links-cache-expire-after {links_expire} "
     cmd += "--disable-warnings --quiet "
     cmd += f"--check-links-cache-name {cache_dir}/check-release-links "
+    # do not run doctests, since they might depend on other state.
+    cmd += "--doctest-glob=*.skip"
 
     ignored = []
     for spec in ignore_glob:
