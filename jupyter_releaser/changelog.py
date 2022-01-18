@@ -105,7 +105,12 @@ def get_version_entry(
         return f"## {version}\n\nNo merged PRs"
 
     entry = md.replace("[full changelog]", "[Full Changelog]")
-    entry = entry.replace("...None", f"...{until}")
+    
+    if until:
+        entry = entry.replace("...None", f"...{until}")
+    else:
+        entry = entry.replace("...None", f"")
+    
 
     entry = entry.splitlines()[2:]
 

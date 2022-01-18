@@ -45,6 +45,16 @@ CHANGELOG_ENTRY = f"""
 [@betatim](https://github.com/search?q=repo%3Aexecutablebooks%2Fgithub-activity+involves%3Abetatim+updated%3A2019-09-01..2019-11-01&type=Issues) | [@choldgraf](https://github.com/search?q=repo%3Aexecutablebooks%2Fgithub-activity+involves%3Acholdgraf+updated%3A2019-09-01..2019-11-01&type=Issues) | [@consideRatio](https://github.com/search?q=repo%3Aexecutablebooks%2Fgithub-activity+involves%3AconsideRatio+updated%3A2019-09-01..2019-11-01&type=Issues)
 """
 
+EMPTY_CHANGELOG_ENTRY = f"""
+## main@{{2021-09-15}}...main@{{2022-01-18}}
+
+([Full Changelog](https://github.com/QuantStack/jupyterlab-js-logs/compare/v0.2.4...None))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/QuantStack/jupyterlab-js-logs/graphs/contributors?from=2021-09-15&to=2022-01-18&type=c))
+
+"""
 
 def setup_cfg_template(package_name="foo", module_name=None):
     return f"""

@@ -124,6 +124,27 @@ def test_get_changelog_version_entry_since_last_stable(py_package, mocker):
     assert f"## {version}" in resp
     assert testutil.PR_ENTRY in resp
 
+def test_get_empty_changelog(py_package, mocker):
+    mocked_gen = mocker.patch("jupyter_releaser.changelog.generate_activity_md")
+    mocked_gen.return_value = testutil.EMPTY_CHANGELOG_ENTRY
+    branch = "foo"
+    util.run("git branch baz/bar")
+    ref = "heads/baz/bar"
+    resp = changelog.get_version_entry(
+        ref, branch, "baz/bar", "0.2.5", since="v0.2.4"
+    )
+    mocked_gen.assert_called_with(
+        "baz/bar",
+        since="v0.2.4",
+        until=None,
+        kind="pr",
+        branch=branch,
+        heading_level=2,
+        auth=None,
+    )
+
+    assert not ("...None" in resp)
+
 
 def test_compute_sha256(py_package):
     assert len(util.compute_sha256(py_package / "CHANGELOG.md")) == 64
