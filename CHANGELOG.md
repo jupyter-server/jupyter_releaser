@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.11.2
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...455050d2193cd026136f034b9220c788e94b725d))
+
+### Bugs fixed
+
+- Test empty changelog [#243](https://github.com/jupyter-server/jupyter_releaser/pull/243) ([@hbcarlos](https://github.com/hbcarlos))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-01-17&to=2022-01-19&type=c))
+
+[@hbcarlos](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ahbcarlos+updated%3A2022-01-17..2022-01-19&type=Issues) | [@welcome](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Awelcome+updated%3A2022-01-17..2022-01-19&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.11.1
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...fe2a3ab5ede03d3aac6d894807c82efb07171369))
@@ -15,8 +31,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-01-13&to=2022-01-17&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-01-13..2022-01-17&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.11.0
 
