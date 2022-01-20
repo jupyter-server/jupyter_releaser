@@ -54,6 +54,9 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
     cmd += f"--check-links-cache-name {cache_dir}/check-release-links "
     # do not run doctests, since they might depend on other state.
     cmd += "-p no:doctest "
+    # ignore package pytest configuration,
+    # since we aren't running their tests
+    cmd += "-c _IGNORE_CONFIG"
 
     ignored = []
     for spec in ignore_glob:
