@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.11.3
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...d84497abaab91bcfa8810c295fdba89881bc1e1e))
+
+### Enhancements made
+
+- ignore package pytest config [#246](https://github.com/jupyter-server/jupyter_releaser/pull/246) ([@minrk](https://github.com/minrk))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-01-19&to=2022-01-21&type=c))
+
+[@minrk](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Aminrk+updated%3A2022-01-19..2022-01-21&type=Issues) | [@welcome](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Awelcome+updated%3A2022-01-19..2022-01-21&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.11.2
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...455050d2193cd026136f034b9220c788e94b725d))
@@ -15,8 +31,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-01-17&to=2022-01-19&type=c))
 
 [@hbcarlos](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ahbcarlos+updated%3A2022-01-17..2022-01-19&type=Issues) | [@welcome](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Awelcome+updated%3A2022-01-17..2022-01-19&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.11.1
 
