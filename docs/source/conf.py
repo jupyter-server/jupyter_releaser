@@ -23,7 +23,7 @@ copyright = "2021, Project Jupyter"
 author = "Project Jupyter"
 
 # The full version, including alpha/beta/rc tags.
-release = "0.11.3"
+release = "0.12.0"
 # The short X.Y version.
 version = ".".join(release.split(".")[:2])
 
