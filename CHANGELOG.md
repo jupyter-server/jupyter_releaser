@@ -2,6 +2,23 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.12.0
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...8c97f42f9857fbfbe63ced2f37bc1a6776f82dcb))
+
+### Maintenance and upkeep improvements
+
+- Update to `tbump~=6.7` [#252](https://github.com/jupyter-server/jupyter_releaser/pull/252) ([@jtpio](https://github.com/jtpio))
+- Update `setuptools` [#251](https://github.com/jupyter-server/jupyter_releaser/pull/251) ([@jtpio](https://github.com/jtpio))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-01-21&to=2022-01-27&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-01-21..2022-01-27&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-01-21..2022-01-27&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2022-01-21..2022-01-27&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.11.3
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...d84497abaab91bcfa8810c295fdba89881bc1e1e))
@@ -15,8 +32,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-01-19&to=2022-01-21&type=c))
 
 [@minrk](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Aminrk+updated%3A2022-01-19..2022-01-21&type=Issues) | [@welcome](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Awelcome+updated%3A2022-01-19..2022-01-21&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.11.2
 
