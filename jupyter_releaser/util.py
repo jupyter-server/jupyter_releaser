@@ -45,6 +45,8 @@ RELEASE_API_PATTERN = "https://api.github.com/repos/(?P<owner>[^/]+)/(?P<repo>[^
 SCHEMA = files("jupyter_releaser").joinpath("schema.json").read_text()
 SCHEMA = json.loads(SCHEMA)
 
+GIT_FETCH_CMD = "git fetch origin --filter=blob:none --quiet"
+
 
 def run(cmd, **kwargs):
     """Run a command as a subprocess and get the output as a string"""
