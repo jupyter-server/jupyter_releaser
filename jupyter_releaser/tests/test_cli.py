@@ -24,6 +24,7 @@ from jupyter_releaser.tests.util import PR_ENTRY
 from jupyter_releaser.tests.util import REPO_DATA
 from jupyter_releaser.tests.util import VERSION_SPEC
 from jupyter_releaser.util import bump_version
+from jupyter_releaser.util import GIT_FETCH_CMD
 from jupyter_releaser.util import normalize_path
 from jupyter_releaser.util import run
 
@@ -107,9 +108,9 @@ def test_prep_git_full(py_package, tmp_path, mocker, runner):
             call('git config --global user.name "GitHub Action"'),
             call("git init .jupyter_releaser_checkout"),
             call("git remote add origin https://snuffy:abc123@github.com/baz/bar.git"),
-            call("git fetch origin --tags --force --quiet"),
-            call("git fetch origin +refs/pull/42:refs/pull/42"),
-            call("git fetch origin refs/pull/42"),
+            call(f"{GIT_FETCH_CMD} --tags --force"),
+            call(f"{GIT_FETCH_CMD} +refs/pull/42:refs/pull/42"),
+            call(" refs/pull/42"),
             call("git checkout -B foo refs/pull/42"),
         ]
     )
