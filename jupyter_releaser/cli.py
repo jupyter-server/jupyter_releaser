@@ -254,6 +254,15 @@ npm_install_options = [
     )
 ]
 
+pydist_check_options = [
+    click.option(
+        "--pydist-check-cmd",
+        envvar="RH_PYDIST_CHECK_CMD",
+        default="twine check --strict",
+        help="The command to use to check a python distribution file",
+    )
+]
+
 
 def add_options(options):
     """Add extracted common options to a click command"""
@@ -414,15 +423,16 @@ def build_python(dist_dir, python_packages):
 @main.command()
 @add_options(dist_dir_options)
 @add_options(check_imports_options)
+@add_options(pydist_check_options)
 @use_checkout_dir()
-def check_python(dist_dir, check_imports):
+def check_python(dist_dir, check_imports, check_cmd):
     """Check Python dist files"""
     for dist_file in glob(f"{dist_dir}/*"):
         if Path(dist_file).suffix not in [".gz", ".whl"]:
             util.log(f"Skipping non-python dist file {dist_file}")
             continue
 
-        python.check_dist(dist_file, python_imports=check_imports)
+        python.check_dist(dist_file, python_imports=check_imports, check_cmd=check_cmd)
 
 
 @main.command()
@@ -587,10 +597,15 @@ def delete_release(auth, release_url):
 @add_options(dist_dir_options)
 @add_options(dry_run_options)
 @add_options(npm_install_options)
+@add_options(pydist_check_options)
 @click.argument("release-url", nargs=1)
-def extract_release(auth, dist_dir, dry_run, release_url, npm_install_options):
+def extract_release(
+    auth, dist_dir, dry_run, release_url, npm_install_options, pydist_check_cmd
+):
     """Download and verify assets from a draft GitHub release"""
-    lib.extract_release(auth, dist_dir, dry_run, release_url, npm_install_options)
+    lib.extract_release(
+        auth, dist_dir, dry_run, release_url, npm_install_options, pydist_check_cmd
+    )
 
 
 @main.command()

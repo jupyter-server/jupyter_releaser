@@ -163,6 +163,7 @@ npm-token: NPM_TOKEN
 output: RH_CHANGELOG_OUTPUT
 post-version-message: RH_POST_VERSION_MESSAGE
 post-version-spec: RH_POST_VERSION_SPEC
+pydist-check-cmd: RH_PYDIST_CHECK_CMD
 python-packages: RH_PYTHON_PACKAGES
 ref: RH_REF
 release-message: RH_RELEASE_MESSAGE

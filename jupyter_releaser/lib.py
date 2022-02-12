@@ -284,7 +284,9 @@ def delete_release(auth, release_url):
     gh.repos.delete_release(release.id)
 
 
-def extract_release(auth, dist_dir, dry_run, release_url, npm_install_options):
+def extract_release(
+    auth, dist_dir, dry_run, release_url, npm_install_options, pydist_check_cmd
+):
     """Download and verify assets from a draft GitHub release"""
     match = parse_release_url(release_url)
     owner, repo = match["owner"], match["repo"]
@@ -329,7 +331,7 @@ def extract_release(auth, dist_dir, dry_run, release_url, npm_install_options):
     for asset in assets:
         suffix = Path(asset.name).suffix
         if suffix in [".gz", ".whl"]:
-            python.check_dist(dist / asset.name)
+            python.check_dist(dist / asset.name, check_cmd=pydist_check_cmd)
         elif suffix == ".tgz":
             pass  # already handled
         else:
