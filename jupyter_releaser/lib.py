@@ -530,7 +530,7 @@ def prep_git(ref, branch, repo, auth, username, url):
     ref = ref or ""
 
     # Make sure we have *all* tags
-    util.run(f"{util.GIT_FETCH_CMD} --tags --force ")
+    util.run(f"{util.GIT_FETCH_CMD} --tags --force")
 
     # Handle the ref
     if ref.startswith("refs/pull/"):
@@ -597,7 +597,7 @@ def forwardport_changelog(
 
     # switch to main branch here
     branch = branch or util.get_default_branch()
-    util.run(f" {branch}")
+    util.run(f"{util.GIT_FETCH_CMD} {branch}")
     util.run(f"git checkout {branch}")
 
     # Bail if the tag has been merged to the branch

@@ -110,7 +110,7 @@ def test_prep_git_full(py_package, tmp_path, mocker, runner):
             call("git remote add origin https://snuffy:abc123@github.com/baz/bar.git"),
             call(f"{GIT_FETCH_CMD} --tags --force"),
             call(f"{GIT_FETCH_CMD} +refs/pull/42:refs/pull/42"),
-            call(" refs/pull/42"),
+            call(f"{GIT_FETCH_CMD} refs/pull/42"),
             call("git checkout -B foo refs/pull/42"),
         ]
     )
