@@ -425,14 +425,16 @@ def build_python(dist_dir, python_packages):
 @add_options(check_imports_options)
 @add_options(pydist_check_options)
 @use_checkout_dir()
-def check_python(dist_dir, check_imports, check_cmd):
+def check_python(dist_dir, check_imports, pydist_check_cmd):
     """Check Python dist files"""
     for dist_file in glob(f"{dist_dir}/*"):
         if Path(dist_file).suffix not in [".gz", ".whl"]:
             util.log(f"Skipping non-python dist file {dist_file}")
             continue
 
-        python.check_dist(dist_file, python_imports=check_imports, check_cmd=check_cmd)
+        python.check_dist(
+            dist_file, python_imports=check_imports, check_cmd=pydist_check_cmd
+        )
 
 
 @main.command()
