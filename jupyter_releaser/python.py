@@ -34,10 +34,12 @@ def build_dist(dist_dir, clean=True):
         util.run(f"python setup.py bdist_wheel --dist-dir {dest}", quiet=True)
 
 
-def check_dist(dist_file, test_cmd="", python_imports=None):
+def check_dist(
+    dist_file, test_cmd="", python_imports=None, check_cmd="twine check --strict"
+):
     """Check a Python package locally (not as a cli)"""
     dist_file = util.normalize_path(dist_file)
-    util.run(f"twine check {dist_file}")
+    util.run(f"{check_cmd} {dist_file}")
 
     test_commands = []
 
