@@ -182,6 +182,13 @@ def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=F
     #  title, head, base, body, maintainer_can_modify, draft, issue
     pull = gh.pulls.create(title, head, base, body, maintainer_can_modify, False, None)
 
+    # Try to add the documentation label to the PR.
+    number = pull.number
+    try:
+        gh.issues.add_labels(number, ["documentation"])
+    except Exception as e:
+        print(e)
+
     util.actions_output("pr_url", pull.html_url)
 
 
