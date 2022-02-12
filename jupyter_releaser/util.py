@@ -220,13 +220,15 @@ def bump_version(version_spec, version_cmd=""):
         v = parse_version(get_version())
         if version_spec == "next":
             if v.is_devrelease:
-                version_spec = f"{v.major}.{v.minor}.{v.micro}.dev{v.dev + 1}"
+                version_spec = f"{v.major}.{v.minor}.{v.micro}"
             elif v.is_prerelease:
                 version_spec = f"{v.major}.{v.minor}.{v.micro}{v.pre[0]}{v.pre[1] + 1}"
             else:
                 version_spec = f"{v.major}.{v.minor}.{v.micro + 1}"
         elif version_spec == "patch":
             version_spec = f"{v.major}.{v.minor}.{v.micro + 1}"
+        elif version_spec == "minor":
+            version_spec = f"{v.major}.{v.minor + 1}.0"
 
     # Bump the version
     run(f"{version_cmd} {version_spec}")

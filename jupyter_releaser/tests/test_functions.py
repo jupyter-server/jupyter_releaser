@@ -205,7 +205,9 @@ def test_bump_version(py_package):
     assert util.get_version() == "1.0.3a6"
     util.bump_version("1.0.3.dev1")
     util.bump_version("next")
-    assert util.get_version() == "1.0.3.dev2"
+    assert util.get_version() == "1.0.3"
+    util.bump_version("minor")
+    assert util.get_version() == "1.1.0"
 
 
 def test_get_config_python(py_package):
