@@ -269,7 +269,9 @@ class MockHTTPResponse:
     def __init__(self, data=None):
         self.url = ""
         data = data or {}
-        defaults = dict(id="foo", html_url=HTML_URL, url=URL, upload_url=URL)
+        defaults = dict(
+            id="foo", html_url=HTML_URL, url=URL, upload_url=URL, number=100
+        )
         if isinstance(data, list):
             for datum in data:
                 for key in defaults:
