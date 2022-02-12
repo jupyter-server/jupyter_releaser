@@ -42,7 +42,8 @@ already uses Jupyter Releaser.
   ![Draft Changelog Workflow Dialog](../images/draft_changelog.png)
 
   - The "New Version Spec" will usually be the full version (e.g. 0.7.1). Repos using `tbump` can also use the "next"
-    option, which will bump the micro version (or the build version in the case of a prerelease).
+    option, which will bump the micro version (or the build version in the case of a prerelease). The "minor" option allows projects using "tbump" to bump
+    to the next minor version directly.
   - Use the "since" field to select PRs prior to the latest tag to include in the release
   - Type "true" in the "since the last stable git tag" if you would like to include PRs since the last non-prerelease version tagged on the target repository and branch.
   - The workflow will use the GitHub API to find the relevant pull requests and make an appropriate changelog entry.
