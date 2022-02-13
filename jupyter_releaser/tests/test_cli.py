@@ -972,7 +972,7 @@ def test_forwardport_changelog_has_new(
     os.chdir(npm_package)
     runner(["forwardport-changelog", HTML_URL, "--branch", current])
 
-    assert len(open_mock.call_args) == 3
+    assert len(open_mock.call_args) == 2
     util.run(f"git checkout {current}", cwd=npm_package)
 
     expected = """
