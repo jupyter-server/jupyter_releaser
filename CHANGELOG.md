@@ -2,6 +2,25 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.13.0
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...3fbe0cfe40667da0cdeafab2bee7d3597fd2a436))
+
+### Enhancements made
+
+- Add documentation label to changelog PR [#259](https://github.com/jupyter-server/jupyter_releaser/pull/259) ([@blink1073](https://github.com/blink1073))
+- Make twine check strict by default [#258](https://github.com/jupyter-server/jupyter_releaser/pull/258) ([@blink1073](https://github.com/blink1073))
+- Use a more efficient fetch [#257](https://github.com/jupyter-server/jupyter_releaser/pull/257) ([@blink1073](https://github.com/blink1073))
+- Add support for minor release [#256](https://github.com/jupyter-server/jupyter_releaser/pull/256) ([@blink1073](https://github.com/blink1073))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-01-27&to=2022-02-14&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-01-27..2022-02-14&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-01-27..2022-02-14&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.12.0
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...8c97f42f9857fbfbe63ced2f37bc1a6776f82dcb))
@@ -16,8 +35,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-01-21&to=2022-01-27&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-01-21..2022-01-27&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-01-21..2022-01-27&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2022-01-21..2022-01-27&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.11.3
 
