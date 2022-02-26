@@ -281,6 +281,13 @@ def get_latest_tag(source, since_last_stable=False):
     return tags[0]
 
 
+def get_first_commit(source):
+    """Get the default 'since' value for a branch"""
+    source = source or get_branch()
+    commit = run("git rev-list --max-parents=0 HEAD", quiet=True)
+    return commit
+
+
 def retry(cmd, **kwargs):
     """Run a command with retries"""
     attempt = 0
