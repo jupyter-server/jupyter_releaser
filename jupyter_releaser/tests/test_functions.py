@@ -97,6 +97,45 @@ def test_get_changelog_version_entry(py_package, mocker):
     assert f"## {version}" in resp
     assert testutil.PR_ENTRY in resp
 
+def test_get_changelog_version_entry_no_tag(py_package, mocker):
+    version = util.get_version()
+
+    mocked_gen = mocker.patch("jupyter_releaser.changelog.generate_activity_md")
+    mocked_gen.return_value = testutil.CHANGELOG_ENTRY
+    branch = "foo"
+    util.run("git branch baz/bar")
+    ref = "heads/baz/bar"
+    resp = changelog.get_version_entry(ref, branch, "baz/bar", version)
+    mocked_gen.assert_called_with(
+        "baz/bar",
+        since="v1.0",
+        until=None,
+        kind="pr",
+        branch=branch,
+        heading_level=2,
+        auth=None,
+    )
+
+    assert f"## {version}" in resp
+    assert testutil.PR_ENTRY in resp
+
+    mocked_gen.return_value = testutil.CHANGELOG_ENTRY
+    resp = changelog.get_version_entry(
+        ref, branch, "baz/bar", version, resolve_backports=True, auth="bizz"
+    )
+    mocked_gen.assert_called_with(
+        "baz/bar",
+        since="v1.0",
+        until=None,
+        kind="pr",
+        branch=branch,
+        heading_level=2,
+        auth="bizz",
+    )
+
+    assert f"## {version}" in resp
+    assert testutil.PR_ENTRY in resp
+
 
 def test_get_changelog_version_entry_since_last_stable(py_package, mocker):
     version = util.get_version()
