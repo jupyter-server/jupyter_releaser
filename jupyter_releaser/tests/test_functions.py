@@ -105,11 +105,12 @@ def test_get_changelog_version_entry_no_tag(py_package, mocker):
     mocked_gen.return_value = testutil.CHANGELOG_ENTRY
     branch = "foo"
     util.run("git branch baz/bar")
+    commit = run("git rev-list --max-parents=0 HEAD", quiet=True)
     ref = "heads/baz/bar"
     resp = changelog.get_version_entry(ref, branch, "baz/bar", version)
     mocked_gen.assert_called_with(
         "baz/bar",
-        since="73804d3413a6342d4d893628065729297c0be022",
+        since=commit,
         until=None,
         kind="pr",
         branch=branch,
@@ -126,7 +127,7 @@ def test_get_changelog_version_entry_no_tag(py_package, mocker):
     )
     mocked_gen.assert_called_with(
         "baz/bar",
-        since="73804d3413a6342d4d893628065729297c0be022",
+        since=commit,
         until=None,
         kind="pr",
         branch=branch,
