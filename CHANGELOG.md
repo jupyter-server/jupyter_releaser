@@ -2,6 +2,23 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.13.1
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...7daf1cebb31c640c6ccf03dd43bdcbd251fc61d0))
+
+### Bugs fixed
+
+- Create forwardport PR after publishing [#262](https://github.com/jupyter-server/jupyter_releaser/pull/262) ([@blink1073](https://github.com/blink1073))
+- Select first commit if there is no tags [#261](https://github.com/jupyter-server/jupyter_releaser/pull/261) ([@hbcarlos](https://github.com/hbcarlos))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-02-14&to=2022-03-10&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-02-14..2022-03-10&type=Issues) | [@hbcarlos](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ahbcarlos+updated%3A2022-02-14..2022-03-10&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.13.0
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...3fbe0cfe40667da0cdeafab2bee7d3597fd2a436))
@@ -18,8 +35,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-01-27&to=2022-02-14&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-01-27..2022-02-14&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-01-27..2022-02-14&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.12.0
 
