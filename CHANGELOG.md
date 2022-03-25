@@ -2,6 +2,23 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.13.3
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...2a10db69739f622eb605068d5771e86027318657))
+
+### Bugs fixed
+
+- Include explicit package data [#270](https://github.com/jupyter-server/jupyter_releaser/pull/270) ([@blink1073](https://github.com/blink1073))
+- forward python imports for checking with extract_release [#268](https://github.com/jupyter-server/jupyter_releaser/pull/268) ([@wolfv](https://github.com/wolfv))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-03-11&to=2022-03-25&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-03-11..2022-03-25&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-03-11..2022-03-25&type=Issues) | [@welcome](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Awelcome+updated%3A2022-03-11..2022-03-25&type=Issues) | [@wolfv](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Awolfv+updated%3A2022-03-11..2022-03-25&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.13.2
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...9aaad0bd2bb91dfd3f8085bae7fcd4fa5d17f832))
@@ -15,8 +32,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-03-10&to=2022-03-11&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-03-10..2022-03-11&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.13.1
 
