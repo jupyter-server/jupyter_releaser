@@ -63,12 +63,12 @@ jobs:
       - name: Run the tests with coverage on Ubuntu
         if: ${{ matrix.os == 'ubuntu' }}
         run: |
-          pytest -vv --cov jupyter_releaser --cov-branch --cov-report term-missing:skip-covered
+          python -m pytest -vv --cov jupyter_releaser --cov-branch --cov-report term-missing:skip-covered
 
       - name: Run the tests on Windows and macOS
         if: ${{ matrix.os != 'ubuntu' }}
         run: |
-          pytest -vv -s
+          python -m pytest -vv -s
 
       - name: Verify the Generate Changelog Action
         if: ${{ matrix.os == 'ubuntu' }}
