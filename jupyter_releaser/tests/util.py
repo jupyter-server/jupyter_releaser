@@ -85,6 +85,9 @@ def pyproject_template(sub_packages=[]):
 [build-system]
 requires = ["setuptools>=40.8.0", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[project]
+version = "0.0.1"
 """
     if sub_packages:
         res += f"""
