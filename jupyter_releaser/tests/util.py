@@ -215,6 +215,9 @@ def create_python_package(git_repo, multi=False, not_matching_name=False):
             encoding="utf-8"
         )
 
+        readme = git_repo / "README.md"
+        readme.touch()
+
         pre_commit = git_repo / ".pre-commit-config.yaml"
         pre_commit.write_text(text, encoding="utf-8")
 
