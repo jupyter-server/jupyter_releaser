@@ -139,8 +139,8 @@ def get_version():
     elif PYPROJECT.exists():
         text = PYPROJECT.read_text(encoding="utf-8")
         data = toml.loads(text)
-        project = data.get('project', {})
-        version = project.get('version')
+        project = data.get("project", {})
+        version = project.get("version")
         if not version:  # pragma: no cover
             raise ValueError("No version identifier could be found!")
         return version
