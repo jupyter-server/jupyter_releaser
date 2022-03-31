@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.14.0
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...7d4dc94377caada8a71ae08b147228677df42316))
+
+### Enhancements made
+
+- Support static version in pyproject.toml [#275](https://github.com/jupyter-server/jupyter_releaser/pull/275) ([@blink1073](https://github.com/blink1073))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-03-25&to=2022-03-31&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-03-25..2022-03-31&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.13.3
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...2a10db69739f622eb605068d5771e86027318657))
@@ -16,8 +32,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-03-11&to=2022-03-25&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-03-11..2022-03-25&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-03-11..2022-03-25&type=Issues) | [@welcome](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Awelcome+updated%3A2022-03-11..2022-03-25&type=Issues) | [@wolfv](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Awolfv+updated%3A2022-03-11..2022-03-25&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.13.2
 
