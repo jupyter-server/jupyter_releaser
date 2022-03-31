@@ -90,6 +90,7 @@ authors = [
   {{email = "foo@foo.com"}},
   {{name = "foo"}}
 ]
+dynamic = ["readme"]
 
 [project.urls]
 homepage = "https://foo.com"
