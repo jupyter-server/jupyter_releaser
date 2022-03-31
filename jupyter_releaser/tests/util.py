@@ -62,6 +62,7 @@ def setup_cfg_template(package_name="foo", module_name=None):
 [metadata]
 name = {package_name}
 version = attr: {module_name or package_name}.__version__
+long_description = file: README.md
 long_description_content_type = text/x-markdown
 
 [options]
