@@ -26,21 +26,20 @@ def test_get_repo(git_repo, mocker):
 
 
 def test_get_version_pyproject_static(py_package):
-    text = util.PYPROJECT.read_text(encoding="utf-8")
-    text += """
-    [project]
-    version = "0.0.1"
-"""
-    util.PYPROJECT.write_text(text, encoding="utf-8")
     assert util.get_version() == "0.0.1"
+    util.bump_version("0.0.2a0")
+    assert util.get_version() == "0.0.2a0"
 
 
 def test_get_version_pyproject_dynamic(py_package):
+    py_project = py_package / "pyproject.toml"
+    text = py_project.read_text(encoding="utf-8")
+    text = text.replace("""[project]\nversion = "0.0.1\"""", "")
+    py_project.write_text(text, encoding="utf-8")
     assert util.get_version() == "0.0.1"
 
 
 def test_get_version_setuppy(py_package):
-    util.PYPROJECT.unlink()
     assert util.get_version() == "0.0.1"
     util.bump_version("0.0.2a0")
     assert util.get_version() == "0.0.2a0"
