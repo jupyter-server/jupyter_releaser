@@ -136,6 +136,14 @@ def get_version():
     """Get the current package version"""
     if SETUP_PY.exists():
         return run("python setup.py --version").split("\n")[-1]
+    elif PYPROJECT.exists():
+        text = PYPROJECT.read_text(encoding="utf-8")
+        data = toml.loads(text)
+        project = data.get("project", {})
+        version = project.get("version")
+        if not version:  # pragma: no cover
+            raise ValueError("No version identifier could be found!")
+        return version
     elif PACKAGE_JSON.exists():
         return json.loads(PACKAGE_JSON.read_text(encoding="utf-8")).get("version", "")
     else:  # pragma: no cover
