@@ -62,13 +62,6 @@ def setup_cfg_template(package_name="foo", module_name=None):
 [metadata]
 name = {package_name}
 version = attr: {module_name or package_name}.__version__
-description = My package description
-long_description = file: README.md
-long_description_content_type = text/markdown
-license = BSD 3-Clause License
-author = foo
-author_email = foo@foo.com
-url = https://foo.com
 
 [options]
 zip_safe = False
@@ -80,14 +73,26 @@ py_modules = {module_name or package_name}
 SETUP_PY_TEMPLATE = """__import__("setuptools").setup()\n"""
 
 
-def pyproject_template(sub_packages=[]):
-    res = """
+def pyproject_template(project_name="foo", sub_packages=[]):
+    res = f"""
 [build-system]
-requires = ["setuptools>=40.8.0", "wheel"]
+requires = ["setuptools>=61.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
+name = "{project_name}"
 version = "0.0.1"
+description = "My package description"
+readme = "README.md"
+license = {{file = "LICENSE"}}
+authors = [
+  {{email = "foo@foo.com"}},
+  {{name = "foo"}}
+]
+
+[project.urls]
+homepage = "https://foo.com"
+
 """
     if sub_packages:
         res += f"""
@@ -134,6 +139,7 @@ MANIFEST_TEMPLATE = """
 include *.md
 include *.toml
 include *.yaml
+include LICENSE
 """
 
 CHANGELOG_TEMPLATE = f"""# Changelog
@@ -208,13 +214,18 @@ def create_python_package(git_repo, multi=False, not_matching_name=False):
         )
 
         pyproject = git_repo / "pyproject.toml"
-        pyproject.write_text(pyproject_template(sub_packages), encoding="utf-8")
+        pyproject.write_text(
+            pyproject_template(module_name, sub_packages), encoding="utf-8"
+        )
 
         foopy = git_repo / f"{module_name}.py"
         foopy.write_text(PY_MODULE_TEMPLATE, encoding="utf-8")
 
         manifest = git_repo / "MANIFEST.in"
         manifest.write_text(MANIFEST_TEMPLATE, encoding="utf-8")
+
+        license = git_repo / "LICENSE"
+        license.touch()
 
         here = Path(__file__).parent
         text = here.parent.parent.joinpath(".pre-commit-config.yaml").read_text(
