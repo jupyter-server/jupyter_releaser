@@ -62,7 +62,6 @@ def setup_cfg_template(package_name="foo", module_name=None):
 [metadata]
 name = {package_name}
 version = attr: {module_name or package_name}.__version__
-long_description = file: README.md
 long_description_content_type = text/x-markdown
 
 [options]
@@ -85,16 +84,18 @@ build-backend = "setuptools.build_meta"
 name = "{project_name}"
 version = "0.0.1"
 description = "My package description"
+dynamic = ["readme"]
 license = {{file = "LICENSE"}}
 authors = [
   {{email = "foo@foo.com"}},
   {{name = "foo"}}
 ]
-dynamic = ["readme"]
 
 [project.urls]
 homepage = "https://foo.com"
 
+[tool.setuptools.dynamic]
+readme = {{file = "README.md"}}
 """
     if sub_packages:
         res += f"""
