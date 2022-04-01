@@ -72,9 +72,9 @@ py_modules = {module_name or package_name}
 
 SETUP_PY_TEMPLATE = """__import__("setuptools").setup()\n"""
 
-LICENSE_TEMPLATE = "A fake license"
+LICENSE_TEMPLATE = "A fake license\n"
 
-README_TEMPLATE = "A fake readme"
+README_TEMPLATE = "A fake readme\n"
 
 
 def pyproject_template(project_name="foo", sub_packages=[]):
