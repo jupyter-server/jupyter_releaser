@@ -2,6 +2,27 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.15.0
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...b5c58b89dbc3e981ffbc1dab88f6bfb128c492a4))
+
+### Enhancements made
+
+- Add support for dynamic versions [#279](https://github.com/jupyter-server/jupyter_releaser/pull/279) ([@blink1073](https://github.com/blink1073))
+
+### Bugs fixed
+
+- Fix check_links on macOS [#282](https://github.com/jupyter-server/jupyter_releaser/pull/282) ([@blink1073](https://github.com/blink1073))
+- Fix listing of tags [#281](https://github.com/jupyter-server/jupyter_releaser/pull/281) ([@jtpio](https://github.com/jtpio))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-03-31&to=2022-04-01&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-03-31..2022-04-01&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2022-03-31..2022-04-01&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.14.0
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...7d4dc94377caada8a71ae08b147228677df42316))
@@ -15,8 +36,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-03-25&to=2022-03-31&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-03-25..2022-03-31&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.13.3
 
