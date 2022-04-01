@@ -53,9 +53,6 @@ def git_repo(tmp_path):
     changelog = tmp_path / "CHANGELOG.md"
     changelog.write_text(testutil.CHANGELOG_TEMPLATE, encoding="utf-8")
 
-    readme = tmp_path / "README.md"
-    readme.write_text("Hello from foo project\n", encoding="utf-8")
-
     config = Path(util.JUPYTER_RELEASER_CONFIG)
     config.write_text(testutil.TOML_CONFIG, encoding="utf-8")
 

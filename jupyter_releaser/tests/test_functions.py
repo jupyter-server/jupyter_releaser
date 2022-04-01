@@ -25,15 +25,24 @@ def test_get_repo(git_repo, mocker):
     assert util.get_repo() == repo
 
 
-def test_get_version_python(py_package):
+def test_get_version_pyproject_static(py_package):
     assert util.get_version() == "0.0.1"
     util.bump_version("0.0.2a0")
     assert util.get_version() == "0.0.2a0"
 
 
-def test_get_version_pyproject(py_package):
-    os.unlink("setup.py")
+def test_get_version_pyproject_dynamic(py_package):
+    py_project = py_package / "pyproject.toml"
+    text = py_project.read_text(encoding="utf-8")
+    text = text.replace("""[project]\nversion = "0.0.1\"""", "")
+    py_project.write_text(text, encoding="utf-8")
     assert util.get_version() == "0.0.1"
+
+
+def test_get_version_setuppy(py_package):
+    assert util.get_version() == "0.0.1"
+    util.bump_version("0.0.2a0")
+    assert util.get_version() == "0.0.2a0"
 
 
 def test_get_version_multipython(py_multipackage):

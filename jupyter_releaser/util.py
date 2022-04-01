@@ -10,7 +10,9 @@ import re
 import shlex
 import shutil
 import sys
+import tempfile
 import time
+import warnings
 from glob import glob
 from pathlib import Path
 from subprocess import CalledProcessError
@@ -20,7 +22,8 @@ from subprocess import PIPE
 import toml
 from importlib_resources import files
 from jsonschema import Draft4Validator as Validator
-from pkg_resources import parse_version
+from packaging.version import parse as parse_version
+from pkginfo import Wheel
 
 from jupyter_releaser.tee import run as tee
 
@@ -134,20 +137,27 @@ def get_repo():
 
 def get_version():
     """Get the current package version"""
-    if SETUP_PY.exists():
-        return run("python setup.py --version").split("\n")[-1]
-    elif PYPROJECT.exists():
+    if PYPROJECT.exists():
         text = PYPROJECT.read_text(encoding="utf-8")
         data = toml.loads(text)
         project = data.get("project", {})
         version = project.get("version")
-        if not version:  # pragma: no cover
-            raise ValueError("No version identifier could be found!")
+        if not version:
+            with tempfile.TemporaryDirectory() as tempdir:
+                run(f"{sys.executable} -m build --wheel --outdir {tempdir}")
+                wheel_path = glob(f"{tempdir}/*.whl")[0]
+                wheel = Wheel(wheel_path)
+                version = wheel.version
         return version
-    elif PACKAGE_JSON.exists():
+
+    if PACKAGE_JSON.exists():
         return json.loads(PACKAGE_JSON.read_text(encoding="utf-8")).get("version", "")
-    else:  # pragma: no cover
-        raise ValueError("No version identifier could be found!")
+
+    if SETUP_PY.exists():
+        warnings.warn("Using deprecated setup.py invocation")
+        return run("python setup.py --version").split("\n")[-1]
+
+    raise ValueError("No version identifier could be found!")
 
 
 def normalize_path(path):
