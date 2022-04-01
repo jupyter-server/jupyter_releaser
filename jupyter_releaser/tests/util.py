@@ -62,8 +62,6 @@ def setup_cfg_template(package_name="foo", module_name=None):
 [metadata]
 name = {package_name}
 version = attr: {module_name or package_name}.__version__
-long_description = file: README.md
-long_description_content_type = text/x-markdown
 
 [options]
 zip_safe = False
@@ -73,6 +71,10 @@ py_modules = {module_name or package_name}
 
 
 SETUP_PY_TEMPLATE = """__import__("setuptools").setup()\n"""
+
+LICENSE_TEMPLATE = "A fake license"
+
+README_TEMPLATE = "A fake readme"
 
 
 def pyproject_template(project_name="foo", sub_packages=[]):
@@ -85,7 +87,7 @@ build-backend = "setuptools.build_meta"
 name = "{project_name}"
 version = "0.0.1"
 description = "My package description"
-dynamic = ["readme"]
+readme = "README.md"
 license = {{file = "LICENSE"}}
 authors = [
   {{email = "foo@foo.com"}},
@@ -94,9 +96,6 @@ authors = [
 
 [project.urls]
 homepage = "https://foo.com"
-
-[tool.setuptools.dynamic]
-readme = {{file = "README.md"}}
 """
     if sub_packages:
         res += f"""
@@ -219,7 +218,7 @@ def create_python_package(git_repo, multi=False, not_matching_name=False):
 
         pyproject = git_repo / "pyproject.toml"
         pyproject.write_text(
-            pyproject_template(module_name, sub_packages), encoding="utf-8"
+            pyproject_template(package_name, sub_packages), encoding="utf-8"
         )
 
         foopy = git_repo / f"{module_name}.py"
@@ -229,7 +228,7 @@ def create_python_package(git_repo, multi=False, not_matching_name=False):
         manifest.write_text(MANIFEST_TEMPLATE, encoding="utf-8")
 
         license = git_repo / "LICENSE"
-        license.touch()
+        license.write_text(LICENSE_TEMPLATE, encoding="utf-8")
 
         here = Path(__file__).parent
         text = here.parent.parent.joinpath(".pre-commit-config.yaml").read_text(
@@ -237,7 +236,7 @@ def create_python_package(git_repo, multi=False, not_matching_name=False):
         )
 
         readme = git_repo / "README.md"
-        readme.touch()
+        readme.write_text(README_TEMPLATE, encoding="utf-8")
 
         pre_commit = git_repo / ".pre-commit-config.yaml"
         pre_commit.write_text(text, encoding="utf-8")
