@@ -361,9 +361,10 @@ def extract_release(
     tag_name = release.tag_name
 
     sha = None
-    for tag in gh.list_tags():
+    for tag in gh.list_tags(tag_name):
         if tag.ref == f"refs/tags/{tag_name}":
             sha = tag.object.sha
+            break
     if sha is None:
         raise ValueError("Could not find tag")
 
