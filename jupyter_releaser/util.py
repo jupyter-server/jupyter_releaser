@@ -137,6 +137,10 @@ def get_repo():
 
 def get_version():
     """Get the current package version"""
+    if SETUP_PY.exists():
+        warnings.warn("Using deprecated setup.py invocation")
+        return run("python setup.py --version").split("\n")[-1]
+
     if PYPROJECT.exists():
         text = PYPROJECT.read_text(encoding="utf-8")
         data = toml.loads(text)
@@ -152,10 +156,6 @@ def get_version():
 
     if PACKAGE_JSON.exists():
         return json.loads(PACKAGE_JSON.read_text(encoding="utf-8")).get("version", "")
-
-    if SETUP_PY.exists():
-        warnings.warn("Using deprecated setup.py invocation")
-        return run("python setup.py --version").split("\n")[-1]
 
     raise ValueError("No version identifier could be found!")
 
