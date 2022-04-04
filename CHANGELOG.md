@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.15.1
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...e60175aa7ca19838cf3326703ab72589890d1e79))
+
+### Bugs fixed
+
+- Use setup.py --version by default [#284](https://github.com/jupyter-server/jupyter_releaser/pull/284) ([@blink1073](https://github.com/blink1073))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-04-01&to=2022-04-04&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-04-01..2022-04-04&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.15.0
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...b5c58b89dbc3e981ffbc1dab88f6bfb128c492a4))
@@ -20,8 +36,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-03-31&to=2022-04-01&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-03-31..2022-04-01&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2022-03-31..2022-04-01&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.14.0
 
