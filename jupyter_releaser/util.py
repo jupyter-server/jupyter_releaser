@@ -139,7 +139,10 @@ def get_version():
     """Get the current package version"""
     if SETUP_PY.exists():
         warnings.warn("Using deprecated setup.py invocation")
-        return run("python setup.py --version").split("\n")[-1]
+        try:
+            return run("python setup.py --version").split("\n")[-1]
+        except CalledProcessError as e:
+            print(e)
 
     if PYPROJECT.exists():
         text = PYPROJECT.read_text(encoding="utf-8")
