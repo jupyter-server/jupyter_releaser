@@ -245,8 +245,8 @@ def test_handle_npm_config(npm_package):
         npmrc.write_text(npmrc_text, encoding="utf-8")
 
 
-def test_bump_version(py_package):
-    for spec in ["1.0.1", "1.0.1.dev1", "1.0.3a4"]:
+def test_bump_version_reg(py_package):
+    for spec in ["1.0.1", "1.0.3a4"]:
         util.bump_version(spec)
         util.run("git commit -a -m 'bump version'")
         assert util.get_version() == spec
@@ -258,11 +258,25 @@ def test_bump_version(py_package):
     util.bump_version("1.0.3a5")
     util.bump_version("next")
     assert util.get_version() == "1.0.3a6"
-    util.bump_version("1.0.3.dev1")
-    util.bump_version("next")
-    assert util.get_version() == "1.0.3"
     util.bump_version("minor")
     assert util.get_version() == "1.1.0"
+
+
+def test_bump_version_dev(py_package):
+    util.bump_version("dev")
+    assert util.get_version() == "0.1.0.dev0"
+    util.bump_version("dev")
+    assert util.get_version() == "0.1.0.dev1"
+    # Should get the version from the changelog
+    util.bump_version("next", changelog_path=py_package / "CHANGELOG.md")
+    assert util.get_version() == "0.0.2"
+    util.bump_version("dev")
+    assert util.get_version() == "0.1.0.dev0"
+    util.bump_version("patch", changelog_path=py_package / "CHANGELOG.md")
+    assert util.get_version() == "0.0.2"
+    util.bump_version("1.0.0.dev0")
+    util.bump_version("minor")
+    assert util.get_version() == "1.0.0"
 
 
 def test_get_config_python(py_package):

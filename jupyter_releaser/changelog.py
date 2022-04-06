@@ -299,3 +299,12 @@ def extract_current(changelog_path):
         if start != -1 and end != -1:
             body = changelog[start + len(START_MARKER) : end]
     return body
+
+
+def extract_current_version(changelog_path):
+    """Extract the current released version from the changelog"""
+    body = extract_current(changelog_path)
+    match = re.match(r"#+ ([\d.]+)", body.strip())
+    if not match:
+        raise ValueError("Could not find previous version")
+    return match.groups()[0]
