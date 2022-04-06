@@ -40,7 +40,7 @@ with make_group("Handle Check Release"):
             run("pip install -q -e .")
 
 
-run_action("jupyter-relaser prep-git")
+run_action("jupyter-releaser prep-git")
 
 
 with make_group("Handle RH_SINCE"):
