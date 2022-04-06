@@ -239,8 +239,6 @@ def draft_release(
 
     # Bump to post version if given
     if post_version_spec:
-        # TODO: can this be a static setting and still preserve what
-        # we have?
         post_version = bump_version(
             post_version_spec, version_cmd=version_cmd, changelog_path=changelog_path
         )
