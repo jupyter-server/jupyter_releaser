@@ -1,10 +1,10 @@
 import os
 from pathlib import Path
 
+from jupyter_releaser.actions.common import run_action
 from jupyter_releaser.changelog import get_version_entry
 from jupyter_releaser.util import CHECKOUT_NAME
 from jupyter_releaser.util import get_branch
-from jupyter_releaser.util import run
 
 target = os.environ.get("RH_REPOSITORY")
 branch = os.environ.get("RH_BRANCH", "<default>")
@@ -18,7 +18,7 @@ print("target:", target)
 print("branch:", branch)
 print("convert to rst:", convert_to_rst)
 
-run("jupyter-releaser prep-git")
+run_action("jupyter-releaser prep-git")
 branch = get_branch()
 orig_dir = os.getcwd()
 os.chdir(CHECKOUT_NAME)
