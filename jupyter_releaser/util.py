@@ -54,13 +54,23 @@ GIT_FETCH_CMD = "git fetch origin --filter=blob:none --quiet"
 def run(cmd, **kwargs):
     """Run a command as a subprocess and get the output as a string"""
     quiet_error = kwargs.pop("quiet_error", False)
+    show_cwd = kwargs.pop("show_cwd", False)
+    quiet = kwargs.pop("quiet", False)
+    echo = kwargs.pop("echo", False)
+
+    if echo:
+        prefix = "COMMAND"
+        if show_cwd:
+            prefix += f" (in '{os.getcwd()}')"
+        prefix += ":"
+        print(f"{prefix} {cmd}", file=sys.stderr)
+
     if sys.platform.startswith("win"):
         # Async subprocesses do not work well on Windows, use standard
         # subprocess methods
         return _run_win(cmd, **kwargs)
 
     quiet = kwargs.get("quiet")
-    kwargs.setdefault("echo", True)
     kwargs.setdefault("check", True)
 
     try:
@@ -77,12 +87,11 @@ def run(cmd, **kwargs):
 
 def _run_win(cmd, **kwargs):
     """Run a command as a subprocess and get the output as a string"""
-    kwargs.pop("show_cwd", False)
     quiet = kwargs.pop("quiet", False)
+
     if not quiet:
-        log(f"> {cmd}")
-    else:
         kwargs.setdefault("stderr", PIPE)
+
     kwargs.setdefault("shell", True)
 
     parts = shlex.split(cmd)
