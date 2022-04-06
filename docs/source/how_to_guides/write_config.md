@@ -72,3 +72,15 @@ Example `package.json`:
   }
 }
 ```
+
+## Automatic Dev Versions
+
+If you'd like to use dev versions for your repository between builds,
+use `dev` as the `post-version-spec` setting, e.g.
+
+```toml
+[tools.jupyter-releaser.options]
+post-version-spec = "dev"
+```
+
+This will bump it to the next minor release with a `.dev0` suffix.

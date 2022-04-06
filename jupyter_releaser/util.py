@@ -206,7 +206,7 @@ def create_release_commit(version, release_message=None, dist_dir="dist"):
     return shas
 
 
-def bump_version(version_spec, version_cmd=""):
+def bump_version(version_spec, *, changelog_path="", version_cmd=""):
     """Bump the version"""
     # Look for config files to determine version command if not given
     if not version_cmd:
@@ -241,17 +241,44 @@ def bump_version(version_spec, version_cmd=""):
     # Add some convenience options on top of "tbump"
     if "tbump" in version_cmd:
         v = parse_version(get_version())
-        if version_spec == "next":
-            if v.is_devrelease:
-                version_spec = f"{v.major}.{v.minor}.{v.micro}"
-            elif v.is_prerelease:
-                version_spec = f"{v.major}.{v.minor}.{v.micro}{v.pre[0]}{v.pre[1] + 1}"
-            else:
+
+        if v.is_devrelease:
+            # bump from the version in the changelog.
+            if version_spec in ["patch", "next"]:
+                from jupyter_releaser.changelog import extract_current_version
+
+                v = parse_version(extract_current_version(changelog_path))
                 version_spec = f"{v.major}.{v.minor}.{v.micro + 1}"
-        elif version_spec == "patch":
-            version_spec = f"{v.major}.{v.minor}.{v.micro + 1}"
-        elif version_spec == "minor":
-            version_spec = f"{v.major}.{v.minor + 1}.0"
+
+            # Drop the dev portion and move to the minor release.
+            elif version_spec == "minor":
+                version_spec = f"{v.major}.{v.minor}.{v.micro}"
+
+            # Bump to the next dev version.
+            elif version_spec == "dev":
+                version_spec = f"{v.major}.{v.minor}.{v.micro}.dev{v.dev + 1}"
+
+        else:
+            # Bump to next minor for dev.
+            if version_spec == "dev":
+                version_spec = f"{v.major}.{v.minor + 1}.0.dev0"
+
+            # For next, go to next prerelease or patch if it is a final version.
+            elif version_spec == "next":
+                if v.is_prerelease:
+                    version_spec = (
+                        f"{v.major}.{v.minor}.{v.micro}{v.pre[0]}{v.pre[1] + 1}"
+                    )
+                else:
+                    version_spec = f"{v.major}.{v.minor}.{v.micro + 1}"
+
+            # For patch, always patch.
+            elif version_spec == "patch":
+                version_spec = f"{v.major}.{v.minor}.{v.micro + 1}"
+
+            # For minor, always minor.
+            elif version_spec == "minor":
+                version_spec = f"{v.major}.{v.minor + 1}.0"
 
     # Bump the version
     run(f"{version_cmd} {version_spec}")

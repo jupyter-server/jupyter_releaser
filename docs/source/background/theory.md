@@ -57,7 +57,8 @@ Detailed workflows are available to draft a changelog, draft a release, publish 
 - Checks the links in Markdown and reStructuredText files
 - Adds a commit that includes the hashes of the dist files
 - Creates an annotated version tag in standard format
-- If given, bumps the version using the post version spec
+- If given, bumps the version using the post version spec. he post version
+  spec can also be given as a setting, [Write Releaser Config Guide](../how_to_guides/write_config.html#automatic-dev-versions).
 - Pushes the commits and tag to the target `branch`
 - Publishes a draft GitHub release for the tag with the changelog entry as the text
 
