@@ -156,15 +156,6 @@ def run(args: Union[str, List[str]], **kwargs: Any) -> CompletedProcess:
 
     check = kwargs.get("check", False)
 
-    if kwargs.get("echo", False):
-        # This is modified from the default implementation since
-        # we want all output to be interleved on the same stream
-        prefix = "COMMAND"
-        if kwargs.pop("show_cwd", False):
-            prefix += f" (in '{os.getcwd()}')"
-        prefix += ":"
-        print(f"{prefix} {cmd}", file=sys.stderr)
-
     loop = asyncio.get_event_loop()
     result = loop.run_until_complete(_stream_subprocess(cmd, **kwargs))
 

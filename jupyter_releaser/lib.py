@@ -55,6 +55,7 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
     cmd = f"{python} -m pytest --noconftest --check-links --check-links-cache "
     cmd += f"--check-links-cache-expire-after {links_expire} "
     cmd += "--disable-warnings --quiet "
+    cmd += "-raXs "
     cmd += f"--check-links-cache-name {cache_dir}/check-release-links "
     # do not run doctests, since they might depend on other state.
     cmd += "-p no:doctest "
@@ -84,14 +85,27 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
         matched = glob(f"**/*{ext}", recursive=True)
         files.extend(m for m in matched if not m in ignored and "node_modules" not in m)
 
+    util.log("Checking files with options:")
+    util.log(cmd)
+
+    fails = 0
     for f in files:
         file_cmd = cmd + f' "{f}"'
         try:
-            util.run(file_cmd, shell=False)
+            util.log(f"\nC{f}...")
+            util.run(file_cmd, shell=False, echo=False)
         except Exception as e:
             # Return code 5 means no tests were run (no links found)
             if e.returncode != 5:
-                util.run(file_cmd + " --lf", shell=False)
+                try:
+                    util.log(f"{f} (second attempt)...")
+                    util.run(file_cmd + " --lf", shell=False, echo=False)
+                except Exception:
+                    fails += 1
+                    if fails == 3:
+                        raise RuntimeError("Found three failed links, bailing")
+    if fails:
+        raise RuntimeError(f"Encountered failures in {fails} file(s)")
 
 
 def draft_changelog(
