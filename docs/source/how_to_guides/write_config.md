@@ -28,7 +28,7 @@ Note: the only unusable hook names are `before-prep-git` and `before-extract-rel
 This is where `jupyter-releaser` looks for configuration (first one found is used):
 
 - `.jupyter-releaser.toml`
-- `pyproject.toml` (in the tools.jupyter-releaser section)
+- `pyproject.toml` (in the tool.jupyter-releaser section)
 - `package.json` (in the jupyter-releaser property)
 
 Example `.jupyter-releaser.toml`:
@@ -46,13 +46,13 @@ before-tag-version = "npm run pre:tag:script"
 Example `pyproject.toml` section:
 
 ```toml
-[tools.jupyter-releaser.options]
+[tool.jupyter-releaser.options]
 dist_dir = "mydist"
 
-[tools.jupyter-releaser]
+[tool.jupyter-releaser]
 skip = ["check-links"]
 
-[tools.jupyter-releaser.hooks]
+[tool.jupyter-releaser.hooks]
 after-build-python = ["python scripts/cleanup.py", "python scripts/send_email.py"]
 ```
 
@@ -79,7 +79,7 @@ If you'd like to use dev versions for your repository between builds,
 use `dev` as the `post-version-spec` setting, e.g.
 
 ```toml
-[tools.jupyter-releaser.options]
+[tool.jupyter-releaser.options]
 post-version-spec = "dev"
 ```
 
