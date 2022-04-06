@@ -54,7 +54,7 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
     python = sys.executable.replace(os.sep, "/")
     cmd = f"{python} -m pytest --noconftest --check-links --check-links-cache "
     cmd += f"--check-links-cache-expire-after {links_expire} "
-    cmd += "--disable-warnings --quiet "
+    cmd += "--quiet "
     cmd += "-raXs --color=yes "
     cmd += f"--check-links-cache-name {cache_dir}/check-release-links "
     # do not run doctests, since they might depend on other state.
@@ -92,13 +92,13 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
     for f in files:
         file_cmd = cmd + f' "{f}"'
         try:
-            util.log(f"Checking {f}...")
+            util.log(f"\nC{f}...")
             util.run(file_cmd, shell=False, echo=False)
         except Exception as e:
             # Return code 5 means no tests were run (no links found)
             if e.returncode != 5:
                 try:
-                    util.log(f"Rechecking {f}...")
+                    util.log(f"{f} (second attempt)...")
                     util.run(file_cmd + " --lf", shell=False, echo=False)
                 except Exception:
                     fails += 1
