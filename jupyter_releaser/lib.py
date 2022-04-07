@@ -88,7 +88,7 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
     util.log(cmd)
 
     fails = 0
-    separator = "\n\n" + "-" * 80
+    separator = f"\n\n{'-' * 80}\n"
     for f in files:
         file_cmd = cmd + f' "{f}"'
         try:
@@ -98,7 +98,7 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
             # Return code 5 means no tests were run (no links found)
             if e.returncode != 5:
                 try:
-                    util.log(f"\n{f} (second attempt)...")
+                    util.log(f"\n{f} (second attempt)...\n")
                     util.run(file_cmd + " --lf", shell=False, echo=False)
                 except Exception:
                     fails += 1
