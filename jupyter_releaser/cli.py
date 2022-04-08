@@ -7,27 +7,23 @@ from pathlib import Path
 
 import click
 
-from jupyter_releaser import changelog
-from jupyter_releaser import lib
-from jupyter_releaser import npm
-from jupyter_releaser import python
-from jupyter_releaser import util
+from jupyter_releaser import changelog, lib, npm, python, util
 
 
 class ReleaseHelperGroup(click.Group):
     """Click group tailored to jupyter-releaser"""
 
-    _needs_checkout_dir = dict()
+    _needs_checkout_dir = {}
 
     def invoke(self, ctx):
         """Handle jupyter-releaser config while invoking a command"""
         # Get the command name and make sure it is valid
         cmd_name = ctx.protected_args[0]
-        if not cmd_name in self.commands:
+        if cmd_name not in self.commands:
             super().invoke(ctx)
 
         if cmd_name == "list-envvars":
-            envvars = dict()
+            envvars = {}
             for cmd_name in self.commands:
                 for param in self.commands[cmd_name].params:
                     if isinstance(param, click.Option):
@@ -126,9 +122,7 @@ class ReleaseHelperGroup(click.Group):
 
 
 @click.group(cls=ReleaseHelperGroup)
-@click.option(
-    "--force", default=False, help="Force a command to run even when skipped by config"
-)
+@click.option("--force", default=False, help="Force a command to run even when skipped by config")
 def main(force):
     """Jupyter Releaser scripts"""
     pass
@@ -145,9 +139,7 @@ version_spec_options = [
 ]
 
 version_cmd_options = [
-    click.option(
-        "--version-cmd", envvar="RH_VERSION_COMMAND", help="The version command"
-    )
+    click.option("--version-cmd", envvar="RH_VERSION_COMMAND", help="The version command")
 ]
 
 
@@ -161,9 +153,7 @@ auth_options = [
     click.option("--auth", envvar="GITHUB_ACCESS_TOKEN", help="The GitHub auth token"),
 ]
 
-username_options = [
-    click.option("--username", envvar="GITHUB_ACTOR", help="The git username")
-]
+username_options = [click.option("--username", envvar="GITHUB_ACTOR", help="The git username")]
 
 dist_dir_options = [
     click.option(
@@ -195,15 +185,11 @@ check_imports_options = [
 ]
 
 dry_run_options = [
-    click.option(
-        "--dry-run", is_flag=True, envvar="RH_DRY_RUN", help="Run as a dry run"
-    )
+    click.option("--dry-run", is_flag=True, envvar="RH_DRY_RUN", help="Run as a dry run")
 ]
 
 
-git_url_options = [
-    click.option("--git-url", help="A custom url for the git repository")
-]
+git_url_options = [click.option("--git-url", help="A custom url for the git repository")]
 
 
 changelog_path_options = [
@@ -370,9 +356,7 @@ def draft_changelog(
 
 @main.command()
 @add_options(changelog_options)
-@click.option(
-    "--output", envvar="RH_CHANGELOG_OUTPUT", help="The output file for changelog entry"
-)
+@click.option("--output", envvar="RH_CHANGELOG_OUTPUT", help="The output file for changelog entry")
 @use_checkout_dir()
 def check_changelog(
     ref,
@@ -414,9 +398,7 @@ def build_python(dist_dir, python_packages):
                 f"Skipping build-python in {python_package} since there are no python package files"
             )
         else:
-            python.build_dist(
-                Path(os.path.relpath(".", python_package)) / dist_dir, clean=clean
-            )
+            python.build_dist(Path(os.path.relpath(".", python_package)) / dist_dir, clean=clean)
             clean = False
         os.chdir(prev_dir)
 
@@ -433,9 +415,7 @@ def check_python(dist_dir, check_imports, pydist_check_cmd):
             util.log(f"Skipping non-python dist file {dist_file}")
             continue
 
-        python.check_dist(
-            dist_file, python_imports=check_imports, check_cmd=pydist_check_cmd
-        )
+        python.check_dist(dist_file, python_imports=check_imports, check_cmd=pydist_check_cmd)
 
 
 @main.command()
@@ -528,13 +508,9 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
     help="Whether to skip tagging npm workspace packages",
 )
 @use_checkout_dir()
-def tag_release(
-    dist_dir, release_message, tag_format, tag_message, no_git_tag_workspace
-):
+def tag_release(dist_dir, release_message, tag_format, tag_message, no_git_tag_workspace):
     """Create release commit and tag"""
-    lib.tag_release(
-        dist_dir, release_message, tag_format, tag_message, no_git_tag_workspace
-    )
+    lib.tag_release(dist_dir, release_message, tag_format, tag_message, no_git_tag_workspace)
 
 
 @main.command()
@@ -698,9 +674,7 @@ def publish_release(auth, release_url):
 @add_options(dry_run_options)
 @click.argument("release-url")
 @use_checkout_dir()
-def forwardport_changelog(
-    auth, ref, branch, repo, username, changelog_path, dry_run, release_url
-):
+def forwardport_changelog(auth, ref, branch, repo, username, changelog_path, dry_run, release_url):
     """Forwardport Changelog Entries to the Default Branch"""
     lib.forwardport_changelog(
         auth, ref, branch, repo, username, changelog_path, dry_run, release_url

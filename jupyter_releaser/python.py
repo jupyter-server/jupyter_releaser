@@ -7,9 +7,7 @@ import re
 import shlex
 from glob import glob
 from pathlib import Path
-from subprocess import CalledProcessError
-from subprocess import PIPE
-from subprocess import Popen
+from subprocess import PIPE, CalledProcessError, Popen
 from tempfile import TemporaryDirectory
 
 from jupyter_releaser import util
@@ -34,9 +32,7 @@ def build_dist(dist_dir, clean=True):
         util.run(f"python setup.py bdist_wheel --dist-dir {dest}", quiet=True)
 
 
-def check_dist(
-    dist_file, test_cmd="", python_imports=None, check_cmd="twine check --strict"
-):
+def check_dist(dist_file, test_cmd="", python_imports=None, check_cmd="twine check --strict"):
     """Check a Python package locally (not as a cli)"""
     dist_file = util.normalize_path(dist_file)
     util.run(f"{check_cmd} {dist_file}")

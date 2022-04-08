@@ -5,14 +5,9 @@ import shutil
 from pathlib import Path
 from subprocess import CalledProcessError
 
-from jupyter_releaser.actions.common import make_group
-from jupyter_releaser.actions.common import run_action
-from jupyter_releaser.actions.common import setup
+from jupyter_releaser.actions.common import make_group, run_action, setup
 from jupyter_releaser.changelog import extract_current
-from jupyter_releaser.util import CHECKOUT_NAME
-from jupyter_releaser.util import get_latest_tag
-from jupyter_releaser.util import log
-from jupyter_releaser.util import run
+from jupyter_releaser.util import CHECKOUT_NAME, get_latest_tag, log, run
 
 setup()
 

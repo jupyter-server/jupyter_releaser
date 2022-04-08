@@ -4,11 +4,8 @@ import json
 import shutil
 from pathlib import Path
 
-from jupyter_releaser import changelog
-from jupyter_releaser import cli
-from jupyter_releaser import util
+from jupyter_releaser import changelog, cli, util
 from jupyter_releaser.util import run
-
 
 VERSION_SPEC = "1.0.1"
 
@@ -77,7 +74,8 @@ LICENSE_TEMPLATE = "A fake license\n"
 README_TEMPLATE = "A fake readme\n"
 
 
-def pyproject_template(project_name="foo", sub_packages=[]):
+def pyproject_template(project_name="foo", sub_packages=None):
+    sub_packages = sub_packages or []
     res = f"""
 [build-system]
 requires = ["setuptools>=61.0.0", "wheel"]
@@ -198,7 +196,9 @@ def get_log():
 
 
 def create_python_package(git_repo, multi=False, not_matching_name=False):
-    def write_files(git_repo, sub_packages=[], package_name="foo", module_name=None):
+    def write_files(git_repo, sub_packages=None, package_name="foo", module_name=None):
+
+        sub_packages = sub_packages or []
 
         module_name = module_name or package_name
 
@@ -206,9 +206,7 @@ def create_python_package(git_repo, multi=False, not_matching_name=False):
         setuppy.write_text(SETUP_PY_TEMPLATE, encoding="utf-8")
 
         setuppy = git_repo / "setup.cfg"
-        setuppy.write_text(
-            setup_cfg_template(package_name, module_name), encoding="utf-8"
-        )
+        setuppy.write_text(setup_cfg_template(package_name, module_name), encoding="utf-8")
 
         tbump = git_repo / "tbump.toml"
         tbump.write_text(
@@ -217,9 +215,7 @@ def create_python_package(git_repo, multi=False, not_matching_name=False):
         )
 
         pyproject = git_repo / "pyproject.toml"
-        pyproject.write_text(
-            pyproject_template(package_name, sub_packages), encoding="utf-8"
-        )
+        pyproject.write_text(pyproject_template(package_name, sub_packages), encoding="utf-8")
 
         foopy = git_repo / f"{module_name}.py"
         foopy.write_text(PY_MODULE_TEMPLATE, encoding="utf-8")
@@ -231,9 +227,7 @@ def create_python_package(git_repo, multi=False, not_matching_name=False):
         license.write_text(LICENSE_TEMPLATE, encoding="utf-8")
 
         here = Path(__file__).parent
-        text = here.parent.parent.joinpath(".pre-commit-config.yaml").read_text(
-            encoding="utf-8"
-        )
+        text = here.parent.parent.joinpath(".pre-commit-config.yaml").read_text(encoding="utf-8")
 
         readme = git_repo / "README.md"
         readme.write_text(README_TEMPLATE, encoding="utf-8")
@@ -292,9 +286,7 @@ class MockHTTPResponse:
     def __init__(self, data=None):
         self.url = ""
         data = data or {}
-        defaults = dict(
-            id="foo", html_url=HTML_URL, url=URL, upload_url=URL, number=100
-        )
+        defaults = dict(id="foo", html_url=HTML_URL, url=URL, upload_url=URL, number=100)
         if isinstance(data, list):
             for datum in data:
                 for key in defaults:

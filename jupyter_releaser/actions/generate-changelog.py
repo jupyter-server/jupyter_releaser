@@ -3,8 +3,7 @@ from pathlib import Path
 
 from jupyter_releaser.actions.common import run_action
 from jupyter_releaser.changelog import get_version_entry
-from jupyter_releaser.util import CHECKOUT_NAME
-from jupyter_releaser.util import get_branch
+from jupyter_releaser.util import CHECKOUT_NAME, get_branch
 
 target = os.environ.get("RH_REPOSITORY")
 branch = os.environ.get("RH_BRANCH", "<default>")

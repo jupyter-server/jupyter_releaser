@@ -35,7 +35,7 @@ pre-commit install
 You can also invoke the pre-commit hook manually at any time with
 
 ```bash
-pre-commit run
+pre-commit run --all-files --hook-stage manual
 ```
 
 Once you have done this, you can launch the main branch of Jupyter Releaser

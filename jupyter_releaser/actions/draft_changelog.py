@@ -2,12 +2,8 @@
 # Distributed under the terms of the Modified BSD License.
 import os
 
-from jupyter_releaser.actions.common import make_group
-from jupyter_releaser.actions.common import run_action
-from jupyter_releaser.actions.common import setup
-from jupyter_releaser.util import CHECKOUT_NAME
-from jupyter_releaser.util import get_latest_tag
-from jupyter_releaser.util import log
+from jupyter_releaser.actions.common import make_group, run_action, setup
+from jupyter_releaser.util import CHECKOUT_NAME, get_latest_tag, log
 
 setup()
 

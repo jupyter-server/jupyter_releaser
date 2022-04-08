@@ -12,21 +12,19 @@ from unittest.mock import call
 
 import pytest
 
-from jupyter_releaser import changelog
-from jupyter_releaser import util
-from jupyter_releaser.tests.util import CHANGELOG_ENTRY
-from jupyter_releaser.tests.util import get_log
-from jupyter_releaser.tests.util import HTML_URL
-from jupyter_releaser.tests.util import mock_changelog_entry
-from jupyter_releaser.tests.util import MockHTTPResponse
-from jupyter_releaser.tests.util import MockRequestResponse
-from jupyter_releaser.tests.util import PR_ENTRY
-from jupyter_releaser.tests.util import REPO_DATA
-from jupyter_releaser.tests.util import VERSION_SPEC
-from jupyter_releaser.util import bump_version
-from jupyter_releaser.util import GIT_FETCH_CMD
-from jupyter_releaser.util import normalize_path
-from jupyter_releaser.util import run
+from jupyter_releaser import changelog, util
+from jupyter_releaser.tests.util import (
+    CHANGELOG_ENTRY,
+    HTML_URL,
+    PR_ENTRY,
+    REPO_DATA,
+    VERSION_SPEC,
+    MockHTTPResponse,
+    MockRequestResponse,
+    get_log,
+    mock_changelog_entry,
+)
+from jupyter_releaser.util import GIT_FETCH_CMD, bump_version, normalize_path, run
 
 
 def test_prep_git_simple(py_package, runner):
@@ -132,9 +130,7 @@ def test_bump_version(npm_package, runner):
 def test_bump_version_bad_version(py_package, runner):
     runner(["prep-git", "--git-url", py_package])
     with pytest.raises(CalledProcessError):
-        runner(
-            ["bump-version", "--version-spec", "a1.0.1"], env=dict(GITHUB_ACTIONS="")
-        )
+        runner(["bump-version", "--version-spec", "a1.0.1"], env=dict(GITHUB_ACTIONS=""))
 
 
 def test_bump_version_tag_exists(py_package, runner):
@@ -234,7 +230,7 @@ def test_build_changelog_existing(py_package, mocker, runner):
 
     text = changelog_path.read_text(encoding="utf-8")
     assert "Definining contributions" in text, text
-    assert not "defining contributions" in text, text
+    assert "defining contributions" not in text, text
 
     assert len(re.findall(changelog.START_MARKER, text)) == 1
     assert len(re.findall(changelog.END_MARKER, text)) == 1
@@ -253,9 +249,7 @@ def test_build_changelog_backport(py_package, mocker, runner, open_mock):
     runner(["bump-version", "--version-spec", VERSION_SPEC])
 
     entry = CHANGELOG_ENTRY.replace("consideRatio", "meeseeksmachine")
-    entry = entry.replace(
-        "Support git references etc.", "Backport PR #50 (original title"
-    )
+    entry = entry.replace("Support git references etc.", "Backport PR #50 (original title")
 
     mocked_gen = mocker.patch("jupyter_releaser.changelog.generate_activity_md")
     mocked_gen.return_value = entry
@@ -629,9 +623,7 @@ def test_extract_dist_py(py_package, runner, mocker, open_mock, tmp_path, git_pr
     os.name == "nt" and sys.version_info.major == 3 and sys.version_info.minor < 8,
     reason="See https://bugs.python.org/issue26660",
 )
-def test_extract_dist_multipy(
-    py_multipackage, runner, mocker, open_mock, tmp_path, git_prep
-):
+def test_extract_dist_multipy(py_multipackage, runner, mocker, open_mock, tmp_path, git_prep):
     git_repo = py_multipackage[0]["abs_path"]
     changelog_entry = mock_changelog_entry(git_repo, runner, mocker)
 
@@ -724,9 +716,7 @@ def test_extract_dist_npm(npm_dist, runner, mocker, open_mock, tmp_path):
     assert "after-extract-release" in log
 
 
-@pytest.mark.skipif(
-    os.name == "nt", reason="pypiserver does not start properly on Windows"
-)
+@pytest.mark.skipif(os.name == "nt", reason="pypiserver does not start properly on Windows")
 def test_publish_assets_py(py_package, runner, mocker, git_prep):
     # Create the dist files
     changelog_entry = mock_changelog_entry(py_package, runner, mocker)
@@ -768,9 +758,7 @@ def test_publish_assets_npm(npm_dist, runner, mocker):
 
     mock_run = mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
 
-    runner(
-        ["publish-assets", "--npm-cmd", "npm publish --dry-run", "--dist-dir", dist_dir]
-    )
+    runner(["publish-assets", "--npm-cmd", "npm publish --dry-run", "--dist-dir", dist_dir])
 
     assert called == 3, called
 
@@ -940,9 +928,7 @@ def test_forwardport_changelog_no_new(npm_package, runner, mocker, open_mock, gi
     assert "after-forwardport-changelog" in log
 
 
-def test_forwardport_changelog_has_new(
-    npm_package, runner, mocker, open_mock, git_prep
-):
+def test_forwardport_changelog_has_new(npm_package, runner, mocker, open_mock, git_prep):
 
     open_mock.side_effect = [MockHTTPResponse([REPO_DATA]), MockHTTPResponse()]
     current = util.run("git branch --show-current")
@@ -952,9 +938,7 @@ def test_forwardport_changelog_has_new(
     util.run("git push origin backport_branch", cwd=util.CHECKOUT_NAME)
     util.run(f"git checkout {current}")
     mock_changelog_entry(npm_package, runner, mocker)
-    util.run(
-        f'git commit -a -m "Add changelog entry {VERSION_SPEC}"', cwd=util.CHECKOUT_NAME
-    )
+    util.run(f'git commit -a -m "Add changelog entry {VERSION_SPEC}"', cwd=util.CHECKOUT_NAME)
     util.run(f"git tag v{VERSION_SPEC}", cwd=util.CHECKOUT_NAME)
     util.run(f"git checkout {current}", cwd=util.CHECKOUT_NAME)
     util.run("git push origin backport_branch --tags", cwd=util.CHECKOUT_NAME)

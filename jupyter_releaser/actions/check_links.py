@@ -1,5 +1,4 @@
-from jupyter_releaser.actions.common import run_action
-from jupyter_releaser.actions.common import setup
+from jupyter_releaser.actions.common import run_action, setup
 
 setup()
 
