@@ -26,13 +26,7 @@ import platform
 import subprocess
 import sys
 from asyncio import StreamReader
-from typing import Any
-from typing import Callable
-from typing import Dict
-from typing import List
-from typing import Optional
-from typing import TYPE_CHECKING
-from typing import Union
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
 
 if TYPE_CHECKING:
     CompletedProcess = subprocess.CompletedProcess[Any]  # pylint: disable=E1136
@@ -108,15 +102,11 @@ async def _stream_subprocess(args: str, **kwargs: Any) -> CompletedProcess:
     tasks = []
     if process.stdout:
         tasks.append(
-            loop.create_task(
-                _read_stream(process.stdout, lambda l: tee_func(l, out, stdout))
-            )
+            loop.create_task(_read_stream(process.stdout, lambda l: tee_func(l, out, stdout)))
         )
     if process.stderr:
         tasks.append(
-            loop.create_task(
-                _read_stream(process.stderr, lambda l: tee_func(l, err, stderr))
-            )
+            loop.create_task(_read_stream(process.stderr, lambda l: tee_func(l, err, stderr)))
         )
 
     await asyncio.wait(set(tasks))

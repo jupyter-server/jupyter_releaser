@@ -7,9 +7,7 @@ from pathlib import Path
 
 import toml
 
-from jupyter_releaser import changelog
-from jupyter_releaser import npm
-from jupyter_releaser import util
+from jupyter_releaser import changelog, npm, util
 from jupyter_releaser.tests import util as testutil
 from jupyter_releaser.util import run
 
@@ -163,9 +161,7 @@ def test_get_changelog_version_entry_since_last_stable(py_package, mocker):
     util.run("git tag v1.0.0 baz/bar")
     util.run("git tag v1.1.0a0 baz/bar")
     ref = "heads/baz/bar"
-    resp = changelog.get_version_entry(
-        ref, branch, "baz/bar", version, since_last_stable=True
-    )
+    resp = changelog.get_version_entry(ref, branch, "baz/bar", version, since_last_stable=True)
     mocked_gen.assert_called_with(
         "baz/bar",
         since="v1.0.0",

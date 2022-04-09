@@ -3,21 +3,18 @@ on:
   push:
     branches: ["main"]
   pull_request:
-    branches: ["*"]
+
 jobs:
-  # Run "pre-commit run --all-files"
+  # Run "pre-commit run --all-files --hook-stage=manual"
   pre-commit:
     runs-on: ubuntu-20.04
-    timeout-minutes: 2
-
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: "3.10"
-
-      # ref: https://github.com/pre-commit/action
+      - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
       - uses: pre-commit/action@v2.0.0
+        with:
+          extra_args: --all-files --hook-stage=manual
       - name: Help message if pre-commit fail
         if: ${{ failure() }}
         run: |
@@ -27,7 +24,7 @@ jobs:
           echo "or you can run by hand on staged files with"
           echo "    pre-commit run"
           echo "or after-the-fact on already committed files with"
-          echo "    pre-commit run --all-files"
+          echo "    pre-commit run --all-files --hook-stage=manual"
 
   check-links:
     runs-on: ubuntu-20.04
@@ -43,11 +40,11 @@ jobs:
         uses: ./.github/actions/check-links
 
   test:
-    runs-on: ${{ matrix.os }}-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu, windows, macos]
+        os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.7", "3.10"]
     steps:
       - name: Checkout

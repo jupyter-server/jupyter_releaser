@@ -15,9 +15,7 @@ import time
 import warnings
 from glob import glob
 from pathlib import Path
-from subprocess import CalledProcessError
-from subprocess import check_output
-from subprocess import PIPE
+from subprocess import PIPE, CalledProcessError, check_output
 
 import toml
 from importlib_resources import files
@@ -42,7 +40,9 @@ CHECKOUT_NAME = ".jupyter_releaser_checkout"
 RELEASE_HTML_PATTERN = (
     "https://github.com/(?P<owner>[^/]+)/(?P<repo>[^/]+)/releases/tag/(?P<tag>.*)"
 )
-RELEASE_API_PATTERN = "https://api.github.com/repos/(?P<owner>[^/]+)/(?P<repo>[^/]+)/releases/tags/(?P<tag>.*)"
+RELEASE_API_PATTERN = (
+    "https://api.github.com/repos/(?P<owner>[^/]+)/(?P<repo>[^/]+)/releases/tags/(?P<tag>.*)"
+)
 
 
 SCHEMA = files("jupyter_releaser").joinpath("schema.json").read_text()
@@ -197,7 +197,7 @@ def create_release_commit(version, release_message=None, dist_dir="dist"):
     release_message = release_message.format(version=version)
     cmd = f'git commit -am "{release_message}"'
 
-    shas = dict()
+    shas = {}
 
     files = glob(f"{dist_dir}/*")
     if files:  # pragma: no cover
@@ -275,9 +275,7 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):
             # For next, go to next prerelease or patch if it is a final version.
             elif version_spec == "next":
                 if v.is_prerelease:
-                    version_spec = (
-                        f"{v.major}.{v.minor}.{v.micro}{v.pre[0]}{v.pre[1] + 1}"
-                    )
+                    version_spec = f"{v.major}.{v.minor}.{v.micro}{v.pre[0]}{v.pre[1] + 1}"
                 else:
                     version_spec = f"{v.major}.{v.minor}.{v.micro + 1}"
 

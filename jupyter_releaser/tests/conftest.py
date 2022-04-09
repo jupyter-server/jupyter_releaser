@@ -9,8 +9,7 @@ from urllib.request import OpenerDirector
 from click.testing import CliRunner
 from pytest import fixture
 
-from jupyter_releaser import cli
-from jupyter_releaser import util
+from jupyter_releaser import cli, util
 from jupyter_releaser.tests import util as testutil
 from jupyter_releaser.util import run
 
@@ -188,9 +187,7 @@ def build_mock(mocker):
                 dist_dir = Path("dist")
             os.makedirs(dist_dir, exist_ok=True)
             Path(f"{dist_dir}/foo-0.0.2a0.tar.gz").write_text("hello", encoding="utf-8")
-            Path(f"{dist_dir}/foo-0.0.2a0-py3-none-any.whl").write_text(
-                "hello", encoding="utf-8"
-            )
+            Path(f"{dist_dir}/foo-0.0.2a0-py3-none-any.whl").write_text("hello", encoding="utf-8")
             return ""
         return orig_run(cmd, **kwargs)
 

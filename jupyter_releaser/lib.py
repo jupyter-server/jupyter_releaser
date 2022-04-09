@@ -14,20 +14,14 @@ from subprocess import CalledProcessError
 import requests
 from ghapi.core import GhApi
 from pkg_resources import parse_version
-from pkginfo import SDist
-from pkginfo import Wheel
+from pkginfo import SDist, Wheel
 
-from jupyter_releaser import changelog
-from jupyter_releaser import npm
-from jupyter_releaser import python
-from jupyter_releaser import util
+from jupyter_releaser import changelog, npm, python, util
 
 
 def bump_version(version_spec, version_cmd, changelog_path):
     """Bump the version and verify new version"""
-    util.bump_version(
-        version_spec, version_cmd=version_cmd, changelog_path=changelog_path
-    )
+    util.bump_version(version_spec, version_cmd=version_cmd, changelog_path=changelog_path)
 
     version = util.get_version()
 
@@ -82,7 +76,7 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
     files = []
     for ext in [".md", ".rst", ".ipynb"]:
         matched = glob(f"**/*{ext}", recursive=True)
-        files.extend(m for m in matched if not m in ignored and "node_modules" not in m)
+        files.extend(m for m in matched if m not in ignored and "node_modules" not in m)
 
     util.log("Checking files with options:")
     util.log(cmd)
@@ -210,9 +204,7 @@ def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=F
     util.actions_output("pr_url", pull.html_url)
 
 
-def tag_release(
-    dist_dir, release_message, tag_format, tag_message, no_git_tag_workspace
-):
+def tag_release(dist_dir, release_message, tag_format, tag_message, no_git_tag_workspace):
     """Create release commit and tag"""
     # Get the new version
     version = util.get_version()
@@ -483,20 +475,17 @@ def publish_assets(
         elif suffix == ".tgz":
             # Ignore already published versions
             try:
-                util.run(
-                    f"{npm_cmd} {name}", cwd=dist_dir, quiet=True, quiet_error=True
-                )
+                util.run(f"{npm_cmd} {name}", cwd=dist_dir, quiet=True, quiet_error=True)
             except CalledProcessError as e:
                 stderr = e.stderr
-                if (
-                    "EPUBLISHCONFLICT" in stderr
-                    or "previously published versions" in stderr
-                ):
+                if "EPUBLISHCONFLICT" in stderr or "previously published versions" in stderr:
                     continue
                 raise e
             found = True
         else:
             util.log(f"Nothing to upload for {name}")
+    if not found:
+        util.log("No files to upload")
 
 
 def publish_release(auth, release_url):
@@ -622,9 +611,7 @@ def prep_git(ref, branch, repo, auth, username, url):
     return branch
 
 
-def forwardport_changelog(
-    auth, ref, branch, repo, username, changelog_path, dry_run, release_url
-):
+def forwardport_changelog(auth, ref, branch, repo, username, changelog_path, dry_run, release_url):
     """Forwardport Changelog Entries to the Default Branch"""
     # Set up the git repo with the branch
     match = parse_release_url(release_url)
@@ -670,7 +657,7 @@ def forwardport_changelog(
 
     # Look for the previous header
     default_log = Path(changelog_path).read_text(encoding="utf-8")
-    if not prev_header in default_log:
+    if prev_header not in default_log:
         util.log(
             f'Could not find previous header "{prev_header}" in {changelog_path} on branch {branch}'
         )
@@ -694,9 +681,7 @@ def forwardport_changelog(
     commit_message = f'git commit -a -m "{title}"'
     body = title
 
-    pr = make_changelog_pr(
-        auth, branch, repo, title, commit_message, body, dry_run=dry_run
-    )
+    make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=dry_run)
 
     # Clean up after ourselves
     util.run(f"git checkout {source_branch}")

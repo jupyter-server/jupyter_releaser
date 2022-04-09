@@ -132,10 +132,7 @@ def get_version_entry(
     entry = "\n".join(entry).strip()
 
     # Remove empty documentation entry if only automated changelogs were there
-    if (
-        "# Documentation improvements" in entry
-        and not "# Documentation improvements\n\n-" in entry
-    ):
+    if "# Documentation improvements" in entry and "# Documentation improvements\n\n-" not in entry:
         entry = re.sub(r"#+ Documentation improvements\n\n", "", entry)
 
     output = f"""
@@ -201,7 +198,7 @@ def insert_entry(changelog, entry, version=None):
             pr = re.search(r"\[#\d+\]", line)
             if not pr:
                 continue
-            for old_line in prev_entry.splitlines():
+            for old_line in old_lines:
                 if pr.group() in old_line:
                     lines[ind] = old_line
         changelog = changelog.replace(prev_entry, "\n".join(lines))
@@ -278,10 +275,10 @@ def check_entry(
                 break
         if skip:
             continue
-        if not f"[#{pr}]" in final_entry:  # pragma: no cover
+        if f"[#{pr}]" not in final_entry:  # pragma: no cover
             raise ValueError(f"Missing PR #{pr} in changelog")
     for pr in final_prs:
-        if not f"[#{pr}]" in raw_entry:  # pragma: no cover
+        if f"[#{pr}]" not in raw_entry:  # pragma: no cover
             raise ValueError(f"PR #{pr} does not belong in changelog for {version}")
 
     if output:
