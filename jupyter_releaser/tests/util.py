@@ -53,6 +53,16 @@ EMPTY_CHANGELOG_ENTRY = """
 
 """
 
+GITHUB_CHANGELOG_ENTRY = """
+## What's Changed
+* Some improvements to `since` and opened issues list @choldgraf in https://github.com/executablebooks/github-activity/pull/8
+* Defining contributions by @choldgraf in https://github.com/executablebooks/github-activity/pull/14
+* Fixing link to changelog with refs by @choldgraf in https://github.com/executablebooks/github-activity/pull/11
+
+
+**Full Changelog**: https://github.com/executablebooks/github-activity/compare/479cc4b2f5504945021e3c4ee84818a10fabf810...ed7f1ed78b523c6b9fe6b3ac29e834087e299296
+"""
+
 
 def setup_cfg_template(package_name="foo", module_name=None):
     return f"""

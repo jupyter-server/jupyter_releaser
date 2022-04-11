@@ -285,6 +285,40 @@ def check_entry(
         Path(output).write_text(final_entry, encoding="utf-8")
 
 
+def splice_github_entry(orig_entry, github_entry):
+    """Splice an entry created on GitHub into one created by build_entry"""
+
+    # Override PR titles
+    gh_regex = re.compile(r"^\* (.*?) by @.*?/pull/(\d+)$", flags=re.MULTILINE)
+    cl_regex = re.compile(r"^- (.*?) \[#(\d+)\]")
+
+    lut = {}
+    for title, pr in re.findall(gh_regex, github_entry):
+        lut[pr] = title
+
+    lines = orig_entry.splitlines()
+    for (ind, line) in enumerate(lines):
+        match = re.match(cl_regex, line)
+        if not match:
+            continue
+        title, pr = re.findall(cl_regex, line)[0]
+        if pr in lut:
+            lines[ind] = line.replace(title, lut[pr])
+
+    # Handle preamble
+    preamble_index = github_entry.index("## What's Changed")
+    if preamble_index > 0:
+        preamble = github_entry[:preamble_index]
+        if preamble.startswith("# "):
+            preamble = preamble.replace("# ", "## ")
+        if preamble.startswith("## "):
+            preamble = preamble.replace("## ", "### ")
+
+        lines = preamble.splitlines() + [""] + lines
+
+    return "\n".join(lines)
+
+
 def extract_current(changelog_path):
     """Extract the current changelog entry"""
     body = ""

@@ -196,6 +196,29 @@ def test_get_empty_changelog(py_package, mocker):
     assert not ("...None" in resp)
 
 
+def test_splice_github_entry(py_package, mocker):
+    version = util.get_version()
+
+    mocked_gen = mocker.patch("jupyter_releaser.changelog.generate_activity_md")
+    mocked_gen.return_value = testutil.CHANGELOG_ENTRY
+    branch = "foo"
+    util.run("git branch baz/bar")
+    util.run("git tag v1.0.0 baz/bar")
+    util.run("git tag v1.1.0a0 baz/bar")
+    ref = "heads/baz/bar"
+    resp = changelog.get_version_entry(ref, branch, "baz/bar", version, since_last_stable=True)
+
+    updated = changelog.splice_github_entry(resp, testutil.GITHUB_CHANGELOG_ENTRY)
+
+    assert "Defining contributions" in updated
+
+    preamble = "# My title\nmy content\n"
+    updated = changelog.splice_github_entry(resp, preamble + testutil.GITHUB_CHANGELOG_ENTRY)
+
+    assert "Defining contributions" in updated
+    assert preamble in updated
+
+
 def test_compute_sha256(py_package):
     assert len(util.compute_sha256(py_package / "CHANGELOG.md")) == 64
 
