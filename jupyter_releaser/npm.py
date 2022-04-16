@@ -108,7 +108,10 @@ def check_dist(dist_dir, install_options):
 def extract_package(path):
     """Get the package json info from the tarball"""
     fid = tarfile.open(path)
-    data = fid.extractfile("package/package.json").read()
+    fidfile = fid.extractfile("package/package.json")
+    assert fidfile is not None
+    data = fidfile.read()
+    fidfile.close()
     data = json.loads(data.decode("utf-8"))
     fid.close()
     return data

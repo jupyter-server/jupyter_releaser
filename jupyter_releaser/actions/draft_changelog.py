@@ -16,8 +16,8 @@ with make_group("Handle RH_SINCE"):
     if not os.environ.get("RH_SINCE"):
         curr_dir = os.getcwd()
         os.chdir(CHECKOUT_NAME)
-        since_last_stable = os.environ.get("RH_SINCE_LAST_STABLE")
-        since_last_stable = since_last_stable == "true"
+        since_last_stable_env = os.environ.get("RH_SINCE_LAST_STABLE")
+        since_last_stable = since_last_stable_env == "true"
         since = get_latest_tag(os.environ.get("RH_BRANCH"), since_last_stable)
         if since:
             log(f"Capturing {since} in RH_SINCE variable")

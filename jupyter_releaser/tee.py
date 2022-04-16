@@ -34,9 +34,11 @@ else:
     CompletedProcess = subprocess.CompletedProcess
 
 try:
-    from shlex import join  # type: ignore
+    from shlex import join
 except ImportError:
-    from subprocess import list2cmdline as join  # pylint: disable=ungrouped-imports
+    from subprocess import (
+        list2cmdline as join,  # type:ignore  # pylint: disable=ungrouped-imports
+    )
 
 
 STREAM_LIMIT = 2**23  # 8MB instead of default 64kb, override it if you need
@@ -146,7 +148,7 @@ def run(args: Union[str, List[str]], **kwargs: Any) -> CompletedProcess:
 
     check = kwargs.get("check", False)
 
-    loop = asyncio.get_event_loop()
+    loop = asyncio.new_event_loop()
     result = loop.run_until_complete(_stream_subprocess(cmd, **kwargs))
 
     if check and result.returncode != 0:

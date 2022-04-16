@@ -2,6 +2,7 @@
 # Distributed under the terms of the Modified BSD License.
 import json
 import shutil
+import typing as t
 from pathlib import Path
 
 from jupyter_releaser import changelog, cli, util
@@ -290,8 +291,8 @@ def create_python_package(git_repo, multi=False, not_matching_name=False):
 
 
 class MockHTTPResponse:
-    header = {}
-    status = 200
+    header: t.Dict[str, t.Any] = {}
+    code = 200
 
     def __init__(self, data=None):
         self.url = ""

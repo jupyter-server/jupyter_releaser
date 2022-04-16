@@ -27,3 +27,44 @@ skip = ["check-links"]
 
 [tool.jupyter-releaser.hooks]
 after-draft-release = "bash ./.github/scripts/bump_tag.sh"
+
+[tool.pytest.ini_options]
+addopts = "-raXs --durations 10 --color=yes --doctest-modules"
+testpaths = [
+    "jupyter_releaser/tests/"
+]
+filterwarnings= [
+  # Fail on warnings
+  "error",
+  "ignore:unclosed <socket.socket:ResourceWarning",
+  "ignore:unclosed event loop:ResourceWarning",
+  "ignore:Using deprecated setup.py invocation:UserWarning",
+]
+
+[tool.mypy]
+check_untyped_defs = true
+disallow_any_generics = false
+disallow_incomplete_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+no_implicit_reexport = false
+pretty = true
+show_error_context = true
+show_error_codes = true
+strict_equality = true
+strict_optional = true
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_return_any = false
+warn_unused_ignores = true
+
+[[tool.mypy.overrides]]
+module = [
+  "toml.*",
+  "jsonschema",
+  "ghapi.*",
+  "github_activity",
+  "pkginfo",
+  "pypandoc",
+]
+ignore_missing_imports = true

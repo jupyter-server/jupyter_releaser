@@ -4,3 +4,4 @@ prune media
 prune docs
 exclude readthedocs.yml
 include jupyter_releaser/schema.json
+include jupyter_releaser/py.typed

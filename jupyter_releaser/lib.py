@@ -5,6 +5,7 @@ import os.path as osp
 import re
 import shutil
 import sys
+import typing as t
 import uuid
 from datetime import datetime
 from glob import glob
@@ -13,7 +14,7 @@ from subprocess import CalledProcessError
 
 import requests
 from ghapi.core import GhApi
-from pkg_resources import parse_version
+from packaging.version import parse as parse_version
 from pkginfo import SDist, Wheel
 
 from jupyter_releaser import changelog, npm, python, util
@@ -73,7 +74,7 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
     cmd += " --ignore-glob node_modules"
 
     # Gather all of the markdown, RST, and ipynb files
-    files = []
+    files: t.List[str] = []
     for ext in [".md", ".rst", ".ipynb"]:
         matched = glob(f"**/*{ext}", recursive=True)
         files.extend(m for m in matched if m not in ignored and "node_modules" not in m)
@@ -90,7 +91,7 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
             util.run(file_cmd, shell=False, echo=False)
         except Exception as e:
             # Return code 5 means no tests were run (no links found)
-            if e.returncode != 5:
+            if e.returncode != 5:  # type:ignore[attr-defined]
                 try:
                     util.log(f"\n{f} (second attempt)...\n")
                     util.run(file_cmd + " --lf", shell=False, echo=False)

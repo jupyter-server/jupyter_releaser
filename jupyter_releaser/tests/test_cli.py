@@ -182,20 +182,20 @@ version-spec: RH_VERSION_SPEC
 def test_build_changelog(py_package, mocker, runner):
     run("pre-commit run -a")
 
-    changelog_path = "CHANGELOG.md"
+    changelog_path_str = "CHANGELOG.md"
 
     runner(["prep-git", "--git-url", py_package])
     runner(["bump-version", "--version-spec", VERSION_SPEC])
 
     mocked_gen = mocker.patch("jupyter_releaser.changelog.generate_activity_md")
     mocked_gen.return_value = CHANGELOG_ENTRY
-    runner(["build-changelog", "--changelog-path", changelog_path])
+    runner(["build-changelog", "--changelog-path", changelog_path_str])
 
     log = get_log()
     assert "before-build-changelog" in log
     assert "after-build-changelog" in log
 
-    changelog_path = Path(util.CHECKOUT_NAME) / "CHANGELOG.md"
+    changelog_path = Path(util.CHECKOUT_NAME) / changelog_path_str
     text = changelog_path.read_text(encoding="utf-8")
     assert changelog.START_MARKER in text
     assert changelog.END_MARKER in text
@@ -272,20 +272,20 @@ def test_build_changelog_slashes(py_package, mocker, runner, open_mock):
     env = dict(RH_REF=f"refs/heads/{branch}", RH_BRANCH=branch)
     run("pre-commit run -a")
 
-    changelog_path = "CHANGELOG.md"
+    changelog_path_str = "CHANGELOG.md"
 
     runner(["prep-git", "--git-url", py_package], env=env)
     runner(["bump-version", "--version-spec", VERSION_SPEC], env=env)
 
     mocked_gen = mocker.patch("jupyter_releaser.changelog.generate_activity_md")
     mocked_gen.return_value = CHANGELOG_ENTRY
-    runner(["build-changelog", "--changelog-path", changelog_path], env=env)
+    runner(["build-changelog", "--changelog-path", changelog_path_str], env=env)
 
     log = get_log()
     assert "before-build-changelog" in log
     assert "after-build-changelog" in log
 
-    changelog_path = Path(util.CHECKOUT_NAME) / "CHANGELOG.md"
+    changelog_path = Path(util.CHECKOUT_NAME) / changelog_path_str
     text = changelog_path.read_text(encoding="utf-8")
     assert changelog.START_MARKER in text
     assert changelog.END_MARKER in text
@@ -385,20 +385,20 @@ def test_check_links(py_package, runner):
 
 def test_check_changelog(py_package, tmp_path, mocker, runner, git_prep):
     changelog_entry = mock_changelog_entry(py_package, runner, mocker)
-    output = "output.md"
+    output_path = "output.md"
 
     # prep the release
     bump_version(VERSION_SPEC)
 
     runner(
-        ["check-changelog", "--changelog-path", changelog_entry, "--output", output],
+        ["check-changelog", "--changelog-path", changelog_entry, "--output", output_path],
     )
 
     log = get_log()
     assert "before-check-changelog" in log
     assert "after-check-changelog" in log
 
-    output = Path(util.CHECKOUT_NAME) / output
+    output = Path(util.CHECKOUT_NAME) / output_path
     assert PR_ENTRY in output.read_text(encoding="utf-8")
     changelog_entry = Path(util.CHECKOUT_NAME) / changelog_entry
     text = changelog_entry.read_text(encoding="utf-8")
