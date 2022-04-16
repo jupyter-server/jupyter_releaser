@@ -36,9 +36,7 @@ else:
 try:
     from shlex import join
 except ImportError:
-    from subprocess import (
-        list2cmdline as join,  # type:ignore  # pylint: disable=ungrouped-imports
-    )
+    from subprocess import list2cmdline as join  # type:ignore
 
 
 STREAM_LIMIT = 2**23  # 8MB instead of default 64kb, override it if you need
