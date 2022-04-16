@@ -357,7 +357,7 @@ def test_draft_changelog_lerna(workspace_package, mocker, runner, open_mock, git
 def test_check_links(py_package, runner):
     readme = Path("README.md")
     text = readme.read_text(encoding="utf-8")
-    text += "\nhttps://apod.nasa.gov/apod/astropix.html"
+    text += "\nhttps://apod.nasa.gov/apod/astropix.html\n"
     readme.write_text(text, encoding="utf-8")
 
     config = Path(util.JUPYTER_RELEASER_CONFIG)

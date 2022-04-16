@@ -89,20 +89,17 @@ def extract_dist(dist_dir, target):
 
 def check_dist(dist_dir, install_options):
     """Check npm dist file(s) in a dist dir"""
-    tmp_dir = Path(TemporaryDirectory().name)
-    os.makedirs(tmp_dir)
+    with TemporaryDirectory() as td:
 
-    util.run("npm init -y", cwd=tmp_dir, quiet=True)
-    names = []
-    staging = tmp_dir / "staging"
+        util.run("npm init -y", cwd=td, quiet=True)
+        names = []
+        staging = Path(td) / "staging"
 
-    names = extract_dist(dist_dir, staging)
+        names = extract_dist(dist_dir, staging)
 
-    install_str = " ".join(f"./staging/{name}" for name in names)
+        install_str = " ".join(f"./staging/{name}" for name in names)
 
-    util.run(f"npm install {install_options} {install_str}", cwd=tmp_dir, quiet=True)
-
-    shutil.rmtree(str(tmp_dir), ignore_errors=True)
+        util.run(f"npm install {install_options} {install_str}", cwd=td, quiet=True)
 
 
 def extract_package(path):

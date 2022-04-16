@@ -104,15 +104,14 @@ def get_pypi_token(release_url, python_package):
 
 def start_local_pypi():
     """Start a local PyPI server"""
-    temp_dir = TemporaryDirectory()
-    cmd = f"pypi-server -p 8081  -P . -a . -o  -v {temp_dir.name}"
-    proc = Popen(shlex.split(cmd), stderr=PIPE)
-    # Wait for the server to start
-    while True:
-        assert proc.stderr is not None
-        line = proc.stderr.readline().decode("utf-8").strip()
-        util.log(line)
-        if "Listening on" in line:
-            break
-    atexit.register(proc.kill)
-    atexit.register(temp_dir.cleanup)
+    with TemporaryDirectory() as td:
+        cmd = f"pypi-server -p 8081  -P . -a . -o  -v {td}"
+        proc = Popen(shlex.split(cmd), stderr=PIPE)
+        # Wait for the server to start
+        while True:
+            assert proc.stderr is not None
+            line = proc.stderr.readline().decode("utf-8").strip()
+            util.log(line)
+            if "Listening on" in line:
+                break
+        atexit.register(proc.kill)

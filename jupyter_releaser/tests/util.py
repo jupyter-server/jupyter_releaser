@@ -191,7 +191,9 @@ def mock_changelog_entry(package_path, runner, mocker, version_spec=VERSION_SPEC
 def create_npm_package(git_repo):
     npm = util.normalize_path(shutil.which("npm"))
     run(f"{npm} init -y")
-    git_repo.joinpath("index.js").write_text('console.log("hello")', encoding="utf-8")
+
+    git_repo.joinpath("index.js").write_text('console.log("hello");\n', encoding="utf-8")
+
     run("git add .")
     run('git commit -m "initial npm package"')
 
