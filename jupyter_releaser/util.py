@@ -102,6 +102,8 @@ def _run_win(cmd, **kwargs):
             raise CalledProcessError(1, f'Could not find executable "{parts[0]}"')
         parts[0] = normalize_path(executable)
 
+    kwargs.pop("check", None)
+
     try:
         output = check_output(parts, **kwargs).decode("utf-8").strip()
         log(output)

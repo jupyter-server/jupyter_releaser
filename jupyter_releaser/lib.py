@@ -66,6 +66,8 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
         "https://github.com/.*/(pull|issues)/.*",
         "https://github.com/search?",
         "http://localhost.*",
+        # https://github.com/github/feedback/discussions/14773
+        "https://docs.github.com/.*",
     ]
 
     for spec in ignore_links:
