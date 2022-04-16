@@ -114,7 +114,7 @@ def _run_win(cmd, **kwargs):
             e.stderr = e.stderr.decode("utf-8")
             log("stderr:\n", e.stderr.strip(), "\n\n")
         log("stdout:\n", e.output.strip(), "\n\n")
-        if not check:
+        if check:
             raise e
 
 
