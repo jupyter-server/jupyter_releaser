@@ -31,6 +31,7 @@ PYPROJECT = Path("pyproject.toml")
 SETUP_PY = Path("setup.py")
 SETUP_CFG = Path("setup.cfg")
 PACKAGE_JSON = Path("package.json")
+MANIFEST = Path("MANIFEST.in")
 YARN_LOCK = Path("yarn.lock")
 JUPYTER_RELEASER_CONFIG = Path(".jupyter-releaser.toml")
 
