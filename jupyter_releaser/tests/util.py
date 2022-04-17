@@ -175,6 +175,15 @@ REPO_DATA = dict(
     draft=True,
     created_at="2013-02-27T19:35:32Z",
 )
+REPO_DATA_2 = dict(
+    body="bar",
+    tag_name=f"v{VERSION_SPEC}",
+    target_commitish="bar",
+    name="foo2",
+    prerelease=False,
+    draft=True,
+    created_at="2013-02-27T20:35:32Z",
+)
 
 
 def mock_changelog_entry(package_path, runner, mocker, version_spec=VERSION_SPEC):
