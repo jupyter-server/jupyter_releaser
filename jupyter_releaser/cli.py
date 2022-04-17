@@ -2,6 +2,7 @@
 # Distributed under the terms of the Modified BSD License.
 import os
 import os.path as osp
+import typing as t
 from glob import glob
 from pathlib import Path
 
@@ -13,7 +14,7 @@ from jupyter_releaser import changelog, lib, npm, python, util
 class ReleaseHelperGroup(click.Group):
     """Click group tailored to jupyter-releaser"""
 
-    _needs_checkout_dir = {}
+    _needs_checkout_dir: t.Dict[str, bool] = {}
 
     def invoke(self, ctx):
         """Handle jupyter-releaser config while invoking a command"""
@@ -23,12 +24,12 @@ class ReleaseHelperGroup(click.Group):
             super().invoke(ctx)
 
         if cmd_name == "list-envvars":
-            envvars = {}
+            envvars: t.Dict[str, str] = {}
             for cmd_name in self.commands:
                 for param in self.commands[cmd_name].params:
                     if isinstance(param, click.Option):
                         if param.envvar:
-                            envvars[param.name] = param.envvar
+                            envvars[str(param.name)] = str(param.envvar)
 
             for key in sorted(envvars):
                 util.log(f"{key.replace('_', '-')}: {envvars[key]}")
@@ -66,9 +67,10 @@ class ReleaseHelperGroup(click.Group):
         # Handle all of the parameters
         for param in self.commands[cmd_name].get_params(ctx):
             # Defer to env var overrides
-            if param.envvar and os.environ.get(param.envvar):
+            if param.envvar and os.environ.get(str(param.envvar)):
                 continue
             name = param.name
+            assert name is not None
             if name in options or name.replace("_", "-") in options:
                 arg = f"--{name.replace('_', '-')}"
                 # Defer to cli overrides

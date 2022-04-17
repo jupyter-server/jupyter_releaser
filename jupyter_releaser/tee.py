@@ -21,6 +21,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 import asyncio
+import atexit
 import os
 import platform
 import subprocess
@@ -34,9 +35,9 @@ else:
     CompletedProcess = subprocess.CompletedProcess
 
 try:
-    from shlex import join  # type: ignore
+    from shlex import join
 except ImportError:
-    from subprocess import list2cmdline as join  # pylint: disable=ungrouped-imports
+    from subprocess import list2cmdline as join  # type:ignore
 
 
 STREAM_LIMIT = 2**23  # 8MB instead of default 64kb, override it if you need
@@ -98,7 +99,7 @@ async def _stream_subprocess(args: str, **kwargs: Any) -> CompletedProcess:
             # we want all output to be interleved on the same stream
             print(line_str, file=sys.stderr)
 
-    loop = asyncio.get_event_loop()
+    loop = asyncio.get_running_loop()
     tasks = []
     if process.stdout:
         tasks.append(
@@ -146,8 +147,9 @@ def run(args: Union[str, List[str]], **kwargs: Any) -> CompletedProcess:
 
     check = kwargs.get("check", False)
 
-    loop = asyncio.get_event_loop()
+    loop = asyncio.get_event_loop_policy().get_event_loop()
     result = loop.run_until_complete(_stream_subprocess(cmd, **kwargs))
+    atexit.register(loop.close)
 
     if check and result.returncode != 0:
         raise subprocess.CalledProcessError(

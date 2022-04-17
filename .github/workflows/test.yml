@@ -58,12 +58,12 @@ jobs:
           pip install -e .[test] codecov
 
       - name: Run the tests with coverage on Ubuntu
-        if: ${{ matrix.os == 'ubuntu' }}
+        if: ${{ matrix.os == 'ubuntu-latest' }}
         run: |
           python -m pytest -vv --cov jupyter_releaser --cov-branch --cov-report term-missing:skip-covered
 
       - name: Run the tests on Windows and macOS
-        if: ${{ matrix.os != 'ubuntu' }}
+        if: ${{ matrix.os != 'ubuntu-latest' }}
         run: |
           python -m pytest -vv -s
 

@@ -50,3 +50,22 @@ repos:
             "flake8-implicit-str-concat==0.2.0",
           ]
         stages: [manual]
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v0.942
+    hooks:
+      - id: mypy
+        args: ["--config-file", "pyproject.toml"]
+        additional_dependencies:
+          [pytest, click, importlib_resources, types-requests]
+        stages: [manual]
+
+  - repo: https://github.com/sirosen/check-jsonschema
+    rev: 0.14.2
+    hooks:
+      - id: check-jsonschema
+        name: "Check GitHub Workflows"
+        files: ^\.github/workflows/
+        types: [yaml]
+        args: ["--schemafile", "https://json.schemastore.org/github-workflow"]
+        stages: [manual]
