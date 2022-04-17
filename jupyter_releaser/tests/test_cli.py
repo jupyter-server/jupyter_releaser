@@ -248,8 +248,9 @@ def test_build_changelog_backport(py_package, mocker, runner, open_mock):
     runner(["prep-git", "--git-url", py_package])
     runner(["bump-version", "--version-spec", VERSION_SPEC])
 
-    entry = CHANGELOG_ENTRY.replace("consideRatio", "meeseeksmachine")
-    entry = entry.replace("Support git references etc.", "Backport PR #50 (original title")
+    entry = CHANGELOG_ENTRY.replace(
+        "Support git references etc.", "Backport PR #50 on branch (original title"
+    )
 
     mocked_gen = mocker.patch("jupyter_releaser.changelog.generate_activity_md")
     mocked_gen.return_value = entry
