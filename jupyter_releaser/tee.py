@@ -21,6 +21,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 import asyncio
+import atexit
 import os
 import platform
 import subprocess
@@ -98,7 +99,7 @@ async def _stream_subprocess(args: str, **kwargs: Any) -> CompletedProcess:
             # we want all output to be interleved on the same stream
             print(line_str, file=sys.stderr)
 
-    loop = asyncio.get_event_loop()
+    loop = asyncio.get_running_loop()
     tasks = []
     if process.stdout:
         tasks.append(
@@ -146,9 +147,9 @@ def run(args: Union[str, List[str]], **kwargs: Any) -> CompletedProcess:
 
     check = kwargs.get("check", False)
 
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
+    loop = asyncio.get_event_loop_policy().get_event_loop()
     result = loop.run_until_complete(_stream_subprocess(cmd, **kwargs))
+    atexit.register(loop.close)
 
     if check and result.returncode != 0:
         raise subprocess.CalledProcessError(

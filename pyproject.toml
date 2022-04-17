@@ -36,8 +36,6 @@ testpaths = [
 filterwarnings= [
   # Fail on warnings
   "error",
-  "ignore:unclosed <socket.socket:ResourceWarning",
-  "ignore:unclosed event loop:ResourceWarning",
   "ignore:Using deprecated setup.py invocation:UserWarning",
 ]
 
