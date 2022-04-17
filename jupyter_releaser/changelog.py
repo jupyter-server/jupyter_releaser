@@ -117,10 +117,10 @@ def get_version_entry(
     entry = entry.splitlines()[2:]
 
     for (ind, line) in enumerate(entry):
-        if re.search(r"\[@meeseeksmachine\]", line) is not None:
-            match = re.search(r"Backport PR #(\d+)", line)
-            if match:
-                entry[ind] = format_pr_entry(repo, match.groups()[0])
+        # Look for a backport, either manual or automatic.
+        match = re.search(r"Backport PR #(\d+) on branch", line)
+        if match:
+            entry[ind] = format_pr_entry(repo, match.groups()[0])
 
     # Remove github actions PRs
     gh_actions = "[@github-actions](https://github.com/github-actions)"
