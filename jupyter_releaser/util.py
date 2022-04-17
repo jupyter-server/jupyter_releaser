@@ -20,6 +20,7 @@ from subprocess import PIPE, CalledProcessError, check_output
 import toml
 from importlib_resources import files
 from jsonschema import Draft4Validator as Validator
+from packaging.version import Version
 from packaging.version import parse as parse_version
 from pkginfo import Wheel
 
@@ -101,6 +102,8 @@ def _run_win(cmd, **kwargs):
             raise CalledProcessError(1, f'Could not find executable "{parts[0]}"')
         parts[0] = normalize_path(executable)
 
+    check = kwargs.pop("check", True)
+
     try:
         output = check_output(parts, **kwargs).decode("utf-8").strip()
         log(output)
@@ -111,7 +114,8 @@ def _run_win(cmd, **kwargs):
             e.stderr = e.stderr.decode("utf-8")
             log("stderr:\n", e.stderr.strip(), "\n\n")
         log("stdout:\n", e.output.strip(), "\n\n")
-        raise e
+        if check:
+            raise e
 
 
 def log(*outputs, **kwargs):
@@ -250,6 +254,7 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):
     # Add some convenience options on top of "tbump"
     if "tbump" in version_cmd:
         v = parse_version(get_version())
+        assert isinstance(v, Version)
 
         if v.is_devrelease:
             # bump from the version in the changelog.
@@ -257,6 +262,7 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):
                 from jupyter_releaser.changelog import extract_current_version
 
                 v = parse_version(extract_current_version(changelog_path))
+                assert isinstance(v, Version)
                 version_spec = f"{v.major}.{v.minor}.{v.micro + 1}"
 
             # Drop the dev portion and move to the minor release.
@@ -265,6 +271,7 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):
 
             # Bump to the next dev version.
             elif version_spec == "dev":
+                assert v.dev is not None
                 version_spec = f"{v.major}.{v.minor}.{v.micro}.dev{v.dev + 1}"
 
         else:
@@ -275,6 +282,7 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):
             # For next, go to next prerelease or patch if it is a final version.
             elif version_spec == "next":
                 if v.is_prerelease:
+                    assert v.pre is not None
                     version_spec = f"{v.major}.{v.minor}.{v.micro}{v.pre[0]}{v.pre[1] + 1}"
                 else:
                     version_spec = f"{v.major}.{v.minor}.{v.micro + 1}"
@@ -295,7 +303,9 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):
 
 def is_prerelease(version):
     """Test whether a version is a prerelease version"""
-    final_version = re.match("([0-9]+.[0-9]+.[0-9]+)", version).groups()[0]
+    match = re.match("([0-9]+.[0-9]+.[0-9]+)", version)
+    assert match is not None
+    final_version = match.groups()[0]
     return final_version != version
 
 

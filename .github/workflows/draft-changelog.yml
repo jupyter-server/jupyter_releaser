@@ -7,14 +7,18 @@ on:
         required: true
       branch:
         description: "The branch to target (defaults to default branch)"
+        required: false
       version_spec:
         description: "New Version Spec"
         default: "next"
+        required: false
       since:
-        description: Use PRs with activity since this date or git reference
+        description: "Use PRs with activity since this date or git reference"
+        required: false
       since_last_stable:
-        description: Use PRs with activity since the last stable git tag
+        description: "Use PRs with activity since the last stable git tag"
         type: boolean
+        required: false
 jobs:
   draft_changelog:
     runs-on: ubuntu-latest

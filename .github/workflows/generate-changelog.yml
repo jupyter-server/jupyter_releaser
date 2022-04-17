@@ -3,17 +3,21 @@ on:
   workflow_dispatch:
     inputs:
       target:
-        description: Target Owner/Repo
+        description: "Target Owner/Repo"
         required: true
       branch:
-        description: The branch or reference name to filter pull requests by
+        description: "The branch or reference name to filter pull requests by"
+        required: false
       convert_to_rst:
-        description: Whether to convert to RST
+        description: "Whether to convert to RST"
+        required: false
         type: boolean
       since:
-        description: Use PRs with activity since this date or git reference
+        description: "Use PRs with activity since this date or git reference"
+        required: false
       until:
-        description: Use PRs with activity until this date or git reference
+        description: "Use PRs with activity until this date or git reference"
+        required: false
 jobs:
   generate_changelog:
     runs-on: ubuntu-latest

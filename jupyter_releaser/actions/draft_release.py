@@ -11,7 +11,7 @@ from jupyter_releaser.util import CHECKOUT_NAME, get_latest_tag, log, run
 
 setup()
 
-changelog_location = ""
+changelog_location = None
 changelog_text = ""
 
 with make_group("Handle Check Release"):
@@ -21,8 +21,8 @@ with make_group("Handle Check Release"):
         log("Handling Check Release action")
 
         # Extract the changelog
-        changelog_location = os.environ.get("RH_CHANGELOG", "CHANGELOG.md")
-        changelog_location = Path(CHECKOUT_NAME) / changelog_location
+        changelog_location_str = os.environ.get("RH_CHANGELOG", "CHANGELOG.md")
+        changelog_location = Path(CHECKOUT_NAME) / changelog_location_str
         changelog_text = changelog_location.read_text(encoding="utf-8")
 
         # Remove the checkout
@@ -44,8 +44,8 @@ with make_group("Handle RH_SINCE"):
     if not os.environ.get("RH_SINCE"):
         curr_dir = os.getcwd()
         os.chdir(CHECKOUT_NAME)
-        since_last_stable = os.environ.get("RH_SINCE_LAST_STABLE")
-        since_last_stable = since_last_stable == "true"
+        since_last_stable_env = os.environ.get("RH_SINCE_LAST_STABLE")
+        since_last_stable = since_last_stable_env == "true"
         since = get_latest_tag(os.environ.get("RH_BRANCH"), since_last_stable)
         if since:
             log(f"Capturing {since} in RH_SINCE variable")
@@ -59,6 +59,7 @@ with make_group("Handle Check Release"):
     if check_release:
         # Override the changelog
         log("Patching the changelog")
+        assert changelog_location is not None
         Path(changelog_location).write_text(changelog_text)
         log(extract_current(changelog_location))
 

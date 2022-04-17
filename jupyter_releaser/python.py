@@ -45,7 +45,9 @@ def check_dist(dist_file, test_cmd="", python_imports=None, check_cmd="twine che
         test_commands.extend([f'python -c "import {name}"' for name in python_imports])
     else:
         # Get the package name from the dist file name
-        name = re.match(r"(\S+)-\d", osp.basename(dist_file)).groups()[0]
+        match = re.match(r"(\S+)-\d", osp.basename(dist_file))
+        assert match is not None
+        name = match.groups()[0]
         name = name.replace("-", "_")
         test_commands.append(f'python -c "import {name}"')
 
@@ -107,6 +109,7 @@ def start_local_pypi():
     proc = Popen(shlex.split(cmd), stderr=PIPE)
     # Wait for the server to start
     while True:
+        assert proc.stderr is not None
         line = proc.stderr.readline().decode("utf-8").strip()
         util.log(line)
         if "Listening on" in line:

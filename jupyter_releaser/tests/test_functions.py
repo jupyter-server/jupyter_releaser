@@ -241,6 +241,7 @@ def test_create_release_commit_hybrid(py_package, build_mock):
     data = json.loads(pkg_json.read_text(encoding="utf-8"))
     data["version"] = version
     pkg_json.write_text(json.dumps(data, indent=4), encoding="utf-8")
+    util.run("pre-commit run --all-files", check=False)
     txt = (py_package / "tbump.toml").read_text(encoding="utf-8")
     txt += testutil.TBUMP_NPM_TEMPLATE
     (py_package / "tbump.toml").write_text(txt, encoding="utf-8")
