@@ -13,6 +13,7 @@ import sys
 import tempfile
 import time
 import warnings
+from datetime import datetime
 from glob import glob
 from pathlib import Path
 from subprocess import PIPE, CalledProcessError, check_output
@@ -318,6 +319,23 @@ def release_for_url(gh, url):
     if not release:
         raise ValueError(f"No release found for url {url}")
     return release
+
+
+def lastest_draft_release(gh):
+    """Get the latest draft release for a given repo"""
+    newest_time = None
+    newest_release = None
+    for release in gh.repos.list_releases():
+        if str(release.draft).lower() == "false":
+            continue
+        created = release.created_at
+        d_created = datetime.strptime(created, r"%Y-%m-%dT%H:%M:%SZ")
+        if newest_time is None or d_created > newest_time:
+            newest_time = d_created
+            newest_release = release
+    if not newest_release:
+        raise ValueError("No draft releases found")
+    return newest_release
 
 
 def actions_output(name, value):

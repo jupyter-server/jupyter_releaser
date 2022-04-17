@@ -6,6 +6,7 @@ import shutil
 from pathlib import Path
 
 import toml
+from ghapi.core import GhApi
 
 from jupyter_releaser import changelog, npm, util
 from jupyter_releaser.tests import util as testutil
@@ -321,3 +322,11 @@ def test_get_config_npm(npm_package):
 def test_get_config_file(git_repo):
     config = util.read_config()
     assert "before-build-python" in config["hooks"]["before-build-python"]
+
+
+def test_get_latest_draft_release(mocker, open_mock):
+    open_mock.side_effect = [testutil.MockHTTPResponse([testutil.REPO_DATA, testutil.REPO_DATA_2])]
+    gh = GhApi()
+    latest = util.lastest_draft_release(gh)
+    assert latest.name == testutil.REPO_DATA_2["name"]
+    assert len(open_mock.call_args) == 2
