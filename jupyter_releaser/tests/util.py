@@ -133,7 +133,7 @@ tag_template = "v{new_version}"
 def tbump_py_template(package_name="foo"):
     return f"""
 [[file]]
-src = "{package_name}.py"
+src = "{package_name}/__init__.py"
 
 [[file]]
 src = "pyproject.toml"
