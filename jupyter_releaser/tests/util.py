@@ -2,7 +2,6 @@
 # Distributed under the terms of the Modified BSD License.
 import json
 import shutil
-import typing as t
 from pathlib import Path
 
 from jupyter_releaser import changelog, cli, util
@@ -54,56 +53,35 @@ EMPTY_CHANGELOG_ENTRY = """
 
 """
 
-GITHUB_CHANGELOG_ENTRY = """
-## What's Changed
-* Some improvements to `since` and opened issues list @choldgraf in https://github.com/executablebooks/github-activity/pull/8
-* Defining contributions by @choldgraf in https://github.com/executablebooks/github-activity/pull/14
-* Fixing link to changelog with refs by @choldgraf in https://github.com/executablebooks/github-activity/pull/11
 
-
-**Full Changelog**: https://github.com/executablebooks/github-activity/compare/479cc4b2f5504945021e3c4ee84818a10fabf810...ed7f1ed78b523c6b9fe6b3ac29e834087e299296
-"""
-
-
-def setup_cfg_template(package_name="foo"):
+def setup_cfg_template(package_name="foo", module_name=None):
     return f"""
 [metadata]
 name = {package_name}
-version = attr: {package_name}.__version__
+version = attr: {module_name or package_name}.__version__
+description = My package description
+long_description = file: README.md
+long_description_content_type = text/markdown
+license = BSD 3-Clause License
+author = foo
+author_email = foo@foo.com
+url = https://foo.com
 
 [options]
 zip_safe = False
 include_package_data = True
+py_modules = {module_name or package_name}
 """
 
 
 SETUP_PY_TEMPLATE = """__import__("setuptools").setup()\n"""
 
-LICENSE_TEMPLATE = "A fake license\n"
 
-README_TEMPLATE = "A fake readme\n"
-
-
-def pyproject_template(project_name="foo", sub_packages=None):
-    sub_packages = sub_packages or []
-    res = f"""
+def pyproject_template(sub_packages=[]):
+    res = """
 [build-system]
-requires = ["setuptools>=61.0.0", "wheel"]
+requires = ["setuptools>=40.8.0", "wheel"]
 build-backend = "setuptools.build_meta"
-
-[project]
-name = "{project_name}"
-version = "0.0.1"
-description = "My package description"
-readme = "README.md"
-license = {{file = "LICENSE"}}
-authors = [
-  {{email = "foo@foo.com"}},
-  {{name = "foo"}}
-]
-
-[project.urls]
-homepage = "https://foo.com"
 """
     if sub_packages:
         res += f"""
@@ -133,10 +111,7 @@ tag_template = "v{new_version}"
 def tbump_py_template(package_name="foo"):
     return f"""
 [[file]]
-src = "{package_name}/__init__.py"
-
-[[file]]
-src = "pyproject.toml"
+src = "{package_name}.py"
 """
 
 
@@ -150,7 +125,6 @@ MANIFEST_TEMPLATE = """
 include *.md
 include *.toml
 include *.yaml
-include LICENSE
 """
 
 CHANGELOG_TEMPLATE = f"""# Changelog
@@ -175,15 +149,6 @@ REPO_DATA = dict(
     draft=True,
     created_at="2013-02-27T19:35:32Z",
 )
-REPO_DATA_2 = dict(
-    body="bar",
-    tag_name=f"v{VERSION_SPEC}",
-    target_commitish="bar",
-    name="foo2",
-    prerelease=False,
-    draft=True,
-    created_at="2013-02-27T20:35:32Z",
-)
 
 
 def mock_changelog_entry(package_path, runner, mocker, version_spec=VERSION_SPEC):
@@ -199,9 +164,7 @@ def mock_changelog_entry(package_path, runner, mocker, version_spec=VERSION_SPEC
 def create_npm_package(git_repo):
     npm = util.normalize_path(shutil.which("npm"))
     run(f"{npm} init -y")
-
-    git_repo.joinpath("index.js").write_text('console.log("hello");\n', encoding="utf-8")
-
+    git_repo.joinpath("index.js").write_text('console.log("hello")', encoding="utf-8")
     run("git add .")
     run('git commit -m "initial npm package"')
 
@@ -216,16 +179,16 @@ def get_log():
     return log.read_text(encoding="utf-8").splitlines()
 
 
-def create_python_package(git_repo, multi=False):
-    def write_files(git_repo, sub_packages=None, package_name="foo"):
+def create_python_package(git_repo, multi=False, not_matching_name=False):
+    def write_files(git_repo, sub_packages=[], package_name="foo", module_name=None):
 
-        sub_packages = sub_packages or []
+        module_name = module_name or package_name
 
         setuppy = git_repo / "setup.py"
         setuppy.write_text(SETUP_PY_TEMPLATE, encoding="utf-8")
 
         setuppy = git_repo / "setup.cfg"
-        setuppy.write_text(setup_cfg_template(package_name), encoding="utf-8")
+        setuppy.write_text(setup_cfg_template(package_name, module_name), encoding="utf-8")
 
         tbump = git_repo / "tbump.toml"
         tbump.write_text(
@@ -234,24 +197,16 @@ def create_python_package(git_repo, multi=False):
         )
 
         pyproject = git_repo / "pyproject.toml"
-        pyproject.write_text(pyproject_template(package_name, sub_packages), encoding="utf-8")
+        pyproject.write_text(pyproject_template(sub_packages), encoding="utf-8")
 
-        foopy_dir = git_repo / package_name
-        foopy_dir.mkdir()
-        foopy = foopy_dir / "__init__.py"
+        foopy = git_repo / f"{module_name}.py"
         foopy.write_text(PY_MODULE_TEMPLATE, encoding="utf-8")
 
         manifest = git_repo / "MANIFEST.in"
         manifest.write_text(MANIFEST_TEMPLATE, encoding="utf-8")
 
-        license = git_repo / "LICENSE"
-        license.write_text(LICENSE_TEMPLATE, encoding="utf-8")
-
         here = Path(__file__).parent
         text = here.parent.parent.joinpath(".pre-commit-config.yaml").read_text(encoding="utf-8")
-
-        readme = git_repo / "README.md"
-        readme.write_text(README_TEMPLATE, encoding="utf-8")
 
         pre_commit = git_repo / ".pre-commit-config.yaml"
         pre_commit.write_text(text, encoding="utf-8")
@@ -270,18 +225,22 @@ def create_python_package(git_repo, multi=False):
             )
             sub_package.mkdir()
             package_name = f"foo{i}"
+            module_name = f"foo{i}bar" if not_matching_name else None
             write_files(
                 git_repo / sub_package,
                 package_name=package_name,
+                module_name=module_name,
             )
             run(f"git add {sub_package}")
             run(f'git commit -m "initial python {sub_package}"')
 
     package_name = "foo"
+    module_name = "foobar" if not_matching_name else None
     write_files(
         git_repo,
         sub_packages=sub_packages,
         package_name=package_name,
+        module_name=module_name,
     )
     run("git add .")
     run('git commit -m "initial python package"')
@@ -297,13 +256,13 @@ def create_python_package(git_repo, multi=False):
 
 
 class MockHTTPResponse:
-    header: t.Dict[str, t.Any] = {}
-    code = 200
+    header = {}
+    status = 200
 
     def __init__(self, data=None):
         self.url = ""
         data = data or {}
-        defaults = dict(id="foo", html_url=HTML_URL, url=URL, upload_url=URL, number=100)
+        defaults = dict(id="foo", html_url=HTML_URL, url=URL, upload_url=URL)
         if isinstance(data, list):
             for datum in data:
                 for key in defaults:
