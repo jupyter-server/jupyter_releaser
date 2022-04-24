@@ -84,7 +84,11 @@ def check_dist(
         for resource_path in resource_paths:
             name, _, rest = resource_path.partition("/")
             test_file = Path(td) / "test_path.py"
-            test_text = f"import importlib.resources; assert importlib.resources.path('{name}','{rest}').exists()"
+            test_text = f"""
+import importlib.resources
+with importlib.resources.path('{name}','{rest}') as resource_path:
+    assert resource_path.exists()
+"""
             test_file.write_text(test_text, encoding="utf-8")
             cmd = f"{bin_path}/python {test_file}"
             util.run(cmd)
