@@ -313,6 +313,7 @@ def extract_release(
     release_url,
     npm_install_options,
     pydist_check_cmd,
+    pydist_resource_paths,
     python_imports,
 ):
     """Download and verify assets from a draft GitHub release"""
