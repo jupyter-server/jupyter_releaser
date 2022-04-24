@@ -363,6 +363,7 @@ def extract_release(
                 dist / asset.name,
                 check_cmd=pydist_check_cmd,
                 python_imports=python_imports,
+                resource_paths=pydist_resource_paths,
             )
         elif suffix == ".tgz":
             pass  # already handled

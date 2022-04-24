@@ -32,8 +32,15 @@ def build_dist(dist_dir, clean=True):
         util.run(f"python setup.py bdist_wheel --dist-dir {dest}", quiet=True)
 
 
-def check_dist(dist_file, test_cmd="", python_imports=None, check_cmd="twine check --strict"):
+def check_dist(
+    dist_file,
+    test_cmd="",
+    python_imports=None,
+    check_cmd="twine check --strict",
+    resource_paths=None,
+):
     """Check a Python package locally (not as a cli)"""
+    resource_paths = resource_paths or []
     dist_file = util.normalize_path(dist_file)
     util.run(f"{check_cmd} {dist_file}")
 
@@ -74,6 +81,13 @@ def check_dist(dist_file, test_cmd="", python_imports=None, check_cmd="twine che
                     'You may need to set "check_imports" to appropriate Python package names in the config file.'
                 )
             raise e
+        for resource_path in resource_paths:
+            name, _, rest = resource_path.partition("/")
+            test_file = Path(td) / "test_path.py"
+            test_text = f"import importlib.resources; assert importlib.resources.path('{name}','{rest}').exists()"
+            test_file.write_text(test_text, encoding="utf-8")
+            cmd = f"{bin_path}/python {test_file}"
+            util.run(cmd)
 
 
 def get_pypi_token(release_url, python_package):

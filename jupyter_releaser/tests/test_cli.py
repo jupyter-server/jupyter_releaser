@@ -161,6 +161,7 @@ output: RH_CHANGELOG_OUTPUT
 post-version-message: RH_POST_VERSION_MESSAGE
 post-version-spec: RH_POST_VERSION_SPEC
 pydist-check-cmd: RH_PYDIST_CHECK_CMD
+pydist-resource-paths: RH_PYDIST_RESOURCE_PATHS
 python-packages: RH_PYTHON_PACKAGES
 ref: RH_REF
 release-message: RH_RELEASE_MESSAGE
@@ -425,6 +426,25 @@ def test_build_python_npm(npm_package, runner, build_mock, git_prep):
 
 
 def test_check_python(py_package, runner, build_mock, git_prep):
+    runner(["build-python"])
+    runner(["check-python"])
+
+    log = get_log()
+    assert "before-check-python" in log
+    assert "after-check-python" in log
+
+
+def test_check_python_resource_path(monkeypatch, py_package, runner, build_mock, git_prep):
+    monkeypatch.setenv("RH_PYDIST_RESOURCE_PATHS", "foo/baz.txt")
+
+    path = Path(util.CHECKOUT_NAME) / "foo" / "baz.txt"
+    path.write_text("hello", encoding="utf-8")
+
+    manifest = Path(util.CHECKOUT_NAME) / "MANIFEST.in"
+    manifest_text = manifest.read_text(encoding="utf-8")
+    manifest_text += "\ninclude foo/baz.txt\n"
+    manifest.write_text(manifest_text, encoding="utf-8")
+
     runner(["build-python"])
     runner(["check-python"])
 

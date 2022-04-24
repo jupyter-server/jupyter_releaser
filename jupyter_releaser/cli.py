@@ -248,7 +248,13 @@ pydist_check_options = [
         envvar="RH_PYDIST_CHECK_CMD",
         default="twine check --strict",
         help="The command to use to check a python distribution file",
-    )
+    ),
+    click.option(
+        "--pydist-resource-paths",
+        envvar="RH_PYDIST_RESOURCE_PATHS",
+        multiple=True,
+        help="Resource paths that should be available when installed",
+    ),
 ]
 
 
@@ -410,14 +416,19 @@ def build_python(dist_dir, python_packages):
 @add_options(check_imports_options)
 @add_options(pydist_check_options)
 @use_checkout_dir()
-def check_python(dist_dir, check_imports, pydist_check_cmd):
+def check_python(dist_dir, check_imports, pydist_check_cmd, pydist_resource_paths):
     """Check Python dist files"""
     for dist_file in glob(f"{dist_dir}/*"):
         if Path(dist_file).suffix not in [".gz", ".whl"]:
             util.log(f"Skipping non-python dist file {dist_file}")
             continue
 
-        python.check_dist(dist_file, python_imports=check_imports, check_cmd=pydist_check_cmd)
+        python.check_dist(
+            dist_file,
+            python_imports=check_imports,
+            check_cmd=pydist_check_cmd,
+            resource_paths=pydist_resource_paths,
+        )
 
 
 @main.command()
@@ -589,6 +600,7 @@ def extract_release(
     release_url,
     npm_install_options,
     pydist_check_cmd,
+    pydist_resource_paths,
     check_imports,
 ):
     """Download and verify assets from a draft GitHub release"""
@@ -599,6 +611,7 @@ def extract_release(
         release_url,
         npm_install_options,
         pydist_check_cmd,
+        pydist_resource_paths,
         check_imports,
     )
 

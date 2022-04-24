@@ -65,16 +65,15 @@ GITHUB_CHANGELOG_ENTRY = """
 """
 
 
-def setup_cfg_template(package_name="foo", module_name=None):
+def setup_cfg_template(package_name="foo"):
     return f"""
 [metadata]
 name = {package_name}
-version = attr: {module_name or package_name}.__version__
+version = attr: {package_name}.__version__
 
 [options]
 zip_safe = False
 include_package_data = True
-py_modules = {module_name or package_name}
 """
 
 
@@ -217,18 +216,16 @@ def get_log():
     return log.read_text(encoding="utf-8").splitlines()
 
 
-def create_python_package(git_repo, multi=False, not_matching_name=False):
-    def write_files(git_repo, sub_packages=None, package_name="foo", module_name=None):
+def create_python_package(git_repo, multi=False):
+    def write_files(git_repo, sub_packages=None, package_name="foo"):
 
         sub_packages = sub_packages or []
-
-        module_name = module_name or package_name
 
         setuppy = git_repo / "setup.py"
         setuppy.write_text(SETUP_PY_TEMPLATE, encoding="utf-8")
 
         setuppy = git_repo / "setup.cfg"
-        setuppy.write_text(setup_cfg_template(package_name, module_name), encoding="utf-8")
+        setuppy.write_text(setup_cfg_template(package_name), encoding="utf-8")
 
         tbump = git_repo / "tbump.toml"
         tbump.write_text(
@@ -239,7 +236,9 @@ def create_python_package(git_repo, multi=False, not_matching_name=False):
         pyproject = git_repo / "pyproject.toml"
         pyproject.write_text(pyproject_template(package_name, sub_packages), encoding="utf-8")
 
-        foopy = git_repo / f"{module_name}.py"
+        foopy_dir = git_repo / package_name
+        foopy_dir.mkdir()
+        foopy = foopy_dir / "__init__.py"
         foopy.write_text(PY_MODULE_TEMPLATE, encoding="utf-8")
 
         manifest = git_repo / "MANIFEST.in"
@@ -271,22 +270,18 @@ def create_python_package(git_repo, multi=False, not_matching_name=False):
             )
             sub_package.mkdir()
             package_name = f"foo{i}"
-            module_name = f"foo{i}bar" if not_matching_name else None
             write_files(
                 git_repo / sub_package,
                 package_name=package_name,
-                module_name=module_name,
             )
             run(f"git add {sub_package}")
             run(f'git commit -m "initial python {sub_package}"')
 
     package_name = "foo"
-    module_name = "foobar" if not_matching_name else None
     write_files(
         git_repo,
         sub_packages=sub_packages,
         package_name=package_name,
-        module_name=module_name,
     )
     run("git add .")
     run('git commit -m "initial python package"')
