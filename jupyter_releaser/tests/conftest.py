@@ -52,9 +52,6 @@ def git_repo(tmp_path):
     changelog = tmp_path / "CHANGELOG.md"
     changelog.write_text(testutil.CHANGELOG_TEMPLATE, encoding="utf-8")
 
-    readme = tmp_path / "README.md"
-    readme.write_text("Hello from foo project\n", encoding="utf-8")
-
     config = Path(util.JUPYTER_RELEASER_CONFIG)
     config.write_text(testutil.TOML_CONFIG, encoding="utf-8")
 
@@ -72,11 +69,6 @@ def git_repo(tmp_path):
 @fixture
 def py_package(git_repo):
     return testutil.create_python_package(git_repo)
-
-
-@fixture
-def py_package_folder(git_repo):
-    return testutil.create_python_package(git_repo, folder=True)
 
 
 @fixture
@@ -164,6 +156,7 @@ def runner():
             if result.stderr_bytes:
                 print("Captured stderr\n", result.stderr, "\n\n")
             print("Catpured stdout\n", result.stdout, "\n\n")
+            assert result.exception is not None
             raise result.exception
 
         return result
