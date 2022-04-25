@@ -6,7 +6,7 @@ import os.path as osp
 import re
 import shlex
 from glob import glob
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from subprocess import PIPE, CalledProcessError, Popen
 from tempfile import TemporaryDirectory
 
@@ -83,7 +83,7 @@ def check_dist(
             raise e
         for resource_path in resource_paths:
             name, _, rest = resource_path.partition("/")
-            test_file = Path(td) / "test_path.py"
+            test_file = PurePosixPath(td) / "test_path.py"
             test_text = f"""
 import importlib.resources
 with importlib.resources.path('{name}','{rest}') as resource_path:
