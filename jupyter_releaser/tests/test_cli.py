@@ -161,6 +161,7 @@ output: RH_CHANGELOG_OUTPUT
 post-version-message: RH_POST_VERSION_MESSAGE
 post-version-spec: RH_POST_VERSION_SPEC
 pydist-check-cmd: RH_PYDIST_CHECK_CMD
+pydist-resource-paths: RH_PYDIST_RESOURCE_PATHS
 python-packages: RH_PYTHON_PACKAGES
 ref: RH_REF
 release-message: RH_RELEASE_MESSAGE
@@ -437,6 +438,30 @@ def test_check_python_different_names(
     monkeypatch, py_package_different_names, runner, build_mock, git_prep
 ):
     monkeypatch.setenv("RH_CHECK_IMPORTS", "foobar")
+
+
+def test_check_python_resource_path(monkeypatch, py_package, runner, build_mock, git_prep):
+    monkeypatch.setenv("RH_PYDIST_RESOURCE_PATHS", "foo/baz.txt")
+
+    # Convert the package to use a package dir.
+    foo_dir = Path(util.CHECKOUT_NAME) / "foo"
+    foo_dir.mkdir()
+    shutil.move(Path(util.CHECKOUT_NAME) / "foo.py", foo_dir / "__init__.py")
+
+    path = foo_dir / "baz.txt"
+    path.write_text("hello", encoding="utf-8")
+
+    manifest = Path(util.CHECKOUT_NAME) / "MANIFEST.in"
+    manifest_text = manifest.read_text(encoding="utf-8")
+    manifest_text += "\ninclude foo/baz.txt\n"
+    manifest.write_text(manifest_text, encoding="utf-8")
+
+    setup_cfg_path = Path(util.CHECKOUT_NAME) / "setup.cfg"
+    setup_cfg_text = setup_cfg_path.read_text(encoding="utf-8")
+    setup_cfg_text = setup_cfg_text.replace("foo.__version__", "foo.__init__.__version__")
+    setup_cfg_text = setup_cfg_text.replace("py_modules = foo", "")
+    setup_cfg_path.write_text(setup_cfg_text, encoding="utf-8")
+
     runner(["build-python"])
     runner(["check-python"])
 

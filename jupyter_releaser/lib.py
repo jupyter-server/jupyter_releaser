@@ -313,6 +313,7 @@ def extract_release(
     release_url,
     npm_install_options,
     pydist_check_cmd,
+    pydist_resource_paths,
     python_imports,
 ):
     """Download and verify assets from a draft GitHub release"""
@@ -363,6 +364,7 @@ def extract_release(
                 dist / asset.name,
                 check_cmd=pydist_check_cmd,
                 python_imports=python_imports,
+                resource_paths=pydist_resource_paths,
             )
         elif suffix == ".tgz":
             pass  # already handled

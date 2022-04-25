@@ -84,3 +84,14 @@ post-version-spec = "dev"
 ```
 
 This will bump it to the next minor release with a `.dev0` suffix.
+
+## Ensuring Python Resource Files
+
+If you want to ensure that resource files are included in your installed Python
+package
+(from an sdist or a wheel), include configuration like the following:
+
+```toml
+[tool.jupyter-releaser.options]
+pydist_resource_paths = ["my-package/img1.png", "my-package/foo.json"]
+```
