@@ -93,5 +93,5 @@ package
 
 ```toml
 [tool.jupyter-releaser.options]
-pydist_resource_paths = ["my-package/img1.png", "my-package/foo.json"]
+pydist_resource_paths = ["my-package/img1.png", "my-package/foo/bar.json"]
 ```
