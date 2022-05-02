@@ -441,19 +441,21 @@ def test_check_python_different_names(
 
 
 def test_check_python_resource_path(monkeypatch, py_package, runner, build_mock, git_prep):
-    monkeypatch.setenv("RH_PYDIST_RESOURCE_PATHS", "foo/baz.txt")
+    monkeypatch.setenv("RH_PYDIST_RESOURCE_PATHS", "foo/bar/baz.txt")
 
     # Convert the package to use a package dir.
     foo_dir = Path(util.CHECKOUT_NAME) / "foo"
     foo_dir.mkdir()
     shutil.move(Path(util.CHECKOUT_NAME) / "foo.py", foo_dir / "__init__.py")
 
-    path = foo_dir / "baz.txt"
+    bar_dir = foo_dir / "bar"
+    bar_dir.mkdir()
+    path = bar_dir / "baz.txt"
     path.write_text("hello", encoding="utf-8")
 
     manifest = Path(util.CHECKOUT_NAME) / "MANIFEST.in"
     manifest_text = manifest.read_text(encoding="utf-8")
-    manifest_text += "\ninclude foo/baz.txt\n"
+    manifest_text += "\ninclude foo/bar/baz.txt\n"
     manifest.write_text(manifest_text, encoding="utf-8")
 
     setup_cfg_path = Path(util.CHECKOUT_NAME) / "setup.cfg"

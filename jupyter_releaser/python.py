@@ -82,12 +82,11 @@ def check_dist(
                 )
             raise e
         for resource_path in resource_paths:
-            name, _, rest = resource_path.partition("/")
+            name, _, _ = resource_path.partition("/")
             test_file = Path(td) / "test_path.py"
             test_text = f"""
-import importlib.resources
-with importlib.resources.path('{name}','{rest}') as resource_path:
-    assert resource_path.exists()
+from importlib.metadata import PackagePath, files
+assert PackagePath('{resource_path}') in files('{name}')
 """
             test_file.write_text(test_text, encoding="utf-8")
             test_file = util.normalize_path(test_file)
@@ -124,12 +123,12 @@ def get_pypi_token(release_url, python_package):
 def start_local_pypi():
     """Start a local PyPI server"""
     temp_dir = TemporaryDirectory()
-    cmd = f"pypi-server -p 8081  -P . -a . -o  -v {temp_dir.name}"
-    proc = Popen(shlex.split(cmd), stderr=PIPE)
+    cmd = f"pypi-server run -p 8081  -P . -a . -o  -v {temp_dir.name}"
+    proc = Popen(shlex.split(cmd), stdout=PIPE)
     # Wait for the server to start
     while True:
-        assert proc.stderr is not None
-        line = proc.stderr.readline().decode("utf-8").strip()
+        assert proc.stdout is not None
+        line = proc.stdout.readline().decode("utf-8").strip()
         util.log(line)
         if "Listening on" in line:
             break
