@@ -124,7 +124,7 @@ def get_pypi_token(release_url, python_package):
 def start_local_pypi():
     """Start a local PyPI server"""
     temp_dir = TemporaryDirectory()
-    cmd = f"pypi-server -p 8081  -P . -a . -o  -v {temp_dir.name}"
+    cmd = f"pypi-server run -p 8081  -P . -a . -o  -v {temp_dir.name}"
     proc = Popen(shlex.split(cmd), stderr=PIPE)
     # Wait for the server to start
     while True:
