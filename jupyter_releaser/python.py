@@ -82,12 +82,11 @@ def check_dist(
                 )
             raise e
         for resource_path in resource_paths:
-            name = os.path.basename(resource_path)
-            package = os.path.dirname(resource_path).replace("/", ".")
+            name, _, _ = resource_path.partition("/")
             test_file = Path(td) / "test_path.py"
             test_text = f"""
-import importlib.resources
-assert importlib.resources.is_resource('{package}','{name}')
+from importlib.metadata import PackagePath, files
+assert PackagePath('{resource_path}') in files('{name}')
 """
             test_file.write_text(test_text, encoding="utf-8")
             test_file = util.normalize_path(test_file)
