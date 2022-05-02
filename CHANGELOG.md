@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.20.0
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...d847dd94a7e1bb70f036ac46fa6145197ee0b0cb))
+
+### Bugs fixed
+
+- Fix handling of nested resource files [#308](https://github.com/jupyter-server/jupyter_releaser/pull/308) ([@blink1073](https://github.com/blink1073))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-04-25&to=2022-05-02&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-04-25..2022-05-02&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.19.0
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...bb94f113285986ed4a97150dd0507f7a2e38e897))
@@ -19,8 +35,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-04-18&to=2022-04-25&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-04-18..2022-04-25&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-04-18..2022-04-25&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2022-04-18..2022-04-25&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.18.0
 
