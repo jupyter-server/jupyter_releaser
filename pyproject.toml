@@ -5,7 +5,7 @@ build-backend = "flit_core.buildapi"
 [project]
 name = "jupyter_releaser"
 description = "Jupyter Releaser for Python and/or npm packages."
-license = {text = "BSD 3-Clause License"}
+license = {file = "LICENSE"}
 authors = [{name = "Jupyter Development Team", email = "jupyter@googlegroups.com"}]
 keywords = ["ipython", "jupyter"]
 classifiers = [
