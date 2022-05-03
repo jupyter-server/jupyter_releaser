@@ -45,6 +45,9 @@ dynamic = ["version"]
 file = "README.md"
 content-type = "text/markdown"
 
+[project.license]
+file = 'LICENSE'
+
 [project.optional-dependencies]
 test = [
     "coverage",
