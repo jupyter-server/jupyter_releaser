@@ -45,7 +45,7 @@ B. Prep target repository:
   - Note that [directives](https://myst-parser.readthedocs.io/en/latest/using/syntax.html#syntax-directives) can still be used
 - [ ] Add HTML start and end comment markers to Changelog file - see example in [CHANGELOG.md](https://github.com/jupyter-server/jupyter_releaser/blob/main/CHANGELOG.md) (view in raw mode)
 - [ ] Add [tbump](https://github.com/tankerhq/tbump) support if using Python - see example metadata in [pyproject.toml](https://github.com/jupyter-server/jupyter_releaser/blob/main/pyproject.toml)
-  - We recommend putting `setuptools` metadata in `setup.cfg` and using `version = attr: <package_name>.__version__`, see example [`setup.cfg`](https://github.com/jupyter-server/jupyter_releaser/blob/main/setup.cfg)
+  - We recommend putting `setuptools` metadata in `setup.cfg` and using `version = attr: <package_name>.__version__`.
   - See documentation on `setup.cfg` [metadata](https://setuptools.readthedocs.io/en/latest/userguide/declarative_config.html)
   - If previously providing `version_info` like `version_info = (1, 7, 0, '.dev', '0')`, use tbump config like the one below:
 
