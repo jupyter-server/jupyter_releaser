@@ -2,6 +2,32 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.21.0
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...ede808f57e73bfec22a796ee2bb86c7f25e5e709))
+
+### Enhancements made
+
+- Fix pip install in git checkout [#319](https://github.com/jupyter-server/jupyter_releaser/pull/319) ([@blink1073](https://github.com/blink1073))
+
+### Maintenance and upkeep improvements
+
+- [pre-commit.ci] pre-commit autoupdate [#318](https://github.com/jupyter-server/jupyter_releaser/pull/318) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+- Remove dead link [#317](https://github.com/jupyter-server/jupyter_releaser/pull/317) ([@blink1073](https://github.com/blink1073))
+- [pre-commit.ci] pre-commit autoupdate [#316](https://github.com/jupyter-server/jupyter_releaser/pull/316) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+- Handle license [#315](https://github.com/jupyter-server/jupyter_releaser/pull/315) ([@blink1073](https://github.com/blink1073))
+- Allow bot PRs to be auto labeled [#314](https://github.com/jupyter-server/jupyter_releaser/pull/314) ([@blink1073](https://github.com/blink1073))
+- [pre-commit.ci] pre-commit autoupdate [#313](https://github.com/jupyter-server/jupyter_releaser/pull/313) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+- Switch to flit [#311](https://github.com/jupyter-server/jupyter_releaser/pull/311) ([@blink1073](https://github.com/blink1073))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-05-02&to=2022-05-18&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-05-02..2022-05-18&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-05-02..2022-05-18&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2022-05-02..2022-05-18&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.20.0
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...d847dd94a7e1bb70f036ac46fa6145197ee0b0cb))
@@ -15,8 +41,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-04-25&to=2022-05-02&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-04-25..2022-05-02&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.19.0
 
