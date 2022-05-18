@@ -597,9 +597,9 @@ def prep_git(ref, branch, repo, auth, username, url):
         util.run(f"git switch -c {branch}")
 
     # Install the package
-    # install python package in editable mode with test deps
-    if util.SETUP_PY.exists():
-        util.run('pip install -q -e ".[test]"')
+    # install python package in editable mode with dev and test deps
+    if util.PYPROJECT.exists():
+        util.run('pip install -q -e ".[dev,test]"')
 
     # prefer yarn if yarn lock exists
     elif util.YARN_LOCK.exists():
