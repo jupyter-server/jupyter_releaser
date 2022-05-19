@@ -1,9 +1,10 @@
 [build-system]
-requires = ["flit_core >=3.2,<4"]
-build-backend = "flit_core.buildapi"
+requires = ["hatchling>=1.0"]
+build-backend = "hatchling.build"
 
 [project]
 name = "jupyter_releaser"
+version = "0.21.0"
 description = "Jupyter Releaser for Python and/or npm packages."
 license = {file = "LICENSE"}
 authors = [{name = "Jupyter Development Team", email = "jupyter@googlegroups.com"}]
@@ -39,7 +40,6 @@ dependencies = [
     "toml~=0.10",
     "twine",
 ]
-dynamic = ["version"]
 
 [project.readme]
 file = "README.md"
@@ -69,6 +69,9 @@ tag_template = "v{new_version}"
 
 [[tool.tbump.file]]
 src = "jupyter_releaser/__init__.py"
+
+[[tool.tbump.file]]
+src = "pyproject.toml"
 
 [[tool.tbump.file]]
 src = "docs/source/conf.py"
