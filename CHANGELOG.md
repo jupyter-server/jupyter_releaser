@@ -2,6 +2,30 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.22.0
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...21a39f512d8f8333d637532ab6d4fec5dff47e22))
+
+### Bugs fixed
+
+- Check build-system before installing [#322](https://github.com/jupyter-server/jupyter_releaser/pull/322) ([@jtpio](https://github.com/jtpio))
+
+### Maintenance and upkeep improvements
+
+- Switch to hatch backend [#323](https://github.com/jupyter-server/jupyter_releaser/pull/323) ([@blink1073](https://github.com/blink1073))
+
+### Documentation improvements
+
+- add step N to actions to make it easier [#324](https://github.com/jupyter-server/jupyter_releaser/pull/324) ([@wolfv](https://github.com/wolfv))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-05-18&to=2022-05-19&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-05-18..2022-05-19&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2022-05-18..2022-05-19&type=Issues) | [@wolfv](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Awolfv+updated%3A2022-05-18..2022-05-19&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.21.0
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...ede808f57e73bfec22a796ee2bb86c7f25e5e709))
@@ -25,8 +49,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-05-02&to=2022-05-18&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-05-02..2022-05-18&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-05-02..2022-05-18&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2022-05-02..2022-05-18&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.20.0
 
