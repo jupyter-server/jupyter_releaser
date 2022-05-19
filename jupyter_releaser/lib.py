@@ -13,6 +13,7 @@ from pathlib import Path
 from subprocess import CalledProcessError
 
 import requests
+import toml
 from ghapi.core import GhApi
 from packaging.version import parse as parse_version
 from pkginfo import SDist, Wheel
@@ -599,7 +600,11 @@ def prep_git(ref, branch, repo, auth, username, url):
     # Install the package
     # install python package in editable mode with dev and test deps
     if util.PYPROJECT.exists():
-        util.run('pip install -q -e ".[dev,test]"')
+        # check the package can be installed first
+        text = util.PYPROJECT.read_text(encoding="utf-8")
+        data = toml.loads(text)
+        if data.get("build-system"):
+            util.run('pip install -q -e ".[dev,test]"')
 
     # prefer yarn if yarn lock exists
     elif util.YARN_LOCK.exists():
