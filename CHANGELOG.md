@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.22.2
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...0f61e78511ea099b4b00d271807a021cbec05162))
+
+### Bugs fixed
+
+- Fix a bug when retrieving package version [#331](https://github.com/jupyter-server/jupyter_releaser/pull/331) ([@brichet](https://github.com/brichet))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-06-14&to=2022-06-14&type=c))
+
+[@brichet](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Abrichet+updated%3A2022-06-14..2022-06-14&type=Issues) | [@welcome](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Awelcome+updated%3A2022-06-14..2022-06-14&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.22.1
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...ecb30ecadc10241b74b87eea5448d8773019fa4a))
@@ -21,8 +37,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-05-19&to=2022-06-14&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-05-19..2022-06-14&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-05-19..2022-06-14&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2022-05-19..2022-06-14&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.22.0
 
