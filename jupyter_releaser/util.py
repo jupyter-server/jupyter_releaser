@@ -152,6 +152,20 @@ def get_repo():
 
 def get_version():
     """Get the current package version"""
+    # Prefer to get a static version from pyproject.toml.
+    if PYPROJECT.exists():
+        text = PYPROJECT.read_text(encoding="utf-8")
+        data = toml.loads(text)
+        project = data.get("project", {})
+        version = project.get("version")
+        if version:
+            return version
+
+        # If this is a hatchling project, use hatchling to get
+        # the dynamic version.
+        if data.get("build-system", {}).get("build-backend") == "hatchling.build":
+            return run("hatchling version").split("\n")[-1]
+
     if SETUP_PY.exists():
         warnings.warn("Using deprecated setup.py invocation")
         try:
@@ -159,18 +173,13 @@ def get_version():
         except CalledProcessError as e:
             print(e)
 
+    # Build the wheel and extract the version.
     if PYPROJECT.exists():
-        text = PYPROJECT.read_text(encoding="utf-8")
-        data = toml.loads(text)
-        project = data.get("project", {})
-        version = project.get("version")
-        if not version:
-            with tempfile.TemporaryDirectory() as tempdir:
-                run(f"{sys.executable} -m build --wheel --outdir {tempdir}")
-                wheel_path = glob(f"{tempdir}/*.whl")[0]
-                wheel = Wheel(wheel_path)
-                version = wheel.version
-        return version
+        with tempfile.TemporaryDirectory() as tempdir:
+            run(f"{sys.executable} -m build --wheel --outdir {tempdir}")
+            wheel_path = glob(f"{tempdir}/*.whl")[0]
+            wheel = Wheel(wheel_path)
+            version = wheel.version
 
     if PACKAGE_JSON.exists():
         return json.loads(PACKAGE_JSON.read_text(encoding="utf-8")).get("version", "")

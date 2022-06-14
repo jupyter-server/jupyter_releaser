@@ -38,6 +38,16 @@ def test_get_version_pyproject_dynamic(py_package):
     assert util.get_version() == "0.0.1"
 
 
+def test_get_version_hatchling(py_package):
+    py_project = py_package / "pyproject.toml"
+    with open(py_project) as fid:
+        data = toml.load(fid)
+    del data["project"]["version"]
+    data["build-system"] = {"requires": ["hatchling>=1.0"], "build-backend": "hatchling.build"}
+    with open(py_project, "w") as fid:
+        fid.write(str(py_project))
+
+
 def test_get_version_setuppy(py_package):
     assert util.get_version() == "0.0.1"
     util.bump_version("0.0.2a0")

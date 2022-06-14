@@ -27,6 +27,7 @@ dependencies = [
     "click",
     "ghapi",
     "github-activity~=0.2",
+    "hatchling>=1.0",
     "importlib_resources",
     "jsonschema>=3.0.1",
     "packaging",
