@@ -2,6 +2,28 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.22.1
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...ecb30ecadc10241b74b87eea5448d8773019fa4a))
+
+### Bugs fixed
+
+- Add hatchling handling [#329](https://github.com/jupyter-server/jupyter_releaser/pull/329) ([@blink1073](https://github.com/blink1073))
+
+### Maintenance and upkeep improvements
+
+- [pre-commit.ci] pre-commit autoupdate [#328](https://github.com/jupyter-server/jupyter_releaser/pull/328) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+- [pre-commit.ci] pre-commit autoupdate [#327](https://github.com/jupyter-server/jupyter_releaser/pull/327) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+- [pre-commit.ci] pre-commit autoupdate [#326](https://github.com/jupyter-server/jupyter_releaser/pull/326) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-05-19&to=2022-06-14&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-05-19..2022-06-14&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-05-19..2022-06-14&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2022-05-19..2022-06-14&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.22.0
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...21a39f512d8f8333d637532ab6d4fec5dff47e22))
@@ -23,8 +45,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-05-18&to=2022-05-19&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-05-18..2022-05-19&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2022-05-18..2022-05-19&type=Issues) | [@wolfv](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Awolfv+updated%3A2022-05-18..2022-05-19&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.21.0
 
