@@ -180,6 +180,7 @@ def get_version():
             wheel_path = glob(f"{tempdir}/*.whl")[0]
             wheel = Wheel(wheel_path)
             version = wheel.version
+            return version
 
     if PACKAGE_JSON.exists():
         return json.loads(PACKAGE_JSON.read_text(encoding="utf-8")).get("version", "")
