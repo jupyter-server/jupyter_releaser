@@ -2,6 +2,28 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.22.3
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...face9d62bd6dbab7599b7b2463f198afcbe4b9ac))
+
+### Bugs fixed
+
+- Fix handling of versions when dev versions are used [#341](https://github.com/jupyter-server/jupyter_releaser/pull/341) ([@blink1073](https://github.com/blink1073))
+
+### Maintenance and upkeep improvements
+
+- [pre-commit.ci] pre-commit autoupdate [#338](https://github.com/jupyter-server/jupyter_releaser/pull/338) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+- [pre-commit.ci] pre-commit autoupdate [#336](https://github.com/jupyter-server/jupyter_releaser/pull/336) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+- [pre-commit.ci] pre-commit autoupdate [#334](https://github.com/jupyter-server/jupyter_releaser/pull/334) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-06-14&to=2022-07-07&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-06-14..2022-07-07&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-06-14..2022-07-07&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2022-06-14..2022-07-07&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.22.2
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...0f61e78511ea099b4b00d271807a021cbec05162))
@@ -15,8 +37,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-06-14&to=2022-06-14&type=c))
 
 [@brichet](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Abrichet+updated%3A2022-06-14..2022-06-14&type=Issues) | [@welcome](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Awelcome+updated%3A2022-06-14..2022-06-14&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.22.1
 
