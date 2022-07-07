@@ -203,6 +203,15 @@ changelog_path_options = [
     ),
 ]
 
+use_changelog_version_options = [
+    click.option(
+        "--use-changelog-version",
+        envvar="RH_USE_CHANGELOG_VERSION",
+        is_flag=True,
+        help="Whether to use the changelog version if the current version is a dev version in version bump",
+    ),
+]
+
 since_options = [
     click.option(
         "--since",
@@ -300,14 +309,17 @@ def prep_git(ref, branch, repo, auth, username, git_url):
 @add_options(version_spec_options)
 @add_options(version_cmd_options)
 @add_options(changelog_path_options)
+@add_options(use_changelog_version_options)
 @add_options(python_packages_options)
 @use_checkout_dir()
-def bump_version(version_spec, version_cmd, changelog_path, python_packages):
+def bump_version(version_spec, version_cmd, changelog_path, use_changelog_version, python_packages):
     """Prep git and env variables and bump version"""
     prev_dir = os.getcwd()
     for python_package in [p.split(":")[0] for p in python_packages]:
         os.chdir(python_package)
-        lib.bump_version(version_spec, version_cmd, changelog_path)
+        lib.bump_version(
+            version_spec, version_cmd, changelog_path, use_changelog_version=use_changelog_version
+        )
         os.chdir(prev_dir)
 
 

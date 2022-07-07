@@ -335,7 +335,7 @@ def extract_current(changelog_path):
 def extract_current_version(changelog_path):
     """Extract the current released version from the changelog"""
     body = extract_current(changelog_path)
-    match = re.match(r"#+ ([\d.]+)", body.strip())
+    match = re.match(r"#+ ([\da-z.]+)", body.strip())
     if not match:
         raise ValueError("Could not find previous version")
     return match.groups()[0]

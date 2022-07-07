@@ -21,9 +21,14 @@ from pkginfo import SDist, Wheel
 from jupyter_releaser import changelog, npm, python, util
 
 
-def bump_version(version_spec, version_cmd, changelog_path):
+def bump_version(version_spec, version_cmd, changelog_path, use_changelog_version):
     """Bump the version and verify new version"""
-    util.bump_version(version_spec, version_cmd=version_cmd, changelog_path=changelog_path)
+    util.bump_version(
+        version_spec,
+        version_cmd=version_cmd,
+        changelog_path=changelog_path,
+        use_changelog_version=use_changelog_version,
+    )
 
     version = util.get_version()
 
