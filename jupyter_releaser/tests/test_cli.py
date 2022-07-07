@@ -127,6 +127,13 @@ def test_bump_version(npm_package, runner):
     assert version == "1.0.1-rc0"
 
 
+def test_bump_version_use_changelog(npm_package, runner):
+    runner(["prep-git", "--git-url", npm_package])
+    runner(["bump-version", "--use-changelog-version"])
+    version = util.get_version()
+    assert version == "1.0.0"
+
+
 def test_bump_version_bad_version(py_package, runner):
     runner(["prep-git", "--git-url", py_package])
     with pytest.raises(CalledProcessError):
@@ -173,6 +180,7 @@ tag-format: RH_TAG_FORMAT
 tag-message: RH_TAG_MESSAGE
 twine-cmd: TWINE_COMMAND
 twine-registry: TWINE_REGISTRY
+use-changelog-version: RH_USE_CHANGELOG_VERSION
 username: GITHUB_ACTOR
 version-cmd: RH_VERSION_COMMAND
 version-spec: RH_VERSION_SPEC

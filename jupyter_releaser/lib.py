@@ -21,9 +21,14 @@ from pkginfo import SDist, Wheel
 from jupyter_releaser import changelog, npm, python, util
 
 
-def bump_version(version_spec, version_cmd, changelog_path):
+def bump_version(version_spec, version_cmd, changelog_path, use_changelog_version):
     """Bump the version and verify new version"""
-    util.bump_version(version_spec, version_cmd=version_cmd, changelog_path=changelog_path)
+    util.bump_version(
+        version_spec,
+        version_cmd=version_cmd,
+        changelog_path=changelog_path,
+        use_changelog_version=use_changelog_version,
+    )
 
     version = util.get_version()
 
@@ -250,7 +255,10 @@ def draft_release(
     # Bump to post version if given
     if post_version_spec:
         post_version = bump_version(
-            post_version_spec, version_cmd=version_cmd, changelog_path=changelog_path
+            post_version_spec,
+            version_cmd=version_cmd,
+            changelog_path=changelog_path,
+            use_changelog_version=False,
         )
         util.log(post_version_message.format(post_version=post_version))
         util.run(f'git commit -a -m "Bump to {post_version}"')

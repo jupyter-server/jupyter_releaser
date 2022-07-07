@@ -53,7 +53,7 @@ with make_group("Handle RH_SINCE"):
         os.chdir(curr_dir)
 
 
-run_action("jupyter-releaser bump-version")
+run_action("jupyter-releaser bump-version --use-changelog-version")
 
 with make_group("Handle Check Release"):
     if check_release:
