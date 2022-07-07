@@ -180,6 +180,7 @@ tag-format: RH_TAG_FORMAT
 tag-message: RH_TAG_MESSAGE
 twine-cmd: TWINE_COMMAND
 twine-registry: TWINE_REGISTRY
+use-changelog-version: RH_USE_CHANGELOG_VERSION
 username: GITHUB_ACTOR
 version-cmd: RH_VERSION_COMMAND
 version-spec: RH_VERSION_SPEC
