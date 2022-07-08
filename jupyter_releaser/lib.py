@@ -21,7 +21,7 @@ from pkginfo import SDist, Wheel
 from jupyter_releaser import changelog, npm, python, util
 
 
-def bump_version(version_spec, version_cmd, changelog_path, use_changelog_version):
+def bump_version(version_spec, version_cmd, changelog_path, use_changelog_version, create_tag):
     """Bump the version and verify new version"""
     util.bump_version(
         version_spec,
@@ -37,6 +37,9 @@ def bump_version(version_spec, version_cmd, changelog_path, use_changelog_versio
 
     if util.SETUP_PY.exists() and not hasattr(parsed, "major"):
         raise ValueError(f"Invalid version {version}")
+
+    if not create_tag:
+        return version
 
     # Bail if tag already exists
     tag_name = f"v{version}"
@@ -259,6 +262,7 @@ def draft_release(
             version_cmd=version_cmd,
             changelog_path=changelog_path,
             use_changelog_version=False,
+            create_tag=False,
         )
         util.log(post_version_message.format(post_version=post_version))
         util.run(f'git commit -a -m "Bump to {post_version}"')

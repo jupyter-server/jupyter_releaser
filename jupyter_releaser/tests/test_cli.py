@@ -183,6 +183,7 @@ twine-registry: TWINE_REGISTRY
 use-changelog-version: RH_USE_CHANGELOG_VERSION
 username: GITHUB_ACTOR
 version-cmd: RH_VERSION_COMMAND
+version-create-tag: RH_VERSION_CREATE_TAG
 version-spec: RH_VERSION_SPEC
 """.strip()
     )
