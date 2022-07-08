@@ -148,6 +148,7 @@ version_create_tag_options = [
     click.option(
         "--version-create-tag",
         envvar="RH_VERSION_CREATE_TAG",
+        is_flag=True,
         help="Whether to create a tag when bumping the version",
     ),
 ]
