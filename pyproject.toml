@@ -80,6 +80,9 @@ src = "docs/source/conf.py"
 [tool.jupyter-releaser]
 skip = ["check-links"]
 
+[tool.jupyter-releaser.options]
+post-version-spec = "dev"
+
 [tool.jupyter-releaser.hooks]
 after-draft-release = "bash ./.github/scripts/bump_tag.sh"
 
