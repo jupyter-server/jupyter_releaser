@@ -59,7 +59,7 @@ def run(cmd, **kwargs):
     quiet_error = kwargs.pop("quiet_error", False)
     show_cwd = kwargs.pop("show_cwd", False)
     quiet = kwargs.pop("quiet", False)
-    echo = kwargs.pop("echo", False)
+    echo = kwargs.pop("echo", True)
 
     if echo:
         prefix = "COMMAND"

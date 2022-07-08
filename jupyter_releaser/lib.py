@@ -30,7 +30,10 @@ def bump_version(version_spec, version_cmd, changelog_path, use_changelog_versio
         use_changelog_version=use_changelog_version,
     )
 
+
+def create_tag():
     version = util.get_version()
+    assert version is not None
 
     # A properly parsed version will have a "major" attribute
     parsed = parse_version(version)
@@ -44,7 +47,6 @@ def bump_version(version_spec, version_cmd, changelog_path, use_changelog_versio
         msg = f"Tag {tag_name} already exists!"
         msg += " To delete run: `git push --delete origin {tag_name}`"
         raise ValueError(msg)
-
     return version
 
 
