@@ -142,6 +142,9 @@ version_spec_options = [
 
 version_cmd_options = [
     click.option("--version-cmd", envvar="RH_VERSION_COMMAND", help="The version command"),
+]
+
+version_create_tag_options = [
     click.option(
         "--version-create-tag",
         envvar="RH_VERSION_CREATE_TAG",
@@ -313,6 +316,7 @@ def prep_git(ref, branch, repo, auth, username, git_url):
 @main.command()
 @add_options(version_spec_options)
 @add_options(version_cmd_options)
+@add_options(version_create_tag_options)
 @add_options(changelog_path_options)
 @add_options(use_changelog_version_options)
 @add_options(python_packages_options)
