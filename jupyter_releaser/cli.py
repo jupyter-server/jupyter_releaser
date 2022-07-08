@@ -330,11 +330,7 @@ def bump_version(
     for python_package in [p.split(":")[0] for p in python_packages]:
         os.chdir(python_package)
         lib.bump_version(
-            version_spec,
-            version_cmd,
-            changelog_path,
-            use_changelog_version=use_changelog_version,
-            create_tag=create_tag,
+            version_spec, version_cmd, changelog_path, use_changelog_version=use_changelog_version
         )
         if version_create_tag:
             lib.create_tag()
