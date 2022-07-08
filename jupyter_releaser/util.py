@@ -275,6 +275,14 @@ def bump_version(version_spec, *, changelog_path="", version_cmd="", use_changel
 
                 v = parse_version(extract_current_version(changelog_path))
                 assert isinstance(v, Version)
+
+                # Handle the case of a check release on a PR that is updating
+                # the changelog version.
+                if os.environ.get("RH_IS_CHECK_RELEASE"):
+                    latest_tag = get_latest_tag(None)
+                    if str(v) not in latest_tag:
+                        use_changelog_version = True
+
                 if use_changelog_version:
                     version_spec = v
                 elif v.is_prerelease:
