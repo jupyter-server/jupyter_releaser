@@ -21,7 +21,7 @@ from pkginfo import SDist, Wheel
 from jupyter_releaser import changelog, npm, python, util
 
 
-def bump_version(version_spec, version_cmd, changelog_path, use_changelog_version, create_tag):
+def bump_version(version_spec, version_cmd, changelog_path, use_changelog_version):
     """Bump the version and verify new version"""
     util.bump_version(
         version_spec,
@@ -30,7 +30,10 @@ def bump_version(version_spec, version_cmd, changelog_path, use_changelog_versio
         use_changelog_version=use_changelog_version,
     )
 
+
+def create_tag():
     version = util.get_version()
+    assert version is not None
 
     # A properly parsed version will have a "major" attribute
     parsed = parse_version(version)
@@ -38,16 +41,12 @@ def bump_version(version_spec, version_cmd, changelog_path, use_changelog_versio
     if util.SETUP_PY.exists() and not hasattr(parsed, "major"):
         raise ValueError(f"Invalid version {version}")
 
-    if not create_tag:
-        return version
-
     # Bail if tag already exists
     tag_name = f"v{version}"
     if tag_name in util.run("git --no-pager tag", quiet=True).splitlines():
         msg = f"Tag {tag_name} already exists!"
         msg += " To delete run: `git push --delete origin {tag_name}`"
         raise ValueError(msg)
-
     return version
 
 
@@ -262,7 +261,6 @@ def draft_release(
             version_cmd=version_cmd,
             changelog_path=changelog_path,
             use_changelog_version=False,
-            create_tag=False,
         )
         util.log(post_version_message.format(post_version=post_version))
         util.run(f'git commit -a -m "Bump to {post_version}"')

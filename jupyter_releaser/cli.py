@@ -318,7 +318,12 @@ def prep_git(ref, branch, repo, auth, username, git_url):
 @add_options(python_packages_options)
 @use_checkout_dir()
 def bump_version(
-    version_spec, version_cmd, create_tag, changelog_path, use_changelog_version, python_packages
+    version_spec,
+    version_cmd,
+    version_create_tag,
+    changelog_path,
+    use_changelog_version,
+    python_packages,
 ):
     """Prep git and env variables and bump version"""
     prev_dir = os.getcwd()
@@ -331,6 +336,8 @@ def bump_version(
             use_changelog_version=use_changelog_version,
             create_tag=create_tag,
         )
+        if version_create_tag:
+            lib.create_tag()
         os.chdir(prev_dir)
 
 
