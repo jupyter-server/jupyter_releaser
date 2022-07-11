@@ -5,6 +5,7 @@ import os
 import shutil
 from pathlib import Path
 
+import pytest
 import toml
 from ghapi.core import GhApi
 
@@ -298,16 +299,12 @@ def test_bump_version_dev(py_package):
     assert util.get_version() == "0.1.0.dev0"
     util.bump_version("dev")
     assert util.get_version() == "0.1.0.dev1"
-    # Should get the version from the changelog
-    util.bump_version("next", changelog_path=py_package / "CHANGELOG.md")
-    assert util.get_version() == "0.0.2"
-    util.bump_version("dev")
-    assert util.get_version() == "0.1.0.dev0"
-    util.bump_version("patch", changelog_path=py_package / "CHANGELOG.md")
-    assert util.get_version() == "0.0.2"
-    util.bump_version("1.0.0.dev0")
+    with pytest.raises(ValueError):
+        util.bump_version("next")
+    with pytest.raises(ValueError):
+        util.bump_version("patch")
     util.bump_version("minor")
-    assert util.get_version() == "1.0.0"
+    assert util.get_version() == "0.1.0"
 
 
 def test_get_config_python(py_package):

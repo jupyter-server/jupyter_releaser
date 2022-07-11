@@ -271,11 +271,9 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):
         if v.is_devrelease:
             # bump from the version in the changelog.
             if version_spec in ["patch", "next"]:
-                from jupyter_releaser.changelog import extract_current_version
-
-                v = parse_version(extract_current_version(changelog_path))
-                assert isinstance(v, Version)
-                version_spec = f"{v.major}.{v.minor}.{v.micro + 1}"
+                raise ValueError(
+                    "We do not support 'patch' or 'next' when dev versions are used, please use an explicit version."
+                )
 
             # Drop the dev portion and move to the minor release.
             elif version_spec == "minor":
