@@ -294,27 +294,17 @@ def test_bump_version_reg(py_package):
 
 
 def test_bump_version_dev(py_package):
-    changelog_path = py_package / "CHANGELOG.md"
     util.bump_version("dev")
     assert util.get_version() == "0.1.0.dev0"
     util.bump_version("dev")
     assert util.get_version() == "0.1.0.dev1"
     # Should get the version from the changelog
-    util.bump_version("next", changelog_path=changelog_path)
+    util.bump_version("next", changelog_path=py_package / "CHANGELOG.md")
     assert util.get_version() == "0.0.2"
     util.bump_version("dev")
     assert util.get_version() == "0.1.0.dev0"
-    util.bump_version("patch", changelog_path=changelog_path, use_changelog_version=True)
-    assert util.get_version() == "0.0.1"
-    util.bump_version("1.0.0.dev0")
-    text = changelog_path.read_text(encoding="utf-8")
-    text = text.replace("0.0.1", "0.0.1a1")
-    changelog_path.write_text(text, encoding="utf-8")
-    util.bump_version("patch", changelog_path=changelog_path)
-    assert util.get_version() == "0.0.1a2"
-    util.bump_version("1.0.0.dev0")
-    util.bump_version("patch", changelog_path=changelog_path, use_changelog_version=True)
-    assert util.get_version() == "0.0.1a1"
+    util.bump_version("patch", changelog_path=py_package / "CHANGELOG.md")
+    assert util.get_version() == "0.0.2"
     util.bump_version("1.0.0.dev0")
     util.bump_version("minor")
     assert util.get_version() == "1.0.0"
