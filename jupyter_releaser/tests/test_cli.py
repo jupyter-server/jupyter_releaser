@@ -144,10 +144,7 @@ def test_bump_version_tag_exists(py_package, runner):
     runner(["prep-git", "--git-url", py_package])
     run("git tag v1.0.1", cwd=util.CHECKOUT_NAME)
     with pytest.raises(ValueError):
-        runner(
-            ["bump-version", "--version-spec", "1.0.1", "--version-create-tag"],
-            env=dict(GITHUB_ACTIONS=""),
-        )
+        runner(["bump-version", "--version-spec", "1.0.1"], env=dict(GITHUB_ACTIONS=""))
 
 
 def test_list_envvars(runner):
@@ -186,7 +183,6 @@ twine-registry: TWINE_REGISTRY
 use-changelog-version: RH_USE_CHANGELOG_VERSION
 username: GITHUB_ACTOR
 version-cmd: RH_VERSION_COMMAND
-version-create-tag: RH_VERSION_CREATE_TAG
 version-spec: RH_VERSION_SPEC
 """.strip()
     )

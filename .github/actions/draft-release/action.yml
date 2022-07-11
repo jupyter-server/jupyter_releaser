@@ -58,8 +58,6 @@ runs:
         export RH_SINCE=${{ inputs.since }}
         export RH_SINCE_LAST_STABLE=${{ inputs.since_last_stable }}
         export RH_STEPS_TO_SKIP=${{ inputs.steps_to_skip }}
-        export RH_USE_CHANGELOG_VERSION=1
-        export RH_VERSION_CREATE_TAG=1
 
         # Draft Release
         python -m jupyter_releaser.actions.draft_release
