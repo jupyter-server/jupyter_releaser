@@ -59,7 +59,7 @@ def run(cmd, **kwargs):
     quiet_error = kwargs.pop("quiet_error", False)
     show_cwd = kwargs.pop("show_cwd", False)
     quiet = kwargs.pop("quiet", False)
-    echo = kwargs.pop("echo", True)
+    echo = kwargs.pop("echo", False)
 
     if echo:
         prefix = "COMMAND"
@@ -231,7 +231,7 @@ def create_release_commit(version, release_message=None, dist_dir="dist"):
     return shas
 
 
-def bump_version(version_spec, *, changelog_path="", version_cmd="", use_changelog_version=False):
+def bump_version(version_spec, *, changelog_path="", version_cmd=""):
     """Bump the version"""
     # Look for config files to determine version command if not given
     if not version_cmd:
@@ -271,19 +271,9 @@ def bump_version(version_spec, *, changelog_path="", version_cmd="", use_changel
         if v.is_devrelease:
             # bump from the version in the changelog.
             if version_spec in ["patch", "next"]:
-                from jupyter_releaser.changelog import extract_current_version
-
-                v = parse_version(extract_current_version(changelog_path))
-                assert isinstance(v, Version)
-                if use_changelog_version:
-                    version_spec = v
-                elif v.is_prerelease:
-                    assert v.pre
-                    # Bump to the next prerelease.
-                    version_spec = f"{v.major}.{v.minor}.{v.micro}{v.pre[0]}{v.pre[1] + 1}"
-                else:
-                    # Bump to the next micro.
-                    version_spec = f"{v.major}.{v.minor}.{v.micro + 1}"
+                raise ValueError(
+                    "We do not support 'patch' or 'next' when dev versions are used, please use an explicit version."
+                )
 
             # Drop the dev portion and move to the minor release.
             elif version_spec == "minor":

@@ -141,16 +141,7 @@ version_spec_options = [
 ]
 
 version_cmd_options = [
-    click.option("--version-cmd", envvar="RH_VERSION_COMMAND", help="The version command"),
-]
-
-version_create_tag_options = [
-    click.option(
-        "--version-create-tag",
-        envvar="RH_VERSION_CREATE_TAG",
-        is_flag=True,
-        help="Whether to create a tag when bumping the version",
-    ),
+    click.option("--version-cmd", envvar="RH_VERSION_COMMAND", help="The version command")
 ]
 
 
@@ -209,15 +200,6 @@ changelog_path_options = [
         envvar="RH_CHANGELOG",
         default="CHANGELOG.md",
         help="The path to changelog file",
-    ),
-]
-
-use_changelog_version_options = [
-    click.option(
-        "--use-changelog-version",
-        envvar="RH_USE_CHANGELOG_VERSION",
-        is_flag=True,
-        help="Whether to use the changelog version if the current version is a dev version in version bump",
     ),
 ]
 
@@ -317,28 +299,15 @@ def prep_git(ref, branch, repo, auth, username, git_url):
 @main.command()
 @add_options(version_spec_options)
 @add_options(version_cmd_options)
-@add_options(version_create_tag_options)
 @add_options(changelog_path_options)
-@add_options(use_changelog_version_options)
 @add_options(python_packages_options)
 @use_checkout_dir()
-def bump_version(
-    version_spec,
-    version_cmd,
-    version_create_tag,
-    changelog_path,
-    use_changelog_version,
-    python_packages,
-):
+def bump_version(version_spec, version_cmd, changelog_path, python_packages):
     """Prep git and env variables and bump version"""
     prev_dir = os.getcwd()
     for python_package in [p.split(":")[0] for p in python_packages]:
         os.chdir(python_package)
-        lib.bump_version(
-            version_spec, version_cmd, changelog_path, use_changelog_version=use_changelog_version
-        )
-        if version_create_tag:
-            lib.create_tag()
+        lib.bump_version(version_spec, version_cmd, changelog_path)
         os.chdir(prev_dir)
 
 
