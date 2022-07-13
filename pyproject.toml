@@ -78,6 +78,14 @@ version_template = "version = \"{major}.{minor}.{patch}{channel}{release}\""
 [[tool.tbump.file]]
 src = "docs/source/conf.py"
 
+[[tool.tbump.field]]
+name = "channel"
+default = ""
+
+[[tool.tbump.field]]
+name = "release"
+default = ""
+
 [tool.jupyter-releaser]
 skip = ["check-links"]
 
