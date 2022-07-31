@@ -3,13 +3,18 @@
 import json
 import os
 import os.path as osp
+import subprocess
+import sys
 from pathlib import Path
 from urllib.request import OpenerDirector
 
+import requests
 from click.testing import CliRunner
+from ghapi import core
 from pytest import fixture
 
 from jupyter_releaser import cli, util
+from jupyter_releaser.mock_github import BASE_URL
 from jupyter_releaser.tests import util as testutil
 from jupyter_releaser.util import run
 
@@ -26,6 +31,7 @@ def mock_env(mocker):
                 del env[key]
 
     mocker.patch.dict(os.environ, env, clear=True)
+    core.GH_HOST = BASE_URL
 
     try:
         run("git config --global user.name")
@@ -193,3 +199,26 @@ def build_mock(mocker):
         return orig_run(cmd, **kwargs)
 
     mock_run = mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
+
+
+@fixture
+def mock_github():
+    proc = subprocess.Popen([sys.executable, "-m", "uvicorn", "jupyter_releaser.mock_github:app"])
+
+    try:
+        ret = proc.wait(1)
+        if ret > 0:
+            raise ValueError(f"mock_github failed with {proc.returncode}")
+    except subprocess.TimeoutExpired:
+        pass
+
+    while 1:
+        try:
+            requests.get(BASE_URL)
+            break
+        except requests.ConnectionError:
+            pass
+    yield proc
+
+    proc.kill()
+    proc.wait()

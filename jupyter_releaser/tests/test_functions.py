@@ -72,12 +72,10 @@ def test_get_version_npm(npm_package):
     assert util.get_version() == "1.0.1"
 
 
-def test_format_pr_entry(mocker, open_mock):
-    data = dict(title="foo", user=dict(login="bar", html_url=testutil.HTML_URL))
-    open_mock.return_value = testutil.MockHTTPResponse(data)
-    resp = changelog.format_pr_entry("snuffy/foo", 121, auth="baz")
-    open_mock.assert_called_once()
-
+def test_format_pr_entry(mock_github):
+    gh = GhApi(owner="snuffy", repo="foo")
+    info = gh.pulls.create("title", "head", "base", "body", True, False, None)
+    resp = changelog.format_pr_entry("snuffy/foo", info["number"], auth="baz")
     assert resp.startswith("- ")
 
 
@@ -331,9 +329,16 @@ def test_get_config_file(git_repo):
     assert "before-build-python" in config["hooks"]["before-build-python"]
 
 
-def test_get_latest_draft_release(mocker, open_mock):
-    open_mock.side_effect = [testutil.MockHTTPResponse([testutil.REPO_DATA, testutil.REPO_DATA_2])]
-    gh = GhApi()
+def test_get_latest_draft_release(mock_github):
+    gh = GhApi(owner="foo", repo="bar")
+    gh.create_release(
+        "v1.0.0",
+        "main",
+        "v1.0.0",
+        "body",
+        True,
+        True,
+        files=[],
+    )
     latest = util.lastest_draft_release(gh)
-    assert latest.name == testutil.REPO_DATA_2["name"]
-    assert len(open_mock.call_args) == 2
+    assert latest.name == "v1.0.0"

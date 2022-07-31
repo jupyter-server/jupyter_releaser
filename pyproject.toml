@@ -49,9 +49,11 @@ content-type = "text/markdown"
 [project.optional-dependencies]
 test = [
     "coverage",
+    "fastapi",
     "pytest>=7.0",
     "pytest-cov",
     "pytest-mock",
+    "uvicorn"
 ]
 
 [project.scripts]
