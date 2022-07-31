@@ -9,6 +9,7 @@ import os.path as osp
 import re
 import shlex
 import shutil
+import subprocess
 import sys
 import tempfile
 import time
@@ -18,6 +19,7 @@ from glob import glob
 from pathlib import Path
 from subprocess import PIPE, CalledProcessError, check_output
 
+import requests
 import toml
 from importlib_resources import files
 from jsonschema import Draft4Validator as Validator
@@ -25,6 +27,7 @@ from packaging.version import Version
 from packaging.version import parse as parse_version
 from pkginfo import Wheel
 
+from jupyter_releaser.mock_github import BASE_URL
 from jupyter_releaser.tee import run as tee
 
 PYPROJECT = Path("pyproject.toml")
@@ -416,3 +419,22 @@ def read_config():
     validator = Validator(SCHEMA)
     validator.validate(config)
     return config
+
+
+def start_mock_github():
+    proc = subprocess.Popen([sys.executable, "-m", "uvicorn", "jupyter_releaser.mock_github:app"])
+
+    try:
+        ret = proc.wait(1)
+        if ret > 0:
+            raise ValueError(f"mock_github failed with {proc.returncode}")
+    except subprocess.TimeoutExpired:
+        pass
+
+    while 1:
+        try:
+            requests.get(BASE_URL)
+            break
+        except requests.ConnectionError:
+            pass
+    return proc

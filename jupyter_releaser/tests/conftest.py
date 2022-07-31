@@ -3,12 +3,8 @@
 import json
 import os
 import os.path as osp
-import subprocess
-import sys
 from pathlib import Path
-from urllib.request import OpenerDirector
 
-import requests
 from click.testing import CliRunner
 from ghapi import core
 from pytest import fixture
@@ -16,7 +12,7 @@ from pytest import fixture
 from jupyter_releaser import cli, util
 from jupyter_releaser.mock_github import BASE_URL
 from jupyter_releaser.tests import util as testutil
-from jupyter_releaser.util import run
+from jupyter_releaser.util import run, start_mock_github
 
 
 @fixture(autouse=True)
@@ -176,13 +172,6 @@ def git_prep(runner, git_repo):
 
 
 @fixture
-def open_mock(mocker):
-    open_mock = mocker.patch.object(OpenerDirector, "open", autospec=True)
-    open_mock.return_value = testutil.MockHTTPResponse()
-    yield open_mock
-
-
-@fixture
 def build_mock(mocker):
     orig_run = util.run
 
@@ -203,21 +192,7 @@ def build_mock(mocker):
 
 @fixture
 def mock_github():
-    proc = subprocess.Popen([sys.executable, "-m", "uvicorn", "jupyter_releaser.mock_github:app"])
-
-    try:
-        ret = proc.wait(1)
-        if ret > 0:
-            raise ValueError(f"mock_github failed with {proc.returncode}")
-    except subprocess.TimeoutExpired:
-        pass
-
-    while 1:
-        try:
-            requests.get(BASE_URL)
-            break
-        except requests.ConnectionError:
-            pass
+    proc = start_mock_github()
     yield proc
 
     proc.kill()

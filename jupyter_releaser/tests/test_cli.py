@@ -11,6 +11,7 @@ from subprocess import CalledProcessError
 from unittest.mock import call
 
 import pytest
+from ghapi.core import GhApi
 
 from jupyter_releaser import changelog, util
 from jupyter_releaser.tests.util import (
@@ -341,10 +342,9 @@ def test_draft_changelog_dry_run(npm_package, mocker, runner, git_prep):
     del os.environ["RH_SINCE_LAST_STABLE"]
 
 
-def test_draft_changelog_lerna(workspace_package, mocker, runner, open_mock, git_prep):
+def test_draft_changelog_lerna(workspace_package, mocker, runner, mock_github, git_prep):
     mock_changelog_entry(workspace_package, runner, mocker)
     runner(["draft-changelog", "--version-spec", VERSION_SPEC])
-    assert len(open_mock.call_args) == 2
 
 
 def test_check_links(py_package, runner):
@@ -563,7 +563,7 @@ def test_delete_release(npm_dist, runner, mock_github, git_prep):
     os.name == "nt" and sys.version_info.major == 3 and sys.version_info.minor < 8,
     reason="See https://bugs.python.org/issue26660",
 )
-def test_extract_dist_py(py_package, runner, mocker, open_mock, tmp_path, git_prep):
+def test_extract_dist_py(py_package, runner, mocker, mock_github, tmp_path, git_prep):
     changelog_entry = mock_changelog_entry(py_package, runner, mocker)
 
     # Create the dist files
@@ -572,37 +572,21 @@ def test_extract_dist_py(py_package, runner, mocker, open_mock, tmp_path, git_pr
     # Finalize the release
     runner(["tag-release"])
 
+    gh = GhApi("snuffy", "test")
+    dist_dir = os.path.join(util.CHECKOUT_NAME, "dist")
+    release = gh.create_release(
+        "bar",
+        "main",
+        "bar",
+        "body",
+        True,
+        True,
+        files=glob(f"{dist_dir}/*.*"),
+    )
     os.makedirs("staging")
     shutil.move(f"{util.CHECKOUT_NAME}/dist", "staging")
 
-    def helper(path, **kwargs):
-        return MockRequestResponse(f"{py_package}/staging/dist/{path}")
-
-    get_mock = mocker.patch("requests.get", side_effect=helper)
-
-    tag_name = f"v{VERSION_SPEC}"
-
-    dist_names = [osp.basename(f) for f in glob("staging/dist/*.*")]
-    releases = [
-        dict(
-            tag_name=tag_name,
-            target_commitish=util.get_branch(),
-            assets=[dict(name=dist_name, url=dist_name) for dist_name in dist_names],
-        )
-    ]
-    sha = run("git rev-parse HEAD", cwd=util.CHECKOUT_NAME)
-
-    tags = [dict(ref=f"refs/tags/{tag_name}", object=dict(sha=sha))]
-    url = normalize_path(osp.join(os.getcwd(), util.CHECKOUT_NAME))
-    open_mock.side_effect = [
-        MockHTTPResponse(releases),
-        MockHTTPResponse(tags),
-        MockHTTPResponse(dict(html_url=url)),
-    ]
-
-    runner(["extract-release", HTML_URL])
-    assert len(open_mock.mock_calls) == 2
-    assert len(get_mock.mock_calls) == len(dist_names) == 2
+    runner(["extract-release", release.html_url])
 
     log = get_log()
     assert "before-extract-release" not in log
@@ -613,7 +597,7 @@ def test_extract_dist_py(py_package, runner, mocker, open_mock, tmp_path, git_pr
     os.name == "nt" and sys.version_info.major == 3 and sys.version_info.minor < 8,
     reason="See https://bugs.python.org/issue26660",
 )
-def test_extract_dist_multipy(py_multipackage, runner, mocker, open_mock, tmp_path, git_prep):
+def test_extract_dist_multipy(py_multipackage, runner, mocker, mock_github, tmp_path, git_prep):
     git_repo = py_multipackage[0]["abs_path"]
     changelog_entry = mock_changelog_entry(git_repo, runner, mocker)
 
@@ -669,7 +653,7 @@ def test_extract_dist_multipy(py_multipackage, runner, mocker, open_mock, tmp_pa
     os.name == "nt" and sys.version_info.major == 3 and sys.version_info.minor < 8,
     reason="See https://bugs.python.org/issue26660",
 )
-def test_extract_dist_npm(npm_dist, runner, mocker, open_mock, tmp_path):
+def test_extract_dist_npm(npm_dist, runner, mocker, mock_github, tmp_path):
 
     os.makedirs("staging")
     shutil.move(f"{util.CHECKOUT_NAME}/dist", "staging")
@@ -814,16 +798,14 @@ def test_publish_assets_npm_all_exists(npm_dist, runner, mocker):
     assert called == 3, called
 
 
-def test_publish_release(npm_dist, runner, mocker, open_mock):
-    open_mock.side_effect = [MockHTTPResponse([REPO_DATA]), MockHTTPResponse()]
-    dist_dir = npm_dist / util.CHECKOUT_NAME / "dist"
-    runner(["publish-release", HTML_URL])
+def test_publish_release(npm_dist, runner, mocker, mock_github):
+    gh = GhApi(owner="foo", repo="bar")
+    release = gh.create_release("bar", "main", "bar", "body", True, True, files=[])
+    runner(["publish-release", release.html_url])
 
     log = get_log()
     assert "before-publish-release" in log
     assert "after-publish-release" in log
-
-    assert len(open_mock.call_args) == 2
 
 
 def test_config_file(py_package, runner, mocker, git_prep):
@@ -897,9 +879,9 @@ def test_config_file_cli_override(py_package, runner, mocker, git_prep):
     assert "after-build-python" in log
 
 
-def test_forwardport_changelog_no_new(npm_package, runner, mocker, open_mock, git_prep):
-
-    open_mock.side_effect = [MockHTTPResponse([REPO_DATA]), MockHTTPResponse()]
+def test_forwardport_changelog_no_new(npm_package, runner, mocker, mock_github, git_prep):
+    gh = GhApi(owner="foo", repo="bar")
+    release = gh.create_release("bar", "main", "bar", "body", True, True, files=[])
 
     # Create a branch with a changelog entry
     util.run("git checkout -b backport_branch", cwd=util.CHECKOUT_NAME)
@@ -909,18 +891,16 @@ def test_forwardport_changelog_no_new(npm_package, runner, mocker, open_mock, gi
     util.run(f"git tag v{VERSION_SPEC}", cwd=util.CHECKOUT_NAME)
 
     # Run the forwardport workflow against default branch
-    runner(["forwardport-changelog", HTML_URL])
-
-    assert len(open_mock.mock_calls) == 3
+    runner(["forwardport-changelog", release.html_url])
 
     log = get_log()
     assert "before-forwardport-changelog" in log
     assert "after-forwardport-changelog" in log
 
 
-def test_forwardport_changelog_has_new(npm_package, runner, mocker, open_mock, git_prep):
-
-    open_mock.side_effect = [MockHTTPResponse([REPO_DATA]), MockHTTPResponse()]
+def test_forwardport_changelog_has_new(npm_package, runner, mocker, mock_github, git_prep):
+    gh = GhApi(owner="foo", repo="bar")
+    release = gh.create_release("bar", "main", "bar", "body", True, True, files=[])
     current = util.run("git branch --show-current")
 
     # Create a branch with a changelog entry
@@ -945,9 +925,8 @@ def test_forwardport_changelog_has_new(npm_package, runner, mocker, open_mock, g
     # Run the forwardport workflow against default branch
     url = osp.abspath(npm_package)
     os.chdir(npm_package)
-    runner(["forwardport-changelog", HTML_URL, "--branch", current])
+    runner(["forwardport-changelog", release.html_url, "--branch", current])
 
-    assert len(open_mock.call_args) == 2
     util.run(f"git checkout {current}", cwd=npm_package)
 
     expected = """
