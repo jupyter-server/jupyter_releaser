@@ -18,10 +18,17 @@ from jupyter_releaser.tests.util import (
     CHANGELOG_ENTRY,
     PR_ENTRY,
     VERSION_SPEC,
+    create_tag_ref,
     get_log,
     mock_changelog_entry,
 )
-from jupyter_releaser.util import GIT_FETCH_CMD, bump_version, normalize_path, run
+from jupyter_releaser.util import (
+    GIT_FETCH_CMD,
+    bump_version,
+    get_latest_tag,
+    normalize_path,
+    run,
+)
 
 
 def test_prep_git_simple(py_package, runner):
@@ -570,12 +577,20 @@ def test_extract_dist_py(py_package, runner, mocker, mock_github, tmp_path, git_
     # Finalize the release
     runner(["tag-release"])
 
+    # Create a tag ref
+    os.chdir(util.CHECKOUT_NAME)
+    ref = get_latest_tag(None)
+    sha = run("git rev-parse HEAD")
+    create_tag_ref(ref, sha)
+    os.chdir(py_package)
+
+    # Create the release.
     gh = GhApi("snuffy", "test")
     dist_dir = os.path.join(util.CHECKOUT_NAME, "dist")
     release = gh.create_release(
+        ref,
         "bar",
-        "bar",
-        "bar",
+        ref,
         "body",
         True,
         True,
@@ -599,44 +614,40 @@ def test_extract_dist_multipy(py_multipackage, runner, mocker, mock_github, tmp_
     changelog_entry = mock_changelog_entry(git_repo, runner, mocker)
 
     # Create the dist files
+    files = []
     dist_dir = normalize_path(Path(util.CHECKOUT_NAME).resolve() / "dist")
     for package in py_multipackage:
         run(
             f"python -m build . -o {dist_dir}",
             cwd=Path(util.CHECKOUT_NAME) / package["rel_path"],
         )
+        files.extend(glob(dist_dir + "/*.*"))
 
     # Finalize the release
     runner(["tag-release"])
 
-    def helper(path, **kwargs):
-        return MockRequestResponse(f"{git_repo}/staging/dist/{path}")
+    # Create a tag ref
+    os.chdir(util.CHECKOUT_NAME)
+    ref = get_latest_tag(None)
+    sha = run("git rev-parse HEAD")
+    create_tag_ref(ref, sha)
+    os.chdir(git_repo)
 
-    get_mock = mocker.patch("requests.get", side_effect=helper)
+    # Create the release.
+    gh = GhApi("snuffy", "test")
+    dist_dir = os.path.join(util.CHECKOUT_NAME, "dist")
+    release = gh.create_release(
+        ref,
+        "bar",
+        ref,
+        "body",
+        True,
+        True,
+        files=files,
+    )
+    shutil.rmtree(f"{util.CHECKOUT_NAME}/dist")
 
-    tag_name = f"v{VERSION_SPEC}"
-
-    dist_names = [osp.basename(f) for f in glob("staging/dist/*.*")]
-    releases = [
-        dict(
-            tag_name=tag_name,
-            target_commitish=util.get_branch(),
-            assets=[dict(name=dist_name, url=dist_name) for dist_name in dist_names],
-        )
-    ]
-    sha = run("git rev-parse HEAD", cwd=util.CHECKOUT_NAME)
-
-    tags = [dict(ref=f"refs/tags/{tag_name}", object=dict(sha=sha))]
-    url = normalize_path(osp.join(os.getcwd(), util.CHECKOUT_NAME))
-    open_mock.side_effect = [
-        MockHTTPResponse(releases),
-        MockHTTPResponse(tags),
-        MockHTTPResponse(dict(html_url=url)),
-    ]
-
-    runner(["extract-release", HTML_URL])
-    assert len(open_mock.mock_calls) == 2
-    assert len(get_mock.mock_calls) == len(dist_names) == 2 * len(py_multipackage)
+    runner(["extract-release", release.html_url])
 
     log = get_log()
     assert "before-extract-release" not in log
@@ -649,35 +660,28 @@ def test_extract_dist_multipy(py_multipackage, runner, mocker, mock_github, tmp_
 )
 def test_extract_dist_npm(npm_dist, runner, mocker, mock_github, tmp_path):
 
-    os.makedirs("staging")
-    shutil.move(f"{util.CHECKOUT_NAME}/dist", "staging")
+    # Create a tag ref
+    os.chdir(util.CHECKOUT_NAME)
+    ref = get_latest_tag(None)
+    sha = run("git rev-parse HEAD")
+    create_tag_ref(ref, sha)
+    os.chdir(npm_dist)
 
-    def helper(path, **kwargs):
-        return MockRequestResponse(f"{npm_dist}/staging/dist/{path}")
+    # Create the release.
+    gh = GhApi("snuffy", "test")
+    dist_dir = os.path.join(util.CHECKOUT_NAME, "dist")
+    release = gh.create_release(
+        ref,
+        "bar",
+        ref,
+        "body",
+        True,
+        True,
+        files=glob(f"{dist_dir}/*.*"),
+    )
+    shutil.rmtree(f"{util.CHECKOUT_NAME}/dist")
 
-    get_mock = mocker.patch("requests.get", side_effect=helper)
-
-    dist_names = [osp.basename(f) for f in glob("staging/dist/*.tgz")]
-    url = normalize_path(osp.join(os.getcwd(), util.CHECKOUT_NAME))
-    tag_name = f"v{VERSION_SPEC}"
-    releases = [
-        dict(
-            tag_name=tag_name,
-            target_commitish="foo",
-            assets=[dict(name=dist_name, url=dist_name) for dist_name in dist_names],
-        )
-    ]
-    sha = run("git rev-parse HEAD", cwd=util.CHECKOUT_NAME)
-    tags = [dict(ref=f"refs/tags/{tag_name}", object=dict(sha=sha))]
-    open_mock.side_effect = [
-        MockHTTPResponse(releases),
-        MockHTTPResponse(tags),
-        MockHTTPResponse(dict(html_url=url)),
-    ]
-
-    runner(["extract-release", HTML_URL])
-    assert len(open_mock.mock_calls) == 2
-    assert len(get_mock.mock_calls) == len(dist_names) == 3
+    runner(["extract-release", release.html_url])
 
     log = get_log()
     assert "before-extract-release" not in log

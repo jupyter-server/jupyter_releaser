@@ -1,11 +1,12 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
-import json
 import shutil
-import typing as t
 from pathlib import Path
 
+import requests
+
 from jupyter_releaser import changelog, cli, util
+from jupyter_releaser.mock_github import BASE_URL
 from jupyter_releaser.util import run
 
 VERSION_SPEC = "1.0.1"
@@ -282,3 +283,8 @@ def create_python_package(git_repo, multi=False, not_matching_name=False):
         return packages
     else:
         return git_repo
+
+
+def create_tag_ref(ref, sha):
+    url = f"{BASE_URL}/create_tag_ref/{ref}/{sha}"
+    requests.post(url)

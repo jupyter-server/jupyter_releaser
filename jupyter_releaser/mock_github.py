@@ -18,6 +18,8 @@ app.mount("/static", StaticFiles(directory=static_dir.name), name="static")
 releases: Dict[int, "Release"] = {}
 pulls: Dict[int, "PullRequest"] = {}
 release_ids_for_asset: Dict[int, int] = {}
+tag_refs: Dict[str, "Tag"] = {}
+
 
 BASE_URL = "http://127.0.0.1:8000"
 
@@ -182,8 +184,15 @@ def add_labels_to_an_issue(owner: str, repo: str, issue_number: int) -> BaseMode
     return BaseModel()
 
 
+@app.post("/create_tag_ref/{tag_ref}/{sha}")
+def create_tag_ref(tag_ref: str, sha: str):
+    """Create a remote tag ref object for testing"""
+    tag = Tag(ref=f"refs/tags/{tag_ref}", object=TagObject(sha=sha))
+    tag_refs[tag_ref] = tag
+
+
 @app.get("/repos/{owner}/{repo}/git/matching-refs/tags/{tag_ref}")
 def list_matching_references(owner: str, repo: str, tag_ref: str) -> List[Tag]:
     """https://docs.github.com/en/rest/git/refs#list-matching-references"""
-    raise ValueError("we should have an api to set a sha for a tag ref for tests")
-    return [Tag(ref=f"refs/tags/{tag_ref}", object=TagObject(sha="foo"))]
+    # raise ValueError("we should have an api to set a sha for a tag ref for tests")
+    return [tag_refs[tag_ref]]
