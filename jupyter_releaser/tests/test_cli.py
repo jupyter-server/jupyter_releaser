@@ -16,9 +16,7 @@ from ghapi.core import GhApi
 from jupyter_releaser import changelog, util
 from jupyter_releaser.tests.util import (
     CHANGELOG_ENTRY,
-    HTML_URL,
     PR_ENTRY,
-    REPO_DATA,
     VERSION_SPEC,
     get_log,
     mock_changelog_entry,
@@ -576,15 +574,14 @@ def test_extract_dist_py(py_package, runner, mocker, mock_github, tmp_path, git_
     dist_dir = os.path.join(util.CHECKOUT_NAME, "dist")
     release = gh.create_release(
         "bar",
-        "main",
+        "bar",
         "bar",
         "body",
         True,
         True,
         files=glob(f"{dist_dir}/*.*"),
     )
-    os.makedirs("staging")
-    shutil.move(f"{util.CHECKOUT_NAME}/dist", "staging")
+    shutil.rmtree(f"{util.CHECKOUT_NAME}/dist")
 
     runner(["extract-release", release.html_url])
 
@@ -611,9 +608,6 @@ def test_extract_dist_multipy(py_multipackage, runner, mocker, mock_github, tmp_
 
     # Finalize the release
     runner(["tag-release"])
-
-    os.makedirs("staging")
-    shutil.move(f"{util.CHECKOUT_NAME}/dist", "staging")
 
     def helper(path, **kwargs):
         return MockRequestResponse(f"{git_repo}/staging/dist/{path}")
@@ -881,7 +875,7 @@ def test_config_file_cli_override(py_package, runner, mocker, git_prep):
 
 def test_forwardport_changelog_no_new(npm_package, runner, mocker, mock_github, git_prep):
     gh = GhApi(owner="foo", repo="bar")
-    release = gh.create_release("bar", "main", "bar", "body", True, True, files=[])
+    release = gh.create_release("bar", "bar", "bar", "body", True, True, files=[])
 
     # Create a branch with a changelog entry
     util.run("git checkout -b backport_branch", cwd=util.CHECKOUT_NAME)
@@ -900,8 +894,9 @@ def test_forwardport_changelog_no_new(npm_package, runner, mocker, mock_github, 
 
 def test_forwardport_changelog_has_new(npm_package, runner, mocker, mock_github, git_prep):
     gh = GhApi(owner="foo", repo="bar")
-    release = gh.create_release("bar", "main", "bar", "body", True, True, files=[])
-    current = util.run("git branch --show-current")
+    release = gh.create_release("bar", "bar", "bar", "body", True, True, files=[])
+
+    current = util.run("git branch --show-current", cwd=util.CHECKOUT_NAME)
 
     # Create a branch with a changelog entry
     util.run("git checkout -b backport_branch", cwd=util.CHECKOUT_NAME)

@@ -3,8 +3,6 @@ import os
 import requests
 from ghapi.core import GhApi
 
-from jupyter_releaser.mock_github import BASE_URL
-
 
 def test_mock_github(mock_github):
     owner = "foo"
@@ -42,13 +40,11 @@ def test_mock_github(mock_github):
     assert release.draft == False
 
     for asset in release.assets:
-        url = BASE_URL + asset.url
         headers = dict(Authorization=f"token {auth}", Accept="application/octet-stream")
-        path = os.path.join(here, asset.name)
         print(asset.name)
-        with requests.get(url, headers=headers, stream=True) as r:
+        with requests.get(asset.url, headers=headers, stream=True) as r:
             r.raise_for_status()
-            for chunk in r.iter_content(chunk_size=8192):
+            for _ in r.iter_content(chunk_size=8192):
                 pass
 
     gh.repos.delete_release(release.id)

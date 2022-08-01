@@ -3,7 +3,7 @@ import datetime
 import os
 import tempfile
 import uuid
-from typing import List
+from typing import Dict, List
 
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
@@ -15,9 +15,9 @@ static_dir = tempfile.TemporaryDirectory()
 atexit.register(static_dir.cleanup)
 app.mount("/static", StaticFiles(directory=static_dir.name), name="static")
 
-releases: dict[int, "Release"] = {}
-pulls: dict[int, "PullRequest"] = {}
-release_ids_for_asset: dict[int, int] = {}
+releases: Dict[int, "Release"] = {}
+pulls: Dict[int, "PullRequest"] = {}
+release_ids_for_asset: Dict[int, int] = {}
 
 BASE_URL = "http://127.0.0.1:8000"
 
@@ -69,6 +69,15 @@ class PullRequest(BaseModel):
     html_url: str = "http://foo.com"
     title: str = "foo"
     user: User = User()
+
+
+class TagObject(BaseModel):
+    sha: str
+
+
+class Tag(BaseModel):
+    ref: str
+    object: TagObject
 
 
 @app.get("/")
@@ -171,3 +180,10 @@ def create_a_pull_request(owner: str, repo: str) -> PullRequest:
 def add_labels_to_an_issue(owner: str, repo: str, issue_number: int) -> BaseModel:
     """https://docs.github.com/en/rest/issues/labels#add-labels-to-an-issue"""
     return BaseModel()
+
+
+@app.get("/repos/{owner}/{repo}/git/matching-refs/tags/{tag_ref}")
+def list_matching_references(owner: str, repo: str, tag_ref: str) -> List[Tag]:
+    """https://docs.github.com/en/rest/git/refs#list-matching-references"""
+    raise ValueError("we should have an api to set a sha for a tag ref for tests")
+    return [Tag(ref=f"refs/tags/{tag_ref}", object=TagObject(sha="foo"))]

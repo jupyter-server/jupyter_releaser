@@ -158,33 +158,16 @@ CHANGELOG_TEMPLATE = f"""# Changelog
 
 {changelog.START_MARKER}
 
+## 0.0.2
+
+Second commit
+
+{changelog.END_MARKER}
+
 ## 0.0.1
 
 Initial commit
-
-{changelog.END_MARKER}
 """
-
-HTML_URL = "https://github.com/snuffy/test/releases/tag/bar"
-URL = "https://api.gihub.com/repos/snuffy/test/releases/tags/bar"
-REPO_DATA = dict(
-    body="bar",
-    tag_name=f"v{VERSION_SPEC}",
-    target_commitish="bar",
-    name="foo",
-    prerelease=False,
-    draft=True,
-    created_at="2013-02-27T19:35:32Z",
-)
-REPO_DATA_2 = dict(
-    body="bar",
-    tag_name=f"v{VERSION_SPEC}",
-    target_commitish="bar",
-    name="foo2",
-    prerelease=False,
-    draft=True,
-    created_at="2013-02-27T20:35:32Z",
-)
 
 
 def mock_changelog_entry(package_path, runner, mocker, version_spec=VERSION_SPEC):
