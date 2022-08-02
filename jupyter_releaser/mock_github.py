@@ -185,7 +185,7 @@ def add_labels_to_an_issue(owner: str, repo: str, issue_number: int) -> BaseMode
 
 
 @app.post("/create_tag_ref/{tag_ref}/{sha}")
-def create_tag_ref(tag_ref: str, sha: str):
+def create_tag_ref(tag_ref: str, sha: str) -> None:
     """Create a remote tag ref object for testing"""
     tag = Tag(ref=f"refs/tags/{tag_ref}", object=TagObject(sha=sha))
     tag_refs[tag_ref] = tag

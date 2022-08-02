@@ -22,13 +22,7 @@ from jupyter_releaser.tests.util import (
     get_log,
     mock_changelog_entry,
 )
-from jupyter_releaser.util import (
-    GIT_FETCH_CMD,
-    bump_version,
-    get_latest_tag,
-    normalize_path,
-    run,
-)
+from jupyter_releaser.util import GIT_FETCH_CMD, bump_version, normalize_path, run
 
 
 def test_prep_git_simple(py_package, runner):

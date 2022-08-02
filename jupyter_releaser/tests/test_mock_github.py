@@ -37,7 +37,7 @@ def test_mock_github(mock_github):
         False,
         release["prerelease"],
     )
-    assert release.draft == False
+    assert release.draft is False
 
     for asset in release.assets:
         headers = dict(Authorization=f"token {auth}", Accept="application/octet-stream")
