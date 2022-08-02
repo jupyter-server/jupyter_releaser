@@ -9,6 +9,7 @@ import os.path as osp
 import re
 import shlex
 import shutil
+import subprocess
 import sys
 import tempfile
 import time
@@ -18,6 +19,7 @@ from glob import glob
 from pathlib import Path
 from subprocess import PIPE, CalledProcessError, check_output
 
+import requests
 import toml
 from importlib_resources import files
 from jsonschema import Draft4Validator as Validator
@@ -52,6 +54,8 @@ SCHEMA = files("jupyter_releaser").joinpath("schema.json").read_text()
 SCHEMA = json.loads(SCHEMA)
 
 GIT_FETCH_CMD = "git fetch origin --filter=blob:none --quiet"
+
+MOCK_GITHUB_URL = "http://127.0.0.1:8000"
 
 
 def run(cmd, **kwargs):
@@ -416,3 +420,22 @@ def read_config():
     validator = Validator(SCHEMA)
     validator.validate(config)
     return config
+
+
+def start_mock_github():
+    proc = subprocess.Popen([sys.executable, "-m", "uvicorn", "jupyter_releaser.mock_github:app"])
+
+    try:
+        ret = proc.wait(1)
+        if ret > 0:
+            raise ValueError(f"mock_github failed with {proc.returncode}")
+    except subprocess.TimeoutExpired:
+        pass
+
+    while 1:
+        try:
+            requests.get(MOCK_GITHUB_URL)
+            break
+        except requests.ConnectionError:
+            pass
+    return proc

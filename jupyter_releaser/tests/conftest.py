@@ -4,14 +4,14 @@ import json
 import os
 import os.path as osp
 from pathlib import Path
-from urllib.request import OpenerDirector
 
 from click.testing import CliRunner
+from ghapi import core
 from pytest import fixture
 
 from jupyter_releaser import cli, util
 from jupyter_releaser.tests import util as testutil
-from jupyter_releaser.util import run
+from jupyter_releaser.util import MOCK_GITHUB_URL, run, start_mock_github
 
 
 @fixture(autouse=True)
@@ -26,6 +26,7 @@ def mock_env(mocker):
                 del env[key]
 
     mocker.patch.dict(os.environ, env, clear=True)
+    core.GH_HOST = MOCK_GITHUB_URL
 
     try:
         run("git config --global user.name")
@@ -170,13 +171,6 @@ def git_prep(runner, git_repo):
 
 
 @fixture
-def open_mock(mocker):
-    open_mock = mocker.patch.object(OpenerDirector, "open", autospec=True)
-    open_mock.return_value = testutil.MockHTTPResponse()
-    yield open_mock
-
-
-@fixture
 def build_mock(mocker):
     orig_run = util.run
 
@@ -193,3 +187,12 @@ def build_mock(mocker):
         return orig_run(cmd, **kwargs)
 
     mock_run = mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
+
+
+@fixture
+def mock_github():
+    proc = start_mock_github()
+    yield proc
+
+    proc.kill()
+    proc.wait()

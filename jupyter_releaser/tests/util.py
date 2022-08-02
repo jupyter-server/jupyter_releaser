@@ -1,12 +1,14 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
-import json
+import os
 import shutil
-import typing as t
 from pathlib import Path
 
+import requests
+from ghapi.core import GhApi
+
 from jupyter_releaser import changelog, cli, util
-from jupyter_releaser.util import run
+from jupyter_releaser.util import MOCK_GITHUB_URL, get_latest_tag, run
 
 VERSION_SPEC = "1.0.1"
 
@@ -158,33 +160,16 @@ CHANGELOG_TEMPLATE = f"""# Changelog
 
 {changelog.START_MARKER}
 
+## 0.0.2
+
+Second commit
+
+{changelog.END_MARKER}
+
 ## 0.0.1
 
 Initial commit
-
-{changelog.END_MARKER}
 """
-
-HTML_URL = "https://github.com/snuffy/test/releases/tag/bar"
-URL = "https://api.gihub.com/repos/snuffy/test/releases/tags/bar"
-REPO_DATA = dict(
-    body="bar",
-    tag_name=f"v{VERSION_SPEC}",
-    target_commitish="bar",
-    name="foo",
-    prerelease=False,
-    draft=True,
-    created_at="2013-02-27T19:35:32Z",
-)
-REPO_DATA_2 = dict(
-    body="bar",
-    tag_name=f"v{VERSION_SPEC}",
-    target_commitish="bar",
-    name="foo2",
-    prerelease=False,
-    draft=True,
-    created_at="2013-02-27T20:35:32Z",
-)
 
 
 def mock_changelog_entry(package_path, runner, mocker, version_spec=VERSION_SPEC):
@@ -301,52 +286,25 @@ def create_python_package(git_repo, multi=False, not_matching_name=False):
         return git_repo
 
 
-class MockHTTPResponse:
-    header: t.Dict[str, t.Any] = {}
-    code = 200
-
-    def __init__(self, data=None):
-        self.url = ""
-        data = data or {}
-        defaults = dict(id="foo", html_url=HTML_URL, url=URL, upload_url=URL, number=100)
-        if isinstance(data, list):
-            for datum in data:
-                for key in defaults:
-                    datum.setdefault(key, defaults[key])
-        else:
-            for key in defaults:
-                data.setdefault(key, defaults[key])
-        self.data = json.dumps(data).encode("utf-8")
-        self.headers = {}
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, type, value, traceback):
-        pass
-
-    def read(self, amt=None):
-        return self.data
-
-    @property
-    def status(self):
-        return self.code
+def create_draft_release(ref="bar", files=None):
+    gh = GhApi("snuffy", "test")
+    return gh.create_release(
+        ref,
+        "bar",
+        ref,
+        "body",
+        True,
+        True,
+        files=files or [],
+    )
 
 
-class MockRequestResponse:
-    def __init__(self, filename, status_code=200):
-        self.filename = filename
-        self.status_code = status_code
-
-    def raise_for_status(self):
-        pass
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, *args):
-        pass
-
-    def iter_content(self, *args, **kwargs):
-        with open(self.filename, "rb") as fid:
-            return [fid.read()]
+def create_tag_ref():
+    curr_dir = os.getcwd()
+    os.chdir(util.CHECKOUT_NAME)
+    ref = get_latest_tag(None)
+    sha = run("git rev-parse HEAD")
+    url = f"{MOCK_GITHUB_URL}/create_tag_ref/{ref}/{sha}"
+    requests.post(url)
+    os.chdir(curr_dir)
+    return ref
