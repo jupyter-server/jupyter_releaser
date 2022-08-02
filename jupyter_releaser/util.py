@@ -55,6 +55,8 @@ SCHEMA = json.loads(SCHEMA)
 
 GIT_FETCH_CMD = "git fetch origin --filter=blob:none --quiet"
 
+MOCK_GITHUB_URL = "http://127.0.0.1:8000"
+
 
 def run(cmd, **kwargs):
     """Run a command as a subprocess and get the output as a string"""
@@ -421,8 +423,6 @@ def read_config():
 
 
 def start_mock_github():
-    from jupyter_releaser.mock_github import BASE_URL
-
     proc = subprocess.Popen([sys.executable, "-m", "uvicorn", "jupyter_releaser.mock_github:app"])
 
     try:
@@ -434,7 +434,7 @@ def start_mock_github():
 
     while 1:
         try:
-            requests.get(BASE_URL)
+            requests.get(MOCK_GITHUB_URL)
             break
         except requests.ConnectionError:
             pass

@@ -9,6 +9,8 @@ from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
+from jupyter_releaser.util import MOCK_GITHUB_URL
+
 app = FastAPI()
 
 static_dir = tempfile.TemporaryDirectory()
@@ -19,9 +21,6 @@ releases: Dict[int, "Release"] = {}
 pulls: Dict[int, "PullRequest"] = {}
 release_ids_for_asset: Dict[int, int] = {}
 tag_refs: Dict[str, "Tag"] = {}
-
-
-BASE_URL = "http://127.0.0.1:8000"
 
 
 class Asset(BaseModel):
@@ -100,7 +99,7 @@ async def create_a_release(owner: str, repo: str, request: Request) -> Release:
     data = await request.json()
     url = f"https://github.com/repos/{owner}/{repo}/releases/{release_id}"
     html_url = f"https://github.com/{owner}/{repo}/releases/tag/{data['tag_name']}"
-    upload_url = f"{BASE_URL}/repos/{owner}/{repo}/releases/{release_id}/assets"
+    upload_url = f"{MOCK_GITHUB_URL}/repos/{owner}/{repo}/releases/{release_id}/assets"
     fmt_str = r"%Y-%m-%dT%H:%M:%SZ"
     created_at = datetime.datetime.utcnow().strftime(fmt_str)
     model = Release(
@@ -136,7 +135,7 @@ async def upload_a_release_asset(owner: str, repo: str, release_id: int, request
         async for chunk in request.stream():
             fid.write(chunk)
     headers = request.headers
-    url = f"{BASE_URL}/static/{asset_id}"
+    url = f"{MOCK_GITHUB_URL}/static/{asset_id}"
     asset = Asset(
         id=asset_id,
         name=name,

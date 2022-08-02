@@ -8,8 +8,7 @@ import requests
 from ghapi.core import GhApi
 
 from jupyter_releaser import changelog, cli, util
-from jupyter_releaser.mock_github import BASE_URL
-from jupyter_releaser.util import get_latest_tag, run
+from jupyter_releaser.util import MOCK_GITHUB_URL, get_latest_tag, run
 
 VERSION_SPEC = "1.0.1"
 
@@ -305,7 +304,7 @@ def create_tag_ref():
     os.chdir(util.CHECKOUT_NAME)
     ref = get_latest_tag(None)
     sha = run("git rev-parse HEAD")
-    url = f"{BASE_URL}/create_tag_ref/{ref}/{sha}"
+    url = f"{MOCK_GITHUB_URL}/create_tag_ref/{ref}/{sha}"
     requests.post(url)
     os.chdir(curr_dir)
     return ref

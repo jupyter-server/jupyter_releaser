@@ -10,9 +10,8 @@ from ghapi import core
 from pytest import fixture
 
 from jupyter_releaser import cli, util
-from jupyter_releaser.mock_github import BASE_URL
 from jupyter_releaser.tests import util as testutil
-from jupyter_releaser.util import run, start_mock_github
+from jupyter_releaser.util import MOCK_GITHUB_URL, run, start_mock_github
 
 
 @fixture(autouse=True)
@@ -27,7 +26,7 @@ def mock_env(mocker):
                 del env[key]
 
     mocker.patch.dict(os.environ, env, clear=True)
-    core.GH_HOST = BASE_URL
+    core.GH_HOST = MOCK_GITHUB_URL
 
     try:
         run("git config --global user.name")
