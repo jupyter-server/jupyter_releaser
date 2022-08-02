@@ -11,13 +11,13 @@ from subprocess import CalledProcessError
 from unittest.mock import call
 
 import pytest
-from ghapi.core import GhApi
 
 from jupyter_releaser import changelog, util
 from jupyter_releaser.tests.util import (
     CHANGELOG_ENTRY,
     PR_ENTRY,
     VERSION_SPEC,
+    create_draft_release,
     create_tag_ref,
     get_log,
     mock_changelog_entry,
@@ -578,24 +578,11 @@ def test_extract_dist_py(py_package, runner, mocker, mock_github, tmp_path, git_
     runner(["tag-release"])
 
     # Create a tag ref
-    os.chdir(util.CHECKOUT_NAME)
-    ref = get_latest_tag(None)
-    sha = run("git rev-parse HEAD")
-    create_tag_ref(ref, sha)
-    os.chdir(py_package)
+    ref = create_tag_ref()
 
     # Create the release.
-    gh = GhApi("snuffy", "test")
     dist_dir = os.path.join(util.CHECKOUT_NAME, "dist")
-    release = gh.create_release(
-        ref,
-        "bar",
-        ref,
-        "body",
-        True,
-        True,
-        files=glob(f"{dist_dir}/*.*"),
-    )
+    release = create_draft_release(ref, glob(f"{dist_dir}/*.*"))
     shutil.rmtree(f"{util.CHECKOUT_NAME}/dist")
 
     runner(["extract-release", release.html_url])
@@ -627,24 +614,11 @@ def test_extract_dist_multipy(py_multipackage, runner, mocker, mock_github, tmp_
     runner(["tag-release"])
 
     # Create a tag ref
-    os.chdir(util.CHECKOUT_NAME)
-    ref = get_latest_tag(None)
-    sha = run("git rev-parse HEAD")
-    create_tag_ref(ref, sha)
-    os.chdir(git_repo)
+    ref = create_tag_ref()
 
     # Create the release.
-    gh = GhApi("snuffy", "test")
     dist_dir = os.path.join(util.CHECKOUT_NAME, "dist")
-    release = gh.create_release(
-        ref,
-        "bar",
-        ref,
-        "body",
-        True,
-        True,
-        files=files,
-    )
+    release = create_draft_release(ref, files)
     shutil.rmtree(f"{util.CHECKOUT_NAME}/dist")
 
     runner(["extract-release", release.html_url])
@@ -661,24 +635,11 @@ def test_extract_dist_multipy(py_multipackage, runner, mocker, mock_github, tmp_
 def test_extract_dist_npm(npm_dist, runner, mocker, mock_github, tmp_path):
 
     # Create a tag ref
-    os.chdir(util.CHECKOUT_NAME)
-    ref = get_latest_tag(None)
-    sha = run("git rev-parse HEAD")
-    create_tag_ref(ref, sha)
-    os.chdir(npm_dist)
+    ref = create_tag_ref()
 
     # Create the release.
-    gh = GhApi("snuffy", "test")
     dist_dir = os.path.join(util.CHECKOUT_NAME, "dist")
-    release = gh.create_release(
-        ref,
-        "bar",
-        ref,
-        "body",
-        True,
-        True,
-        files=glob(f"{dist_dir}/*.*"),
-    )
+    release = create_draft_release(ref, glob(f"{dist_dir}/*.*"))
     shutil.rmtree(f"{util.CHECKOUT_NAME}/dist")
 
     runner(["extract-release", release.html_url])
@@ -689,7 +650,7 @@ def test_extract_dist_npm(npm_dist, runner, mocker, mock_github, tmp_path):
 
 
 @pytest.mark.skipif(os.name == "nt", reason="pypiserver does not start properly on Windows")
-def test_publish_assets_py(py_package, runner, mocker, git_prep):
+def test_publish_assets_py(py_package, runner, mocker, git_prep, mock_github):
     # Create the dist files
     changelog_entry = mock_changelog_entry(py_package, runner, mocker)
     run("python -m build .", cwd=util.CHECKOUT_NAME)
@@ -709,7 +670,8 @@ def test_publish_assets_py(py_package, runner, mocker, git_prep):
     mock_run = mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
 
     dist_dir = py_package / util.CHECKOUT_NAME / "dist"
-    runner(["publish-assets", "--dist-dir", dist_dir, "--dry-run", HTML_URL])
+    release = create_draft_release()
+    runner(["publish-assets", "--dist-dir", dist_dir, "--dry-run", release.html_url])
     assert called == 2, called
 
     log = get_log()
@@ -735,7 +697,7 @@ def test_publish_assets_npm(npm_dist, runner, mocker):
     assert called == 3, called
 
 
-def test_publish_assets_npm_exists(npm_dist, runner, mocker):
+def test_publish_assets_npm_exists(npm_dist, runner, mocker, mock_github):
     dist_dir = npm_dist / util.CHECKOUT_NAME / "dist"
     called = 0
 
@@ -749,7 +711,7 @@ def test_publish_assets_npm_exists(npm_dist, runner, mocker):
                 raise err
 
     mock_run = mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
-
+    release = create_draft_release()
     runner(
         [
             "publish-assets",
@@ -759,14 +721,14 @@ def test_publish_assets_npm_exists(npm_dist, runner, mocker):
             "npm publish --dry-run",
             "--dist-dir",
             dist_dir,
-            HTML_URL,
+            release.html_url,
         ]
     )
 
     assert called == 3, called
 
 
-def test_publish_assets_npm_all_exists(npm_dist, runner, mocker):
+def test_publish_assets_npm_all_exists(npm_dist, runner, mocker, mock_github):
     dist_dir = npm_dist / util.CHECKOUT_NAME / "dist"
     called = 0
 
@@ -779,7 +741,7 @@ def test_publish_assets_npm_all_exists(npm_dist, runner, mocker):
             raise err
 
     mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
-
+    release = create_draft_release()
     runner(
         [
             "publish-assets",
@@ -789,7 +751,7 @@ def test_publish_assets_npm_all_exists(npm_dist, runner, mocker):
             "npm publish --dry-run",
             "--dist-dir",
             dist_dir,
-            HTML_URL,
+            release.html_url,
         ]
     )
 
@@ -797,8 +759,7 @@ def test_publish_assets_npm_all_exists(npm_dist, runner, mocker):
 
 
 def test_publish_release(npm_dist, runner, mocker, mock_github):
-    gh = GhApi(owner="foo", repo="bar")
-    release = gh.create_release("bar", "main", "bar", "body", True, True, files=[])
+    release = create_draft_release("bar")
     runner(["publish-release", release.html_url])
 
     log = get_log()
@@ -878,8 +839,7 @@ def test_config_file_cli_override(py_package, runner, mocker, git_prep):
 
 
 def test_forwardport_changelog_no_new(npm_package, runner, mocker, mock_github, git_prep):
-    gh = GhApi(owner="foo", repo="bar")
-    release = gh.create_release("bar", "bar", "bar", "body", True, True, files=[])
+    release = create_draft_release("bar")
 
     # Create a branch with a changelog entry
     util.run("git checkout -b backport_branch", cwd=util.CHECKOUT_NAME)
@@ -897,8 +857,7 @@ def test_forwardport_changelog_no_new(npm_package, runner, mocker, mock_github, 
 
 
 def test_forwardport_changelog_has_new(npm_package, runner, mocker, mock_github, git_prep):
-    gh = GhApi(owner="foo", repo="bar")
-    release = gh.create_release("bar", "bar", "bar", "body", True, True, files=[])
+    release = create_draft_release("bar")
 
     current = util.run("git branch --show-current", cwd=util.CHECKOUT_NAME)
 

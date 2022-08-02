@@ -1,13 +1,15 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
+import os
 import shutil
 from pathlib import Path
 
 import requests
+from ghapi.core import GhApi
 
 from jupyter_releaser import changelog, cli, util
 from jupyter_releaser.mock_github import BASE_URL
-from jupyter_releaser.util import run
+from jupyter_releaser.util import get_latest_tag, run
 
 VERSION_SPEC = "1.0.1"
 
@@ -285,6 +287,25 @@ def create_python_package(git_repo, multi=False, not_matching_name=False):
         return git_repo
 
 
-def create_tag_ref(ref, sha):
+def create_draft_release(ref="bar", files=None):
+    gh = GhApi("snuffy", "test")
+    return gh.create_release(
+        ref,
+        "bar",
+        ref,
+        "body",
+        True,
+        True,
+        files=files or [],
+    )
+
+
+def create_tag_ref():
+    curr_dir = os.getcwd()
+    os.chdir(util.CHECKOUT_NAME)
+    ref = get_latest_tag(None)
+    sha = run("git rev-parse HEAD")
     url = f"{BASE_URL}/create_tag_ref/{ref}/{sha}"
     requests.post(url)
+    os.chdir(curr_dir)
+    return ref

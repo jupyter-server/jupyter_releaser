@@ -27,7 +27,6 @@ from packaging.version import Version
 from packaging.version import parse as parse_version
 from pkginfo import Wheel
 
-from jupyter_releaser.mock_github import BASE_URL
 from jupyter_releaser.tee import run as tee
 
 PYPROJECT = Path("pyproject.toml")
@@ -422,6 +421,8 @@ def read_config():
 
 
 def start_mock_github():
+    from jupyter_releaser.mock_github import BASE_URL
+
     proc = subprocess.Popen([sys.executable, "-m", "uvicorn", "jupyter_releaser.mock_github:app"])
 
     try:
