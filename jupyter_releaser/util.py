@@ -2,6 +2,7 @@
 # Distributed under the terms of the Modified BSD License.
 # Of the form:
 # https://github.com/{owner}/{repo}/releases/tag/{tag}
+import atexit
 import hashlib
 import json
 import os
@@ -21,6 +22,7 @@ from subprocess import PIPE, CalledProcessError, check_output
 
 import requests
 import toml
+from ghapi import core
 from importlib_resources import files
 from jsonschema import Draft4Validator as Validator
 from packaging.version import Version
@@ -422,8 +424,34 @@ def read_config():
     return config
 
 
-def start_mock_github():
-    proc = subprocess.Popen([sys.executable, "-m", "uvicorn", "jupyter_releaser.mock_github:app"])
+def get_gh_object(dry_run=False, **kwargs):
+    """Get a properly configured GhAPi object"""
+    if dry_run:
+        ensure_mock_github()
+
+    return core.GhApi(**kwargs)
+
+
+def ensure_mock_github():
+    """Check for or start a mock github server."""
+    core.GH_HOST = MOCK_GITHUB_URL
+
+    # First see if it is already running.
+    try:
+        requests.get(MOCK_GITHUB_URL)
+        return
+    except requests.ConnectionError:
+        pass
+
+    # Next make sure we have the required libraries.
+    python = sys.executable.replace(os.sep, "/")
+    try:
+        import fastapi  # noqa
+        import univcorn  # type: ignore  # noqa
+    except ImportError:
+        run(f"{python} -m pip install fastapi uvicorn")
+
+    proc = subprocess.Popen([python, "-m", "uvicorn", "jupyter_releaser.mock_github:app"])
 
     try:
         ret = proc.wait(1)
@@ -431,6 +459,7 @@ def start_mock_github():
             raise ValueError(f"mock_github failed with {proc.returncode}")
     except subprocess.TimeoutExpired:
         pass
+    atexit.register(proc.kill)
 
     while 1:
         try:

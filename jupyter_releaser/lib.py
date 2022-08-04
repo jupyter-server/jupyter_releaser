@@ -14,7 +14,6 @@ from subprocess import CalledProcessError
 
 import requests
 import toml
-from ghapi.core import GhApi
 from packaging.version import parse as parse_version
 from pkginfo import SDist, Wheel
 
@@ -183,17 +182,14 @@ def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=F
 
     # Create the pull
     owner, repo_name = repo.split("/")
-    gh = GhApi(owner=owner, repo=repo_name, token=auth)
+    gh = util.get_gh_object(dry_run=dry_run, owner=owner, repo=repo_name, token=auth)
 
     base = branch
     head = pr_branch
     maintainer_can_modify = True
 
-    if dry_run:
-        util.log("Skipping pull request due to dry run")
-        return
-
-    util.run(f"git push origin {pr_branch}")
+    if not dry_run:
+        util.run(f"git push origin {pr_branch}")
 
     #  title, head, base, body, maintainer_can_modify, draft, issue
     pull = gh.pulls.create(title, head, base, body, maintainer_can_modify, False, None)
@@ -255,11 +251,8 @@ def draft_release(
         util.log(post_version_message.format(post_version=post_version))
         util.run(f'git commit -a -m "Bump to {post_version}"')
 
-    if dry_run:
-        return
-
     owner, repo_name = repo.split("/")
-    gh = GhApi(owner=owner, repo=repo_name, token=auth)
+    gh = util.get_gh_object(dry_run=dry_run, owner=owner, repo=repo_name, token=auth)
 
     # Remove draft releases over a day old
     if bool(os.environ.get("GITHUB_ACTIONS")):
@@ -273,7 +266,7 @@ def draft_release(
                 gh.repos.delete_release(release.id)
 
     remote_url = util.run("git config --get remote.origin.url")
-    if not os.path.exists(remote_url):
+    if not dry_run and not os.path.exists(remote_url):
         util.run(f"git push origin HEAD:{branch} --follow-tags --tags")
 
     util.log(f"Creating release for {version}")
@@ -292,14 +285,14 @@ def draft_release(
     util.actions_output("release_url", release.html_url)
 
 
-def delete_release(auth, release_url):
+def delete_release(auth, release_url, dry_run=False):
     """Delete a draft GitHub release by url to the release page"""
     match = re.match(util.RELEASE_HTML_PATTERN, release_url)
     match = match or re.match(util.RELEASE_API_PATTERN, release_url)
     if not match:
         raise ValueError(f"Release url is not valid: {release_url}")
 
-    gh = GhApi(owner=match["owner"], repo=match["repo"], token=auth)
+    gh = util.get_gh_object(dry_run=dry_run, owner=match["owner"], repo=match["repo"], token=auth)
     release = util.release_for_url(gh, release_url)
     for asset in release.assets:
         gh.repos.delete_release_asset(asset.id)
@@ -320,7 +313,8 @@ def extract_release(
     """Download and verify assets from a draft GitHub release"""
     match = parse_release_url(release_url)
     owner, repo = match["owner"], match["repo"]
-    gh = GhApi(owner=owner, repo=repo, token=auth)
+
+    gh = util.get_gh_object(dry_run=dry_run, owner=owner, repo=repo, token=auth)
     release = util.release_for_url(gh, release_url)
     branch = release.target_commitish
     assets = release.assets
@@ -494,14 +488,14 @@ def publish_assets(
         util.log("No files to upload")
 
 
-def publish_release(auth, release_url):
+def publish_release(auth, dry_run, release_url):
     """Publish GitHub release"""
     util.log(f"Publishing {release_url}")
 
     match = parse_release_url(release_url)
 
     # Take the release out of draft
-    gh = GhApi(owner=match["owner"], repo=match["repo"], token=auth)
+    gh = util.get_gh_object(dry_run=dry_run, owner=match["owner"], repo=match["repo"], token=auth)
     release = util.release_for_url(gh, release_url)
 
     release = gh.repos.update_release(
@@ -625,7 +619,8 @@ def forwardport_changelog(auth, ref, branch, repo, username, changelog_path, dry
     """Forwardport Changelog Entries to the Default Branch"""
     # Set up the git repo with the branch
     match = parse_release_url(release_url)
-    gh = GhApi(owner=match["owner"], repo=match["repo"], token=auth)
+
+    gh = util.get_gh_object(dry_run=dry_run, owner=match["owner"], repo=match["repo"], token=auth)
     release = util.release_for_url(gh, release_url)
     tag = release.tag_name
     source_branch = release.target_commitish

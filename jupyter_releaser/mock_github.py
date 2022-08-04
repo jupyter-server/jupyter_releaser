@@ -1,6 +1,7 @@
 import atexit
 import datetime
 import os
+import pickle
 import tempfile
 import uuid
 from typing import Dict, List
@@ -13,14 +14,34 @@ from jupyter_releaser.util import MOCK_GITHUB_URL
 
 app = FastAPI()
 
-static_dir = tempfile.TemporaryDirectory()
-atexit.register(static_dir.cleanup)
-app.mount("/static", StaticFiles(directory=static_dir.name), name="static")
+if "RH_GITHUB_STATIC_DIR" in os.environ:
+    static_dir = os.environ["RH_GITHUB_STATIC_DIR"]
+else:
+    static_dir_obj = tempfile.TemporaryDirectory()
+    atexit.register(static_dir_obj.cleanup)
+    static_dir = static_dir_obj.name
 
-releases: Dict[int, "Release"] = {}
-pulls: Dict[int, "PullRequest"] = {}
-release_ids_for_asset: Dict[int, int] = {}
-tag_refs: Dict[str, "Tag"] = {}
+app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
+
+def load_from_pickle(name):
+    source_file = os.path.join(static_dir, name + ".pkl")
+    if not os.path.exists(source_file):
+        return {}
+    with open(source_file, "rb") as fid:
+        return pickle.load(fid)
+
+
+def write_to_pickle(name, data):
+    source_file = os.path.join(static_dir, name + ".pkl")
+    with open(source_file, "wb") as fid:
+        pickle.dump(data, fid)
+
+
+releases: Dict[int, "Release"] = load_from_pickle("releases")
+pulls: Dict[int, "PullRequest"] = load_from_pickle("pulls")
+release_ids_for_asset: Dict[int, int] = load_from_pickle("release_ids_for_asset")
+tag_refs: Dict[str, "Tag"] = load_from_pickle("tag_refs")
 
 
 class Asset(BaseModel):
@@ -112,6 +133,7 @@ async def create_a_release(owner: str, repo: str, request: Request) -> Release:
         **data,
     )
     releases[model.id] = model
+    write_to_pickle("releases", releases)
     return model
 
 
@@ -122,6 +144,7 @@ async def update_a_release(owner: str, repo: str, release_id: int, request: Requ
     model = releases[release_id]
     for name, value in data.items():
         setattr(model, name, value)
+    write_to_pickle("releases", releases)
     return model
 
 
@@ -131,7 +154,7 @@ async def upload_a_release_asset(owner: str, repo: str, release_id: int, request
     model = releases[release_id]
     asset_id = uuid.uuid4().int
     name = request.query_params["name"]
-    with open(f"{static_dir.name}/{asset_id}", "wb") as fid:
+    with open(f"{static_dir}/{asset_id}", "wb") as fid:
         async for chunk in request.stream():
             fid.write(chunk)
     headers = request.headers
@@ -145,20 +168,26 @@ async def upload_a_release_asset(owner: str, repo: str, release_id: int, request
     )
     release_ids_for_asset[asset_id] = release_id
     model.assets.append(asset)
+    write_to_pickle("releases", releases)
+    write_to_pickle("release_ids_for_asset", release_ids_for_asset)
 
 
 @app.delete("/repos/{owner}/{repo}/releases/assets/{asset_id}")
 async def delete_a_release_asset(owner: str, repo: str, asset_id: int) -> None:
     """https://docs.github.com/en/rest/releases/assets#delete-a-release-asset"""
     release = releases[release_ids_for_asset[asset_id]]
-    os.remove(f"{static_dir.name}/{asset_id}")
+    os.remove(f"{static_dir}/{asset_id}")
     release.assets = [a for a in release.assets if a.id != asset_id]
+    del release_ids_for_asset[asset_id]
+    write_to_pickle("releases", releases)
+    write_to_pickle("release_ids_for_asset", release_ids_for_asset)
 
 
 @app.delete("/repos/{owner}/{repo}/releases/{release_id}")
 def delete_a_release(owner: str, repo: str, release_id: int) -> None:
     """https://docs.github.com/en/rest/releases/releases#delete-a-release"""
     del releases[release_id]
+    write_to_pickle("releases", releases)
 
 
 @app.get("/repos/{owner}/{repo}/pulls/{pull_number}")
@@ -166,6 +195,7 @@ def get_a_pull_request(owner: str, repo: str, pull_number: int) -> PullRequest:
     """https://docs.github.com/en/rest/pulls/pulls#get-a-pull-request"""
     if pull_number not in pulls:
         pulls[pull_number] = PullRequest()
+    write_to_pickle("pulls", pulls)
     return pulls[pull_number]
 
 
@@ -174,6 +204,7 @@ def create_a_pull_request(owner: str, repo: str) -> PullRequest:
     """https://docs.github.com/en/rest/pulls/pulls#create-a-pull-request"""
     pull = PullRequest()
     pulls[pull.number] = pull
+    write_to_pickle("releases", releases)
     return pull
 
 
@@ -188,6 +219,7 @@ def create_tag_ref(tag_ref: str, sha: str) -> None:
     """Create a remote tag ref object for testing"""
     tag = Tag(ref=f"refs/tags/{tag_ref}", object=TagObject(sha=sha))
     tag_refs[tag_ref] = tag
+    write_to_pickle("tag_refs", tag_refs)
 
 
 @app.get("/repos/{owner}/{repo}/git/matching-refs/tags/{tag_ref}")
