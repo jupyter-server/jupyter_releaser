@@ -34,6 +34,7 @@ def setup():
 
         if os.environ.get("RH_DRY_RUN", "").lower() == "true":
             static_dir = os.path.join(tempfile.gettempdir(), "gh_static")
+            os.makedirs(static_dir, exist_ok=True)
             os.environ["RH_GITHUB_STATIC_DIR"] = static_dir
             ensure_mock_github()
 
