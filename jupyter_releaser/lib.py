@@ -14,7 +14,6 @@ from subprocess import CalledProcessError
 
 import requests
 import toml
-from ghapi.core import GhApi
 from packaging.version import parse as parse_version
 from pkginfo import SDist, Wheel
 
@@ -181,13 +180,9 @@ def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=F
         util.log(str(e))
         return
 
-    # Ensure mock github is set up before using ghapi.
-    if dry_run:
-        util.ensure_mock_github()
-
     # Create the pull
     owner, repo_name = repo.split("/")
-    gh = GhApi(owner=owner, repo=repo_name, token=auth)
+    gh = util.get_gh_object(dry_run=dry_run, owner=owner, repo=repo_name, token=auth)
 
     base = branch
     head = pr_branch
@@ -256,12 +251,8 @@ def draft_release(
         util.log(post_version_message.format(post_version=post_version))
         util.run(f'git commit -a -m "Bump to {post_version}"')
 
-    # Ensure mock github is set up before using ghapi.
-    if dry_run:
-        util.ensure_mock_github()
-
     owner, repo_name = repo.split("/")
-    gh = GhApi(owner=owner, repo=repo_name, token=auth)
+    gh = util.get_gh_object(dry_run=dry_run, owner=owner, repo=repo_name, token=auth)
 
     # Remove draft releases over a day old
     if bool(os.environ.get("GITHUB_ACTIONS")):
@@ -294,14 +285,14 @@ def draft_release(
     util.actions_output("release_url", release.html_url)
 
 
-def delete_release(auth, release_url):
+def delete_release(auth, release_url, dry_run=False):
     """Delete a draft GitHub release by url to the release page"""
     match = re.match(util.RELEASE_HTML_PATTERN, release_url)
     match = match or re.match(util.RELEASE_API_PATTERN, release_url)
     if not match:
         raise ValueError(f"Release url is not valid: {release_url}")
 
-    gh = GhApi(owner=match["owner"], repo=match["repo"], token=auth)
+    gh = util.get_gh_object(dry_run=dry_run, owner=match["owner"], repo=match["repo"], token=auth)
     release = util.release_for_url(gh, release_url)
     for asset in release.assets:
         gh.repos.delete_release_asset(asset.id)
@@ -323,11 +314,7 @@ def extract_release(
     match = parse_release_url(release_url)
     owner, repo = match["owner"], match["repo"]
 
-    # Ensure mock github is set up before using ghapi.
-    if dry_run:
-        util.ensure_mock_github()
-
-    gh = GhApi(owner=owner, repo=repo, token=auth)
+    gh = util.get_gh_object(dry_run=dry_run, owner=owner, repo=repo, token=auth)
     release = util.release_for_url(gh, release_url)
     branch = release.target_commitish
     assets = release.assets
@@ -507,12 +494,8 @@ def publish_release(auth, dry_run, release_url):
 
     match = parse_release_url(release_url)
 
-    # Ensure mock github is set up before using ghapi.
-    if dry_run:
-        util.ensure_mock_github()
-
     # Take the release out of draft
-    gh = GhApi(owner=match["owner"], repo=match["repo"], token=auth)
+    gh = util.get_gh_object(dry_run=dry_run, owner=match["owner"], repo=match["repo"], token=auth)
     release = util.release_for_url(gh, release_url)
 
     release = gh.repos.update_release(
@@ -637,11 +620,7 @@ def forwardport_changelog(auth, ref, branch, repo, username, changelog_path, dry
     # Set up the git repo with the branch
     match = parse_release_url(release_url)
 
-    # Ensure mock github is set up before using ghapi.
-    if dry_run:
-        util.ensure_mock_github()
-
-    gh = GhApi(owner=match["owner"], repo=match["repo"], token=auth)
+    gh = util.get_gh_object(dry_run=dry_run, owner=match["owner"], repo=match["repo"], token=auth)
     release = util.release_for_url(gh, release_url)
     tag = release.tag_name
     source_branch = release.target_commitish

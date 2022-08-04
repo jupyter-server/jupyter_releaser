@@ -424,6 +424,13 @@ def read_config():
     return config
 
 
+def get_gh_object(dry_run=False, **kwargs):
+    if dry_run:
+        ensure_mock_github()
+
+    return core.GhApi(**kwargs)
+
+
 def ensure_mock_github():
     """Check for or start a mock github server."""
     core.GH_HOST = MOCK_GITHUB_URL

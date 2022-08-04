@@ -13,7 +13,7 @@ END_MARKER = "<!-- <END NEW CHANGELOG ENTRY> -->"
 PR_PREFIX = "Automated Changelog Entry"
 
 
-def format_pr_entry(target, number, auth=None):
+def format_pr_entry(target, number, auth=None, dry_run=False):
     """Format a PR entry in the style used by our changelogs.
 
     Parameters
@@ -24,6 +24,8 @@ def format_pr_entry(target, number, auth=None):
         The PR number to resolve
     auth : str, optional
         The GitHub authorization token
+    dry_run: bool, optional
+        Whether this is a dry run.
 
     Returns
     -------
@@ -31,7 +33,7 @@ def format_pr_entry(target, number, auth=None):
         A formatted PR entry
     """
     owner, repo = target.split("/")
-    gh = GhApi(owner=owner, repo=repo, token=auth)
+    gh = util.get_gh_object(dry_run=dry_run, owner=owner, repo=repo, token=auth)
     pull = gh.pulls.get(number)
     title = pull.title
     url = pull.html_url
@@ -51,6 +53,7 @@ def get_version_entry(
     until=None,
     auth=None,
     resolve_backports=False,
+    dry_run=False,
 ):
     """Get a changelog for the changes since the last tag on the given branch.
 
@@ -74,6 +77,8 @@ def get_version_entry(
         The GitHub authorization token
     resolve_backports: bool, optional
         Whether to resolve backports to the original PR
+    dry_run: bool, optional
+        Whether this is a dry run.
 
     Returns
     -------
@@ -120,7 +125,7 @@ def get_version_entry(
         # Look for a backport, either manual or automatic.
         match = re.search(r"Backport PR #(\d+) on branch", line)
         if match:
-            entry[ind] = format_pr_entry(repo, match.groups()[0])
+            entry[ind] = format_pr_entry(repo, match.groups()[0], dry_run=dry_run)
 
     # Remove github actions PRs
     gh_actions = "[@github-actions](https://github.com/github-actions)"

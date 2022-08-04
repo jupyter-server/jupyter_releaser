@@ -578,11 +578,12 @@ def draft_release(
 
 @main.command()
 @add_options(auth_options)
+@add_options(dry_run_options)
 @click.argument("release-url", nargs=1)
 @use_checkout_dir()
-def delete_release(auth, release_url):
+def delete_release(auth, dry_run, release_url):
     """Delete a draft GitHub release by url to the release page"""
-    lib.delete_release(auth, release_url)
+    lib.delete_release(auth, release_url, dry_run)
 
 
 @main.command()

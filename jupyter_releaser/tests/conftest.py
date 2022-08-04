@@ -6,12 +6,11 @@ import os.path as osp
 from pathlib import Path
 
 from click.testing import CliRunner
-from ghapi import core
 from pytest import fixture
 
 from jupyter_releaser import cli, util
 from jupyter_releaser.tests import util as testutil
-from jupyter_releaser.util import MOCK_GITHUB_URL, ensure_mock_github, run
+from jupyter_releaser.util import ensure_mock_github, run
 
 
 @fixture(autouse=True)
