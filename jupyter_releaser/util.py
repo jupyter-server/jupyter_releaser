@@ -432,6 +432,30 @@ def get_gh_object(dry_run=False, **kwargs):
     return core.GhApi(**kwargs)
 
 
+_local_remote = None
+
+
+def get_remote_name(dry_run):
+    """Get the appropriate remote git name."""
+    global _local_remote
+    if not dry_run:
+        return "origin"
+
+    if _local_remote:
+        try:
+            run(f"git remote add test {_local_remote}")
+        except Exception:
+            pass
+        return "test"
+
+    tfile = tempfile.NamedTemporaryFile(suffix=".git")
+    tfile.close()
+    _local_remote = tfile.name.replace(os.sep, "/")
+    run(f"git init --bare {_local_remote}")
+    run(f"git remote add test {_local_remote}")
+    return "test"
+
+
 def ensure_mock_github():
     """Check for or start a mock github server."""
     core.GH_HOST = MOCK_GITHUB_URL
