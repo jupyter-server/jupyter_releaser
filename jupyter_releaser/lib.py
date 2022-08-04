@@ -265,7 +265,9 @@ def draft_release(
                 gh.repos.delete_release(release.id)
 
     remote_name = util.get_remote_name(dry_run)
-    util.run(f"git push {remote_name} HEAD:{branch} --follow-tags --tags")
+    remote_url = util.run(f"git config --get remote.{remote_name}.url")
+    if not os.path.exists(remote_url):
+        util.run(f"git push {remote_name} HEAD:{branch} --follow-tags --tags")
 
     util.log(f"Creating release for {version}")
     util.log(f"With assets: {assets}")
