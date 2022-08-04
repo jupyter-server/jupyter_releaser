@@ -266,7 +266,7 @@ def draft_release(
                 gh.repos.delete_release(release.id)
 
     remote_url = util.run("git config --get remote.origin.url")
-    if not os.path.exists(remote_url):
+    if not dry_run and not os.path.exists(remote_url):
         util.run(f"git push origin HEAD:{branch} --follow-tags --tags")
 
     util.log(f"Creating release for {version}")
