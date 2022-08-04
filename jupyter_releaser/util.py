@@ -425,6 +425,7 @@ def read_config():
 
 
 def get_gh_object(dry_run=False, **kwargs):
+    """Get a properly configured GhAPi object"""
     if dry_run:
         ensure_mock_github()
 
