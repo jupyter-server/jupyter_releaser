@@ -190,10 +190,9 @@ def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=F
     maintainer_can_modify = True
 
     if dry_run:
-        util.log("Skipping pull request due to dry run")
-        return
-
-    util.run(f"git push origin {pr_branch}")
+        util.ensure_mock_github()
+    else:
+        util.run(f"git push origin {pr_branch}")
 
     #  title, head, base, body, maintainer_can_modify, draft, issue
     pull = gh.pulls.create(title, head, base, body, maintainer_can_modify, False, None)
@@ -256,7 +255,7 @@ def draft_release(
         util.run(f'git commit -a -m "Bump to {post_version}"')
 
     if dry_run:
-        return
+        util.ensure_mock_github()
 
     owner, repo_name = repo.split("/")
     gh = GhApi(owner=owner, repo=repo_name, token=auth)

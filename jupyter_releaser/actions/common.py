@@ -1,6 +1,7 @@
 import os
 from contextlib import contextmanager
 
+from jupyter_releaser.util import ensure_mock_github
 from jupyter_releaser.util import run as _run
 
 
@@ -29,6 +30,9 @@ def setup():
                 ref = os.environ["GITHUB_REF"]
                 print(f"Using GITHUB_REF: {ref}")
                 os.environ["RH_BRANCH"] = "/".join(ref.split("/")[2:])
+
+        if os.environ.get("RH_DRY_RUN", "").lower() == "true":
+            ensure_mock_github()
 
 
 def run_action(target, *args, **kwargs):

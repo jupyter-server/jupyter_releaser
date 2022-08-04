@@ -13,9 +13,14 @@ from jupyter_releaser.util import MOCK_GITHUB_URL
 
 app = FastAPI()
 
-static_dir = tempfile.TemporaryDirectory()
-atexit.register(static_dir.cleanup)
-app.mount("/static", StaticFiles(directory=static_dir.name), name="static")
+if "RH_GITHUB_STATIC_DIR" in os.environ:
+    static_dir = os.environ["RH_GITHUB_STATIC_DIR"]
+else:
+    static_dir = tempfile.TemporaryDirectory()
+    atexit.register(static_dir.cleanup)
+    static_dir = static_dir.name
+
+app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 releases: Dict[int, "Release"] = {}
 pulls: Dict[int, "PullRequest"] = {}

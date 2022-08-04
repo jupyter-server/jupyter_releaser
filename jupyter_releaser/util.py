@@ -2,6 +2,7 @@
 # Distributed under the terms of the Modified BSD License.
 # Of the form:
 # https://github.com/{owner}/{repo}/releases/tag/{tag}
+import atexit
 import hashlib
 import json
 import os
@@ -422,7 +423,21 @@ def read_config():
     return config
 
 
-def start_mock_github():
+def ensure_mock_github():
+    """Check for or start a mock github server."""
+    # First see if it is already running.
+    try:
+        requests.get(MOCK_GITHUB_URL)
+    except requests.ConnectionError:
+        pass
+
+    # Next make sure we have the required libraries.
+    try:
+        import fastapi  # noqa
+        import univcorn  # noqa
+    except ImportError:
+        run(f"{sys.executable} -m pip install fastapi uvicorn")
+
     proc = subprocess.Popen([sys.executable, "-m", "uvicorn", "jupyter_releaser.mock_github:app"])
 
     try:
@@ -431,6 +446,7 @@ def start_mock_github():
             raise ValueError(f"mock_github failed with {proc.returncode}")
     except subprocess.TimeoutExpired:
         pass
+    atexit.register(proc.kill)
 
     while 1:
         try:

@@ -11,7 +11,7 @@ from pytest import fixture
 
 from jupyter_releaser import cli, util
 from jupyter_releaser.tests import util as testutil
-from jupyter_releaser.util import MOCK_GITHUB_URL, run, start_mock_github
+from jupyter_releaser.util import MOCK_GITHUB_URL, ensure_mock_github, run
 
 
 @fixture(autouse=True)
@@ -191,7 +191,7 @@ def build_mock(mocker):
 
 @fixture
 def mock_github():
-    proc = start_mock_github()
+    proc = ensure_mock_github()
     yield proc
 
     proc.kill()
