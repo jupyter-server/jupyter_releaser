@@ -22,6 +22,7 @@ from subprocess import PIPE, CalledProcessError, check_output
 
 import requests
 import toml
+from ghapi import core
 from importlib_resources import files
 from jsonschema import Draft4Validator as Validator
 from packaging.version import Version
@@ -425,6 +426,8 @@ def read_config():
 
 def ensure_mock_github():
     """Check for or start a mock github server."""
+    core.GH_HOST = MOCK_GITHUB_URL
+
     # First see if it is already running.
     try:
         requests.get(MOCK_GITHUB_URL)

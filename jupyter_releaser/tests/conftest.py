@@ -26,7 +26,6 @@ def mock_env(mocker):
                 del env[key]
 
     mocker.patch.dict(os.environ, env, clear=True)
-    core.GH_HOST = MOCK_GITHUB_URL
 
     try:
         run("git config --global user.name")
