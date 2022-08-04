@@ -164,14 +164,13 @@ def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=F
     # Make a new branch with a uuid suffix
     pr_branch = f"changelog-{uuid.uuid1().hex}"
 
-    if not dry_run:
-        dirty = util.run("git --no-pager diff --stat") != ""
-        if dirty:
-            util.run("git stash")
-        util.run(f"{util.GIT_FETCH_CMD} {branch}")
-        util.run(f"git checkout -b {pr_branch} origin/{branch}")
-        if dirty:
-            util.run("git stash apply")
+    dirty = util.run("git --no-pager diff --stat") != ""
+    if dirty:
+        util.run("git stash")
+    util.run(f"{util.GIT_FETCH_CMD} {branch}")
+    util.run(f"git checkout -b {pr_branch} origin/{branch}")
+    if dirty:
+        util.run("git stash apply")
 
     # Add a commit with the message
     try:
@@ -188,8 +187,8 @@ def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=F
     head = pr_branch
     maintainer_can_modify = True
 
-    if not dry_run:
-        util.run(f"git push origin {pr_branch}")
+    remote_name = util.get_remote_name(dry_run)
+    util.run(f"git push {remote_name} {pr_branch}")
 
     #  title, head, base, body, maintainer_can_modify, draft, issue
     pull = gh.pulls.create(title, head, base, body, maintainer_can_modify, False, None)
@@ -265,9 +264,8 @@ def draft_release(
             if delta.days > 0:
                 gh.repos.delete_release(release.id)
 
-    remote_url = util.run("git config --get remote.origin.url")
-    if not dry_run and not os.path.exists(remote_url):
-        util.run(f"git push origin HEAD:{branch} --follow-tags --tags")
+    remote_name = util.get_remote_name(dry_run)
+    util.run(f"git push {remote_name} HEAD:{branch} --follow-tags --tags")
 
     util.log(f"Creating release for {version}")
     util.log(f"With assets: {assets}")
@@ -512,7 +510,7 @@ def publish_release(auth, dry_run, release_url):
     util.actions_output("release_url", release.html_url)
 
 
-def prep_git(ref, branch, repo, auth, username, url):
+def prep_git(ref, branch, repo, auth, username, url, dry_run):
     """Set up git"""
     repo = repo or util.get_repo()
 
