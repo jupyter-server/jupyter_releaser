@@ -181,6 +181,10 @@ def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=F
         util.log(str(e))
         return
 
+    # Ensure mock github is set up before using ghapi.
+    if dry_run:
+        util.ensure_mock_github()
+
     # Create the pull
     owner, repo_name = repo.split("/")
     gh = GhApi(owner=owner, repo=repo_name, token=auth)
@@ -189,9 +193,7 @@ def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=F
     head = pr_branch
     maintainer_can_modify = True
 
-    if dry_run:
-        util.ensure_mock_github()
-    else:
+    if not dry_run:
         util.run(f"git push origin {pr_branch}")
 
     #  title, head, base, body, maintainer_can_modify, draft, issue
@@ -254,6 +256,7 @@ def draft_release(
         util.log(post_version_message.format(post_version=post_version))
         util.run(f'git commit -a -m "Bump to {post_version}"')
 
+    # Ensure mock github is set up before using ghapi.
     if dry_run:
         util.ensure_mock_github()
 
@@ -319,6 +322,11 @@ def extract_release(
     """Download and verify assets from a draft GitHub release"""
     match = parse_release_url(release_url)
     owner, repo = match["owner"], match["repo"]
+
+    # Ensure mock github is set up before using ghapi.
+    if dry_run:
+        util.ensure_mock_github()
+
     gh = GhApi(owner=owner, repo=repo, token=auth)
     release = util.release_for_url(gh, release_url)
     branch = release.target_commitish
@@ -493,11 +501,15 @@ def publish_assets(
         util.log("No files to upload")
 
 
-def publish_release(auth, release_url):
+def publish_release(auth, dry_run, release_url):
     """Publish GitHub release"""
     util.log(f"Publishing {release_url}")
 
     match = parse_release_url(release_url)
+
+    # Ensure mock github is set up before using ghapi.
+    if dry_run:
+        util.ensure_mock_github()
 
     # Take the release out of draft
     gh = GhApi(owner=match["owner"], repo=match["repo"], token=auth)
@@ -624,6 +636,11 @@ def forwardport_changelog(auth, ref, branch, repo, username, changelog_path, dry
     """Forwardport Changelog Entries to the Default Branch"""
     # Set up the git repo with the branch
     match = parse_release_url(release_url)
+
+    # Ensure mock github is set up before using ghapi.
+    if dry_run:
+        util.ensure_mock_github()
+
     gh = GhApi(owner=match["owner"], repo=match["repo"], token=auth)
     release = util.release_for_url(gh, release_url)
     tag = release.tag_name

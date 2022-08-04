@@ -675,11 +675,12 @@ def publish_assets(
 
 @main.command()
 @add_options(auth_options)
+@add_options(dry_run_options)
 @click.argument("release-url", nargs=1)
 @use_checkout_dir()
-def publish_release(auth, release_url):
+def publish_release(auth, dry_run, release_url):
     """Publish GitHub release"""
-    lib.publish_release(auth, release_url)
+    lib.publish_release(auth, dry_run, release_url)
 
 
 @main.command()
