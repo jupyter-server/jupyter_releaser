@@ -510,7 +510,7 @@ def publish_release(auth, dry_run, release_url):
     util.actions_output("release_url", release.html_url)
 
 
-def prep_git(ref, branch, repo, auth, username, url, dry_run):
+def prep_git(ref, branch, repo, auth, username, url):
     """Set up git"""
     repo = repo or util.get_repo()
 
