@@ -443,13 +443,14 @@ def ensure_mock_github():
         pass
 
     # Next make sure we have the required libraries.
+    python = sys.executable.replace(os.sep, "/")
     try:
         import fastapi  # noqa
         import univcorn  # type: ignore  # noqa
     except ImportError:
-        run(f"{sys.executable} -m pip install fastapi uvicorn")
+        run(f"{python} -m pip install fastapi uvicorn")
 
-    proc = subprocess.Popen([sys.executable, "-m", "uvicorn", "jupyter_releaser.mock_github:app"])
+    proc = subprocess.Popen([python, "-m", "uvicorn", "jupyter_releaser.mock_github:app"])
 
     try:
         ret = proc.wait(1)
