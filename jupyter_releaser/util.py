@@ -445,7 +445,7 @@ def ensure_mock_github():
     # Next make sure we have the required libraries.
     try:
         import fastapi  # noqa
-        import univcorn  # noqa
+        import univcorn  # type: ignore  # noqa
     except ImportError:
         run(f"{sys.executable} -m pip install fastapi uvicorn")
 

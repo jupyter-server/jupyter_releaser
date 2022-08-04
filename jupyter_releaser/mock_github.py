@@ -17,9 +17,9 @@ app = FastAPI()
 if "RH_GITHUB_STATIC_DIR" in os.environ:
     static_dir = os.environ["RH_GITHUB_STATIC_DIR"]
 else:
-    static_dir = tempfile.TemporaryDirectory()
-    atexit.register(static_dir.cleanup)
-    static_dir = static_dir.name
+    static_dir_obj = tempfile.TemporaryDirectory()
+    atexit.register(static_dir_obj.cleanup)
+    static_dir = static_dir_obj.name
 
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
 

@@ -3,7 +3,6 @@
 import re
 from pathlib import Path
 
-from ghapi.core import GhApi
 from github_activity import generate_activity_md
 
 from jupyter_releaser import util

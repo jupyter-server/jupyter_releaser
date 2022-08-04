@@ -192,5 +192,6 @@ def mock_github():
     proc = ensure_mock_github()
     yield proc
 
-    proc.kill()
-    proc.wait()
+    if proc:
+        proc.kill()
+        proc.wait()
