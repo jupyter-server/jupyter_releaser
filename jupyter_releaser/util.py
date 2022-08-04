@@ -428,6 +428,7 @@ def ensure_mock_github():
     # First see if it is already running.
     try:
         requests.get(MOCK_GITHUB_URL)
+        return
     except requests.ConnectionError:
         pass
 
