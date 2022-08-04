@@ -1,4 +1,5 @@
 import os
+import tempfile
 from contextlib import contextmanager
 
 from jupyter_releaser.util import ensure_mock_github
@@ -32,6 +33,8 @@ def setup():
                 os.environ["RH_BRANCH"] = "/".join(ref.split("/")[2:])
 
         if os.environ.get("RH_DRY_RUN", "").lower() == "true":
+            static_dir = os.path.join(tempfile.gettempdir(), "gh_static")
+            os.environ["RH_GITHUB_STATIC_DIR"] = static_dir
             ensure_mock_github()
 
 
