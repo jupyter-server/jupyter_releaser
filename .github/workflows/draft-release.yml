@@ -59,3 +59,6 @@ jobs:
         run: |
           echo "Run the "Publish Release" Workflow with Release Url:"
           echo ${{ steps.draft-release.outputs.release_url }}
+          echo "## Next Step" >> $GITHUB_STEP_SUMMARY
+          echo "Run the "Publish Release" Workflow with Release Url:" >> $GITHUB_STEP_SUMMARY
+          echo ${{ steps.draft-release.outputs.release_url }} >> $GITHUB_STEP_SUMMARY

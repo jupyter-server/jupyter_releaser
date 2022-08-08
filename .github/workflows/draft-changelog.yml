@@ -47,3 +47,5 @@ jobs:
       - name: "** Next Step **"
         run: |
           echo "Review PR: ${{ steps.draft-changelog.outputs.pr_url }}"
+          echo "## Next Step" >> $GITHUB_STEP_SUMMARY
+          echo "Review PR: ${{ steps.draft-changelog.outputs.pr_url }}" >> $GITHUB_STEP_SUMMARY
