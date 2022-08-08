@@ -35,7 +35,12 @@ jobs:
         run: |
           echo "Verify the final release"
           echo ${{ steps.publish-release.outputs.release_url }}
+          echo "## Next Step" >> $GITHUB_STEP_SUMMARY
+          echo "Verify the final release" >> $GITHUB_STEP_SUMMARY
+          echo ${{ steps.publish-release.outputs.release_url }} >> $GITHUB_STEP_SUMMARY
           if [ ! -z "${{ steps.publish-release.outputs.pr_url }}" ]; then
              echo "Merge the forwardport PR"
              echo ${{ steps.publish-release.outputs.pr_url }}
+             echo "Merge the forwardport PR" >> $GITHUB_STEP_SUMMARY
+             echo ${{ steps.publish-release.outputs.pr_url }} >> $GITHUB_STEP_SUMMARY
           fi
