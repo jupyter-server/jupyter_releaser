@@ -2,6 +2,33 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.23.0
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...1c4a1e67902b050d3af47510bfb53d697d78d3da))
+
+### Enhancements made
+
+- Highlight next step using GitHub step summary [#357](https://github.com/jupyter-server/jupyter_releaser/pull/357) ([@fcollonval](https://github.com/fcollonval))
+- Use bare git for dry run [#356](https://github.com/jupyter-server/jupyter_releaser/pull/356) ([@blink1073](https://github.com/blink1073))
+- Use mock github when in dry run mode [#355](https://github.com/jupyter-server/jupyter_releaser/pull/355) ([@blink1073](https://github.com/blink1073))
+- Add mock github api [#352](https://github.com/jupyter-server/jupyter_releaser/pull/352) ([@blink1073](https://github.com/blink1073))
+
+### Maintenance and upkeep improvements
+
+- Fix flake8 v5 compat [#354](https://github.com/jupyter-server/jupyter_releaser/pull/354) ([@blink1073](https://github.com/blink1073))
+- [pre-commit.ci] pre-commit autoupdate [#353](https://github.com/jupyter-server/jupyter_releaser/pull/353) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+- [pre-commit.ci] pre-commit autoupdate [#351](https://github.com/jupyter-server/jupyter_releaser/pull/351) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+- Use version template in pyproject [#350](https://github.com/jupyter-server/jupyter_releaser/pull/350) ([@blink1073](https://github.com/blink1073))
+- [pre-commit.ci] pre-commit autoupdate [#349](https://github.com/jupyter-server/jupyter_releaser/pull/349) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-07-11&to=2022-08-08&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-07-11..2022-08-08&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-07-11..2022-08-08&type=Issues) | [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2022-07-11..2022-08-08&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2022-07-11..2022-08-08&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.22.5
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...915239416cf90ef93e136553bc87aa38e5f31a96))
@@ -15,8 +42,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-07-08&to=2022-07-11&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-07-08..2022-07-11&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-07-08..2022-07-11&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.22.4
 

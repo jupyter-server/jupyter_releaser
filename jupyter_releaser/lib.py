@@ -163,14 +163,16 @@ def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=F
 
     # Make a new branch with a uuid suffix
     pr_branch = f"changelog-{uuid.uuid1().hex}"
-
-    dirty = util.run("git --no-pager diff --stat") != ""
+    util.run(f"{util.GIT_FETCH_CMD} {branch}", echo=True)
+    dirty = False
+    try:
+        util.run("git stash", echo=True)
+        dirty = True
+    except Exception:
+        pass
+    util.run(f"git checkout -b {pr_branch} origin/{branch}", echo=True)
     if dirty:
-        util.run("git stash")
-    util.run(f"{util.GIT_FETCH_CMD} {branch}")
-    util.run(f"git checkout -b {pr_branch} origin/{branch}")
-    if dirty:
-        util.run("git stash apply")
+        util.run("git merge --squash --strategy-option=theirs stash", echo=True)
 
     # Add a commit with the message
     try:
@@ -188,7 +190,7 @@ def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=F
     maintainer_can_modify = True
 
     remote_name = util.get_remote_name(dry_run)
-    util.run(f"git push {remote_name} {pr_branch}")
+    util.run(f"git push {remote_name} {pr_branch}", echo=True)
 
     #  title, head, base, body, maintainer_can_modify, draft, issue
     pull = gh.pulls.create(title, head, base, body, maintainer_can_modify, False, None)
