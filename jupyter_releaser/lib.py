@@ -168,6 +168,9 @@ def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=F
     if dirty:
         util.run("git stash", echo=True)
     util.run(f"{util.GIT_FETCH_CMD} {branch}", echo=True)
+    dirty = util.run("git --no-pager diff --stat", echo=True) != ""
+    if dirty:
+        util.run("git stash", echo=True)
     util.run(f"git checkout -b {pr_branch} origin/{branch}", echo=True)
     if dirty:
         util.run("git stash apply", echo=True)
