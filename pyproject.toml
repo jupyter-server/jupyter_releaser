@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "jupyter_releaser"
-version = "0.22.5"
+version = "0.23.0"
 description = "Jupyter Releaser for Python and/or npm packages."
 license = {file = "LICENSE"}
 authors = [{name = "Jupyter Development Team", email = "jupyter@googlegroups.com"}]
@@ -60,7 +60,7 @@ test = [
 jupyter-releaser = "jupyter_releaser.cli:main"
 
 [tool.tbump.version]
-current = "0.22.5"
+current = "0.23.0"
 regex = '''
   (?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)
   ((?P<channel>a|b|rc|.dev)(?P<release>\d+))?
