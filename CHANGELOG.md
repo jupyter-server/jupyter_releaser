@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.23.1
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...87b32ed3dd7448bd2dd915a8babd65eb2749f017))
+
+### Bugs fixed
+
+- Revert to using stash apply instead of merge [#360](https://github.com/jupyter-server/jupyter_releaser/pull/360) ([@fcollonval](https://github.com/fcollonval))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-08-09&to=2022-08-10&type=c))
+
+[@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2022-08-09..2022-08-10&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.23.0
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...1c4a1e67902b050d3af47510bfb53d697d78d3da))
@@ -26,8 +42,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-07-11&to=2022-08-08&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-07-11..2022-08-08&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-07-11..2022-08-08&type=Issues) | [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2022-07-11..2022-08-08&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2022-07-11..2022-08-08&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.22.5
 
