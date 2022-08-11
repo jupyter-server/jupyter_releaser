@@ -15,7 +15,6 @@ import pytest
 from jupyter_releaser import changelog, util
 from jupyter_releaser.tests.util import (
     CHANGELOG_ENTRY,
-    MANIFEST_TEMPLATE,
     PR_ENTRY,
     VERSION_SPEC,
     create_draft_release,
