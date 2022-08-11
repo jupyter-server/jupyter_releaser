@@ -1,14 +1,17 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
+import json
 import os
 import os.path as osp
 import re
 import shutil
 import sys
+import tempfile
 import typing as t
 import uuid
 from datetime import datetime
 from glob import glob
+from io import StringIO
 from pathlib import Path
 from subprocess import CalledProcessError
 
@@ -106,12 +109,24 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
 
 
 def draft_changelog(
-    version_spec, branch, repo, since, since_last_stable, auth, changelog_path, dry_run
+    version_spec,
+    branch,
+    repo,
+    since,
+    since_last_stable,
+    auth,
+    changelog_path,
+    dry_run,
+    post_version_spec,
+    post_version_message,
 ):
     """Create a changelog entry PR"""
     repo = repo or util.get_repo()
     branch = branch or util.get_branch()
     version = util.get_version()
+    prerelease = util.is_prerelease(version)
+
+    current_sha = util.run("git rev-parse HEAD")
 
     # Check for multiple versions
     npm_versions = None
@@ -137,6 +152,33 @@ def draft_changelog(
     commit_message = f'git commit -a -m "{title}"'
     body = title
 
+    util.log(f"Creating draft GitHub release for {version}")
+    owner, repo_name = repo.split("/")
+    gh = util.get_gh_object(
+        dry_run=dry_run, owner=owner, repo=repo_name, token=auth, current_sha=current_sha
+    )
+
+    data = dict(
+        version_spec=version_spec,
+        branch=branch,
+        repo=repo,
+        since=since,
+        since_last_stable=since_last_stable,
+        version=version,
+        post_version_spec=post_version_spec,
+        post_version_message=post_version_message,
+    )
+    with tempfile.TemporaryDirectory() as d:
+        metadata_path = Path(d) / "metadata.json"
+        with open(metadata_path, "w") as fid:
+            json.dump(data, fid)
+
+        release = gh.create_release(
+            f"v{version}", branch, f"v{version}", body, True, prerelease, files=[metadata_path]
+        )
+    owner, repo_name = repo.split("/")
+    gh = util.get_gh_object(dry_run=dry_run, owner=owner, repo=repo_name, token=auth)
+
     if npm_versions:
         body += f"\n```{npm_versions}\n```"
 
@@ -144,9 +186,7 @@ def draft_changelog(
     body += f"""
 | Input  | Value |
 | ------------- | ------------- |
-| Target | {repo}  |
-| Branch  | {branch}  |
-| Version Spec | {version_spec} |
+| Draft Release | {release.html_url}  |
 """
     if since_last_stable:
         body += "| Since Last Stable | true |"
@@ -154,7 +194,21 @@ def draft_changelog(
         body += f"| Since | {since} |"
     util.log(body)
 
+    # Remove draft releases over a day old
+    if bool(os.environ.get("GITHUB_ACTIONS")):
+        for release in gh.repos.list_releases():
+            if str(release.draft).lower() == "false":
+                continue
+            created = release.created_at
+            d_created = datetime.strptime(created, r"%Y-%m-%dT%H:%M:%SZ")
+            delta = datetime.utcnow() - d_created
+            if delta.days > 0:
+                gh.repos.delete_release(release.id)
+
     make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=dry_run)
+
+    # Set the GitHub action output for the release url.
+    util.actions_output("release_url", release.html_url)
 
 
 def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=False):
@@ -231,6 +285,7 @@ def draft_release(
     version_cmd,
     dist_dir,
     dry_run,
+    release_url,
     post_version_spec,
     post_version_message,
     assets,
@@ -239,11 +294,12 @@ def draft_release(
     branch = branch or util.get_branch()
     repo = repo or util.get_repo()
     assets = assets or glob(f"{dist_dir}/*")
-    version = util.get_version()
     body = changelog.extract_current(changelog_path)
-    prerelease = util.is_prerelease(version)
 
-    # Bump to post version if given
+    match = util.parse_release_url(release_url)
+    owner, repo = match["owner"], match["repo"]
+
+    # Bump to post version if given.
     if post_version_spec:
         post_version = bump_version(
             post_version_spec, version_cmd=version_cmd, changelog_path=changelog_path
@@ -253,33 +309,27 @@ def draft_release(
 
     owner, repo_name = repo.split("/")
     gh = util.get_gh_object(dry_run=dry_run, owner=owner, repo=repo_name, token=auth)
-
-    # Remove draft releases over a day old
-    if bool(os.environ.get("GITHUB_ACTIONS")):
-        for release in gh.repos.list_releases():
-            if str(release.draft).lower() == "false":
-                continue
-            created = release.created_at
-            d_created = datetime.strptime(created, r"%Y-%m-%dT%H:%M:%SZ")
-            delta = datetime.utcnow() - d_created
-            if delta.days > 0:
-                gh.repos.delete_release(release.id)
+    release = util.release_for_url(gh, release_url)
 
     remote_name = util.get_remote_name(dry_run)
     remote_url = util.run(f"git config --get remote.{remote_name}.url")
     if not os.path.exists(remote_url):
         util.run(f"git push {remote_name} HEAD:{branch} --follow-tags --tags")
 
-    util.log(f"Creating release for {version}")
-    util.log(f"With assets: {assets}")
-    release = gh.create_release(
-        f"v{version}",
-        branch,
-        f"v{version}",
+    # Upload the assets to the draft release.
+    util.log(f"Uploading assets: {assets}")
+    for fpath in assets:
+        gh.upload(release_url, fpath)
+
+    # Update the release itself.
+    gh.repos.update_release(
+        release.id,
+        release.tag_name,
+        release.target_commitish,
+        release.name,
         body,
-        True,
-        prerelease,
-        files=assets,
+        False,
+        release.prerelease,
     )
 
     # Set the GitHub action output
@@ -402,15 +452,6 @@ def extract_release(
             raise ValueError(f"Invalid file {asset.name}")
 
     os.chdir(orig_dir)
-
-
-def parse_release_url(release_url):
-    """Parse a release url into a regex match"""
-    match = re.match(util.RELEASE_HTML_PATTERN, release_url)
-    match = match or re.match(util.RELEASE_API_PATTERN, release_url)
-    if not match:
-        raise ValueError(f"Release url is not valid: {release_url}")
-    return match
 
 
 def publish_assets(

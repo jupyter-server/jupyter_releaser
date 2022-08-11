@@ -4,27 +4,14 @@ on:
     inputs:
       target:
         description: "The owner/repo GitHub target"
-        required: true
-      branch:
-        description: "The branch to target (defaults to default branch)"
         required: false
-      version_spec:
-        description: "New Version Spec"
-        default: "next"
+      release_url:
+        description: "The URL of the draft GitHub release"
         required: false
-      post_version_spec:
-        description: "Post Version Specifier"
-        required: false
-      since:
-        description: "Use PRs with activity since this date or git reference"
-        required: false
-      since_last_stable:
-        description: "Use PRs with activity since the last stable git tag"
-        required: false
-        type: boolean
       steps_to_skip:
-        description: "Comma separated list of steps to skip"
+        description: "comma-separated list of steps to skip"
         required: false
+
 jobs:
   draft_release:
     runs-on: ubuntu-latest
@@ -32,9 +19,6 @@ jobs:
       fail-fast: true
       matrix:
         python-version: ["3.10"]
-    env:
-      VERSION_SPEC: ${{ github.event.inputs.version_spec }}
-      POST_VERSION_SPEC: ${{ github.event.inputs.post_version_spec }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -48,11 +32,7 @@ jobs:
         with:
           token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
           target: ${{ github.event.inputs.target }}
-          branch: ${{ github.event.inputs.branch }}
-          version_spec: ${{ github.event.inputs.version_spec }}
-          post_version_spec: ${{ github.event.inputs.post_version_spec }}
-          since: ${{ github.event.inputs.since }}
-          since_last_stable: ${{ github.event.inputs.since_last_stable }}
+          release_url: ${{ github.event.inputs.release_url }}
           steps_to_skip: ${{ github.event.inputs.steps_to_skip }}
 
       - name: "** Next Step **"

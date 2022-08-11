@@ -4,15 +4,18 @@ inputs:
   token:
     description: "GitHub access token"
     required: true
+  target:
+    description: "The owner/repo GitHub target"
+    required: false
   release_url:
     description: "The full url to the GitHub release page"
-    required: true
+    required: false
   dry_run:
     description: "If set, do not push permanent changes"
     default: "false"
     required: false
   steps_to_skip:
-    description: Comma separated list of steps to skip
+    description: "Comma separated list of steps to skip"
     required: false
 
 outputs:
@@ -36,8 +39,9 @@ runs:
 
         # Set up env variables
         export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
+        export RH_REPOSITORY=${{ inputs.target }}
         export RH_DRY_RUN=${{ inputs.dry_run }}
-        export release_url=${{ inputs.release_url }}
+        export RH_RELEASE_URL=${{ inputs.release_url }}
         export RH_STEPS_TO_SKIP=${{ inputs.steps_to_skip }}
 
         # Publish release

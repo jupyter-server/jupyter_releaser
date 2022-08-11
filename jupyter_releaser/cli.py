@@ -140,6 +140,21 @@ version_spec_options = [
     )
 ]
 
+
+post_version_spec_options = [
+    click.option(
+        "--post-version-spec",
+        envvar="RH_POST_VERSION_SPEC",
+        help="The post release version (usually dev)",
+    ),
+    click.option(
+        "--post-version-message",
+        default="Bumped version to {post_version}",
+        envvar="RH_POST_VERSION_MESSAGE",
+        help="The post release message",
+    ),
+]
+
 version_cmd_options = [
     click.option("--version-cmd", envvar="RH_VERSION_COMMAND", help="The version command")
 ]
@@ -192,6 +207,11 @@ dry_run_options = [
 
 
 git_url_options = [click.option("--git-url", help="A custom url for the git repository")]
+
+
+release_url_options = [
+    click.option("--release-url", envvar="RH_RELEASE_URL", help="A draft GitHub release url")
+]
 
 
 changelog_path_options = [
@@ -337,6 +357,7 @@ def build_changelog(
 @add_options(auth_options)
 @add_options(changelog_path_options)
 @add_options(dry_run_options)
+@add_options(post_version_spec_options)
 @use_checkout_dir()
 def draft_changelog(
     version_spec,
@@ -348,6 +369,8 @@ def draft_changelog(
     auth,
     changelog_path,
     dry_run,
+    post_version_spec,
+    post_version_message,
 ):
     """Create a changelog entry PR"""
     lib.draft_changelog(
@@ -359,6 +382,8 @@ def draft_changelog(
         auth,
         changelog_path,
         dry_run,
+        post_version_spec,
+        post_version_message,
     )
 
 
@@ -531,20 +556,10 @@ def tag_release(dist_dir, release_message, tag_format, tag_message, no_git_tag_w
 @add_options(branch_options)
 @add_options(auth_options)
 @add_options(changelog_path_options)
-@add_options(version_cmd_options)
 @add_options(dist_dir_options)
 @add_options(dry_run_options)
-@click.option(
-    "--post-version-spec",
-    envvar="RH_POST_VERSION_SPEC",
-    help="The post release version (usually dev)",
-)
-@click.option(
-    "--post-version-message",
-    default="Bumped version to {post_version}",
-    envvar="RH_POST_VERSION_MESSAGE",
-    help="The post release message",
-)
+@add_options(release_url_options)
+@add_options(post_version_spec_options)
 @click.argument("assets", nargs=-1)
 @use_checkout_dir()
 def draft_release(
@@ -553,9 +568,9 @@ def draft_release(
     repo,
     auth,
     changelog_path,
-    version_cmd,
     dist_dir,
     dry_run,
+    release_url,
     post_version_spec,
     post_version_message,
     assets,
@@ -567,9 +582,9 @@ def draft_release(
         repo,
         auth,
         changelog_path,
-        version_cmd,
         dist_dir,
         dry_run,
+        release_url,
         post_version_spec,
         post_version_message,
         assets,
@@ -579,7 +594,7 @@ def draft_release(
 @main.command()
 @add_options(auth_options)
 @add_options(dry_run_options)
-@click.argument("release-url", nargs=1)
+@add_options(release_url_options)
 @use_checkout_dir()
 def delete_release(auth, dry_run, release_url):
     """Delete a draft GitHub release by url to the release page"""
@@ -593,7 +608,7 @@ def delete_release(auth, dry_run, release_url):
 @add_options(npm_install_options)
 @add_options(pydist_check_options)
 @add_options(check_imports_options)
-@click.argument("release-url", nargs=1)
+@add_options(release_url_options)
 def extract_release(
     auth,
     dist_dir,
@@ -646,7 +661,7 @@ def extract_release(
 )
 @add_options(dry_run_options)
 @add_options(python_packages_options)
-@click.argument("release-url", nargs=1, required=False)
+@add_options(release_url_options)
 @use_checkout_dir()
 def publish_assets(
     dist_dir,
@@ -677,7 +692,7 @@ def publish_assets(
 @main.command()
 @add_options(auth_options)
 @add_options(dry_run_options)
-@click.argument("release-url", nargs=1)
+@add_options(release_url_options)
 @use_checkout_dir()
 def publish_release(auth, dry_run, release_url):
     """Publish GitHub release"""
@@ -690,7 +705,7 @@ def publish_release(auth, dry_run, release_url):
 @add_options(username_options)
 @add_options(changelog_path_options)
 @add_options(dry_run_options)
-@click.argument("release-url")
+@add_options(release_url_options)
 @use_checkout_dir()
 def forwardport_changelog(auth, ref, branch, repo, username, changelog_path, dry_run, release_url):
     """Forwardport Changelog Entries to the Default Branch"""
