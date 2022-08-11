@@ -2,6 +2,23 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.23.2
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...b193f224481f680bb0e9347ff0e5a3c0ca64f57d))
+
+### Bugs fixed
+
+- Revert changes to make changelog pr [#364](https://github.com/jupyter-server/jupyter_releaser/pull/364) ([@blink1073](https://github.com/blink1073))
+- Fix changelog pr for dry run [#362](https://github.com/jupyter-server/jupyter_releaser/pull/362) ([@blink1073](https://github.com/blink1073))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-08-10&to=2022-08-11&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-08-10..2022-08-11&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-08-10..2022-08-11&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.23.1
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...87b32ed3dd7448bd2dd915a8babd65eb2749f017))
@@ -15,8 +32,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-08-09&to=2022-08-10&type=c))
 
 [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2022-08-09..2022-08-10&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.23.0
 
