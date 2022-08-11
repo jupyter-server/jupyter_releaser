@@ -443,17 +443,6 @@ def test_check_python_resource_path(monkeypatch, py_package, runner, build_mock,
     path = bar_dir / "baz.txt"
     path.write_text("hello", encoding="utf-8")
 
-    manifest = Path(util.CHECKOUT_NAME) / "MANIFEST.in"
-    manifest_text = manifest.read_text(encoding="utf-8")
-    manifest_text += "\ninclude foo/bar/baz.txt\n"
-    manifest.write_text(manifest_text, encoding="utf-8")
-
-    setup_cfg_path = Path(util.CHECKOUT_NAME) / "setup.cfg"
-    setup_cfg_text = setup_cfg_path.read_text(encoding="utf-8")
-    setup_cfg_text = setup_cfg_text.replace("foo.__version__", "foo.__init__.__version__")
-    setup_cfg_text = setup_cfg_text.replace("py_modules = foo", "")
-    setup_cfg_path.write_text(setup_cfg_text, encoding="utf-8")
-
     runner(["build-python"])
     runner(["check-python"])
 

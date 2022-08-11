@@ -91,8 +91,8 @@ def pyproject_template(project_name="foo", sub_packages=None):
     sub_packages = sub_packages or []
     res = f"""
 [build-system]
-requires = ["setuptools>=61.0.0", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling>=1.5.0"]
+build-backend = "hatchling.build"
 
 [project]
 name = "{project_name}"
@@ -226,9 +226,6 @@ def create_python_package(git_repo, multi=False, not_matching_name=False):
 
         foopy = git_repo / f"{module_name}.py"
         foopy.write_text(PY_MODULE_TEMPLATE, encoding="utf-8")
-
-        manifest = git_repo / "MANIFEST.in"
-        manifest.write_text(MANIFEST_TEMPLATE, encoding="utf-8")
 
         license = git_repo / "LICENSE"
         license.write_text(LICENSE_TEMPLATE, encoding="utf-8")
