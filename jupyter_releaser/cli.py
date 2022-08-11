@@ -459,8 +459,8 @@ def check_npm(dist_dir, npm_install_options):
 @use_checkout_dir()
 def check_manifest():
     """Check the project manifest"""
-    # Only run the check if we're using setuptools
-    if util.SETUP_PY.exists() or util.MANIFEST.exists():
+    # Only run the check if we have a manifest file.
+    if util.MANIFEST.exists():
         util.run("check-manifest -v")
     else:
         util.log("Skipping check-manifest since there are no python package files")
