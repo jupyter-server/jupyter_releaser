@@ -91,7 +91,7 @@ def pyproject_template(project_name="foo", sub_packages=None):
     sub_packages = sub_packages or []
     res = f"""
 [build-system]
-requires = ["hatchling>=1.15"]
+requires = ["hatchling>=1.5.0"]
 build-backend = "hatchling.build"
 
 [project]
