@@ -172,7 +172,10 @@ def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=F
         pass
     util.run(f"git checkout -b {pr_branch} origin/{branch}", echo=True)
     if dirty:
-        util.run("git stash apply", echo=True)
+        if dry_run:
+            util.run("git merge --squash --strategy-option=theirs stash", echo=True)
+        else:
+            util.run("git stash apply", echo=True)
 
     # Add a commit with the message
     try:
