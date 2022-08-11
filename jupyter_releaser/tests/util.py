@@ -91,8 +91,8 @@ def pyproject_template(project_name="foo", sub_packages=None):
     sub_packages = sub_packages or []
     res = f"""
 [build-system]
-requires = ["setuptools>=61.0.0", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling>=1.15", "wheel"]
+build-backend = "hatchling.build"
 
 [project]
 name = "{project_name}"
