@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.23.3
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...6c449c7e998c61789915ffbdf11990109c1d6f4b))
+
+### Bugs fixed
+
+- Fix the input parameter since_last_stable when running a full release [#366](https://github.com/jupyter-server/jupyter_releaser/pull/366) ([@brichet](https://github.com/brichet))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-08-11&to=2022-08-22&type=c))
+
+[@brichet](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Abrichet+updated%3A2022-08-11..2022-08-22&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.23.2
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...b193f224481f680bb0e9347ff0e5a3c0ca64f57d))
@@ -16,8 +32,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-08-10&to=2022-08-11&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-08-10..2022-08-11&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-08-10..2022-08-11&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.23.1
 
