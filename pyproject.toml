@@ -103,6 +103,7 @@ filterwarnings= [
   # Fail on warnings
   "error",
   "ignore:Using deprecated setup.py invocation:UserWarning",
+  "module:Neither GITHUB_TOKEN nor GITHUB_JWT_TOKEN found: running as unauthenticated:UserWarning",
 ]
 
 [tool.mypy]
