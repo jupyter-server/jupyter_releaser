@@ -3,6 +3,8 @@
 import json
 import os
 import shutil
+import tempfile
+import time
 from pathlib import Path
 
 import pytest
@@ -342,3 +344,82 @@ def test_get_latest_draft_release(mock_github):
     )
     latest = util.lastest_draft_release(gh)
     assert latest.name == "v1.0.0"
+
+    # Ensure a different timestamp.
+    time.sleep(1)
+    gh.create_release(
+        "v1.1.0",
+        "bob",
+        "v1.1.0",
+        "body",
+        True,
+        True,
+        files=[],
+    )
+    latest = util.lastest_draft_release(gh)
+    assert latest.name == "v1.1.0"
+    latest = util.lastest_draft_release(gh, "main")
+    assert latest.name == "v1.0.0"
+
+
+def test_parse_release_url():
+    match = util.parse_release_url("https://github.com/foo/bar/releases/tag/fizz")
+    assert match.groupdict() == {"owner": "foo", "repo": "bar", "tag": "fizz"}
+    match = util.parse_release_url("https://api.github.com/repos/fizz/buzz/releases/tags/foo")
+    assert match.groupdict() == {"owner": "fizz", "repo": "buzz", "tag": "foo"}
+    match = util.parse_release_url(
+        "https://github.com/foo/bar/releases/tag/untagged-8a3c19f85a0a51d3ea66"
+    )
+    assert match.groupdict() == {
+        "owner": "foo",
+        "repo": "bar",
+        "tag": "untagged-8a3c19f85a0a51d3ea66",
+    }
+
+
+@pytest.fixture
+def draft_release(mock_github):
+    gh = GhApi(owner="foo", repo="bar")
+    data = dict(
+        version_spec="foo",
+        branch="bar",
+        repo="fizz",
+        since="buzz",
+        since_last_stable=False,
+        version="1.0.0",
+        post_version_spec="dev",
+        post_version_message="hi",
+    )
+    with tempfile.TemporaryDirectory() as d:
+        metadata_path = Path(d) / "metadata.json"
+        with open(metadata_path, "w") as fid:
+            json.dump(data, fid)
+
+        release = gh.create_release(
+            f"v1.0.0", "bar", f"v1.0.0", "hi", True, True, files=[metadata_path]
+        )
+    return release.html_url
+
+
+def test_extract_metadata_from_release_url(mock_github, draft_release):
+    gh = GhApi(owner="foo", repo="bar")
+    data = util.extract_metadata_from_release_url(gh, draft_release, "")
+    assert os.environ["RH_BRANCH"] == data["branch"]
+
+
+def test_prepare_environment(mock_github, draft_release):
+    os.environ["GITHUB_REPOSITORY"] = "foo/bar"
+    os.environ["GITHUB_REF"] = "refs/tag/bar"
+    data = util.prepare_environment()
+    assert os.environ["RH_RELEASE_URL"] == draft_release
+    assert data["version_spec"] == os.environ["RH_VERSION_SPEC"]
+
+
+def test_handle_since(npm_package, runner):
+    runner(["prep-git", "--git-url", npm_package])
+    since = util.handle_since()
+    assert not since
+
+    run("git tag v1.0.1", cwd=util.CHECKOUT_NAME)
+    since = util.handle_since()
+    assert since == "v1.0.1"

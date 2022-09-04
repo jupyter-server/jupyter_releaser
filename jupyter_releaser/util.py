@@ -17,7 +17,7 @@ import time
 import warnings
 from datetime import datetime
 from glob import glob
-from io import StringIO
+from io import BytesIO
 from pathlib import Path
 from subprocess import PIPE, CalledProcessError, check_output
 
@@ -448,13 +448,13 @@ def extract_metadata_from_release_url(gh, release_url, auth):
         url = asset.url
         headers = dict(Authorization=f"token {auth}", Accept="application/octet-stream")
 
-        sink = StringIO()
+        sink = BytesIO()
         with requests.get(url, headers=headers, stream=True) as r:
             r.raise_for_status()
             for chunk in r.iter_content(chunk_size=8192):
                 sink.write(chunk)
         sink.seek(0)
-        data = json.loads(sink.read())
+        data = json.loads(sink.read().decode("utf-8"))
 
     if data is None:
         raise ValueError(f'Could not find "metadata.json" file in draft release {release_url}')
@@ -471,7 +471,9 @@ def extract_metadata_from_release_url(gh, release_url, auth):
     if "since" in data:
         os.environ["RH_SINCE"] = data["since"]
     if "since_last_stable" in data:
-        os.environ["RH_SINCE_LAST_STABLE"] = data["since_last_stable"]
+        os.environ["RH_SINCE_LAST_STABLE"] = str(data["since_last_stable"])
+
+    return data
 
 
 def prepare_environment():
@@ -513,11 +515,11 @@ def prepare_environment():
     # Get the latest draft release if none is given.
     release_url = os.environ.get("RH_RELEASE_URL")
     if not release_url:
-        release_url = lastest_draft_release(gh, branch)
-        os.environ["RH_RELEASE_URL"] = release_url
+        release = lastest_draft_release(gh, branch)
+        os.environ["RH_RELEASE_URL"] = release_url = release.html_url
 
     # Extract the metadata from the release url.
-    extract_metadata_from_release_url(gh, release_url, auth)
+    return extract_metadata_from_release_url(gh, release_url, auth)
 
 
 def handle_since():
@@ -533,6 +535,7 @@ def handle_since():
         log(f"Capturing {since} in RH_SINCE variable")
         os.environ["RH_SINCE"] = since
     os.chdir(curr_dir)
+    return since
 
 
 def get_gh_object(dry_run=False, **kwargs):
