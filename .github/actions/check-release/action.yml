@@ -12,10 +12,10 @@ runs:
   using: "composite"
   steps:
     - name: install-releaser
-      uses: ${{ github.action_path }}/../install-releaser
+      uses: ./.gitub/actions/install-releaser
 
     - name: draft-changelog
-      uses: ../draft-changelog
+      uses: ./.gitub/actions/draft-changelog
       env:
         RH_IS_CHECK_RELEASE: "true"
       with:
@@ -24,7 +24,7 @@ runs:
         version_spec: ${{ inputs.version_spec }}
 
     - name: draft-release
-      uses: ${{ github.action_path }}/../../draft-release
+      uses: ./.gitub/actions/draft-release
       env:
         RH_IS_CHECK_RELEASE: "true"
       with:
@@ -34,7 +34,7 @@ runs:
         release_url: ${{ steps.draft-changelog.outputs.release_url }}
 
     - name: publish-release
-      uses: ${{ github.action_path }}/../../publish-release
+      uses: ./.gitub/actions/publish-release
       env:
         RH_IS_CHECK_RELEASE: "true"
       with:

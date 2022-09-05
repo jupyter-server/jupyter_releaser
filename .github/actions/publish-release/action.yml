@@ -30,7 +30,7 @@ runs:
   using: "composite"
   steps:
     - name: install-releaser
-      uses: ../install-releaser
+      uses: ./.gitub/actions/install-releaser
 
     - shell: bash
       id: publish-release
