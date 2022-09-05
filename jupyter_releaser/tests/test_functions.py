@@ -398,7 +398,8 @@ def draft_release(mock_github):
         release = gh.create_release(
             f"v1.0.0", "bar", f"v1.0.0", "hi", True, True, files=[metadata_path]
         )
-    return release.html_url
+    yield release.html_url
+    gh.repos.delete_release(release.id)
 
 
 def test_extract_metadata_from_release_url(mock_github, draft_release):

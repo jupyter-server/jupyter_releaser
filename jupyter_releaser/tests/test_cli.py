@@ -163,6 +163,7 @@ pydist-resource-paths: RH_PYDIST_RESOURCE_PATHS
 python-packages: RH_PYTHON_PACKAGES
 ref: RH_REF
 release-message: RH_RELEASE_MESSAGE
+release-url: RH_RELEASE_URL
 repo: RH_REPOSITORY
 resolve-backports: RH_RESOLVE_BACKPORTS
 since: RH_SINCE
