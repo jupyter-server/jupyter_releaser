@@ -435,6 +435,7 @@ def parse_release_url(release_url):
 
 
 def extract_metadata_from_release_url(gh, release_url, auth):
+    log(f"Extracting metadata for release: {release_url}")
     release = release_for_url(gh, release_url)
 
     data = None
@@ -490,13 +491,13 @@ def prepare_environment():
     if not os.environ.get("RH_BRANCH") and check_release:
         if os.environ.get("GITHUB_BASE_REF"):
             base_ref = os.environ.get("GITHUB_BASE_REF", "")
-            print(f"Using GITHUB_BASE_REF: ${base_ref}")
+            log(f"Using GITHUB_BASE_REF: ${base_ref}")
             os.environ["RH_BRANCH"] = base_ref
 
         else:
             # e.g refs/head/foo or refs/tag/bar
             ref = os.environ["GITHUB_REF"]
-            print(f"Using GITHUB_REF: {ref}")
+            log(f"Using GITHUB_REF: {ref}")
             os.environ["RH_BRANCH"] = "/".join(ref.split("/")[2:])
 
     # Start the mock GitHub server if in a dry run.
@@ -514,6 +515,7 @@ def prepare_environment():
 
     # Get the latest draft release if none is given.
     release_url = os.environ.get("RH_RELEASE_URL")
+    log(f"Environment release url was {release_url}")
     if not release_url:
         release = latest_draft_release(gh, branch)
         if release:
@@ -577,7 +579,7 @@ def get_remote_name(dry_run):
 def ensure_mock_github():
     """Check for or start a mock github server."""
     core.GH_HOST = MOCK_GITHUB_URL
-
+    log("Ensuring mock GitHub")
     # First see if it is already running.
     try:
         requests.get(MOCK_GITHUB_URL)
@@ -601,6 +603,7 @@ def ensure_mock_github():
             raise ValueError(f"mock_github failed with {proc.returncode}")
     except subprocess.TimeoutExpired:
         pass
+    log("Mock GitHub started")
     atexit.register(proc.kill)
 
     while 1:

@@ -653,10 +653,11 @@ def test_publish_assets_py(py_package, runner, mocker, git_prep, mock_github):
         return orig_run(cmd, **kwargs)
 
     mock_run = mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
+
+    dist_dir = py_package / util.CHECKOUT_NAME / "dist"
     release = create_draft_release()
     os.environ["RH_RELEASE_URL"] = release.html_url
 
-    dist_dir = py_package / util.CHECKOUT_NAME / "dist"
     runner(["publish-assets", "--dist-dir", dist_dir, "--dry-run"])
     assert called == 2, called
 
