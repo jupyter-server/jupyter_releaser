@@ -532,7 +532,7 @@ def publish_release(auth, dry_run, release_url):
     """Publish GitHub release"""
     util.log(f"Publishing {release_url}")
 
-    match = parse_release_url(release_url)
+    match = util.parse_release_url(release_url)
 
     # Take the release out of draft
     gh = util.get_gh_object(dry_run=dry_run, owner=match["owner"], repo=match["repo"], token=auth)
@@ -658,7 +658,7 @@ def prep_git(ref, branch, repo, auth, username, url):
 def forwardport_changelog(auth, ref, branch, repo, username, changelog_path, dry_run, release_url):
     """Forwardport Changelog Entries to the Default Branch"""
     # Set up the git repo with the branch
-    match = parse_release_url(release_url)
+    match = util.parse_release_url(release_url)
 
     gh = util.get_gh_object(dry_run=dry_run, owner=match["owner"], repo=match["repo"], token=auth)
     release = util.release_for_url(gh, release_url)

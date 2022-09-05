@@ -283,8 +283,8 @@ def create_python_package(git_repo, multi=False, not_matching_name=False):
         return git_repo
 
 
-def create_draft_release(ref="bar", files=None):
-    gh = GhApi("snuffy", "test")
+def create_draft_release(ref, files=None):
+    gh = GhApi("foo", "bar")
     return gh.create_release(
         ref,
         "bar",
@@ -301,7 +301,7 @@ def create_tag_ref():
     os.chdir(util.CHECKOUT_NAME)
     ref = get_latest_tag(None)
     sha = run("git rev-parse HEAD")
-    url = f"{MOCK_GITHUB_URL}/create_tag_ref/{ref}/{sha}"
-    requests.post(url)
+    gh = GhApi("foo", "bar")
+    gh.git.create_ref(ref, sha)
     os.chdir(curr_dir)
     return ref

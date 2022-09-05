@@ -47,6 +47,10 @@ def test_mock_github(mock_github):
             for _ in r.iter_content(chunk_size=8192):
                 pass
 
+    gh.git.create_ref("v1.1.0", "aaaa")
+    tags = gh.list_tags("v1.1.0")
+    assert tags[0]["object"]["sha"] == "aaaa"
+
     gh.repos.delete_release(release.id)
 
     pull = gh.pulls.create("title", "head", "base", "body", True, False, None)

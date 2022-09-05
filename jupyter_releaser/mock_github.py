@@ -214,9 +214,12 @@ def add_labels_to_an_issue(owner: str, repo: str, issue_number: int) -> BaseMode
     return BaseModel()
 
 
-@app.post("/create_tag_ref/{tag_ref}/{sha}")
-def create_tag_ref(tag_ref: str, sha: str) -> None:
-    """Create a remote tag ref object for testing"""
+@app.post("/repos/{owner}/{repo}/git/refs")
+async def create_tag_ref(owner: str, repo: str, request: Request) -> None:
+    """https://docs.github.com/en/rest/git/refs#create-a-reference"""
+    data = await request.json()
+    tag_ref = data["ref"]
+    sha = data["sha"]
     tag = Tag(ref=f"refs/tags/{tag_ref}", object=TagObject(sha=sha))
     tag_refs[tag_ref] = tag
     write_to_pickle("tag_refs", tag_refs)

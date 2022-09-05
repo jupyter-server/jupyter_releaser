@@ -220,6 +220,10 @@ def draft_release(mock_github):
         release = gh.create_release(
             f"v1.0.0", "bar", f"v1.0.0", "hi", True, True, files=[metadata_path]
         )
+    # Create the tag
+    # Get the sha
+
+    gh.git.create_ref("v1.0.0", "aaaaa")
     yield release.html_url
     try:
         gh.repos.delete_release(release.id)
