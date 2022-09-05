@@ -341,7 +341,7 @@ def test_get_latest_draft_release(mock_github):
         True,
         files=[],
     )
-    latest = util.lastest_draft_release(gh)
+    latest = util.latest_draft_release(gh)
     assert latest.name == "v1.0.0"
 
     # Ensure a different timestamp.
@@ -355,9 +355,9 @@ def test_get_latest_draft_release(mock_github):
         True,
         files=[],
     )
-    latest = util.lastest_draft_release(gh)
+    latest = util.latest_draft_release(gh)
     assert latest.name == "v1.1.0"
-    latest = util.lastest_draft_release(gh, "main")
+    latest = util.latest_draft_release(gh, "main")
     assert latest.name == "v1.0.0"
 
 

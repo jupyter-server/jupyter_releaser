@@ -337,7 +337,7 @@ def release_for_url(gh, url):
     return release
 
 
-def lastest_draft_release(gh, branch=None):
+def latest_draft_release(gh, branch=None):
     """Get the latest draft release for a given repo"""
     newest_time = None
     newest_release = None
@@ -515,7 +515,7 @@ def prepare_environment():
     # Get the latest draft release if none is given.
     release_url = os.environ.get("RH_RELEASE_URL")
     if not release_url:
-        release = lastest_draft_release(gh, branch)
+        release = latest_draft_release(gh, branch)
         os.environ["RH_RELEASE_URL"] = release_url = release.html_url
 
     # Extract the metadata from the release url.
