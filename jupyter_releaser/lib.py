@@ -323,7 +323,7 @@ def draft_release(
         release.target_commitish,
         release.name,
         body,
-        False,
+        True,
         release.prerelease,
     )
 
