@@ -45,9 +45,8 @@ TBUMP_CMD = "tbump --non-interactive --only-patch"
 
 CHECKOUT_NAME = ".jupyter_releaser_checkout"
 
-RELEASE_HTML_PATTERN = (
-    "https://github.com/(?P<owner>[^/]+)/(?P<repo>[^/]+)/releases/tag/(?P<tag>.*)"
-)
+MOCK_GITHUB_URL = "http://127.0.0.1:8000"
+RELEASE_HTML_PATTERN = f"(?:https://github.com|{MOCK_GITHUB_URL})/(?P<owner>[^/]+)/(?P<repo>[^/]+)/releases/tag/(?P<tag>.*)"
 RELEASE_API_PATTERN = (
     "https://api.github.com/repos/(?P<owner>[^/]+)/(?P<repo>[^/]+)/releases/tags/(?P<tag>.*)"
 )
@@ -57,8 +56,6 @@ SCHEMA = files("jupyter_releaser").joinpath("schema.json").read_text()
 SCHEMA = json.loads(SCHEMA)
 
 GIT_FETCH_CMD = "git fetch origin --filter=blob:none --quiet"
-
-MOCK_GITHUB_URL = "http://127.0.0.1:8000"
 
 
 def run(cmd, **kwargs):
