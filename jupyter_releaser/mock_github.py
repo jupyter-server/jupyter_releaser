@@ -121,8 +121,8 @@ async def create_a_release(owner: str, repo: str, request: Request) -> Release:
     """https://docs.github.com/en/rest/releases/releases#create-a-release"""
     release_id = uuid.uuid4().int
     data = await request.json()
-    url = f"https://github.com/repos/{owner}/{repo}/releases/{release_id}"
-    html_url = f"https://github.com/{owner}/{repo}/releases/tag/{data['tag_name']}"
+    url = f"{MOCK_GITHUB_URL}/repos/{owner}/{repo}/releases/{release_id}"
+    html_url = f"{MOCK_GITHUB_URL}/{owner}/{repo}/releases/tag/{data['tag_name']}"
     upload_url = f"{MOCK_GITHUB_URL}/repos/{owner}/{repo}/releases/{release_id}/assets"
     fmt_str = r"%Y-%m-%dT%H:%M:%SZ"
     created_at = datetime.datetime.utcnow().strftime(fmt_str)

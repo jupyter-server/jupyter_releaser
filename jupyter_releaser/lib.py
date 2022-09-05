@@ -476,7 +476,7 @@ def publish_assets(
     else:
         python_package_name = ""
 
-    if len(glob(f"{dist_dir}/*.whl")):
+    if release_url and len(glob(f"{dist_dir}/*.whl")):
         twine_token = python.get_pypi_token(release_url, python_package_path)
 
     if dry_run:
@@ -506,12 +506,12 @@ def publish_assets(
                 env["TWINE_PASSWORD"] = twine_token
                 # NOTE: Do not print the env since a twine token extracted from
                 # a PYPI_TOKEN_MAP will not be sanitized in output
-                util.retry(f"{twine_cmd} {name}", cwd=dist_dir, env=env)
+                util.retry(f"{twine_cmd} {name}", cwd=dist_dir, env=env, echo=True)
                 found = True
         elif suffix == ".tgz":
             # Ignore already published versions
             try:
-                util.run(f"{npm_cmd} {name}", cwd=dist_dir, quiet=True, quiet_error=True)
+                util.run(f"{npm_cmd} {name}", cwd=dist_dir, quiet=True, quiet_error=True, echo=True)
             except CalledProcessError as e:
                 stderr = e.stderr
                 if "EPUBLISHCONFLICT" in stderr or "previously published versions" in stderr:

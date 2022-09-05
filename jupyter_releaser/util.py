@@ -483,7 +483,7 @@ def prepare_environment():
     os.environ.setdefault("RH_REF", os.environ["GITHUB_REF"])
 
     check_release = os.environ.get("RH_IS_CHECK_RELEASE", "").lower() == "true"
-    if "RH_DRY_RUN" not in os.environ and check_release:
+    if not os.environ.get("RH_DRY_RUN") and check_release:
         os.environ["RH_DRY_RUN"] = "true"
     dry_run = os.environ.get("RH_DRY_RUN", "").lower() == "true"
 
