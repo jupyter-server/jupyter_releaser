@@ -221,4 +221,7 @@ def draft_release(mock_github):
             f"v1.0.0", "bar", f"v1.0.0", "hi", True, True, files=[metadata_path]
         )
     yield release.html_url
-    gh.repos.delete_release(release.id)
+    try:
+        gh.repos.delete_release(release.id)
+    except Exception as e:
+        print(e)

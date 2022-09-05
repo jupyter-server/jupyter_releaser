@@ -524,26 +524,22 @@ def test_draft_release_dry_run(py_dist, mocker, runner, git_prep, draft_release)
     assert "after-draft-release" in log
 
 
-def test_draft_release_final(npm_dist, runner, mock_github, git_prep):
+def test_draft_release_final(npm_dist, runner, mock_github, git_prep, draft_release):
     # Publish the release
     os.environ["GITHUB_ACTIONS"] = "true"
+    os.environ["RH_RELEASE_URL"] = draft_release
     runner(["draft-release"])
 
 
-def test_delete_release(npm_dist, runner, mock_github, git_prep):
+def test_delete_release(npm_dist, runner, mock_github, git_prep, draft_release):
     # Publish the release
     # Mimic being on GitHub actions so we get the magic output
     os.environ["GITHUB_ACTIONS"] = "true"
+    os.environ["RH_RELEASE_URL"] = draft_release
     result = runner(["draft-release"])
 
-    url = ""
-    for line in result.output.splitlines():
-        match = re.match(r"::set-output name=release_url::(.*)", line)
-        if match:
-            url = match.groups()[0]
-
     # Delete the release
-    runner(["delete-release", url])
+    runner(["delete-release"])
 
     log = get_log()
     assert "before-delete-release" in log
