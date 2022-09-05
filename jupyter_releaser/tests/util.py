@@ -282,7 +282,7 @@ def create_python_package(git_repo, multi=False, not_matching_name=False):
         return git_repo
 
 
-def create_draft_release(ref, files=None):
+def create_draft_release(ref="bar", files=None):
     gh = GhApi("foo", "bar")
     return gh.create_release(
         ref,

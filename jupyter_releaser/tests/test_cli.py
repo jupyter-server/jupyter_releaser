@@ -653,7 +653,7 @@ def test_publish_assets_py(py_package, runner, mocker, git_prep, mock_github):
         return orig_run(cmd, **kwargs)
 
     mock_run = mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
-    release = create_draft_release("foo")
+    release = create_draft_release()
     os.environ["RH_RELEASE_URL"] = release.html_url
 
     dist_dir = py_package / util.CHECKOUT_NAME / "dist"
