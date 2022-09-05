@@ -8,36 +8,45 @@ inputs:
     description: "New Version Specifier"
     required: false
     default: ""
+  steps_to_skip:
+    description: "Comma separated list of steps to skip"
+    required: false
 runs:
   using: "composite"
   steps:
     - name: install-releaser
-      uses: ./../install-releaser
+      shell: bash -eux {0}
+      id: install-releaser
+      run: |
+        # Install Jupyter Releaser from git unless we are testing Releaser itself
+        if ! command -v jupyter-releaser &> /dev/null
+        then
+            pip install -q git+https://github.com/jupyter-server/jupyter_releaser.git@v1
+        fi
 
     - name: draft-changelog
-      uses: ./../draft-changelog
-      env:
-        RH_IS_CHECK_RELEASE: "true"
-      with:
-        dry_run: true
-        token: ${{ inputs.token }}
-        version_spec: ${{ inputs.version_spec }}
+      shell: bash -eux {0}
+      run: |
+        export RH_IS_CHECK_RELEASE="true"
+        export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
+        export RH_VERSION_SPEC=${{ inputs.version_spec }}
+        export RH_STEPS_TO_SKIP=${{ inputs.steps_to_skip }}
+        python -m jupyter_releaser.actions.draft_changelog
 
     - name: draft-release
-      uses: ./../draft-release
-      env:
-        RH_IS_CHECK_RELEASE: "true"
-      with:
-        dry_run: true
-        token: ${{ inputs.token }}
-        version_spec: ${{ inputs.version_spec }}
-        release_url: ${{ steps.draft-changelog.outputs.release_url }}
+      shell: bash -eux {0}
+      run: |
+        export RH_IS_CHECK_RELEASE="true"
+        export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
+        export RH_RELEASE_URL=${{ steps.draft-changelog.outputs.release_url }}
+        export RH_STEPS_TO_SKIP=${{ inputs.steps_to_skip }}
+        python -m jupyter_releaser.actions.draft_release
 
     - name: publish-release
-      uses: ./../publish-release
-      env:
-        RH_IS_CHECK_RELEASE: "true"
-      with:
-        dry_run: true
-        token: ${{ inputs.token }}
-        release_url: ${{ steps.draft-changelog.outputs.release_url }}
+      shell: bash -eux {0}
+      run: |
+        export RH_IS_CHECK_RELEASE="true"
+        export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
+        export RH_RELEASE_URL=${{ steps.draft-changelog.outputs.release_url }}
+        export RH_STEPS_TO_SKIP=${{ inputs.steps_to_skip }}
+        python -m jupyter_releaser.actions.publish_release

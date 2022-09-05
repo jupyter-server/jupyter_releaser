@@ -482,6 +482,8 @@ def prepare_environment():
     os.environ.setdefault("RH_REF", os.environ["GITHUB_REF"])
 
     check_release = os.environ.get("RH_IS_CHECK_RELEASE", "").lower() == "true"
+    if not "RH_DRY_RUN" in os.environ and check_release:
+        os.environ["RH_DRY_RUN"] = "true"
     dry_run = os.environ.get("RH_DRY_RUN", "").lower() == "true"
 
     # Set the branch when using check release.
