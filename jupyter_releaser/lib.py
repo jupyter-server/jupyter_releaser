@@ -24,9 +24,9 @@ from jupyter_releaser import changelog, npm, python, util
 
 def bump_version(version_spec, version_cmd, changelog_path):
     """Bump the version and verify new version"""
-    util.bump_version(version_spec, version_cmd=version_cmd, changelog_path=changelog_path)
-
-    version = util.get_version()
+    version = util.bump_version(
+        version_spec, version_cmd=version_cmd, changelog_path=changelog_path
+    )
 
     # A properly parsed version will have a "major" attribute
     parsed = parse_version(version)
@@ -42,6 +42,42 @@ def bump_version(version_spec, version_cmd, changelog_path):
         raise ValueError(msg)
 
     return version
+
+
+def update_dependencies(python_package, python_packages):
+    dep_names = [] if len(python_package) < 3 else python_package[2].split(",")
+    python_names = [p[1] for p in python_packages]
+    prev_dir = os.getcwd()
+    deps = {}
+    for dep_name in dep_names:
+        try:
+            i = python_names.index(dep_name)
+        except ValueError:
+            raise RuntimeError(
+                f"Package {python_package[1]} depends on {dep_name}, which has not been released yet. Please put the dependency before this package in the python_packages list."
+            )
+        dep_path = python_packages[i][0]
+        os.chdir(dep_path)
+        deps[dep_name] = util.get_version()
+        os.chdir(prev_dir)
+    if util.PYPROJECT.exists():
+        os.chdir(python_package[0])
+        text = util.PYPROJECT.read_text(encoding="utf-8")
+        data = toml.loads(text)
+        dependencies = data.get("project", {}).get("dependencies", [])
+        _update_dependencies(dependencies, deps)
+        for dependencies in data.get("project", {}).get("optional-dependencies", {}).values():
+            _update_dependencies(dependencies, deps)
+        util.PYPROJECT.write_text(toml.dumps(data))
+        os.chdir(prev_dir)
+
+
+def _update_dependencies(dependencies, deps):
+    deps_no_pin = [d.split("<")[0].split("=")[0].split(">")[0].strip() for d in dependencies]
+    for k, v in deps.items():
+        if k in deps_no_pin:
+            i = deps_no_pin.index(k)
+            dependencies[i] = f"{k} >={v}"
 
 
 def check_links(ignore_glob, ignore_links, cache_file, links_expire):

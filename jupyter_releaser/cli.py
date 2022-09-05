@@ -204,7 +204,7 @@ python_packages_options = [
         envvar="RH_PYTHON_PACKAGES",
         default=["."],
         multiple=True,
-        help='The list of strings of the form "path_to_package:name_of_package"',
+        help='A list of strings of the form "path_to_package:name_of_package:dep_0,dep_1,..."',
     )
 ]
 
@@ -329,7 +329,7 @@ def list_envvars():
 @add_options(username_options)
 @add_options(git_url_options)
 def prep_git(ref, branch, repo, auth, username, git_url):
-    """Prep git and env variables and bump version"""
+    """Prep git"""
     lib.prep_git(ref, branch, repo, auth, username, git_url)
 
 
@@ -340,12 +340,15 @@ def prep_git(ref, branch, repo, auth, username, git_url):
 @add_options(python_packages_options)
 @use_checkout_dir()
 def bump_version(version_spec, version_cmd, changelog_path, python_packages):
-    """Prep git and env variables and bump version"""
+    """Bump version"""
     prev_dir = os.getcwd()
-    for python_package in [p.split(":")[0] for p in python_packages]:
-        os.chdir(python_package)
+    python_packages = [p.split(":") for p in python_packages]
+    for i, python_package in enumerate(python_packages):
+        package_path = python_package[0]
+        os.chdir(package_path)
         lib.bump_version(version_spec, version_cmd, changelog_path)
         os.chdir(prev_dir)
+        lib.update_dependencies(python_package, python_packages[:i])
 
 
 @main.command()
