@@ -504,7 +504,7 @@ def test_tag_release(py_package, runner, build_mock, git_prep):
     assert "after-tag-release" in log
 
 
-def test_draft_release_dry_run(py_dist, mocker, runner, git_prep):
+def test_draft_release_dry_run(py_dist, mocker, runner, git_prep, draft_release):
     # Publish the release - dry run
     runner(
         [
@@ -514,6 +514,8 @@ def test_draft_release_dry_run(py_dist, mocker, runner, git_prep):
             "1.1.0.dev0",
             "--post-version-message",
             "haha",
+            "--release-url",
+            draft_release,
         ]
     )
 

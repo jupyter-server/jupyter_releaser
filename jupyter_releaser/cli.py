@@ -554,6 +554,7 @@ def tag_release(dist_dir, release_message, tag_format, tag_message, no_git_tag_w
 
 @main.command()
 @add_options(branch_options)
+@add_options(version_cmd_options)
 @add_options(auth_options)
 @add_options(changelog_path_options)
 @add_options(dist_dir_options)
@@ -566,6 +567,7 @@ def draft_release(
     ref,
     branch,
     repo,
+    version_cmd,
     auth,
     changelog_path,
     dist_dir,
@@ -580,6 +582,7 @@ def draft_release(
         ref,
         branch,
         repo,
+        version_cmd,
         auth,
         changelog_path,
         dist_dir,

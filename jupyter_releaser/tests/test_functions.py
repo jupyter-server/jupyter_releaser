@@ -3,7 +3,6 @@
 import json
 import os
 import shutil
-import tempfile
 import time
 from pathlib import Path
 
@@ -375,31 +374,6 @@ def test_parse_release_url():
         "repo": "bar",
         "tag": "untagged-8a3c19f85a0a51d3ea66",
     }
-
-
-@pytest.fixture
-def draft_release(mock_github):
-    gh = GhApi(owner="foo", repo="bar")
-    data = dict(
-        version_spec="foo",
-        branch="bar",
-        repo="fizz",
-        since="buzz",
-        since_last_stable=False,
-        version="1.0.0",
-        post_version_spec="dev",
-        post_version_message="hi",
-    )
-    with tempfile.TemporaryDirectory() as d:
-        metadata_path = Path(d) / "metadata.json"
-        with open(metadata_path, "w") as fid:
-            json.dump(data, fid)
-
-        release = gh.create_release(
-            f"v1.0.0", "bar", f"v1.0.0", "hi", True, True, files=[metadata_path]
-        )
-    yield release.html_url
-    gh.repos.delete_release(release.id)
 
 
 def test_extract_metadata_from_release_url(mock_github, draft_release):

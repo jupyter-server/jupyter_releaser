@@ -280,9 +280,9 @@ def draft_release(
     ref,
     branch,
     repo,
+    version_cmd,
     auth,
     changelog_path,
-    version_cmd,
     dist_dir,
     dry_run,
     release_url,
@@ -292,12 +292,11 @@ def draft_release(
 ):
     """Publish Draft GitHub release and handle post version bump"""
     branch = branch or util.get_branch()
-    repo = repo or util.get_repo()
     assets = assets or glob(f"{dist_dir}/*")
     body = changelog.extract_current(changelog_path)
 
     match = util.parse_release_url(release_url)
-    owner, repo = match["owner"], match["repo"]
+    owner, repo_name = match["owner"], match["repo"]
 
     # Bump to post version if given.
     if post_version_spec:
@@ -307,7 +306,6 @@ def draft_release(
         util.log(post_version_message.format(post_version=post_version))
         util.run(f'git commit -a -m "Bump to {post_version}"')
 
-    owner, repo_name = repo.split("/")
     gh = util.get_gh_object(dry_run=dry_run, owner=owner, repo=repo_name, token=auth)
     release = util.release_for_url(gh, release_url)
 
@@ -319,7 +317,7 @@ def draft_release(
     # Upload the assets to the draft release.
     util.log(f"Uploading assets: {assets}")
     for fpath in assets:
-        gh.upload(release_url, fpath)
+        gh.upload_file(release, fpath)
 
     # Update the release itself.
     gh.repos.update_release(
