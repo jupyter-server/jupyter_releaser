@@ -360,7 +360,7 @@ def extract_release(
     python_imports,
 ):
     """Download and verify assets from a draft GitHub release"""
-    match = parse_release_url(release_url)
+    match = util.parse_release_url(release_url)
     owner, repo = match["owner"], match["repo"]
 
     gh = util.get_gh_object(dry_run=dry_run, owner=owner, repo=repo, token=auth)

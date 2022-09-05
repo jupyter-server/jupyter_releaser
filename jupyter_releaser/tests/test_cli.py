@@ -550,7 +550,10 @@ def test_delete_release(npm_dist, runner, mock_github, git_prep, draft_release):
     os.name == "nt" and sys.version_info.major == 3 and sys.version_info.minor < 8,
     reason="See https://bugs.python.org/issue26660",
 )
-def test_extract_dist_py(py_package, runner, mocker, mock_github, tmp_path, git_prep):
+def test_extract_dist_py(
+    py_package, runner, mocker, mock_github, tmp_path, git_prep, draft_release
+):
+    os.environ["RH_RELEASE_URL"] = draft_release
     changelog_entry = mock_changelog_entry(py_package, runner, mocker)
 
     # Create the dist files
@@ -567,7 +570,7 @@ def test_extract_dist_py(py_package, runner, mocker, mock_github, tmp_path, git_
     release = create_draft_release(ref, glob(f"{dist_dir}/*.*"))
     shutil.rmtree(f"{util.CHECKOUT_NAME}/dist")
 
-    runner(["extract-release", release.html_url])
+    runner(["extract-release"])
 
     log = get_log()
     assert "before-extract-release" not in log
@@ -578,7 +581,10 @@ def test_extract_dist_py(py_package, runner, mocker, mock_github, tmp_path, git_
     os.name == "nt" and sys.version_info.major == 3 and sys.version_info.minor < 8,
     reason="See https://bugs.python.org/issue26660",
 )
-def test_extract_dist_multipy(py_multipackage, runner, mocker, mock_github, tmp_path, git_prep):
+def test_extract_dist_multipy(
+    py_multipackage, runner, mocker, mock_github, tmp_path, git_prep, draft_release
+):
+    os.environ["RH_RELEASE_URL"] = draft_release
     git_repo = py_multipackage[0]["abs_path"]
     changelog_entry = mock_changelog_entry(git_repo, runner, mocker)
 
@@ -603,7 +609,7 @@ def test_extract_dist_multipy(py_multipackage, runner, mocker, mock_github, tmp_
     release = create_draft_release(ref, files)
     shutil.rmtree(f"{util.CHECKOUT_NAME}/dist")
 
-    runner(["extract-release", release.html_url])
+    runner(["extract-release"])
 
     log = get_log()
     assert "before-extract-release" not in log
@@ -614,7 +620,8 @@ def test_extract_dist_multipy(py_multipackage, runner, mocker, mock_github, tmp_
     os.name == "nt" and sys.version_info.major == 3 and sys.version_info.minor < 8,
     reason="See https://bugs.python.org/issue26660",
 )
-def test_extract_dist_npm(npm_dist, runner, mocker, mock_github, tmp_path):
+def test_extract_dist_npm(npm_dist, runner, mocker, mock_github, tmp_path, draft_release):
+    os.environ["RH_RELEASE_URL"] = draft_release
 
     # Create a tag ref
     ref = create_tag_ref()
@@ -624,7 +631,7 @@ def test_extract_dist_npm(npm_dist, runner, mocker, mock_github, tmp_path):
     release = create_draft_release(ref, glob(f"{dist_dir}/*.*"))
     shutil.rmtree(f"{util.CHECKOUT_NAME}/dist")
 
-    runner(["extract-release", release.html_url])
+    runner(["extract-release"])
 
     log = get_log()
     assert "before-extract-release" not in log
@@ -632,8 +639,9 @@ def test_extract_dist_npm(npm_dist, runner, mocker, mock_github, tmp_path):
 
 
 @pytest.mark.skipif(os.name == "nt", reason="pypiserver does not start properly on Windows")
-def test_publish_assets_py(py_package, runner, mocker, git_prep, mock_github):
+def test_publish_assets_py(py_package, runner, mocker, git_prep, mock_github, draft_release):
     # Create the dist files
+    os.environ["RH_RELEASE_URL"] = draft_release
     changelog_entry = mock_changelog_entry(py_package, runner, mocker)
     run("python -m build .", cwd=util.CHECKOUT_NAME)
 
@@ -652,8 +660,8 @@ def test_publish_assets_py(py_package, runner, mocker, git_prep, mock_github):
     mock_run = mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
 
     dist_dir = py_package / util.CHECKOUT_NAME / "dist"
-    release = create_draft_release()
-    runner(["publish-assets", "--dist-dir", dist_dir, "--dry-run", release.html_url])
+    create_draft_release()
+    runner(["publish-assets", "--dist-dir", dist_dir, "--dry-run"])
     assert called == 2, called
 
     log = get_log()
@@ -679,7 +687,8 @@ def test_publish_assets_npm(npm_dist, runner, mocker):
     assert called == 3, called
 
 
-def test_publish_assets_npm_exists(npm_dist, runner, mocker, mock_github):
+def test_publish_assets_npm_exists(npm_dist, runner, mocker, mock_github, draft_release):
+    os.environ["RH_RELEASE_URL"] = draft_release
     dist_dir = npm_dist / util.CHECKOUT_NAME / "dist"
     called = 0
 
@@ -693,7 +702,7 @@ def test_publish_assets_npm_exists(npm_dist, runner, mocker, mock_github):
                 raise err
 
     mock_run = mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
-    release = create_draft_release()
+    create_draft_release()
     runner(
         [
             "publish-assets",
@@ -703,14 +712,14 @@ def test_publish_assets_npm_exists(npm_dist, runner, mocker, mock_github):
             "npm publish --dry-run",
             "--dist-dir",
             dist_dir,
-            release.html_url,
         ]
     )
 
     assert called == 3, called
 
 
-def test_publish_assets_npm_all_exists(npm_dist, runner, mocker, mock_github):
+def test_publish_assets_npm_all_exists(npm_dist, runner, mocker, mock_github, draft_release):
+    os.environ["RH_RELEASE_URL"] = draft_release
     dist_dir = npm_dist / util.CHECKOUT_NAME / "dist"
     called = 0
 
@@ -723,7 +732,7 @@ def test_publish_assets_npm_all_exists(npm_dist, runner, mocker, mock_github):
             raise err
 
     mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
-    release = create_draft_release()
+    create_draft_release()
     runner(
         [
             "publish-assets",
@@ -733,16 +742,16 @@ def test_publish_assets_npm_all_exists(npm_dist, runner, mocker, mock_github):
             "npm publish --dry-run",
             "--dist-dir",
             dist_dir,
-            release.html_url,
         ]
     )
 
     assert called == 3, called
 
 
-def test_publish_release(npm_dist, runner, mocker, mock_github):
-    release = create_draft_release("bar")
-    runner(["publish-release", release.html_url])
+def test_publish_release(npm_dist, runner, mocker, mock_github, draft_release):
+    os.environ["RH_RELEASE_URL"] = draft_release
+    create_draft_release("bar")
+    runner(["publish-release"])
 
     log = get_log()
     assert "before-publish-release" in log
@@ -820,8 +829,11 @@ def test_config_file_cli_override(py_package, runner, mocker, git_prep):
     assert "after-build-python" in log
 
 
-def test_forwardport_changelog_no_new(npm_package, runner, mocker, mock_github, git_prep):
-    release = create_draft_release("bar")
+def test_forwardport_changelog_no_new(
+    npm_package, runner, mocker, mock_github, git_prep, draft_release
+):
+    os.environ["RH_RELEASE_URL"] = draft_release
+    create_draft_release("bar")
 
     # Create a branch with a changelog entry
     util.run("git checkout -b backport_branch", cwd=util.CHECKOUT_NAME)
@@ -831,15 +843,18 @@ def test_forwardport_changelog_no_new(npm_package, runner, mocker, mock_github, 
     util.run(f"git tag v{VERSION_SPEC}", cwd=util.CHECKOUT_NAME)
 
     # Run the forwardport workflow against default branch
-    runner(["forwardport-changelog", release.html_url])
+    runner(["forwardport-changelog"])
 
     log = get_log()
     assert "before-forwardport-changelog" in log
     assert "after-forwardport-changelog" in log
 
 
-def test_forwardport_changelog_has_new(npm_package, runner, mocker, mock_github, git_prep):
-    release = create_draft_release("bar")
+def test_forwardport_changelog_has_new(
+    npm_package, runner, mocker, mock_github, git_prep, draft_release
+):
+    os.environ["RH_RELEASE_URL"] = draft_release
+    create_draft_release("bar")
 
     current = util.run("git branch --show-current", cwd=util.CHECKOUT_NAME)
 
@@ -865,7 +880,7 @@ def test_forwardport_changelog_has_new(npm_package, runner, mocker, mock_github,
     # Run the forwardport workflow against default branch
     url = osp.abspath(npm_package)
     os.chdir(npm_package)
-    runner(["forwardport-changelog", release.html_url, "--branch", current])
+    runner(["forwardport-changelog", "--branch", current])
 
     util.run(f"git checkout {current}", cwd=npm_package)
 
