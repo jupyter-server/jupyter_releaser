@@ -38,7 +38,7 @@ runs:
   using: "composite"
   steps:
     - name: install-releaser
-      uses: ${{ github.action_path }}/../install-releaser
+      uses: ../install-releaser
 
     - shell: bash
       id: draft-changelog
