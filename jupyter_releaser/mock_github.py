@@ -31,7 +31,7 @@ def load_from_pickle(name):
     with open(source_file, "rb") as fid:
         try:
             return pickle.load(fid)
-        except ValueError:
+        except AttributeError:
             return {}
 
 

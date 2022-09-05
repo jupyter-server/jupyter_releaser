@@ -218,7 +218,7 @@ def draft_release(mock_github):
             json.dump(data, fid)
 
         release = gh.create_release(
-            f"v1.0.0", "bar", f"v1.0.0", "hi", True, True, files=[metadata_path]
+            "v1.0.0", "bar", "v1.0.0", "hi", True, True, files=[metadata_path]
         )
     yield release.html_url
     try:

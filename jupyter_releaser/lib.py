@@ -11,7 +11,6 @@ import typing as t
 import uuid
 from datetime import datetime
 from glob import glob
-from io import StringIO
 from pathlib import Path
 from subprocess import CalledProcessError
 

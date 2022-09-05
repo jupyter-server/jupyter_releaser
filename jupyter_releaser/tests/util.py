@@ -4,11 +4,10 @@ import os
 import shutil
 from pathlib import Path
 
-import requests
 from ghapi.core import GhApi
 
 from jupyter_releaser import changelog, cli, util
-from jupyter_releaser.util import MOCK_GITHUB_URL, get_latest_tag, run
+from jupyter_releaser.util import get_latest_tag, run
 
 VERSION_SPEC = "1.0.1"
 

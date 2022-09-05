@@ -9,10 +9,10 @@ setup()
 release_url = os.environ["RH_RELEASE_URL"]
 
 if release_url:
-    run_action(f"jupyter-releaser extract-release")
+    run_action("jupyter-releaser extract-release")
 
-run_action(f"jupyter-releaser publish-assets")
+run_action("jupyter-releaser publish-assets")
 
 if release_url:
-    run_action(f"jupyter-releaser forwardport-changelog")
-    run_action(f"jupyter-releaser publish-release")
+    run_action("jupyter-releaser forwardport-changelog")
+    run_action("jupyter-releaser publish-release")
