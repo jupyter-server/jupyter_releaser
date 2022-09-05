@@ -351,8 +351,6 @@ def latest_draft_release(gh, branch=None):
         if newest_time is None or d_created > newest_time:
             newest_time = d_created
             newest_release = release
-    if not newest_release:
-        raise ValueError("No draft releases found")
     return newest_release
 
 
@@ -516,10 +514,14 @@ def prepare_environment():
     release_url = os.environ.get("RH_RELEASE_URL")
     if not release_url:
         release = latest_draft_release(gh, branch)
-        os.environ["RH_RELEASE_URL"] = release_url = release.html_url
+        if release:
+            release_url = release.html_url
 
-    # Extract the metadata from the release url.
-    return extract_metadata_from_release_url(gh, release_url, auth)
+    if release_url:
+        os.environ["RH_RELEASE_URL"] = release_url
+
+        # Extract the metadata from the release url.
+        return extract_metadata_from_release_url(gh, release_url, auth)
 
 
 def handle_since():
