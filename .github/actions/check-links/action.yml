@@ -4,7 +4,7 @@ runs:
   using: "composite"
   steps:
     - name: install-releaser
-      uses: jupyter-server/jupyter_releaser/.github/actions/install-releaser@v1
+      uses: ${{ github.action_path }}/../install-releaser
 
     - name: Cache checked links
       uses: actions/cache@v2
