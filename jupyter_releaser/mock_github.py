@@ -29,7 +29,10 @@ def load_from_pickle(name):
     if not os.path.exists(source_file):
         return {}
     with open(source_file, "rb") as fid:
-        return pickle.load(fid)
+        try:
+            return pickle.load(fid)
+        except ValueError:
+            return {}
 
 
 def write_to_pickle(name, data):

@@ -154,9 +154,7 @@ def draft_changelog(
 
     util.log(f"Creating draft GitHub release for {version}")
     owner, repo_name = repo.split("/")
-    gh = util.get_gh_object(
-        dry_run=dry_run, owner=owner, repo=repo_name, token=auth, current_sha=current_sha
-    )
+    gh = util.get_gh_object(dry_run=dry_run, owner=owner, repo=repo_name, token=auth)
 
     data = dict(
         version_spec=version_spec,
@@ -167,6 +165,7 @@ def draft_changelog(
         version=version,
         post_version_spec=post_version_spec,
         post_version_message=post_version_message,
+        current_sha=current_sha,
     )
     with tempfile.TemporaryDirectory() as d:
         metadata_path = Path(d) / "metadata.json"
@@ -176,8 +175,6 @@ def draft_changelog(
         release = gh.create_release(
             f"v{version}", branch, f"v{version}", body, True, prerelease, files=[metadata_path]
         )
-    owner, repo_name = repo.split("/")
-    gh = util.get_gh_object(dry_run=dry_run, owner=owner, repo=repo_name, token=auth)
 
     if npm_versions:
         body += f"\n```{npm_versions}\n```"
