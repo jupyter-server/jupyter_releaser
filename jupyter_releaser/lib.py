@@ -192,14 +192,14 @@ def draft_changelog(
 
     # Remove draft releases over a day old
     if bool(os.environ.get("GITHUB_ACTIONS")):
-        for release in gh.repos.list_releases():
-            if str(release.draft).lower() == "false":
+        for rel in gh.repos.list_releases():
+            if str(rel.draft).lower() == "false":
                 continue
-            created = release.created_at
+            created = rel.created_at
             d_created = datetime.strptime(created, r"%Y-%m-%dT%H:%M:%SZ")
             delta = datetime.utcnow() - d_created
             if delta.days > 0:
-                gh.repos.delete_release(release.id)
+                gh.repos.delete_release(rel.id)
 
     make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=dry_run)
 

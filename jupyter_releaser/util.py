@@ -73,7 +73,7 @@ def run(cmd, **kwargs):
         if show_cwd:
             prefix += f" (in '{os.getcwd()}')"
         prefix += ":"
-        print(f"{prefix} {cmd}", file=sys.stderr)
+        log(f"{prefix} {cmd}")
 
     if sys.platform.startswith("win"):
         # Async subprocesses do not work well on Windows, use standard
@@ -178,7 +178,7 @@ def get_version():
         try:
             return run("python setup.py --version").split("\n")[-1]
         except CalledProcessError as e:
-            print(e)
+            log(e)
 
     # Build the wheel and extract the version.
     if PYPROJECT.exists():
@@ -358,7 +358,7 @@ def actions_output(name, value):
     "Print the special GitHub Actions `::set-output` line for `name::value`"
     log(f"\n\nSetting output {name}={value}")
     if "GITHUB_ACTIONS" in os.environ:
-        print(f"::set-output name={name}::{value}")
+        log(f"::set-output name={name}::{value}")
 
 
 def get_latest_tag(source, since_last_stable=False):
@@ -483,7 +483,7 @@ def prepare_environment():
     os.environ.setdefault("RH_REF", os.environ["GITHUB_REF"])
 
     check_release = os.environ.get("RH_IS_CHECK_RELEASE", "").lower() == "true"
-    if not "RH_DRY_RUN" in os.environ and check_release:
+    if "RH_DRY_RUN" not in os.environ and check_release:
         os.environ["RH_DRY_RUN"] = "true"
     dry_run = os.environ.get("RH_DRY_RUN", "").lower() == "true"
 
