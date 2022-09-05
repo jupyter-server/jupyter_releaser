@@ -316,7 +316,7 @@ def draft_release(
     for fpath in assets:
         gh.upload_file(release, fpath)
 
-    # Update the release itself.
+    # Set the body of the release with the changelog contents.
     gh.repos.update_release(
         release.id,
         release.tag_name,
