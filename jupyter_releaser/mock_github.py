@@ -30,10 +30,13 @@ def load_from_file(name, klass):
         return {}
     with open(source_file) as fid:
         data = json.load(fid)
-        if isinstance(klass, BaseModel):
-            return klass(**data)  # type:ignore[operator]
-        else:
-            return data
+        results = {}
+        for key in data:
+            if isinstance(klass, BaseModel):
+                results[key] = klass(**data[key])  # type:ignore[operator]
+            else:
+                results[key] = data[key]
+    return results
 
 
 def write_to_file(name, data):
