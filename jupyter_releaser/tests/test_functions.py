@@ -384,7 +384,7 @@ def test_extract_metadata_from_release_url(mock_github, draft_release):
 
 def test_prepare_environment(mock_github, draft_release):
     os.environ["GITHUB_REPOSITORY"] = "foo/bar"
-    tag = draft_release.split('/')[-1]
+    tag = draft_release.split("/")[-1]
     os.environ["GITHUB_REF"] = f"refs/tag/{tag}"
     os.environ["RH_DRY_RUN"] = "true"
     data = util.prepare_environment()

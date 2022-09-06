@@ -4,8 +4,8 @@ import json
 import os
 import os.path as osp
 import tempfile
-import uuid
 import time
+import uuid
 from pathlib import Path
 
 from click.testing import CliRunner
