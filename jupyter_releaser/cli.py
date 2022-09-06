@@ -145,6 +145,7 @@ post_version_spec_options = [
     click.option(
         "--post-version-spec",
         envvar="RH_POST_VERSION_SPEC",
+        default="",
         help="The post release version (usually dev)",
     ),
     click.option(
