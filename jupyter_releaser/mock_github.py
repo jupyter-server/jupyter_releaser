@@ -33,7 +33,7 @@ def load_from_file(name, klass):
         results = {}
         for key in data:
             if issubclass(klass, BaseModel):
-                results[key] = klass(**data[key])  # type:ignore[operator]
+                results[key] = klass(**data[key])
             else:
                 results[key] = data[key]
     return results
