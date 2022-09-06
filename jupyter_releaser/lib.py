@@ -494,6 +494,7 @@ def publish_assets(
     found = False
     for path in sorted(glob(f"{dist_dir}/*.*")):
         name = Path(path).name
+        util.log(f"Handling dist file {path}")
         suffix = Path(path).suffix
         if suffix in [".gz", ".whl"]:
             if suffix == ".gz":

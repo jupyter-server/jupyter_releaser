@@ -106,9 +106,9 @@ class Tag(BaseModel):
     object: TagObject
 
 
-releases: Dict[int, "Release"] = load_from_file("releases", Release)
-pulls: Dict[int, "PullRequest"] = load_from_file("pulls", PullRequest)
-release_ids_for_asset: Dict[str, int] = load_from_file("release_ids_for_asset", int)
+releases: Dict[str, "Release"] = load_from_file("releases", Release)
+pulls: Dict[str, "PullRequest"] = load_from_file("pulls", PullRequest)
+release_ids_for_asset: Dict[str, str] = load_from_file("release_ids_for_asset", int)
 tag_refs: Dict[str, "Tag"] = load_from_file("tag_refs", Tag)
 
 
@@ -142,7 +142,7 @@ async def create_a_release(owner: str, repo: str, request: Request) -> Release:
         created_at=created_at,
         **data,
     )
-    releases[model.id] = model
+    releases[str(model.id)] = model
     write_to_file("releases", releases)
     return model
 
@@ -151,7 +151,7 @@ async def create_a_release(owner: str, repo: str, request: Request) -> Release:
 async def update_a_release(owner: str, repo: str, release_id: int, request: Request) -> Release:
     """https://docs.github.com/en/rest/releases/releases#update-a-release"""
     data = await request.json()
-    model = releases[release_id]
+    model = releases[str(release_id)]
     for name, value in data.items():
         setattr(model, name, value)
     write_to_file("releases", releases)
@@ -161,7 +161,7 @@ async def update_a_release(owner: str, repo: str, release_id: int, request: Requ
 @app.post("/repos/{owner}/{repo}/releases/{release_id}/assets")
 async def upload_a_release_asset(owner: str, repo: str, release_id: int, request: Request) -> None:
     """https://docs.github.com/en/rest/releases/assets#upload-a-release-asset"""
-    model = releases[release_id]
+    model = releases[str(release_id)]
     asset_id = uuid.uuid4().int
     name = request.query_params["name"]
     with open(f"{static_dir}/{asset_id}", "wb") as fid:
@@ -176,7 +176,7 @@ async def upload_a_release_asset(owner: str, repo: str, release_id: int, request
         url=url,
         content_type=headers["content-type"],
     )
-    release_ids_for_asset[str(asset_id)] = release_id
+    release_ids_for_asset[str(asset_id)] = str(release_id)
     model.assets.append(asset)
     write_to_file("releases", releases)
     write_to_file("release_ids_for_asset", release_ids_for_asset)
@@ -196,24 +196,24 @@ async def delete_a_release_asset(owner: str, repo: str, asset_id: int) -> None:
 @app.delete("/repos/{owner}/{repo}/releases/{release_id}")
 def delete_a_release(owner: str, repo: str, release_id: int) -> None:
     """https://docs.github.com/en/rest/releases/releases#delete-a-release"""
-    del releases[release_id]
+    del releases[str(release_id)]
     write_to_file("releases", releases)
 
 
 @app.get("/repos/{owner}/{repo}/pulls/{pull_number}")
 def get_a_pull_request(owner: str, repo: str, pull_number: int) -> PullRequest:
     """https://docs.github.com/en/rest/pulls/pulls#get-a-pull-request"""
-    if pull_number not in pulls:
-        pulls[pull_number] = PullRequest()
+    if str(pull_number) not in pulls:
+        pulls[str(pull_number)] = PullRequest()
     write_to_file("pulls", pulls)
-    return pulls[pull_number]
+    return pulls[str(pull_number)]
 
 
 @app.post("/repos/{owner}/{repo}/pulls")
 def create_a_pull_request(owner: str, repo: str) -> PullRequest:
     """https://docs.github.com/en/rest/pulls/pulls#create-a-pull-request"""
     pull = PullRequest()
-    pulls[pull.number] = pull
+    pulls[str(pull.number)] = pull
     write_to_file("pulls", pulls)
     return pull
 

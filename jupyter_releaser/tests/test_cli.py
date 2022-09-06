@@ -643,7 +643,7 @@ def test_publish_assets_py(py_package, runner, mocker, git_prep, mock_github):
     orig_run = util.run
     called = 0
 
-    os.environ["PYPI_TOKEN_MAP"] = "snuffy/test,foo-token\nfizz/buzz,bar"
+    os.environ["PYPI_TOKEN_MAP"] = "foo/bar,foo-token\nfizz/buzz,bar"
 
     def wrapped(cmd, **kwargs):
         nonlocal called
@@ -655,6 +655,8 @@ def test_publish_assets_py(py_package, runner, mocker, git_prep, mock_github):
     mock_run = mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
 
     dist_dir = py_package / util.CHECKOUT_NAME / "dist"
+    release = create_draft_release()
+    os.environ["RH_RELEASE_URL"] = release.html_url
     runner(["publish-assets", "--dist-dir", dist_dir, "--dry-run"])
     assert called == 2, called
 

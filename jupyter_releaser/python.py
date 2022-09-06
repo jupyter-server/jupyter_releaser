@@ -102,7 +102,11 @@ def get_pypi_token(release_url, python_package):
     twine_pwd = os.environ.get("PYPI_TOKEN", "")
     pypi_token_map = os.environ.get("PYPI_TOKEN_MAP", "").replace(r"\n", "\n")
     if pypi_token_map and release_url:
-        parts = release_url.replace("https://github.com/", "").split("/")
+        parts = (
+            release_url.replace(util.MOCK_GITHUB_URL + "/", "")
+            .replace("https://github.com/", "")
+            .split("/")
+        )
         repo_name = f"{parts[0]}/{parts[1]}"
         if python_package != ".":
             repo_name += f"/{python_package}"
