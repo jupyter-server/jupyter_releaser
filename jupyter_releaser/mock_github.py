@@ -31,7 +31,7 @@ def load_from_file(name, klass):
     with open(source_file) as fid:
         data = json.load(fid)
         if isinstance(klass, BaseModel):
-            return klass(**data)
+            return klass(**data)  # type:ignore[operator]
         else:
             return data
 
@@ -42,7 +42,7 @@ def write_to_file(name, data):
     for key in data:
         value = data[key]
         if isinstance(value, BaseModel):
-            value = value.json()
+            value = json.loads(value.json())
         result[key] = value
     with open(source_file, "w") as fid:
         json.dump(result, fid)
