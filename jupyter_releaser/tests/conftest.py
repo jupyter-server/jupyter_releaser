@@ -5,6 +5,7 @@ import os
 import os.path as osp
 import tempfile
 import uuid
+import time
 from pathlib import Path
 
 from click.testing import CliRunner
@@ -220,6 +221,8 @@ def draft_release(mock_github):
         with open(metadata_path, "w") as fid:
             json.dump(data, fid)
 
+        # Ensure this is the latest release.
+        time.sleep(1)
         release = gh.create_release(tag, "bar", tag, "hi", True, True, files=[metadata_path])
     yield release.html_url
     try:
