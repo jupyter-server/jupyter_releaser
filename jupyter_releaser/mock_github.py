@@ -32,7 +32,7 @@ def load_from_file(name, klass):
         data = json.load(fid)
         results = {}
         for key in data:
-            if isinstance(klass, BaseModel):
+            if issubclass(klass, BaseModel):
                 results[key] = klass(**data[key])  # type:ignore[operator]
             else:
                 results[key] = data[key]

@@ -3,6 +3,8 @@ import os
 import requests
 from ghapi.core import GhApi
 
+from jupyter_releaser.mock_github import Asset, Release, load_from_file, write_to_file
+
 
 def test_mock_github(mock_github):
     owner = "foo"
@@ -55,3 +57,30 @@ def test_mock_github(mock_github):
 
     pull = gh.pulls.create("title", "head", "base", "body", True, False, None)
     gh.issues.add_labels(pull.number, ["documentation"])
+
+
+def test_cache_storage():
+    asset = Asset(
+        id=1,
+        name="hi",
+        size=122,
+        url="hi",
+        content_type="hi",
+    )
+    model = Release(
+        id=1,
+        url="hi",
+        html_url="ho",
+        assets=[asset],
+        upload_url="hi",
+        created_at="1",
+        draft=False,
+        prerelease=False,
+        target_commitish="1",
+        tag_name="1",
+    )
+    write_to_file("releases", dict(test=model))
+    data = load_from_file("releases", Release)
+    assert isinstance(data["test"], Release)
+    assert isinstance(data["test"].assets[0], Asset)
+    assert data["test"].assets[0].url == asset.url
