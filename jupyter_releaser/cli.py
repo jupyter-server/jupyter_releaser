@@ -102,11 +102,7 @@ class ReleaseHelperGroup(click.Group):
 
         # Re-read config if we just did a git checkout
         if cmd_name in ["prep-git", "extract-release"]:
-            try:
-                os.chdir(util.CHECKOUT_NAME)
-            except FileNotFoundError as e:
-                util.log(e)
-                util.log(os.getcwd())
+            os.chdir(util.CHECKOUT_NAME)
             config = util.read_config()
             hooks = config.get("hooks", {})
 

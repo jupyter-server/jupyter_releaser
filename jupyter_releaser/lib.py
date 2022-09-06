@@ -413,6 +413,7 @@ def extract_release(
 
     # Skip sha validation for dry runs since the remote tag will not exist
     if dry_run:
+        os.chdir(orig_dir)
         return
 
     tag_name = release.tag_name

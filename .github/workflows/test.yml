@@ -159,7 +159,7 @@ jobs:
           dry_run: true
 
       - name: publish-release
-        uses: ././github/actions/publish-release
+        uses: ./.github/actions/publish-release
         env:
           RH_IS_CHECK_RELEASE: "true"
         with:
