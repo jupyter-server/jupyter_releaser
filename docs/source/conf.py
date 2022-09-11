@@ -11,6 +11,7 @@
 # import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
+import importlib.metadata
 import os.path as osp
 import shutil
 
@@ -23,7 +24,7 @@ copyright = "2021, Project Jupyter"
 author = "Project Jupyter"
 
 # The full version, including alpha/beta/rc tags.
-release = "0.23.3"
+release = importlib.metadata.version("jupyter_releaser")
 # The short X.Y version.
 version = ".".join(release.split(".")[:2])
 
