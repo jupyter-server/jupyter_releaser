@@ -519,9 +519,9 @@ def prepare_environment():
 
     # Set up GitHub object.
     branch = os.environ.get("RH_BRANCH")
+    log(f"Getting GitHub connection for {os.environ['RH_REPOSITORY']}")
     owner, repo_name = os.environ["RH_REPOSITORY"].split("/")
     auth = os.environ.get("GITHUB_ACCESS_TOKEN", "")
-    log(f"Getting GitHub connection for {owner}/{repo_name}")
     gh = get_gh_object(dry_run=dry_run, owner=owner, repo=repo_name, token=auth)
 
     # Get the latest draft release if none is given.
