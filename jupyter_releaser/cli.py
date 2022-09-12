@@ -376,6 +376,7 @@ def draft_changelog(
     """Create a changelog entry PR"""
     lib.draft_changelog(
         version_spec,
+        ref,
         branch,
         repo,
         since,
