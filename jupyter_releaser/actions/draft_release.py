@@ -12,6 +12,9 @@ from jupyter_releaser.util import CHECKOUT_NAME, log, run
 
 setup()
 
+if not os.environ.get("RH_RELEASE_URL"):
+    raise RuntimeError("Cannot complete Draft Release, no draft GitHub release url found!")
+
 changelog_location = None
 changelog_text = ""
 
