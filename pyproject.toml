@@ -4,7 +4,6 @@ build-backend = "hatchling.build"
 
 [project]
 name = "jupyter_releaser"
-version = "0.23.3"
 description = "Jupyter Releaser for Python and/or npm packages."
 license = {file = "LICENSE"}
 authors = [{name = "Jupyter Development Team", email = "jupyter@googlegroups.com"}]
@@ -21,6 +20,7 @@ classifiers = [
 ]
 urls = {Homepage = "https://jupyter.org"}
 requires-python = ">=3.8"
+dynamic = ["version"]
 dependencies = [
     "build",
     "check-manifest",
@@ -59,34 +59,8 @@ test = [
 [project.scripts]
 jupyter-releaser = "jupyter_releaser.cli:main"
 
-[tool.tbump.version]
-current = "0.23.3"
-regex = '''
-  (?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)
-  ((?P<channel>a|b|rc|.dev)(?P<release>\d+))?
-'''
-
-[tool.tbump.git]
-message_template = "Bump to {new_version}"
-tag_template = "v{new_version}"
-
-[[tool.tbump.file]]
-src = "jupyter_releaser/__init__.py"
-
-[[tool.tbump.file]]
-src = "pyproject.toml"
-version_template = "version = \"{major}.{minor}.{patch}{channel}{release}\""
-
-[[tool.tbump.file]]
-src = "docs/source/conf.py"
-
-[[tool.tbump.field]]
-name = "channel"
-default = ""
-
-[[tool.tbump.field]]
-name = "release"
-default = ""
+[tool.hatch.version]
+path = "jupyter_releaser/__init__.py"
 
 [tool.jupyter-releaser]
 skip = ["check-links"]
