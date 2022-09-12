@@ -251,7 +251,7 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):
             if "tbump" in pyproject_text:
                 version_cmd = version_cmd or TBUMP_CMD
             elif "hatchling" in pyproject_text:
-                version_cmd = version_cmd or "hatch version"
+                version_cmd = version_cmd or "hatchling version"
 
         if SETUP_CFG.exists():
             if "bumpversion" in SETUP_CFG.read_text(encoding="utf-8"):
@@ -265,13 +265,13 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):
 
     # Assign default values if no version spec was given
     if not version_spec:
-        if "tbump" in version_cmd or "hatch" in version_cmd:
+        if "tbump" in version_cmd or "hatchling" in version_cmd:
             version_spec = "next"
         else:
             version_spec = "patch"
 
     # Add some convenience options on top of "tbump" and "hatch"
-    if "tbump" in version_cmd or "hatch" in version_cmd:
+    if "tbump" in version_cmd or "hatchling" in version_cmd:
         v = parse_version(get_version())
         assert isinstance(v, Version)
 
