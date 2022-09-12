@@ -248,9 +248,9 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):
 
         if PYPROJECT.exists():
             pyproject_text = PYPROJECT.read_text(encoding="utf-8")
-            if "tbump" in pyproject_text:
+            if "tool.tbump" in pyproject_text:
                 version_cmd = version_cmd or TBUMP_CMD
-            elif "hatchling" in pyproject_text:
+            elif "hatchling.build" in pyproject_text:
                 version_cmd = version_cmd or "hatchling version"
 
         if SETUP_CFG.exists():
