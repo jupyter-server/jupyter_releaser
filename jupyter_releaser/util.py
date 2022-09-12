@@ -17,6 +17,7 @@ import time
 import warnings
 from datetime import datetime
 from glob import glob
+from io import BytesIO
 from pathlib import Path
 from subprocess import PIPE, CalledProcessError, check_output
 
@@ -44,9 +45,8 @@ TBUMP_CMD = "tbump --non-interactive --only-patch"
 
 CHECKOUT_NAME = ".jupyter_releaser_checkout"
 
-RELEASE_HTML_PATTERN = (
-    "https://github.com/(?P<owner>[^/]+)/(?P<repo>[^/]+)/releases/tag/(?P<tag>.*)"
-)
+MOCK_GITHUB_URL = "http://127.0.0.1:8000"
+RELEASE_HTML_PATTERN = f"(?:https://github.com|{MOCK_GITHUB_URL})/(?P<owner>[^/]+)/(?P<repo>[^/]+)/releases/tag/(?P<tag>.*)"
 RELEASE_API_PATTERN = (
     "https://api.github.com/repos/(?P<owner>[^/]+)/(?P<repo>[^/]+)/releases/tags/(?P<tag>.*)"
 )
@@ -56,8 +56,6 @@ SCHEMA = files("jupyter_releaser").joinpath("schema.json").read_text()
 SCHEMA = json.loads(SCHEMA)
 
 GIT_FETCH_CMD = "git fetch origin --filter=blob:none --quiet"
-
-MOCK_GITHUB_URL = "http://127.0.0.1:8000"
 
 
 def run(cmd, **kwargs):
@@ -72,7 +70,7 @@ def run(cmd, **kwargs):
         if show_cwd:
             prefix += f" (in '{os.getcwd()}')"
         prefix += ":"
-        print(f"{prefix} {cmd}", file=sys.stderr)
+        log(f"{prefix} {cmd}")
 
     if sys.platform.startswith("win"):
         # Async subprocesses do not work well on Windows, use standard
@@ -177,7 +175,7 @@ def get_version():
         try:
             return run("python setup.py --version").split("\n")[-1]
         except CalledProcessError as e:
-            print(e)
+            log(e)
 
     # Build the wheel and extract the version.
     if PYPROJECT.exists():
@@ -336,20 +334,20 @@ def release_for_url(gh, url):
     return release
 
 
-def lastest_draft_release(gh):
+def latest_draft_release(gh, branch=None):
     """Get the latest draft release for a given repo"""
     newest_time = None
     newest_release = None
     for release in gh.repos.list_releases():
         if str(release.draft).lower() == "false":
             continue
+        if branch and release.target_commitish != branch:
+            continue
         created = release.created_at
         d_created = datetime.strptime(created, r"%Y-%m-%dT%H:%M:%SZ")
         if newest_time is None or d_created > newest_time:
             newest_time = d_created
             newest_release = release
-    if not newest_release:
-        raise ValueError("No draft releases found")
     return newest_release
 
 
@@ -357,7 +355,7 @@ def actions_output(name, value):
     "Print the special GitHub Actions `::set-output` line for `name::value`"
     log(f"\n\nSetting output {name}={value}")
     if "GITHUB_ACTIONS" in os.environ:
-        print(f"::set-output name={name}::{value}")
+        log(f"::set-output name={name}::{value}")
 
 
 def get_latest_tag(source, since_last_stable=False):
@@ -424,6 +422,125 @@ def read_config():
     return config
 
 
+def parse_release_url(release_url):
+    """Parse a release url into a regex match"""
+    match = re.match(RELEASE_HTML_PATTERN, release_url)
+    match = match or re.match(RELEASE_API_PATTERN, release_url)
+    if not match:
+        raise ValueError(f"Release url is not valid: {release_url}")
+    return match
+
+
+def extract_metadata_from_release_url(gh, release_url, auth):
+    log(f"Extracting metadata for release: {release_url}")
+    release = release_for_url(gh, release_url)
+
+    data = None
+    for asset in release.assets:
+        if asset.name != "metadata.json":
+            continue
+
+        log(f"Fetching {asset.name}...")
+        url = asset.url
+        headers = dict(Authorization=f"token {auth}", Accept="application/octet-stream")
+
+        sink = BytesIO()
+        with requests.get(url, headers=headers, stream=True) as r:
+            r.raise_for_status()
+            for chunk in r.iter_content(chunk_size=8192):
+                sink.write(chunk)
+        sink.seek(0)
+        data = json.loads(sink.read().decode("utf-8"))
+
+    if data is None:
+        raise ValueError(f'Could not find "metadata.json" file in draft release {release_url}')
+
+    # Update environment variables.
+    if "post_version_spec" in data:
+        os.environ["RH_POST_VERSION_SPEC"] = data["post_version_spec"]
+    if "post_version_message" in data:
+        os.environ["RH_POST_VERSION_MESSAGE"] = data["post_version_message"]
+    if "version_spec" in data:
+        os.environ["RH_VERSION_SPEC"] = data["version_spec"]
+    if "branch" in data:
+        os.environ["RH_BRANCH"] = data["branch"]
+    if "since" in data:
+        os.environ["RH_SINCE"] = data["since"]
+    if "since_last_stable" in data:
+        os.environ["RH_SINCE_LAST_STABLE"] = str(data["since_last_stable"])
+
+    return data
+
+
+def prepare_environment():
+    """Prepare the environment variables, for use when running one of the
+    action scripts."""
+    # Set up env variables
+    os.environ.setdefault("RH_REPOSITORY", os.environ["GITHUB_REPOSITORY"])
+    os.environ.setdefault("RH_REF", os.environ["GITHUB_REF"])
+
+    check_release = os.environ.get("RH_IS_CHECK_RELEASE", "").lower() == "true"
+    if not os.environ.get("RH_DRY_RUN") and check_release:
+        os.environ["RH_DRY_RUN"] = "true"
+    dry_run = os.environ.get("RH_DRY_RUN", "").lower() == "true"
+
+    # Set the branch when using check release.
+    if not os.environ.get("RH_BRANCH") and check_release:
+        if os.environ.get("GITHUB_BASE_REF"):
+            base_ref = os.environ.get("GITHUB_BASE_REF", "")
+            log(f"Using GITHUB_BASE_REF: ${base_ref}")
+            os.environ["RH_BRANCH"] = base_ref
+
+        else:
+            # e.g refs/head/foo or refs/tag/bar
+            ref = os.environ["GITHUB_REF"]
+            log(f"Using GITHUB_REF: {ref}")
+            os.environ["RH_BRANCH"] = "/".join(ref.split("/")[2:])
+
+    # Start the mock GitHub server if in a dry run.
+    if dry_run:
+        static_dir = os.path.join(tempfile.gettempdir(), "gh_static")
+        os.makedirs(static_dir, exist_ok=True)
+        os.environ["RH_GITHUB_STATIC_DIR"] = static_dir
+        ensure_mock_github()
+
+    # Set up GitHub object.
+    branch = os.environ.get("RH_BRANCH")
+    owner, repo_name = os.environ["GITHUB_REPOSITORY"].split("/")
+    auth = os.environ.get("GITHUB_ACCESS_TOKEN", "")
+    gh = get_gh_object(dry_run=dry_run, owner=owner, repo=repo_name, token=auth)
+
+    # Get the latest draft release if none is given.
+    release_url = os.environ.get("RH_RELEASE_URL")
+    log(f"Environment release url was {release_url}")
+    if not release_url:
+        release = latest_draft_release(gh, branch)
+        if release:
+            release_url = release.html_url
+
+    if release_url:
+        os.environ["RH_RELEASE_URL"] = release_url
+
+        # Extract the metadata from the release url.
+        return extract_metadata_from_release_url(gh, release_url, auth)
+
+
+def handle_since():
+    """Capture the "since" argument in case we add tags before checking changelog."""
+    if os.environ.get("RH_SINCE"):
+        return
+    curr_dir = os.getcwd()
+    os.chdir(CHECKOUT_NAME)
+    since_last_stable_env = os.environ.get("RH_SINCE_LAST_STABLE")
+    since_last_stable = since_last_stable_env == "true"
+    since = get_latest_tag(os.environ.get("RH_BRANCH"), since_last_stable)
+    if since:
+        log(f"Capturing {since} in RH_SINCE variable")
+        os.environ["RH_SINCE"] = since
+    os.chdir(curr_dir)
+    return since
+
+
 def get_gh_object(dry_run=False, **kwargs):
     """Get a properly configured GhAPi object"""
     if dry_run:
@@ -459,7 +576,7 @@ def get_remote_name(dry_run):
 def ensure_mock_github():
     """Check for or start a mock github server."""
     core.GH_HOST = MOCK_GITHUB_URL
-
+    log("Ensuring mock GitHub")
     # First see if it is already running.
     try:
         requests.get(MOCK_GITHUB_URL)
@@ -483,6 +600,7 @@ def ensure_mock_github():
             raise ValueError(f"mock_github failed with {proc.returncode}")
     except subprocess.TimeoutExpired:
         pass
+    log("Mock GitHub started")
     atexit.register(proc.kill)
 
     while 1:

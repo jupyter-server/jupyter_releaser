@@ -1,5 +1,6 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
+
 import os
 import shutil
 from pathlib import Path
@@ -7,7 +8,7 @@ from subprocess import CalledProcessError
 
 from jupyter_releaser.actions.common import make_group, run_action, setup
 from jupyter_releaser.changelog import extract_current
-from jupyter_releaser.util import CHECKOUT_NAME, get_latest_tag, log, run
+from jupyter_releaser.util import CHECKOUT_NAME, log, run
 
 setup()
 
@@ -36,23 +37,6 @@ with make_group("Handle Check Release"):
 
 
 run_action("jupyter-releaser prep-git")
-
-
-with make_group("Handle RH_SINCE"):
-    # Capture the "since" argument in case we add tags befor checking changelog
-    # Do this before bumping the version
-    if not os.environ.get("RH_SINCE"):
-        curr_dir = os.getcwd()
-        os.chdir(CHECKOUT_NAME)
-        since_last_stable_env = os.environ.get("RH_SINCE_LAST_STABLE")
-        since_last_stable = since_last_stable_env == "true"
-        since = get_latest_tag(os.environ.get("RH_BRANCH"), since_last_stable)
-        if since:
-            log(f"Capturing {since} in RH_SINCE variable")
-            os.environ["RH_SINCE"] = since
-        os.chdir(curr_dir)
-
-
 run_action("jupyter-releaser bump-version")
 
 with make_group("Handle Check Release"):
@@ -63,6 +47,7 @@ with make_group("Handle Check Release"):
         Path(changelog_location).write_text(changelog_text)
         log(extract_current(changelog_location))
 
+# TODO: make this compare files changed since the sha in the metadata.
 run_action("jupyter-releaser check-changelog")
 
 # Make sure npm comes before python in case it produces

@@ -1,10 +1,12 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
+import json
 import os
 import os.path as osp
 import re
 import shutil
 import sys
+import tempfile
 import typing as t
 import uuid
 from datetime import datetime
@@ -106,12 +108,24 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
 
 
 def draft_changelog(
-    version_spec, branch, repo, since, since_last_stable, auth, changelog_path, dry_run
+    version_spec,
+    branch,
+    repo,
+    since,
+    since_last_stable,
+    auth,
+    changelog_path,
+    dry_run,
+    post_version_spec,
+    post_version_message,
 ):
     """Create a changelog entry PR"""
     repo = repo or util.get_repo()
     branch = branch or util.get_branch()
     version = util.get_version()
+    prerelease = util.is_prerelease(version)
+
+    current_sha = util.run("git rev-parse HEAD")
 
     # Check for multiple versions
     npm_versions = None
@@ -137,6 +151,30 @@ def draft_changelog(
     commit_message = f'git commit -a -m "{title}"'
     body = title
 
+    util.log(f"Creating draft GitHub release for {version}")
+    owner, repo_name = repo.split("/")
+    gh = util.get_gh_object(dry_run=dry_run, owner=owner, repo=repo_name, token=auth)
+
+    data = dict(
+        version_spec=version_spec,
+        branch=branch,
+        repo=repo,
+        since=since,
+        since_last_stable=since_last_stable,
+        version=version,
+        post_version_spec=post_version_spec,
+        post_version_message=post_version_message,
+        current_sha=current_sha,
+    )
+    with tempfile.TemporaryDirectory() as d:
+        metadata_path = Path(d) / "metadata.json"
+        with open(metadata_path, "w") as fid:
+            json.dump(data, fid)
+
+        release = gh.create_release(
+            f"v{version}", branch, f"v{version}", body, True, prerelease, files=[metadata_path]
+        )
+
     if npm_versions:
         body += f"\n```{npm_versions}\n```"
 
@@ -144,9 +182,7 @@ def draft_changelog(
     body += f"""
 | Input  | Value |
 | ------------- | ------------- |
-| Target | {repo}  |
-| Branch  | {branch}  |
-| Version Spec | {version_spec} |
+| Draft Release | {release.html_url}  |
 """
     if since_last_stable:
         body += "| Since Last Stable | true |"
@@ -154,7 +190,21 @@ def draft_changelog(
         body += f"| Since | {since} |"
     util.log(body)
 
+    # Remove draft releases over a day old
+    if bool(os.environ.get("GITHUB_ACTIONS")):
+        for rel in gh.repos.list_releases():
+            if str(rel.draft).lower() == "false":
+                continue
+            created = rel.created_at
+            d_created = datetime.strptime(created, r"%Y-%m-%dT%H:%M:%SZ")
+            delta = datetime.utcnow() - d_created
+            if delta.days > 0:
+                gh.repos.delete_release(rel.id)
+
     make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=dry_run)
+
+    # Set the GitHub action output for the release url.
+    util.actions_output("release_url", release.html_url)
 
 
 def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=False):
@@ -226,24 +276,25 @@ def draft_release(
     ref,
     branch,
     repo,
+    version_cmd,
     auth,
     changelog_path,
-    version_cmd,
     dist_dir,
     dry_run,
+    release_url,
     post_version_spec,
     post_version_message,
     assets,
 ):
     """Publish Draft GitHub release and handle post version bump"""
     branch = branch or util.get_branch()
-    repo = repo or util.get_repo()
     assets = assets or glob(f"{dist_dir}/*")
-    version = util.get_version()
     body = changelog.extract_current(changelog_path)
-    prerelease = util.is_prerelease(version)
 
-    # Bump to post version if given
+    match = util.parse_release_url(release_url)
+    owner, repo_name = match["owner"], match["repo"]
+
+    # Bump to post version if given.
     if post_version_spec:
         post_version = bump_version(
             post_version_spec, version_cmd=version_cmd, changelog_path=changelog_path
@@ -251,35 +302,28 @@ def draft_release(
         util.log(post_version_message.format(post_version=post_version))
         util.run(f'git commit -a -m "Bump to {post_version}"')
 
-    owner, repo_name = repo.split("/")
     gh = util.get_gh_object(dry_run=dry_run, owner=owner, repo=repo_name, token=auth)
-
-    # Remove draft releases over a day old
-    if bool(os.environ.get("GITHUB_ACTIONS")):
-        for release in gh.repos.list_releases():
-            if str(release.draft).lower() == "false":
-                continue
-            created = release.created_at
-            d_created = datetime.strptime(created, r"%Y-%m-%dT%H:%M:%SZ")
-            delta = datetime.utcnow() - d_created
-            if delta.days > 0:
-                gh.repos.delete_release(release.id)
+    release = util.release_for_url(gh, release_url)
 
     remote_name = util.get_remote_name(dry_run)
     remote_url = util.run(f"git config --get remote.{remote_name}.url")
     if not os.path.exists(remote_url):
         util.run(f"git push {remote_name} HEAD:{branch} --follow-tags --tags")
 
-    util.log(f"Creating release for {version}")
-    util.log(f"With assets: {assets}")
-    release = gh.create_release(
-        f"v{version}",
-        branch,
-        f"v{version}",
+    # Upload the assets to the draft release.
+    util.log(f"Uploading assets: {assets}")
+    for fpath in assets:
+        gh.upload_file(release, fpath)
+
+    # Set the body of the release with the changelog contents.
+    gh.repos.update_release(
+        release.id,
+        release.tag_name,
+        release.target_commitish,
+        release.name,
         body,
         True,
-        prerelease,
-        files=assets,
+        release.prerelease,
     )
 
     # Set the GitHub action output
@@ -312,7 +356,7 @@ def extract_release(
     python_imports,
 ):
     """Download and verify assets from a draft GitHub release"""
-    match = parse_release_url(release_url)
+    match = util.parse_release_url(release_url)
     owner, repo = match["owner"], match["repo"]
 
     gh = util.get_gh_object(dry_run=dry_run, owner=owner, repo=repo, token=auth)
@@ -369,6 +413,7 @@ def extract_release(
 
     # Skip sha validation for dry runs since the remote tag will not exist
     if dry_run:
+        os.chdir(orig_dir)
         return
 
     tag_name = release.tag_name
@@ -404,15 +449,6 @@ def extract_release(
     os.chdir(orig_dir)
 
 
-def parse_release_url(release_url):
-    """Parse a release url into a regex match"""
-    match = re.match(util.RELEASE_HTML_PATTERN, release_url)
-    match = match or re.match(util.RELEASE_API_PATTERN, release_url)
-    if not match:
-        raise ValueError(f"Release url is not valid: {release_url}")
-    return match
-
-
 def publish_assets(
     dist_dir,
     npm_token,
@@ -441,7 +477,7 @@ def publish_assets(
     else:
         python_package_name = ""
 
-    if len(glob(f"{dist_dir}/*.whl")):
+    if release_url and len(glob(f"{dist_dir}/*.whl")):
         twine_token = python.get_pypi_token(release_url, python_package_path)
 
     if dry_run:
@@ -459,6 +495,7 @@ def publish_assets(
     found = False
     for path in sorted(glob(f"{dist_dir}/*.*")):
         name = Path(path).name
+        util.log(f"Handling dist file {path}")
         suffix = Path(path).suffix
         if suffix in [".gz", ".whl"]:
             if suffix == ".gz":
@@ -471,12 +508,12 @@ def publish_assets(
                 env["TWINE_PASSWORD"] = twine_token
                 # NOTE: Do not print the env since a twine token extracted from
                 # a PYPI_TOKEN_MAP will not be sanitized in output
-                util.retry(f"{twine_cmd} {name}", cwd=dist_dir, env=env)
+                util.retry(f"{twine_cmd} {name}", cwd=dist_dir, env=env, echo=True)
                 found = True
         elif suffix == ".tgz":
             # Ignore already published versions
             try:
-                util.run(f"{npm_cmd} {name}", cwd=dist_dir, quiet=True, quiet_error=True)
+                util.run(f"{npm_cmd} {name}", cwd=dist_dir, quiet=True, quiet_error=True, echo=True)
             except CalledProcessError as e:
                 stderr = e.stderr
                 if "EPUBLISHCONFLICT" in stderr or "previously published versions" in stderr:
@@ -493,7 +530,7 @@ def publish_release(auth, dry_run, release_url):
     """Publish GitHub release"""
     util.log(f"Publishing {release_url}")
 
-    match = parse_release_url(release_url)
+    match = util.parse_release_url(release_url)
 
     # Take the release out of draft
     gh = util.get_gh_object(dry_run=dry_run, owner=match["owner"], repo=match["repo"], token=auth)
@@ -619,7 +656,7 @@ def prep_git(ref, branch, repo, auth, username, url):
 def forwardport_changelog(auth, ref, branch, repo, username, changelog_path, dry_run, release_url):
     """Forwardport Changelog Entries to the Default Branch"""
     # Set up the git repo with the branch
-    match = parse_release_url(release_url)
+    match = util.parse_release_url(release_url)
 
     gh = util.get_gh_object(dry_run=dry_run, owner=match["owner"], repo=match["repo"], token=auth)
     release = util.release_for_url(gh, release_url)

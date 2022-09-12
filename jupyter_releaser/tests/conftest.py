@@ -3,9 +3,13 @@
 import json
 import os
 import os.path as osp
+import tempfile
+import time
+import uuid
 from pathlib import Path
 
 from click.testing import CliRunner
+from ghapi.core import GhApi
 from pytest import fixture
 
 from jupyter_releaser import cli, util
@@ -195,3 +199,33 @@ def mock_github():
     if proc:
         proc.kill()
         proc.wait()
+
+
+@fixture
+def draft_release(mock_github):
+    gh = GhApi(owner="foo", repo="bar")
+    tag = uuid.uuid4().hex
+    data = dict(
+        version_spec="foo",
+        branch="bar",
+        repo="fizz",
+        since="buzz",
+        since_last_stable=False,
+        version=tag,
+        post_version_spec="dev",
+        post_version_message="hi",
+    )
+
+    with tempfile.TemporaryDirectory() as d:
+        metadata_path = Path(d) / "metadata.json"
+        with open(metadata_path, "w") as fid:
+            json.dump(data, fid)
+
+        # Ensure this is the latest release.
+        time.sleep(1)
+        release = gh.create_release(tag, "bar", tag, "hi", True, True, files=[metadata_path])
+    yield release.html_url
+    try:
+        gh.repos.delete_release(release.id)
+    except Exception as e:
+        print(e)

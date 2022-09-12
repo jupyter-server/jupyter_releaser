@@ -2,9 +2,12 @@ name: Publish Release
 on:
   workflow_dispatch:
     inputs:
+      target:
+        description: "The owner/repo GitHub target"
+        required: false
       release_url:
         description: "The URL of the draft GitHub release"
-        required: true
+        required: false
       steps_to_skip:
         description: "comma-separated list of steps to skip"
         required: false
@@ -28,6 +31,7 @@ jobs:
         uses: ./.github/actions/publish-release
         with:
           token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+          target: ${{ github.event.inputs.target }}
           release_url: ${{ github.event.inputs.release_url }}
           steps_to_skip: ${{ github.event.inputs.steps_to_skip }}
 

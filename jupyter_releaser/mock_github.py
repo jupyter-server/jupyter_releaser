@@ -1,7 +1,7 @@
 import atexit
 import datetime
+import json
 import os
-import pickle
 import tempfile
 import uuid
 from typing import Dict, List
@@ -24,24 +24,31 @@ else:
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 
-def load_from_pickle(name):
-    source_file = os.path.join(static_dir, name + ".pkl")
+def load_from_file(name, klass):
+    source_file = os.path.join(static_dir, name + ".json")
     if not os.path.exists(source_file):
         return {}
-    with open(source_file, "rb") as fid:
-        return pickle.load(fid)
+    with open(source_file) as fid:
+        data = json.load(fid)
+        results = {}
+        for key in data:
+            if issubclass(klass, BaseModel):
+                results[key] = klass(**data[key])
+            else:
+                results[key] = data[key]
+    return results
 
 
-def write_to_pickle(name, data):
-    source_file = os.path.join(static_dir, name + ".pkl")
-    with open(source_file, "wb") as fid:
-        pickle.dump(data, fid)
-
-
-releases: Dict[int, "Release"] = load_from_pickle("releases")
-pulls: Dict[int, "PullRequest"] = load_from_pickle("pulls")
-release_ids_for_asset: Dict[int, int] = load_from_pickle("release_ids_for_asset")
-tag_refs: Dict[str, "Tag"] = load_from_pickle("tag_refs")
+def write_to_file(name, data):
+    source_file = os.path.join(static_dir, name + ".json")
+    result = {}
+    for key in data:
+        value = data[key]
+        if isinstance(value, BaseModel):
+            value = json.loads(value.json())
+        result[key] = value
+    with open(source_file, "w") as fid:
+        json.dump(result, fid)
 
 
 class Asset(BaseModel):
@@ -102,6 +109,12 @@ class Tag(BaseModel):
     object: TagObject
 
 
+releases: Dict[str, "Release"] = load_from_file("releases", Release)
+pulls: Dict[str, "PullRequest"] = load_from_file("pulls", PullRequest)
+release_ids_for_asset: Dict[str, str] = load_from_file("release_ids_for_asset", int)
+tag_refs: Dict[str, "Tag"] = load_from_file("tag_refs", Tag)
+
+
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
@@ -118,8 +131,8 @@ async def create_a_release(owner: str, repo: str, request: Request) -> Release:
     """https://docs.github.com/en/rest/releases/releases#create-a-release"""
     release_id = uuid.uuid4().int
     data = await request.json()
-    url = f"https://github.com/repos/{owner}/{repo}/releases/{release_id}"
-    html_url = f"https://github.com/{owner}/{repo}/releases/tag/{data['tag_name']}"
+    url = f"{MOCK_GITHUB_URL}/repos/{owner}/{repo}/releases/{release_id}"
+    html_url = f"{MOCK_GITHUB_URL}/{owner}/{repo}/releases/tag/{data['tag_name']}"
     upload_url = f"{MOCK_GITHUB_URL}/repos/{owner}/{repo}/releases/{release_id}/assets"
     fmt_str = r"%Y-%m-%dT%H:%M:%SZ"
     created_at = datetime.datetime.utcnow().strftime(fmt_str)
@@ -132,8 +145,8 @@ async def create_a_release(owner: str, repo: str, request: Request) -> Release:
         created_at=created_at,
         **data,
     )
-    releases[model.id] = model
-    write_to_pickle("releases", releases)
+    releases[str(model.id)] = model
+    write_to_file("releases", releases)
     return model
 
 
@@ -141,17 +154,17 @@ async def create_a_release(owner: str, repo: str, request: Request) -> Release:
 async def update_a_release(owner: str, repo: str, release_id: int, request: Request) -> Release:
     """https://docs.github.com/en/rest/releases/releases#update-a-release"""
     data = await request.json()
-    model = releases[release_id]
+    model = releases[str(release_id)]
     for name, value in data.items():
         setattr(model, name, value)
-    write_to_pickle("releases", releases)
+    write_to_file("releases", releases)
     return model
 
 
 @app.post("/repos/{owner}/{repo}/releases/{release_id}/assets")
 async def upload_a_release_asset(owner: str, repo: str, release_id: int, request: Request) -> None:
     """https://docs.github.com/en/rest/releases/assets#upload-a-release-asset"""
-    model = releases[release_id]
+    model = releases[str(release_id)]
     asset_id = uuid.uuid4().int
     name = request.query_params["name"]
     with open(f"{static_dir}/{asset_id}", "wb") as fid:
@@ -166,45 +179,45 @@ async def upload_a_release_asset(owner: str, repo: str, release_id: int, request
         url=url,
         content_type=headers["content-type"],
     )
-    release_ids_for_asset[asset_id] = release_id
+    release_ids_for_asset[str(asset_id)] = str(release_id)
     model.assets.append(asset)
-    write_to_pickle("releases", releases)
-    write_to_pickle("release_ids_for_asset", release_ids_for_asset)
+    write_to_file("releases", releases)
+    write_to_file("release_ids_for_asset", release_ids_for_asset)
 
 
 @app.delete("/repos/{owner}/{repo}/releases/assets/{asset_id}")
 async def delete_a_release_asset(owner: str, repo: str, asset_id: int) -> None:
     """https://docs.github.com/en/rest/releases/assets#delete-a-release-asset"""
-    release = releases[release_ids_for_asset[asset_id]]
+    release = releases[release_ids_for_asset[str(asset_id)]]
     os.remove(f"{static_dir}/{asset_id}")
     release.assets = [a for a in release.assets if a.id != asset_id]
-    del release_ids_for_asset[asset_id]
-    write_to_pickle("releases", releases)
-    write_to_pickle("release_ids_for_asset", release_ids_for_asset)
+    del release_ids_for_asset[str(asset_id)]
+    write_to_file("releases", releases)
+    write_to_file("release_ids_for_asset", release_ids_for_asset)
 
 
 @app.delete("/repos/{owner}/{repo}/releases/{release_id}")
 def delete_a_release(owner: str, repo: str, release_id: int) -> None:
     """https://docs.github.com/en/rest/releases/releases#delete-a-release"""
-    del releases[release_id]
-    write_to_pickle("releases", releases)
+    del releases[str(release_id)]
+    write_to_file("releases", releases)
 
 
 @app.get("/repos/{owner}/{repo}/pulls/{pull_number}")
 def get_a_pull_request(owner: str, repo: str, pull_number: int) -> PullRequest:
     """https://docs.github.com/en/rest/pulls/pulls#get-a-pull-request"""
-    if pull_number not in pulls:
-        pulls[pull_number] = PullRequest()
-    write_to_pickle("pulls", pulls)
-    return pulls[pull_number]
+    if str(pull_number) not in pulls:
+        pulls[str(pull_number)] = PullRequest()
+    write_to_file("pulls", pulls)
+    return pulls[str(pull_number)]
 
 
 @app.post("/repos/{owner}/{repo}/pulls")
 def create_a_pull_request(owner: str, repo: str) -> PullRequest:
     """https://docs.github.com/en/rest/pulls/pulls#create-a-pull-request"""
     pull = PullRequest()
-    pulls[pull.number] = pull
-    write_to_pickle("releases", releases)
+    pulls[str(pull.number)] = pull
+    write_to_file("pulls", pulls)
     return pull
 
 
@@ -214,12 +227,15 @@ def add_labels_to_an_issue(owner: str, repo: str, issue_number: int) -> BaseMode
     return BaseModel()
 
 
-@app.post("/create_tag_ref/{tag_ref}/{sha}")
-def create_tag_ref(tag_ref: str, sha: str) -> None:
-    """Create a remote tag ref object for testing"""
+@app.post("/repos/{owner}/{repo}/git/refs")
+async def create_tag_ref(owner: str, repo: str, request: Request) -> None:
+    """https://docs.github.com/en/rest/git/refs#create-a-reference"""
+    data = await request.json()
+    tag_ref = data["ref"]
+    sha = data["sha"]
     tag = Tag(ref=f"refs/tags/{tag_ref}", object=TagObject(sha=sha))
     tag_refs[tag_ref] = tag
-    write_to_pickle("tag_refs", tag_refs)
+    write_to_file("tag_refs", tag_refs)
 
 
 @app.get("/repos/{owner}/{repo}/git/matching-refs/tags/{tag_ref}")

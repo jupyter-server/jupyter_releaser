@@ -4,11 +4,10 @@ import os
 import shutil
 from pathlib import Path
 
-import requests
 from ghapi.core import GhApi
 
 from jupyter_releaser import changelog, cli, util
-from jupyter_releaser.util import MOCK_GITHUB_URL, get_latest_tag, run
+from jupyter_releaser.util import get_latest_tag, run
 
 VERSION_SPEC = "1.0.1"
 
@@ -284,7 +283,7 @@ def create_python_package(git_repo, multi=False, not_matching_name=False):
 
 
 def create_draft_release(ref="bar", files=None):
-    gh = GhApi("snuffy", "test")
+    gh = GhApi("foo", "bar")
     return gh.create_release(
         ref,
         "bar",
@@ -301,7 +300,7 @@ def create_tag_ref():
     os.chdir(util.CHECKOUT_NAME)
     ref = get_latest_tag(None)
     sha = run("git rev-parse HEAD")
-    url = f"{MOCK_GITHUB_URL}/create_tag_ref/{ref}/{sha}"
-    requests.post(url)
+    gh = GhApi("foo", "bar")
+    gh.git.create_ref(ref, sha)
     os.chdir(curr_dir)
     return ref

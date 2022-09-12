@@ -40,7 +40,8 @@ Detailed workflows are available to draft a changelog, draft a release, publish 
 ### Draft Release Workflow
 
 - Manual Github workflow
-  - Inputs are target repository, branch, version spec and optional post version spec
+  - Input is the URL of the draft GitHub Release created in the Draft Changelog
+    workflow.
 - Bumps version using the same method as the changelog action
 - Prepares the environment using the same method as the changelog action
 - Checks the changelog entry
@@ -60,16 +61,22 @@ Detailed workflows are available to draft a changelog, draft a release, publish 
 - If given, bumps the version using the post version spec. he post version
   spec can also be given as a setting, [Write Releaser Config Guide](../how_to_guides/write_config.html#automatic-dev-versions).
 - Pushes the commits and tag to the target `branch`
-- Publishes a draft GitHub release for the tag with the changelog entry as the text
+- Updates the draft GitHub release for the tag with the changelog entry as the text
 
 ### Publish Release Workflow
 
 - Manual Github workflow
-  - Input is the url of the draft release
+  - Input is the url of the draft GitHub release
 - Downloads the dist assets from the release
 - Verifies shas and integrity of release assets
 - Publishes assets to appropriate registries
 - If the tag is on a backport branch, makes a forwardport PR for the changelog entry
+
+### Full Release Workflow
+
+- Combines the Draft and Publish workflows into a single workflow.
+- If this workflow fails during the publish step, you can address any
+  credential errors and run the Publish Release Workflow to publish assets.
 
 ### Check Release Workflow
 

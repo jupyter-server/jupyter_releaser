@@ -131,6 +131,42 @@ jobs:
           make html
           popd
 
+  check_local_actions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup
+        uses: ./.github/actions/common
+
+      - name: draft-changelog
+        uses: ./.github/actions/draft-changelog
+        env:
+          RH_IS_CHECK_RELEASE: "true"
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          version_spec: 10.10.10
+          dry_run: true
+
+      - name: draft-release
+        uses: ./.github/actions/draft-release
+        env:
+          RH_IS_CHECK_RELEASE: "true"
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          release_url: ${{ steps.draft-changelog.outputs.release_url }}
+          dry_run: true
+
+      - name: publish-release
+        uses: ./.github/actions/publish-release
+        env:
+          RH_IS_CHECK_RELEASE: "true"
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          release_url: ${{ steps.draft-changelog.outputs.release_url }}
+          dry_run: true
+
   check: # This job does nothing and is only used for the branch protection
     if: always()
     needs:

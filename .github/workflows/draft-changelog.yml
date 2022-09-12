@@ -2,22 +2,23 @@ name: "Step 1: Draft Changelog"
 on:
   workflow_dispatch:
     inputs:
+      version_spec:
+        description: "New Version Specifier"
+        required: true
+      post_version_spec:
+        description: "Post Version Specifier"
+        required: false
       target:
         description: "The owner/repo GitHub target"
         required: true
       branch:
-        description: "The branch to target (defaults to default branch)"
-        required: false
-      version_spec:
-        description: "New Version Spec"
-        default: "next"
+        description: "The branch to target"
         required: false
       since:
         description: "Use PRs with activity since this date or git reference"
         required: false
       since_last_stable:
         description: "Use PRs with activity since the last stable git tag"
-        type: boolean
         required: false
 jobs:
   draft_changelog:
@@ -39,6 +40,7 @@ jobs:
         with:
           token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
           version_spec: ${{ github.event.inputs.version_spec }}
+          post_version_spec: ${{ github.event.inputs.post_version_spec }}
           target: ${{ github.event.inputs.target }}
           branch: ${{ github.event.inputs.branch }}
           since: ${{ github.event.inputs.since }}
@@ -47,5 +49,7 @@ jobs:
       - name: "** Next Step **"
         run: |
           echo "Review PR: ${{ steps.draft-changelog.outputs.pr_url }}"
+          echo "Optional): Review Draft Release: ${{ steps.draft-changelog.outputs.release_url }}"
           echo "## Next Step" >> $GITHUB_STEP_SUMMARY
           echo "Review PR: ${{ steps.draft-changelog.outputs.pr_url }}" >> $GITHUB_STEP_SUMMARY
+          echo "(Optional): Review Draft Release: ${{ steps.draft-changelog.outputs.release_url }}" >> $GITHUB_STEP_SUMMARY

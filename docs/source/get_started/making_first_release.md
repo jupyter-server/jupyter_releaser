@@ -35,7 +35,7 @@ already uses Jupyter Releaser.
 ## Draft Changelog
 
 - Go to the "Actions" tab in your fork of `jupyter_releaser`
-- Select the "Draft Changelog" workflow on the left
+- Select the "Step 1: Draft Changelog" workflow on the left
 - Click on the "Run workflow" dropdown button on the right
 - Fill in the appropriate parameters
 
@@ -48,6 +48,7 @@ already uses Jupyter Releaser.
     instead.
   - Use the "since" field to select PRs prior to the latest tag to include in the release
   - Type "true" in the "since the last stable git tag" if you would like to include PRs since the last non-prerelease version tagged on the target repository and branch.
+  - The additional "Post Version Spec" field should be used if your repo uses a dev version (e.g. 0.7.0.dev0)
   - The workflow will use the GitHub API to find the relevant pull requests and make an appropriate changelog entry.
   - The workflow will create a pull request to the target
     repository and branch. It will print the link in the "\*\* Next Step \*\*" job step.
@@ -72,13 +73,11 @@ already uses Jupyter Releaser.
 - Click on the "Actions" tab
 - Select the "Full Release" workflow on the left
 - Click on the "Run workflow" button on the right
-- Fill in the entries as prompted by the automated changelog text
+- Fill in draft GitHub Release URL given by the Changelog PR.
 
   ![Full Release Workflow Dialog](../images/draft_release.png)
 
-  - The additional "Post Version Spec" field should be used if your repo uses a dev version (e.g. 0.7.0.dev0)
-
-- The workflow will draft a GitHub release, publish assets to the appropriate registries.
+- The workflow will finish the GitHub release and publish assets to the appropriate registries.
 - If the workflow is not targeting the default branch, it will also generate a forward-port pull request for the changelog entry to the default branch.
 - When the workflow finishes it will print a link to the GitHub release and the forward-port PR (if appropriate) in the "\*\* Next Step \*\*" output.
 
