@@ -109,6 +109,7 @@ def check_links(ignore_glob, ignore_links, cache_file, links_expire):
 
 def draft_changelog(
     version_spec,
+    ref,
     branch,
     repo,
     since,
@@ -157,6 +158,7 @@ def draft_changelog(
 
     data = dict(
         version_spec=version_spec,
+        ref=ref,
         branch=branch,
         repo=repo,
         since=since,

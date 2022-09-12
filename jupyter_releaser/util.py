@@ -341,6 +341,10 @@ def latest_draft_release(gh, branch=None):
     """Get the latest draft release for a given repo"""
     newest_time = None
     newest_release = None
+    if branch:
+        log(f"Getting latest draft release on branch {branch}")
+    else:
+        log("Getting latest draft release")
     for release in gh.repos.list_releases():
         if str(release.draft).lower() == "false":
             continue
@@ -351,6 +355,10 @@ def latest_draft_release(gh, branch=None):
         if newest_time is None or d_created > newest_time:
             newest_time = d_created
             newest_release = release
+    if not newest_release:
+        log("No draft release found!")
+    else:
+        log(f"Found draft release at {newest_release.html_url}")
     return newest_release
 
 
@@ -469,6 +477,8 @@ def extract_metadata_from_release_url(gh, release_url, auth):
         os.environ["RH_BRANCH"] = data["branch"]
     if "since" in data:
         os.environ["RH_SINCE"] = data["since"]
+    if "ref" in data:
+        os.environ["RH_REF"] = data["ref"]
     if "since_last_stable" in data:
         os.environ["RH_SINCE_LAST_STABLE"] = str(data["since_last_stable"])
 
@@ -479,8 +489,10 @@ def prepare_environment():
     """Prepare the environment variables, for use when running one of the
     action scripts."""
     # Set up env variables
-    os.environ.setdefault("RH_REPOSITORY", os.environ["GITHUB_REPOSITORY"])
-    os.environ.setdefault("RH_REF", os.environ["GITHUB_REF"])
+    if not os.environ.get("RH_REPOSITORY"):
+        os.environ["RH_REPOSITORY"] = os.environ["GITHUB_REPOSITORY"]
+    if not os.environ.get("RH_REF"):
+        os.environ["RH_REF"] = os.environ["GITHUB_REF"]
 
     check_release = os.environ.get("RH_IS_CHECK_RELEASE", "").lower() == "true"
     if not os.environ.get("RH_DRY_RUN") and check_release:
@@ -509,7 +521,8 @@ def prepare_environment():
 
     # Set up GitHub object.
     branch = os.environ.get("RH_BRANCH")
-    owner, repo_name = os.environ["GITHUB_REPOSITORY"].split("/")
+    log(f"Getting GitHub connection for {os.environ['RH_REPOSITORY']}")
+    owner, repo_name = os.environ["RH_REPOSITORY"].split("/")
     auth = os.environ.get("GITHUB_ACCESS_TOKEN", "")
     gh = get_gh_object(dry_run=dry_run, owner=owner, repo=repo_name, token=auth)
 
@@ -526,6 +539,7 @@ def prepare_environment():
 
         # Extract the metadata from the release url.
         return extract_metadata_from_release_url(gh, release_url, auth)
+    return release_url
 
 
 def handle_since():
