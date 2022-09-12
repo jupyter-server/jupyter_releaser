@@ -493,7 +493,7 @@ def prepare_environment():
         if os.environ.get("RH_RELEASE_URL"):
             match = parse_release_url(os.environ["RH_RELEASE_URL"])
             owner, repo = match["owner"], match["repo"]
-            os.environ["RH_REPOSITORY"] = f"https://github.com/{owner}/{repo}"
+            os.environ["RH_REPOSITORY"] = f"{owner}/{repo}"
         else:
             os.environ["RH_REPOSITORY"] = os.environ["GITHUB_REPOSITORY"]
     if not os.environ.get("RH_REF"):
