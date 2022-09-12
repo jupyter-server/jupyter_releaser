@@ -490,7 +490,12 @@ def prepare_environment():
     action scripts."""
     # Set up env variables
     if not os.environ.get("RH_REPOSITORY"):
-        os.environ["RH_REPOSITORY"] = os.environ["GITHUB_REPOSITORY"]
+        if os.environ.get("RH_RELEASE_URL"):
+            match = parse_release_url(os.environ["RH_RELEASE_URL"])
+            owner, repo = match["owner"], match["repo"]
+            os.environ["RH_REPOSITORY"] = f"https://github.com/{owner}/{repo}"
+        else:
+            os.environ["RH_REPOSITORY"] = os.environ["GITHUB_REPOSITORY"]
     if not os.environ.get("RH_REF"):
         os.environ["RH_REF"] = os.environ["GITHUB_REF"]
 
