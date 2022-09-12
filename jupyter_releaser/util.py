@@ -489,8 +489,10 @@ def prepare_environment():
     """Prepare the environment variables, for use when running one of the
     action scripts."""
     # Set up env variables
-    os.environ.setdefault("RH_REPOSITORY", os.environ["GITHUB_REPOSITORY"])
-    os.environ.setdefault("RH_REF", os.environ["GITHUB_REF"])
+    if not os.environ.get("RH_REPOSITORY"):
+        os.environ["RH_REPOSITORY"] = os.environ["GITHUB_REPOSITORY"]
+    if not os.environ.get("RH_REF"):
+        os.environ["RH_REF"] = os.environ["GITHUB_REF"]
 
     check_release = os.environ.get("RH_IS_CHECK_RELEASE", "").lower() == "true"
     if not os.environ.get("RH_DRY_RUN") and check_release:
