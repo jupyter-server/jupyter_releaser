@@ -4,18 +4,18 @@ inputs:
   token:
     description: "GitHub access token"
     required: true
+  target:
+    description: "The owner/repo GitHub target"
+    required: true
   version_spec:
     description: "New Version Specifier"
     default: "next"
     required: false
-  post_version_spec:
-    description: "Post Version Specifier"
-    required: false
-  target:
-    description: "The owner/repo GitHub target"
-    required: true
   branch:
     description: "The branch to target"
+    required: false
+  post_version_spec:
+    description: "Post Version Specifier"
     required: false
   dry_run:
     description: "If set, do not make a PR"
@@ -33,7 +33,7 @@ outputs:
     value: ${{ steps.draft-changelog.outputs.pr_url }}
   release_url:
     description: "The html URL of the draft GitHub release"
-    value: ${{ steps.draft-release.outputs.release_url }}
+    value: ${{ steps.draft-changelog.outputs.release_url }}
 runs:
   using: "composite"
   steps:

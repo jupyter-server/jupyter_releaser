@@ -318,7 +318,8 @@ def draft_release(
         gh.upload_file(release, fpath)
 
     # Set the body of the release with the changelog contents.
-    gh.repos.update_release(
+    # Get the new release since the draft release might change urls.
+    release = gh.repos.update_release(
         release.id,
         release.tag_name,
         release.target_commitish,

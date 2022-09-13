@@ -2,17 +2,18 @@ name: "Step 1: Draft Changelog"
 on:
   workflow_dispatch:
     inputs:
-      version_spec:
-        description: "New Version Specifier"
-        required: true
-      post_version_spec:
-        description: "Post Version Specifier"
-        required: false
       target:
         description: "The owner/repo GitHub target"
         required: true
+      version_spec:
+        description: "New Version Specifier"
+        default: "next"
+        required: false
       branch:
         description: "The branch to target"
+        required: false
+      post_version_spec:
+        description: "Post Version Specifier"
         required: false
       since:
         description: "Use PRs with activity since this date or git reference"
