@@ -169,7 +169,7 @@ def draft_changelog(
         current_sha=current_sha,
     )
     with tempfile.TemporaryDirectory() as d:
-        metadata_path = Path(d) / "metadata.json"
+        metadata_path = Path(d) / util.METADATA_JSON
         with open(metadata_path, "w") as fid:
             json.dump(data, fid)
 
@@ -432,7 +432,7 @@ def extract_release(
     commit_message = ""
     commit_message = util.run(f"git log --format=%B -n 1 {sha}")
 
-    for asset in assets:
+    for asset in filter(lambda a: a.name != util.METADATA_JSON.name, assets):
         # Check the sha against the published sha
         valid = False
         path = dist / asset.name

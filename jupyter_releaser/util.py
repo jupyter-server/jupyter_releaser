@@ -39,6 +39,7 @@ PACKAGE_JSON = Path("package.json")
 MANIFEST = Path("MANIFEST.in")
 YARN_LOCK = Path("yarn.lock")
 JUPYTER_RELEASER_CONFIG = Path(".jupyter-releaser.toml")
+METADATA_JSON = Path("metadata.json")
 
 BUF_SIZE = 65536
 TBUMP_CMD = "tbump --non-interactive --only-patch"
@@ -448,7 +449,7 @@ def extract_metadata_from_release_url(gh, release_url, auth):
 
     data = None
     for asset in release.assets:
-        if asset.name != "metadata.json":
+        if asset.name != METADATA_JSON.name:
             continue
 
         log(f"Fetching {asset.name}...")
@@ -464,7 +465,7 @@ def extract_metadata_from_release_url(gh, release_url, auth):
         data = json.loads(sink.read().decode("utf-8"))
 
     if data is None:
-        raise ValueError(f'Could not find "metadata.json" file in draft release {release_url}')
+        raise ValueError(f'Could not find "{METADATA_JSON.name}" file in draft release {release_url}')
 
     # Update environment variables.
     if "post_version_spec" in data:
