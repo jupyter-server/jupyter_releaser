@@ -7,6 +7,9 @@ inputs:
   target:
     description: "The owner/repo GitHub target"
     required: false
+  branch:
+    description: "The target branch"
+    required: false
   release_url:
     description: "The full url to the GitHub release page"
     required: false
@@ -43,4 +46,5 @@ runs:
         export RH_DRY_RUN=${{ inputs.dry_run }}
         export RH_STEPS_TO_SKIP=${{ inputs.steps_to_skip }}
         export RH_RELEASE_URL=${{ inputs.release_url }}
+        export RH_BRANCH=${{ inputs.branch }}
         python -m jupyter_releaser.actions.draft_release

@@ -21,6 +21,7 @@ on:
       since_last_stable:
         description: "Use PRs with activity since the last stable git tag"
         required: false
+        type: boolean
 jobs:
   draft_changelog:
     runs-on: ubuntu-latest
