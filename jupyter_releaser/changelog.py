@@ -10,6 +10,7 @@ from jupyter_releaser import util
 START_MARKER = "<!-- <START NEW CHANGELOG ENTRY> -->"
 END_MARKER = "<!-- <END NEW CHANGELOG ENTRY> -->"
 PR_PREFIX = "Automated Changelog Entry"
+PRECOMMIT_PREFIX = "[pre-commit.ci] pre-commit autoupdate"
 
 
 def format_pr_entry(target, number, auth=None, dry_run=False):
@@ -132,6 +133,9 @@ def get_version_entry(
 
     # Remove automated changelog PRs
     entry = [e for e in entry if PR_PREFIX not in e]
+
+    # Remove Pre-Commit PRs
+    entry = [e for e in entry if PRECOMMIT_PREFIX not in e]
 
     entry = "\n".join(entry).strip()
 

@@ -553,15 +553,19 @@ def prepare_environment():
 def handle_since():
     """Capture the "since" argument in case we add tags before checking changelog."""
     if os.environ.get("RH_SINCE"):
+        log(f"Using RH_SINCE from env: {os.environ.get('RH_SINCE')}")
         return
     curr_dir = os.getcwd()
     os.chdir(CHECKOUT_NAME)
-    since_last_stable_env = os.environ.get("RH_SINCE_LAST_STABLE")
-    since_last_stable = since_last_stable_env == "true"
+    since_last_stable_env = os.environ.get("RH_SINCE_LAST_STABLE", "")
+    since_last_stable = since_last_stable_env.lower() == "true"
+    log(f"Since last stable? {since_last_stable}")
     since = get_latest_tag(os.environ.get("RH_BRANCH"), since_last_stable)
     if since:
         log(f"Capturing {since} in RH_SINCE variable")
         os.environ["RH_SINCE"] = since
+    else:
+        log("No last stable found!")
     os.chdir(curr_dir)
     return since
 
