@@ -5,7 +5,7 @@ import os
 from jupyter_releaser.actions.common import make_group, run_action, setup
 from jupyter_releaser.util import CHECKOUT_NAME, get_default_branch, handle_since
 
-setup()
+setup(False)
 
 run_action("jupyter-releaser prep-git")
 

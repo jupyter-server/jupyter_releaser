@@ -488,7 +488,7 @@ def extract_metadata_from_release_url(gh, release_url, auth):
     return data
 
 
-def prepare_environment():
+def prepare_environment(fetch_draft_release=True):
     """Prepare the environment variables, for use when running one of the
     action scripts."""
     # Set up env variables
@@ -537,7 +537,7 @@ def prepare_environment():
     # Get the latest draft release if none is given.
     release_url = os.environ.get("RH_RELEASE_URL")
     log(f"Environment release url was {release_url}")
-    if not release_url:
+    if not release_url and fetch_draft_release:
         release = latest_draft_release(gh, branch)
         if release:
             release_url = release.html_url
