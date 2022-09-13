@@ -11,9 +11,9 @@ def make_group(name):
     print("::endgroup::")
 
 
-def setup():
+def setup(fetch_draft_release=True):
     with make_group("Prepare Environment"):
-        prepare_environment()
+        prepare_environment(fetch_draft_release=True)
 
 
 def run_action(target, *args, **kwargs):
