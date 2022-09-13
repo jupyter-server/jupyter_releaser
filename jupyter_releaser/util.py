@@ -465,7 +465,9 @@ def extract_metadata_from_release_url(gh, release_url, auth):
         data = json.loads(sink.read().decode("utf-8"))
 
     if data is None:
-        raise ValueError(f'Could not find "{METADATA_JSON.name}" file in draft release {release_url}')
+        raise ValueError(
+            f'Could not find "{METADATA_JSON.name}" file in draft release {release_url}'
+        )
 
     # Update environment variables.
     if "post_version_spec" in data:
