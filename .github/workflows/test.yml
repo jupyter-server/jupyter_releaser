@@ -55,17 +55,17 @@ jobs:
 
       - name: Install the Test dependencies
         run: |
-          pip install -e .[test] codecov
+          pip install -e .[test] codecov pytest-xdist[psutil]
 
       - name: Run the tests with coverage on Ubuntu
         if: ${{ matrix.os == 'ubuntu-latest' }}
         run: |
-          python -m pytest -vv --cov jupyter_releaser --cov-branch --cov-report term-missing:skip-covered
+          python -m pytest -vv -n auto --cov jupyter_releaser --cov-branch --cov-report term-missing:skip-covered
 
       - name: Run the tests on Windows and macOS
         if: ${{ matrix.os != 'ubuntu-latest' }}
         run: |
-          python -m pytest -vv -s
+          python -m pytest -n auto -vv -s
 
       - name: Verify the Generate Changelog Action
         if: ${{ matrix.os == 'ubuntu' }}
