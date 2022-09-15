@@ -13,7 +13,7 @@ def make_group(name):
 
 def setup(fetch_draft_release=True):
     with make_group("Prepare Environment"):
-        prepare_environment(fetch_draft_release=True)
+        prepare_environment(fetch_draft_release=fetch_draft_release)
 
 
 def run_action(target, *args, **kwargs):
