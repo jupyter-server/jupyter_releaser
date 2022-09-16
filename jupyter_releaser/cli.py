@@ -66,16 +66,23 @@ class ReleaseHelperGroup(click.Group):
 
         # Handle all of the parameters
         for param in self.commands[cmd_name].get_params(ctx):
-            # Defer to env var overrides
-            if param.envvar and os.environ.get(str(param.envvar)):
-                continue
             name = param.name
             assert name is not None
+
+            # Defer to env var overrides
+            if param.envvar and os.environ.get(str(param.envvar)):
+                value = os.environ[str(param.envvar)]
+                if "token" in name.lower():
+                    value = "***"
+                util.log(f"Using env value for {name}: {value}")
+                continue
+
             if name in options or name.replace("_", "-") in options:
                 arg = f"--{name.replace('_', '-')}"
                 # Defer to cli overrides
                 if arg not in ctx.args:
                     val = options.get(name, options.get(name.replace("_", "-")))
+                    util.log(f"Adding option override for {arg}")
                     if isinstance(val, list):
                         for v in val:
                             ctx.args.append(arg)
