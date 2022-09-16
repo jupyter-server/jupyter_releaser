@@ -470,20 +470,10 @@ def extract_metadata_from_release_url(gh, release_url, auth):
         )
 
     # Update environment variables.
-    if "post_version_spec" in data:
-        os.environ["RH_POST_VERSION_SPEC"] = data["post_version_spec"]
-    if "post_version_message" in data:
-        os.environ["RH_POST_VERSION_MESSAGE"] = data["post_version_message"]
-    if "version_spec" in data:
-        os.environ["RH_VERSION_SPEC"] = data["version_spec"]
-    if "branch" in data:
-        os.environ["RH_BRANCH"] = data["branch"]
-    if "since" in data:
-        os.environ["RH_SINCE"] = data["since"]
-    if "ref" in data:
-        os.environ["RH_REF"] = data["ref"]
-    if "since_last_stable" in data:
-        os.environ["RH_SINCE_LAST_STABLE"] = str(data["since_last_stable"])
+    for key, value in data.items():
+        if value is not None:
+            env_name = f"RH_{key.capitalize()}"
+            os.environ[env_name] = str(value)
 
     return data
 
