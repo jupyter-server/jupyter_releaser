@@ -472,7 +472,7 @@ def extract_metadata_from_release_url(gh, release_url, auth):
     # Update environment variables.
     for key, value in data.items():
         if value is not None:
-            env_name = f"RH_{key.capitalize()}"
+            env_name = f"RH_{key.upper()}"
             os.environ[env_name] = str(value)
 
     return data
