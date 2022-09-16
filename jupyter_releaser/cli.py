@@ -57,25 +57,33 @@ class ReleaseHelperGroup(click.Group):
 
         # Print a separation header
         util.log(f'\n\n{"-" * 50}')
-        util.log(cmd_name)
-        util.log(f'{"-" * 50}\n\n')
+        util.log(f"\n{cmd_name}\n")
 
         if cmd_name in skip or cmd_name.replace("-", "_") in skip:
             util.log("*** Skipping based on skip config")
+            util.log(f'{"-" * 50}\n\n')
             return
 
         # Handle all of the parameters
         for param in self.commands[cmd_name].get_params(ctx):
-            # Defer to env var overrides
-            if param.envvar and os.environ.get(str(param.envvar)):
-                continue
             name = param.name
             assert name is not None
+
+            # Defer to env var overrides
+            if param.envvar and os.environ.get(str(param.envvar)):
+                value = os.environ[str(param.envvar)]
+                if "token" in name.lower():
+                    value = "***"
+                util.log(f"Using env value for {name}: {value}")
+                continue
+
+            # Handle cli and options overrides.
             if name in options or name.replace("_", "-") in options:
                 arg = f"--{name.replace('_', '-')}"
                 # Defer to cli overrides
                 if arg not in ctx.args:
                     val = options.get(name, options.get(name.replace("_", "-")))
+                    util.log(f"Adding option override for {arg}")
                     if isinstance(val, list):
                         for v in val:
                             ctx.args.append(arg)
@@ -83,6 +91,14 @@ class ReleaseHelperGroup(click.Group):
                     else:
                         ctx.args.append(arg)
                         ctx.args.append(val)
+                    continue
+                else:
+                    util.log(f"Using cli arg for {name}")
+                    continue
+
+            util.log(f"Using default value for {name}")
+
+        util.log(f'{"-" * 50}\n\n')
 
         # Handle before hooks
         before = f"before-{cmd_name}"
