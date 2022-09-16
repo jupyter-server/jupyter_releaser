@@ -57,11 +57,11 @@ class ReleaseHelperGroup(click.Group):
 
         # Print a separation header
         util.log(f'\n\n{"-" * 50}')
-        util.log(cmd_name)
-        util.log(f'{"-" * 50}\n\n')
+        util.log(f"\n{cmd_name}\n")
 
         if cmd_name in skip or cmd_name.replace("-", "_") in skip:
             util.log("*** Skipping based on skip config")
+            util.log(f'{"-" * 50}\n\n')
             return
 
         # Handle all of the parameters
@@ -77,6 +77,7 @@ class ReleaseHelperGroup(click.Group):
                 util.log(f"Using env value for {name}: {value}")
                 continue
 
+            # Handle cli and options overrides.
             if name in options or name.replace("_", "-") in options:
                 arg = f"--{name.replace('_', '-')}"
                 # Defer to cli overrides
@@ -90,6 +91,14 @@ class ReleaseHelperGroup(click.Group):
                     else:
                         ctx.args.append(arg)
                         ctx.args.append(val)
+                    continue
+                else:
+                    util.log(f"Using cli arg for {name}")
+                    continue
+
+            util.log(f"Using default value for {name}")
+
+        util.log(f'{"-" * 50}\n\n')
 
         # Handle before hooks
         before = f"before-{cmd_name}"
