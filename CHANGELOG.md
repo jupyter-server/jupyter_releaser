@@ -2,6 +2,26 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.24.2
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...691989055256400c36ed736433d92c75975f6c14))
+
+### Bugs fixed
+
+- Clean up handling of draft release metadata [#387](https://github.com/jupyter-server/jupyter_releaser/pull/387) ([@blink1073](https://github.com/blink1073))
+
+### Maintenance and upkeep improvements
+
+- Use pipx for cli scripts and hatch for hatch version [#389](https://github.com/jupyter-server/jupyter_releaser/pull/389) ([@blink1073](https://github.com/blink1073))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-09-15&to=2022-09-19&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-09-15..2022-09-19&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.24.1
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...24b290556edbd5bbae9ea05a7e6149b8da290fd7))
@@ -15,8 +35,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-09-15&to=2022-09-15&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-09-15..2022-09-15&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.24.0
 
