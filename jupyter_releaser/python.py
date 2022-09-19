@@ -26,7 +26,7 @@ def build_dist(dist_dir, clean=True):
             os.remove(pkg)
 
     if PYPROJECT.exists():
-        util.run(f"python -m build --outdir {dest} .", quiet=True, show_cwd=True)
+        util.run(f"pipx build --outdir {dest} .", quiet=True, show_cwd=True)
     elif SETUP_PY.exists():
         util.run(f"python setup.py sdist --dist-dir {dest}", quiet=True)
         util.run(f"python setup.py bdist_wheel --dist-dir {dest}", quiet=True)
@@ -36,7 +36,7 @@ def check_dist(
     dist_file,
     test_cmd="",
     python_imports=None,
-    check_cmd="twine check --strict",
+    check_cmd="pipx twine check --strict",
     resource_paths=None,
 ):
     """Check a Python package locally (not as a cli)"""
@@ -127,7 +127,7 @@ def get_pypi_token(release_url, python_package):
 def start_local_pypi():
     """Start a local PyPI server"""
     temp_dir = TemporaryDirectory()
-    cmd = f"pypi-server run -p 8081  -P . -a . -o  -v {temp_dir.name}"
+    cmd = f"pipx run pypi-server run -p 8081  -P . -a . -o  -v {temp_dir.name}"
     proc = Popen(shlex.split(cmd), stdout=PIPE)
     # Wait for the server to start
     while True:

@@ -237,7 +237,7 @@ def test_compute_sha256(py_package):
 def test_create_release_commit(py_package, build_mock):
     util.bump_version("0.0.2a0")
     version = util.get_version()
-    util.run("python -m build .")
+    util.run("pipx run build .")
     shas = util.create_release_commit(version)
     assert util.normalize_path("dist/foo-0.0.2a0.tar.gz") in shas
     assert util.normalize_path("dist/foo-0.0.2a0-py3-none-any.whl") in shas
@@ -257,7 +257,7 @@ def test_create_release_commit_hybrid(py_package, build_mock):
     txt += testutil.TBUMP_NPM_TEMPLATE
     (py_package / "tbump.toml").write_text(txt, encoding="utf-8")
 
-    util.run("python -m build .")
+    util.run("pipx run build .")
     shas = util.create_release_commit(version)
     assert len(shas) == 2
     assert util.normalize_path("dist/foo-0.0.2a0.tar.gz") in shas
