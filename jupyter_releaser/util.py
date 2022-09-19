@@ -42,7 +42,7 @@ JUPYTER_RELEASER_CONFIG = Path(".jupyter-releaser.toml")
 METADATA_JSON = Path("metadata.json")
 
 BUF_SIZE = 65536
-TBUMP_CMD = "pipx tbump --non-interactive --only-patch"
+TBUMP_CMD = "pipx run tbump --non-interactive --only-patch"
 
 CHECKOUT_NAME = ".jupyter_releaser_checkout"
 
@@ -169,7 +169,7 @@ def get_version():
         # If this is a hatchling project, use hatch to get
         # the dynamic version.
         if data.get("build-system", {}).get("build-backend") == "hatchling.build":
-            return run("pipx hatch version").split("\n")[-1]
+            return run("pipx run hatch version").split("\n")[-1]
 
     if SETUP_PY.exists():
         warnings.warn("Using deprecated setup.py invocation")
@@ -181,7 +181,7 @@ def get_version():
     # Build the wheel and extract the version.
     if PYPROJECT.exists():
         with tempfile.TemporaryDirectory() as tempdir:
-            run(f"pipx build --wheel --outdir {tempdir}")
+            run(f"pipx run build --wheel --outdir {tempdir}")
             wheel_path = glob(f"{tempdir}/*.whl")[0]
             wheel = Wheel(wheel_path)
             version = wheel.version
@@ -252,7 +252,7 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):
             if "tool.tbump" in pyproject_text:
                 version_cmd = version_cmd or TBUMP_CMD
             elif "hatchling.build" in pyproject_text:
-                version_cmd = version_cmd or "pipx hatch version"
+                version_cmd = version_cmd or "pipx run hatch version"
 
         if SETUP_CFG.exists():
             if "bumpversion" in SETUP_CFG.read_text(encoding="utf-8"):
