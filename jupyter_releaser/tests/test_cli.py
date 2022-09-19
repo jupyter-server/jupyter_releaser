@@ -647,7 +647,7 @@ def test_publish_assets_py(py_package, runner, mocker, git_prep, mock_github):
 
     def wrapped(cmd, **kwargs):
         nonlocal called
-        if cmd.startswith("twine upload"):
+        if "twine upload" in cmd:
             if kwargs["env"]["TWINE_PASSWORD"] == "foo-token":
                 called += 1
         return orig_run(cmd, **kwargs)
