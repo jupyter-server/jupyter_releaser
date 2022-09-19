@@ -487,7 +487,7 @@ def test_tag_release(py_package, runner, build_mock, git_prep):
     # Bump the version
     runner(["bump-version", "--version-spec", VERSION_SPEC])
     # Create the dist files
-    util.run("python -m build .", cwd=util.CHECKOUT_NAME)
+    util.run("pipx run build .", cwd=util.CHECKOUT_NAME)
     # Tag the release
     runner(
         [
@@ -554,7 +554,7 @@ def test_extract_dist_py(py_package, runner, mocker, mock_github, tmp_path, git_
     changelog_entry = mock_changelog_entry(py_package, runner, mocker)
 
     # Create the dist files
-    run("python -m build .", cwd=util.CHECKOUT_NAME)
+    run("pipx run build .", cwd=util.CHECKOUT_NAME)
 
     # Finalize the release
     runner(["tag-release"])
@@ -588,7 +588,7 @@ def test_extract_dist_multipy(py_multipackage, runner, mocker, mock_github, tmp_
     dist_dir = normalize_path(Path(util.CHECKOUT_NAME).resolve() / "dist")
     for package in py_multipackage:
         run(
-            f"python -m build . -o {dist_dir}",
+            f"pipx run build . -o {dist_dir}",
             cwd=Path(util.CHECKOUT_NAME) / package["rel_path"],
         )
         files.extend(glob(dist_dir + "/*.*"))
@@ -638,7 +638,7 @@ def test_extract_dist_npm(npm_dist, runner, mocker, mock_github, tmp_path):
 def test_publish_assets_py(py_package, runner, mocker, git_prep, mock_github):
     # Create the dist files
     changelog_entry = mock_changelog_entry(py_package, runner, mocker)
-    run("python -m build .", cwd=util.CHECKOUT_NAME)
+    run("pipx run build .", cwd=util.CHECKOUT_NAME)
 
     orig_run = util.run
     called = 0
@@ -647,7 +647,7 @@ def test_publish_assets_py(py_package, runner, mocker, git_prep, mock_github):
 
     def wrapped(cmd, **kwargs):
         nonlocal called
-        if cmd.startswith("twine upload"):
+        if "twine upload" in cmd:
             if kwargs["env"]["TWINE_PASSWORD"] == "foo-token":
                 called += 1
         return orig_run(cmd, **kwargs)
@@ -763,7 +763,7 @@ def test_config_file(py_package, runner, mocker, git_prep):
 
     def wrapped(cmd, **kwargs):
         nonlocal called
-        if cmd.startswith("python -m build --outdir foo"):
+        if cmd.startswith("pipx run build --outdir foo"):
             called = True
             return ""
         return orig_run(cmd, **kwargs)
@@ -785,7 +785,7 @@ def test_config_file_env_override(py_package, runner, mocker, git_prep):
 
     def wrapped(cmd, **kwargs):
         nonlocal called
-        if cmd.startswith("python -m build --outdir bar"):
+        if cmd.startswith("pipx run build --outdir bar"):
             called = True
             return ""
         return orig_run(cmd, **kwargs)
@@ -807,7 +807,7 @@ def test_config_file_cli_override(py_package, runner, mocker, git_prep):
 
     def wrapped(cmd, **kwargs):
         nonlocal called
-        if cmd.startswith("python -m build --outdir bar"):
+        if cmd.startswith("pipx run build --outdir bar"):
             called = True
             return ""
         return orig_run(cmd, **kwargs)

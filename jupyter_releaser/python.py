@@ -26,7 +26,7 @@ def build_dist(dist_dir, clean=True):
             os.remove(pkg)
 
     if PYPROJECT.exists():
-        util.run(f"python -m build --outdir {dest} .", quiet=True, show_cwd=True)
+        util.run(f"pipx run build --outdir {dest} .", quiet=True, show_cwd=True)
     elif SETUP_PY.exists():
         util.run(f"python setup.py sdist --dist-dir {dest}", quiet=True)
         util.run(f"python setup.py bdist_wheel --dist-dir {dest}", quiet=True)
@@ -36,7 +36,7 @@ def check_dist(
     dist_file,
     test_cmd="",
     python_imports=None,
-    check_cmd="twine check --strict",
+    check_cmd="pipx twine check --strict",
     resource_paths=None,
 ):
     """Check a Python package locally (not as a cli)"""

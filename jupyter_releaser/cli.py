@@ -283,7 +283,7 @@ pydist_check_options = [
     click.option(
         "--pydist-check-cmd",
         envvar="RH_PYDIST_CHECK_CMD",
-        default="twine check --strict",
+        default="pipx run twine check --strict",
         help="The command to use to check a python distribution file",
     ),
     click.option(
@@ -666,7 +666,7 @@ def extract_release(
     "--twine-cmd",
     help="The twine to run for Python release",
     envvar="TWINE_COMMAND",
-    default="twine upload",
+    default="pipx run twine upload",
 )
 @click.option(
     "--npm-registry",

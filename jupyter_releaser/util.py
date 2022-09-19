@@ -42,7 +42,7 @@ JUPYTER_RELEASER_CONFIG = Path(".jupyter-releaser.toml")
 METADATA_JSON = Path("metadata.json")
 
 BUF_SIZE = 65536
-TBUMP_CMD = "tbump --non-interactive --only-patch"
+TBUMP_CMD = "pipx run tbump --non-interactive --only-patch"
 
 CHECKOUT_NAME = ".jupyter_releaser_checkout"
 
@@ -166,10 +166,10 @@ def get_version():
         if version:
             return version
 
-        # If this is a hatchling project, use hatchling to get
+        # If this is a hatchling project, use hatch to get
         # the dynamic version.
         if data.get("build-system", {}).get("build-backend") == "hatchling.build":
-            return run("hatchling version").split("\n")[-1]
+            return run("pipx run hatch version").split("\n")[-1]
 
     if SETUP_PY.exists():
         warnings.warn("Using deprecated setup.py invocation")
@@ -181,7 +181,7 @@ def get_version():
     # Build the wheel and extract the version.
     if PYPROJECT.exists():
         with tempfile.TemporaryDirectory() as tempdir:
-            run(f"{sys.executable} -m build --wheel --outdir {tempdir}")
+            run(f"pipx run build --wheel --outdir {tempdir}")
             wheel_path = glob(f"{tempdir}/*.whl")[0]
             wheel = Wheel(wheel_path)
             version = wheel.version
@@ -252,7 +252,7 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):
             if "tool.tbump" in pyproject_text:
                 version_cmd = version_cmd or TBUMP_CMD
             elif "hatchling.build" in pyproject_text:
-                version_cmd = version_cmd or "hatchling version"
+                version_cmd = version_cmd or "pipx run hatch version"
 
         if SETUP_CFG.exists():
             if "bumpversion" in SETUP_CFG.read_text(encoding="utf-8"):
@@ -266,13 +266,13 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):
 
     # Assign default values if no version spec was given
     if not version_spec:
-        if "tbump" in version_cmd or "hatchling" in version_cmd:
+        if "tbump" in version_cmd or "hatch" in version_cmd:
             version_spec = "next"
         else:
             version_spec = "patch"
 
     # Add some convenience options on top of "tbump" and "hatch"
-    if "tbump" in version_cmd or "hatchling" in version_cmd:
+    if "tbump" in version_cmd or "hatch" in version_cmd:
         v = parse_version(get_version())
         assert isinstance(v, Version)
 
