@@ -2,6 +2,24 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.24.3
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...0146419f57e6194a6433e76ff1160adfa50105be))
+
+### Bugs fixed
+
+- Fix handling of check manifest [#392](https://github.com/jupyter-server/jupyter_releaser/pull/392) ([@blink1073](https://github.com/blink1073))
+
+### Maintenance and upkeep improvements
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-09-19&to=2022-09-20&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-09-19..2022-09-20&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2022-09-19..2022-09-20&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.24.2
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...691989055256400c36ed736433d92c75975f6c14))
@@ -19,8 +37,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-09-15&to=2022-09-19&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-09-15..2022-09-19&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.24.1
 
