@@ -145,12 +145,10 @@ def test_list_envvars(runner):
         == """
 auth: GITHUB_ACCESS_TOKEN
 branch: RH_BRANCH
-cache-file: RH_CACHE_FILE
 changelog-path: RH_CHANGELOG
 check-imports: RH_CHECK_IMPORTS
 dist-dir: RH_DIST_DIR
 dry-run: RH_DRY_RUN
-links-expire: RH_LINKS_EXPIRE
 npm-cmd: RH_NPM_COMMAND
 npm-install-options: RH_NPM_INSTALL_OPTIONS
 npm-registry: NPM_REGISTRY
@@ -347,35 +345,6 @@ def test_draft_changelog_lerna(workspace_package, mocker, runner, mock_github, g
     runner(["draft-changelog", "--version-spec", VERSION_SPEC])
 
 
-def test_check_links(py_package, runner):
-    readme = Path("README.md")
-    text = readme.read_text(encoding="utf-8")
-    text += "\nhttps://apod.nasa.gov/apod/astropix.html\n"
-    readme.write_text(text, encoding="utf-8")
-
-    config = Path(util.JUPYTER_RELEASER_CONFIG)
-    config_data = util.toml.loads(config.read_text(encoding="utf-8"))
-    config_data["options"] = {"ignore-glob": ["FOO.md"]}
-    config.write_text(util.toml.dumps(config_data), encoding="utf-8")
-
-    util.run("git commit -a -m 'update files'")
-
-    runner(["prep-git", "--git-url", py_package])
-    runner(["check-links"])
-
-    log = get_log()
-    assert "before-check-links" in log
-    assert "after-check-links" in log
-
-    foo = Path(util.CHECKOUT_NAME) / "FOO.md"
-    foo.write_text("http://127.0.0.1:5555")
-
-    bar = Path(util.CHECKOUT_NAME) / "BAR BAZ.md"
-    bar.write_text("")
-
-    runner(["check-links"])
-
-
 def test_check_changelog(py_package, tmp_path, mocker, runner, git_prep):
     changelog_entry = mock_changelog_entry(py_package, runner, mocker)
     output_path = "output.md"
@@ -469,18 +438,6 @@ def test_handle_npm(npm_package, runner, git_prep):
 def test_handle_npm_lerna(workspace_package, runner, git_prep):
     runner(["build-npm"])
     runner(["check-npm"])
-
-
-def test_check_manifest(py_package, runner, git_prep):
-    runner(["check-manifest"])
-
-    log = get_log()
-    assert "before-check-manifest" in log
-    assert "after-check-manifest" in log
-
-
-def test_check_manifest_npm(npm_package, runner, git_prep):
-    runner(["check-manifest"])
 
 
 def test_tag_release(py_package, runner, build_mock, git_prep):

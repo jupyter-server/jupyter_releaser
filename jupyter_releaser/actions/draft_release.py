@@ -59,8 +59,6 @@ run_action("jupyter-releaser build-npm")
 run_action("jupyter-releaser check-npm")
 run_action("jupyter-releaser build-python")
 run_action("jupyter-releaser check-python")
-run_action("jupyter-releaser check-manifest")
-run_action("jupyter-releaser check-links")
 run_action("jupyter-releaser tag-release")
 
 # Run check changelog again to make sure no new PRs have been merged

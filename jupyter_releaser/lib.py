@@ -5,9 +5,7 @@ import os
 import os.path as osp
 import re
 import shutil
-import sys
 import tempfile
-import typing as t
 import uuid
 from datetime import datetime
 from glob import glob
@@ -42,69 +40,6 @@ def bump_version(version_spec, version_cmd, changelog_path):
         raise ValueError(msg)
 
     return version
-
-
-def check_links(ignore_glob, ignore_links, cache_file, links_expire):
-    """Check URLs for HTML-containing files."""
-    cache_dir = osp.expanduser(cache_file).replace(os.sep, "/")
-    os.makedirs(cache_dir, exist_ok=True)
-    python = sys.executable.replace(os.sep, "/")
-    cmd = f"{python} -m pytest --noconftest --check-links --check-links-cache "
-    cmd += f"--check-links-cache-expire-after {links_expire} "
-    cmd += "-raXs --color yes --quiet "
-    cmd += f"--check-links-cache-name {cache_dir}/check-release-links "
-    # do not run doctests, since they might depend on other state.
-    cmd += "-p no:doctest "
-    # ignore package pytest configuration,
-    # since we aren't running their tests
-    cmd += "-c _IGNORE_CONFIG"
-
-    ignored = []
-    for spec in ignore_glob:
-        cmd += f' --ignore-glob "{spec}"'
-        ignored.extend(glob(spec, recursive=True))
-
-    ignore_links = list(ignore_links) + [
-        "https://github.com/.*/(pull|issues)/.*",
-        "https://github.com/search?",
-        "http://localhost.*",
-        # https://github.com/github/feedback/discussions/14773
-        "https://docs.github.com/.*",
-    ]
-
-    for spec in ignore_links:
-        cmd += f' --check-links-ignore "{spec}"'
-
-    cmd += " --ignore-glob node_modules"
-
-    # Gather all of the markdown, RST, and ipynb files
-    files: t.List[str] = []
-    for ext in [".md", ".rst", ".ipynb"]:
-        matched = glob(f"**/*{ext}", recursive=True)
-        files.extend(m for m in matched if m not in ignored and "node_modules" not in m)
-
-    util.log("Checking files with options:")
-    util.log(cmd)
-
-    fails = 0
-    separator = f"\n\n{'-' * 80}\n"
-    for f in files:
-        file_cmd = cmd + f' "{f}"'
-        try:
-            util.log(f"{separator}{f}...")
-            util.run(file_cmd, shell=False, echo=False)
-        except Exception as e:
-            # Return code 5 means no tests were run (no links found)
-            if e.returncode != 5:  # type:ignore[attr-defined]
-                try:
-                    util.log(f"\n{f} (second attempt)...\n")
-                    util.run(file_cmd + " --lf", shell=False, echo=False)
-                except Exception:
-                    fails += 1
-                    if fails == 3:
-                        raise RuntimeError("Found three failed links, bailing")
-    if fails:
-        raise RuntimeError(f"Encountered failures in {fails} file(s)")
 
 
 def draft_changelog(
