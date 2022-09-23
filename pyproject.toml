@@ -29,7 +29,6 @@ dependencies = [
     "jsonschema>=3.0.1",
     "packaging",
     "pkginfo",
-    "pytest-check-links>=0.7",
     "pypiserver",
     "pipx",
     "requests",

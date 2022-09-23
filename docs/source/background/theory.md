@@ -9,8 +9,6 @@ This project should help maintainers reduce toil and save time in the release pr
 - Commit a message with hashes of dist file(s)
 - Annotate the git tag in standard format
 - Create a GitHub release with changelog entry
-- Verify url links in markdown and reStructuredText files
-- Verify integrity of Python manifest
 - Forward port changelog entries into default branch
 - Dry run publish on CI
 - Revert to Dev version after release (optional)
@@ -54,8 +52,6 @@ Detailed workflows are available to draft a changelog, draft a release, publish 
 - For npm package(s) (including workspace support):
   - Builds tarball(s) using `npm pack`
   - Make sure tarball(s) can be installed and imported in a new npm package
-- Checks the package manifest using [`check-manifest`](https://github.com/mgedmin/check-manifest)
-- Checks the links in Markdown and reStructuredText files
 - Adds a commit that includes the hashes of the dist files
 - Creates an annotated version tag in standard format
 - If given, bumps the version using the post version spec. he post version

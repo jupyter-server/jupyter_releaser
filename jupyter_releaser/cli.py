@@ -499,54 +499,6 @@ def check_npm(dist_dir, npm_install_options):
 
 
 @main.command()
-@use_checkout_dir()
-def check_manifest():
-    """Check the project manifest"""
-    # Only run the check if are using setuptools as the backend
-    if not util.PYPROJECT.exists() and util.SETUP_PY.exists():
-        util.run("pipx run check-manifest -v")
-        return
-
-    if util.PYPROJECT.exists():
-        content = util.PYPROJECT.read_text("utf-8")
-        if "setuptools.build_meta" in content:
-            util.run("pipx run check-manifest -v")
-            return
-
-    util.log("Skipping check-manifest")
-
-
-@main.command()
-@click.option(
-    "--ignore-glob",
-    default=[],
-    multiple=True,
-    help="Ignore test file paths based on glob pattern",
-)
-@click.option(
-    "--ignore-links",
-    multiple=True,
-    help="Ignore links based on regex pattern(s)",
-)
-@click.option(
-    "--cache-file",
-    envvar="RH_CACHE_FILE",
-    default="~/.cache/releaser-link-check",
-    help="The cache file to use",
-)
-@click.option(
-    "--links-expire",
-    default=604800,
-    envvar="RH_LINKS_EXPIRE",
-    help="Duration in seconds for links to be cached (default one week)",
-)
-@use_checkout_dir()
-def check_links(ignore_glob, ignore_links, cache_file, links_expire):
-    """Check URLs for HTML-containing files."""
-    lib.check_links(ignore_glob, ignore_links, cache_file, links_expire)
-
-
-@main.command()
 @add_options(dist_dir_options)
 @click.option(
     "--release-message",
