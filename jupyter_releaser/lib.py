@@ -5,9 +5,7 @@ import os
 import os.path as osp
 import re
 import shutil
-import sys
 import tempfile
-import typing as t
 import uuid
 from datetime import datetime
 from glob import glob

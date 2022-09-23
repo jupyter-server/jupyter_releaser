@@ -145,7 +145,6 @@ def test_list_envvars(runner):
         == """
 auth: GITHUB_ACCESS_TOKEN
 branch: RH_BRANCH
-cache-file: RH_CACHE_FILE
 changelog-path: RH_CHANGELOG
 check-imports: RH_CHECK_IMPORTS
 dist-dir: RH_DIST_DIR
