@@ -2,6 +2,7 @@
 # Distributed under the terms of the Modified BSD License.
 import os
 import shutil
+import tempfile
 from pathlib import Path
 
 from ghapi.core import GhApi
@@ -284,23 +285,13 @@ def create_python_package(git_repo, multi=False, not_matching_name=False):
 
 def create_draft_release(ref="bar", files=None):
     gh = GhApi("foo", "bar")
-    return gh.create_release(
-        ref,
-        "bar",
-        ref,
-        "body",
-        True,
-        True,
-        files=files or [],
-    )
-
-
-def create_tag_ref():
-    curr_dir = os.getcwd()
-    os.chdir(util.CHECKOUT_NAME)
-    ref = get_latest_tag(None)
-    sha = run("git rev-parse HEAD")
-    gh = GhApi("foo", "bar")
-    gh.git.create_ref(ref, sha)
-    os.chdir(curr_dir)
-    return ref
+    release = gh.create_release(ref, "bar", ref, "body", True, True)
+    if files:
+        with tempfile.TemporaryDirectory() as td:
+            metadata_file = os.path.join(td, "metadata.json")
+            with open(metadata_file, "w") as fid:
+                fid.write("{}")
+            gh.upload_file(release, metadata_file)
+            release = util.release_for_url(gh, release.url)
+        util.upload_assets(gh, files, release, "foo")
+    return release

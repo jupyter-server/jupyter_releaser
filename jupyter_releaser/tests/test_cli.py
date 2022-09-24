@@ -18,7 +18,6 @@ from jupyter_releaser.tests.util import (
     PR_ENTRY,
     VERSION_SPEC,
     create_draft_release,
-    create_tag_ref,
     get_log,
     mock_changelog_entry,
 )
@@ -516,13 +515,10 @@ def test_extract_dist_py(py_package, runner, mocker, mock_github, tmp_path, git_
     # Finalize the release
     runner(["tag-release"])
 
-    # Create a tag ref
-    ref = create_tag_ref()
-
     # Create the release.
     dist_dir = os.path.join(util.CHECKOUT_NAME, "dist")
-    release = create_draft_release(ref, glob(f"{dist_dir}/*.*"))
-    shutil.rmtree(f"{util.CHECKOUT_NAME}/dist")
+    release = create_draft_release("bar", glob(f"{dist_dir}/*.*"))
+    shutil.rmtree(dist_dir)
 
     os.environ["RH_RELEASE_URL"] = release.html_url
     runner(["extract-release"])
@@ -553,14 +549,10 @@ def test_extract_dist_multipy(py_multipackage, runner, mocker, mock_github, tmp_
     # Finalize the release
     runner(["tag-release"])
 
-    # Create a tag ref
-    ref = create_tag_ref()
-
     # Create the release.
     dist_dir = os.path.join(util.CHECKOUT_NAME, "dist")
-    release = create_draft_release(ref, glob(f"{dist_dir}/*.*"))
-
-    shutil.rmtree(f"{util.CHECKOUT_NAME}/dist")
+    release = create_draft_release("bar", glob(f"{dist_dir}/*.*"))
+    shutil.rmtree(dist_dir)
 
     os.environ["RH_RELEASE_URL"] = release.html_url
     runner(["extract-release"])
@@ -575,13 +567,10 @@ def test_extract_dist_multipy(py_multipackage, runner, mocker, mock_github, tmp_
     reason="See https://bugs.python.org/issue26660",
 )
 def test_extract_dist_npm(npm_dist, runner, mocker, mock_github, tmp_path):
-    # Create a tag ref
-    ref = create_tag_ref()
-
     # Create the release.
     dist_dir = os.path.join(util.CHECKOUT_NAME, "dist")
-    release = create_draft_release(ref, glob(f"{dist_dir}/*.*"))
-    shutil.rmtree(f"{util.CHECKOUT_NAME}/dist")
+    release = create_draft_release("bar", glob(f"{dist_dir}/*.*"))
+    shutil.rmtree(dist_dir)
 
     os.environ["RH_RELEASE_URL"] = release.html_url
     runner(["extract-release"])
@@ -612,7 +601,7 @@ def test_publish_assets_py(py_package, runner, mocker, git_prep, mock_github):
     mock_run = mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
 
     dist_dir = py_package / util.CHECKOUT_NAME / "dist"
-    release = create_draft_release()
+    release = create_draft_release(files=glob(f"{dist_dir}/*.*"))
     os.environ["RH_RELEASE_URL"] = release.html_url
     runner(["publish-assets", "--dist-dir", dist_dir, "--dry-run"])
     assert called == 2, called

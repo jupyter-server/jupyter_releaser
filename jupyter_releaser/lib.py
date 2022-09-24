@@ -247,13 +247,6 @@ def draft_release(
     if not os.path.exists(remote_url):
         util.run(f"git push {remote_name} HEAD:{branch} --follow-tags --tags")
 
-    # Upload the assets to the draft release.
-    util.log(f"Uploading assets: {assets}")
-    asset_shas = {}
-    for fpath in assets:
-        gh.upload_file(release, fpath)
-        asset_shas[os.path.basename(fpath)] = util.compute_sha256(fpath)
-
     # Set the body of the release with the changelog contents.
     # Get the new release since the draft release might change urls.
     release = gh.repos.update_release(
@@ -266,14 +259,8 @@ def draft_release(
         release.prerelease,
     )
 
-    # Update the metadata file to include the shas
-    assets = release.assets
-    for asset in assets:
-        if asset.name == "metadata.json":
-            with tempfile.TemporaryDirectory() as td:
-                metadata = util.fetch_release_asset(td, asset, auth)
-                metadata["asset_shas"] = asset_shas
-                gh.upload_file(release, os.path.join(td, "metadata.json"))
+    # Upload the assets to the draft release.
+    release = util.upload_assets(gh, assets, release, auth)
 
     # Set the GitHub action output
     util.actions_output("release_url", release.html_url)
