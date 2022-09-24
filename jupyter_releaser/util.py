@@ -443,6 +443,19 @@ def parse_release_url(release_url):
     return match
 
 
+def fetch_release_asset(target_dir, asset, auth):
+    """Fetch a release asset into a target directory."""
+    log(f"Fetching {asset.name}...")
+    url = asset.url
+    headers = dict(Authorization=f"token {auth}", Accept="application/octet-stream")
+    path = target_dir / asset.name
+    with requests.get(url, headers=headers, stream=True) as r:
+        r.raise_for_status()
+        with open(path, "wb") as f:
+            for chunk in r.iter_content(chunk_size=8192):
+                f.write(chunk)
+
+
 def extract_metadata_from_release_url(gh, release_url, auth):
     log(f"Extracting metadata for release: {release_url}")
     release = release_for_url(gh, release_url)

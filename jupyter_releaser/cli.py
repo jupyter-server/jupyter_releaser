@@ -585,30 +585,14 @@ def delete_release(auth, dry_run, release_url):
 @add_options(auth_options)
 @add_options(dist_dir_options)
 @add_options(dry_run_options)
-@add_options(npm_install_options)
-@add_options(pydist_check_options)
-@add_options(check_imports_options)
 @add_options(release_url_options)
-def extract_release(
-    auth,
-    dist_dir,
-    dry_run,
-    release_url,
-    npm_install_options,
-    pydist_check_cmd,
-    pydist_resource_paths,
-    check_imports,
-):
+def extract_release(auth, dist_dir, dry_run, release_url):
     """Download and verify assets from a draft GitHub release"""
     lib.extract_release(
         auth,
         dist_dir,
         dry_run,
         release_url,
-        npm_install_options,
-        pydist_check_cmd,
-        pydist_resource_paths,
-        check_imports,
     )
 
 

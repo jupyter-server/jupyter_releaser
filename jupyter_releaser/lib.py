@@ -249,8 +249,10 @@ def draft_release(
 
     # Upload the assets to the draft release.
     util.log(f"Uploading assets: {assets}")
+    asset_shas = {}
     for fpath in assets:
         gh.upload_file(release, fpath)
+        asset_shas[os.path.basename(fpath)] = util.compute_sha256(fpath)
 
     # Set the body of the release with the changelog contents.
     # Get the new release since the draft release might change urls.
@@ -263,6 +265,15 @@ def draft_release(
         True,
         release.prerelease,
     )
+
+    # Update the metadata file to include the shas
+    assets = release.assets
+    for asset in assets:
+        if asset.name == "metadata.json":
+            with tempfile.TemporaryDirectory() as td:
+                metadata = util.fetch_release_asset(td, asset, auth)
+                metadata["asset_shas"] = asset_shas
+                gh.upload_file(release, os.path.join(td, "metadata.json"))
 
     # Set the GitHub action output
     util.actions_output("release_url", release.html_url)
@@ -283,16 +294,7 @@ def delete_release(auth, release_url, dry_run=False):
     gh.repos.delete_release(release.id)
 
 
-def extract_release(
-    auth,
-    dist_dir,
-    dry_run,
-    release_url,
-    npm_install_options,
-    pydist_check_cmd,
-    pydist_resource_paths,
-    python_imports,
-):
+def extract_release(auth, dist_dir, dry_run, release_url):
     """Download and verify assets from a draft GitHub release"""
     match = util.parse_release_url(release_url)
     owner, repo = match["owner"], match["repo"]
@@ -308,11 +310,6 @@ def extract_release(
     orig_dir = os.getcwd()
     os.chdir(util.CHECKOUT_NAME)
 
-    # Read in the config
-    config = util.read_config()
-    options = config.get("options", {})
-    npm_install_options = npm_install_options or options.get("npm-install-options", "")
-
     # Clean the dist folder
     dist = Path(dist_dir)
     if dist.exists():
@@ -321,68 +318,21 @@ def extract_release(
 
     # Fetch, validate, and publish assets
     for asset in assets:
-        util.log(f"Fetching {asset.name}...")
-        url = asset.url
-        headers = dict(Authorization=f"token {auth}", Accept="application/octet-stream")
-        path = dist / asset.name
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            with open(path, "wb") as f:
-                for chunk in r.iter_content(chunk_size=8192):
-                    f.write(chunk)
+        util.fetch_release_asset(dist_dir, asset, auth)
 
-    # Check all npm packages
-    npm.check_dist(dist, npm_install_options)
+    # Validate the shas of all the files
+    metadata_file = dist / "metadata.json"
+    with open(metadata_file) as fid:
+        asset_shas = json.load(fid)["asset_shas"]
+    metadata_file.unlink()
 
-    # Check python packages individually
     for asset in assets:
-        suffix = Path(asset.name).suffix
-        if suffix in [".gz", ".whl"]:
-            python.check_dist(
-                dist / asset.name,
-                check_cmd=pydist_check_cmd,
-                python_imports=python_imports,
-                resource_paths=pydist_resource_paths,
-            )
-        elif suffix == ".tgz":
-            pass  # already handled
-        else:
-            util.log(f"Nothing to check for {asset.name}")
-
-    # Skip sha validation for dry runs since the remote tag will not exist
-    if dry_run:
-        os.chdir(orig_dir)
-        return
-
-    tag_name = release.tag_name
-
-    sha = None
-    for tag in gh.list_tags(tag_name):
-        if tag.ref == f"refs/tags/{tag_name}":
-            sha = tag.object.sha
-            break
-    if sha is None:
-        raise ValueError("Could not find tag")
-
-    # Get the commmit message for the tag
-    commit_message = ""
-    commit_message = util.run(f"git log --format=%B -n 1 {sha}")
-
-    for asset in filter(lambda a: a.name != util.METADATA_JSON.name, assets):
-        # Check the sha against the published sha
-        valid = False
-        path = dist / asset.name
-        sha = util.compute_sha256(path)
-
-        for line in commit_message.splitlines():
-            if asset.name in line:
-                if sha in line:
-                    valid = True
-                else:
-                    util.log("Mismatched sha!")
-
-        if not valid:  # pragma: no cover
-            raise ValueError(f"Invalid file {asset.name}")
+        if asset.name == "metadata.json":
+            continue
+        if asset.name not in asset_shas:
+            raise ValueError(f"{asset.name} was not found in metadata file")
+        if util.compute_sha256(dist / asset.name) != asset_shas[asset.name]:
+            raise ValueError(f"sha for {asset.name} does not match metadata file")
 
     os.chdir(orig_dir)
 
