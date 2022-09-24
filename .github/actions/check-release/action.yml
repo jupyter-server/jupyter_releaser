@@ -23,29 +23,29 @@ runs:
             pip install -q git+https://github.com/jupyter-server/jupyter_releaser.git@v1
         fi
 
-    - id: draft-changelog
+    - id: prep-release
       shell: bash -eux {0}
       run: |
-        export RH_IS_CHECK_RELEASE="true"
+        export RH_DRY_RUN="true"
         export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
         export RH_VERSION_SPEC=${{ inputs.version_spec }}
         export RH_STEPS_TO_SKIP=${{ inputs.steps_to_skip }}
-        python -m jupyter_releaser.actions.draft_changelog
+        python -m jupyter_releaser.actions.prep_release
 
-    - id: draft-release
+    - id: populate-release
       shell: bash -eux {0}
       run: |
-        export RH_IS_CHECK_RELEASE="true"
+        export RH_DRY_RUN="true"
         export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
-        export RH_RELEASE_URL=${{ steps.draft-changelog.outputs.release_url }}
+        export RH_RELEASE_URL=${{ steps.prep-release.outputs.release_url }}
         export RH_STEPS_TO_SKIP=${{ inputs.steps_to_skip }}
-        python -m jupyter_releaser.actions.draft_release
+        python -m jupyter_releaser.actions.prep_release
 
-    - id: publish-release
+    - id: finalize-release
       shell: bash -eux {0}
       run: |
-        export RH_IS_CHECK_RELEASE="true"
+        export RH_DRY_RUN="true"
         export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
-        export RH_RELEASE_URL=${{ steps.draft-changelog.outputs.release_url }}
+        export RH_RELEASE_URL=${{ steps.populate-release.outputs.release_url }}
         export RH_STEPS_TO_SKIP=${{ inputs.steps_to_skip }}
-        python -m jupyter_releaser.actions.publish_release
+        python -m jupyter_releaser.actions.finalize_release

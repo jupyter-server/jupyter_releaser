@@ -534,13 +534,10 @@ def prepare_environment(fetch_draft_release=True):
     if not os.environ.get("RH_REF"):
         os.environ["RH_REF"] = os.environ["GITHUB_REF"]
 
-    check_release = os.environ.get("RH_IS_CHECK_RELEASE", "").lower() == "true"
-    if not os.environ.get("RH_DRY_RUN") and check_release:
-        os.environ["RH_DRY_RUN"] = "true"
     dry_run = os.environ.get("RH_DRY_RUN", "").lower() == "true"
 
     # Set the branch when using check release.
-    if not os.environ.get("RH_BRANCH") and check_release:
+    if not os.environ.get("RH_BRANCH") and dry_run:
         if os.environ.get("GITHUB_BASE_REF"):
             base_ref = os.environ.get("GITHUB_BASE_REF", "")
             log(f"Using GITHUB_BASE_REF: ${base_ref}")
@@ -600,6 +597,17 @@ def handle_since():
         log("No last stable found!")
     os.chdir(curr_dir)
     return since
+
+
+def ensure_sha():
+    """Ensure the sha of the remote branch matches the expected sha"""
+    current_sha = os.environ["RH_CURRENT_SHA"]
+    branch = os.environ["RH_BRANCH"]
+    remote_name = get_remote_name(False)
+    run(f"git fetch {remote_name} {branch}")
+    sha = run(f"git rev-parse {remote_name}/{branch}")
+    if sha != current_sha:
+        raise ValueError(f"{branch} is ahead of expected sha {current_sha}")
 
 
 def get_gh_object(dry_run=False, **kwargs):

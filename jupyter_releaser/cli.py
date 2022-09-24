@@ -406,35 +406,6 @@ def draft_changelog(
 
 
 @main.command()
-@add_options(changelog_options)
-@click.option("--output", envvar="RH_CHANGELOG_OUTPUT", help="The output file for changelog entry")
-@use_checkout_dir()
-def check_changelog(
-    ref,
-    branch,
-    repo,
-    auth,
-    changelog_path,
-    since,
-    since_last_stable,
-    resolve_backports,
-    output,
-):
-    """Check changelog entry"""
-    changelog.check_entry(
-        ref,
-        branch,
-        repo,
-        auth,
-        changelog_path,
-        since,
-        since_last_stable,
-        resolve_backports,
-        output,
-    )
-
-
-@main.command()
 @add_options(dist_dir_options)
 @add_options(python_packages_options)
 @use_checkout_dir()
