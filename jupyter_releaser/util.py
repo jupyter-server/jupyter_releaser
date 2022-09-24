@@ -443,6 +443,58 @@ def parse_release_url(release_url):
     return match
 
 
+def fetch_release_asset(target_dir, asset, auth):
+    """Fetch a release asset into a target directory."""
+    log(f"Fetching {asset.name}...")
+    url = asset.url
+    headers = dict(Authorization=f"token {auth}", Accept="application/octet-stream")
+    path = Path(target_dir) / asset.name
+    with requests.get(url, headers=headers, stream=True) as r:
+        r.raise_for_status()
+        with open(path, "wb") as f:
+            for chunk in r.iter_content(chunk_size=8192):
+                f.write(chunk)
+    return path
+
+
+def fetch_release_asset_data(asset, auth):
+    """Fetch the data for a release asset."""
+    log(f"Fetching data for {asset.name}...")
+    url = asset.url
+    headers = dict(Authorization=f"token {auth}", Accept="application/octet-stream")
+
+    sink = BytesIO()
+    with requests.get(url, headers=headers, stream=True) as r:
+        r.raise_for_status()
+        for chunk in r.iter_content(chunk_size=8192):
+            sink.write(chunk)
+    sink.seek(0)
+    return json.loads(sink.read().decode("utf-8"))
+
+
+def upload_assets(gh, assets, release, auth):
+    """Upload assets to a release."""
+    log(f"Uploading assets: {assets}")
+    asset_shas = {}
+    for fpath in assets:
+        gh.upload_file(release, fpath)
+        asset_shas[os.path.basename(fpath)] = compute_sha256(fpath)
+
+    # Update the metadata file to include the shas
+    for asset in release.assets:
+        if asset.name == "metadata.json":
+            with tempfile.TemporaryDirectory() as td:
+                metadata_file = fetch_release_asset(td, asset, auth)
+                with open(metadata_file) as fid:
+                    metadata = json.load(fid)
+                metadata["asset_shas"] = asset_shas
+                with open(metadata_file, "w") as fid:
+                    json.dump(metadata, fid)
+                gh.upload_file(release, os.path.join(td, "metadata.json"))
+
+    return release
+
+
 def extract_metadata_from_release_url(gh, release_url, auth):
     log(f"Extracting metadata for release: {release_url}")
     release = release_for_url(gh, release_url)
@@ -452,17 +504,7 @@ def extract_metadata_from_release_url(gh, release_url, auth):
         if asset.name != METADATA_JSON.name:
             continue
 
-        log(f"Fetching {asset.name}...")
-        url = asset.url
-        headers = dict(Authorization=f"token {auth}", Accept="application/octet-stream")
-
-        sink = BytesIO()
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            for chunk in r.iter_content(chunk_size=8192):
-                sink.write(chunk)
-        sink.seek(0)
-        data = json.loads(sink.read().decode("utf-8"))
+        data = fetch_release_asset_data(asset, auth)
 
     if data is None:
         raise ValueError(
