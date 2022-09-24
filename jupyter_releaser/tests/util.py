@@ -8,7 +8,7 @@ from pathlib import Path
 from ghapi.core import GhApi
 
 from jupyter_releaser import changelog, cli, util
-from jupyter_releaser.util import get_latest_tag, run
+from jupyter_releaser.util import run
 
 VERSION_SPEC = "1.0.1"
 

@@ -12,7 +12,6 @@ from glob import glob
 from pathlib import Path
 from subprocess import CalledProcessError
 
-import requests
 import toml
 from packaging.version import parse as parse_version
 from pkginfo import SDist, Wheel
