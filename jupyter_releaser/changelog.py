@@ -162,15 +162,6 @@ def build_entry(
     # Get the new version
     version = util.get_version()
 
-    # Get the existing changelog and run some validation
-    changelog = Path(changelog_path).read_text(encoding="utf-8")
-
-    if START_MARKER not in changelog or END_MARKER not in changelog:
-        raise ValueError("Missing insert marker for changelog")
-
-    if changelog.find(START_MARKER) != changelog.rfind(START_MARKER):
-        raise ValueError("Insert marker appears more than once in changelog")
-
     # Get changelog entry
     entry = get_version_entry(
         ref,
@@ -182,6 +173,21 @@ def build_entry(
         auth=auth,
         resolve_backports=resolve_backports,
     )
+    update_changelog(changelog_path, entry)
+
+
+def update_changelog(changelog_path, entry):
+    # Get the new version
+    version = util.get_version()
+
+    # Get the existing changelog and run some validation
+    changelog = Path(changelog_path).read_text(encoding="utf-8")
+
+    if START_MARKER not in changelog or END_MARKER not in changelog:
+        raise ValueError("Missing insert marker for changelog")
+
+    if changelog.find(START_MARKER) != changelog.rfind(START_MARKER):
+        raise ValueError("Insert marker appears more than once in changelog")
 
     changelog = insert_entry(changelog, entry, version=version)
     Path(changelog_path).write_text(changelog, encoding="utf-8")
