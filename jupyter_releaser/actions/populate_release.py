@@ -2,14 +2,17 @@
 # Distributed under the terms of the Modified BSD License.
 
 import os
+import sys
 
 from jupyter_releaser.actions.common import run_action, setup
-from jupyter_releaser.util import ensure_sha, log
+from jupyter_releaser.util import actions_output, ensure_sha, log
 
 data = setup()
 
 if len(data.get("asset_shas", [])):
     log("Skipping populate assets")
+    actions_output("release_url", os.environ["RH_RELEASE_URL"])
+    sys.exit(0)
 
 dry_run = os.environ.get("RH_DRY_RUN", "").lower() == "true"
 
