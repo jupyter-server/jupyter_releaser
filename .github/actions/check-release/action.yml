@@ -39,7 +39,7 @@ runs:
         export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
         export RH_RELEASE_URL=${{ steps.prep-release.outputs.release_url }}
         export RH_STEPS_TO_SKIP=${{ inputs.steps_to_skip }}
-        python -m jupyter_releaser.actions.prep_release
+        python -m jupyter_releaser.actions.populate_release
 
     - id: finalize-release
       shell: bash -eux {0}

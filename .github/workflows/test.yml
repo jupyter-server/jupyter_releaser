@@ -142,18 +142,18 @@ jobs:
           version_spec: 10.10.10
           dry_run: true
 
-      - name: draft-release
-        uses: ./.github/actions/draft-release
+      - name: populate-release
+        uses: ./.github/actions/populate-release
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          release_url: ${{ steps.draft-changelog.outputs.release_url }}
+          release_url: ${{ steps.prep-release.outputs.release_url }}
           dry_run: true
 
       - name: publish-release
-        uses: ./.github/actions/publish-release
+        uses: ./.github/actions/finalize-release
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          release_url: ${{ steps.draft-changelog.outputs.release_url }}
+          release_url: ${{ steps.populate-release.outputs.release_url }}
           dry_run: true
 
   check: # This job does nothing and is only used for the branch protection
