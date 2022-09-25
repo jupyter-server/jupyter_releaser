@@ -310,14 +310,14 @@ def publish_assets(
     npm_cmd,
     twine_cmd,
     npm_registry,
-    twine_registry,
+    twine_repository_url,
     dry_run,
     release_url,
     python_package,
 ):
     """Publish release asset(s)"""
     os.environ["NPM_REGISTRY"] = npm_registry
-    os.environ["TWINE_REGISTRY"] = twine_registry
+    os.environ["TWINE_REPOSITORY_URL"] = twine_repository_url
     twine_token = ""
 
     if len(glob(f"{dist_dir}/*.tgz")):
