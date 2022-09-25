@@ -32,4 +32,4 @@ run_action("jupyter-releaser tag-release")
 
 if not dry_run:
     ensure_sha()
-run_action("jupyter-releaser draft-release")
+run_action("jupyter-releaser populate-release")
