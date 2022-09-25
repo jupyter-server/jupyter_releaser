@@ -30,7 +30,6 @@ from packaging.version import Version
 from packaging.version import parse as parse_version
 from pkginfo import Wheel
 
-from jupyter_releaser.changelog import extract_current_version
 from jupyter_releaser.tee import run as tee
 
 PYPROJECT = Path("pyproject.toml")
@@ -279,6 +278,9 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):
 
         if v.is_devrelease:
             # bump from the version in the changelog unless the spec is dev.
+            # Import here to avoid circular import.
+            from jupyter_releaser.changelog import extract_current_version
+
             vc = parse_version(extract_current_version(changelog_path))
             assert isinstance(vc, Version)
 
