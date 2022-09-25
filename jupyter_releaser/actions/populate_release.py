@@ -20,7 +20,9 @@ dry_run = os.environ.get("RH_DRY_RUN", "").lower() == "true"
 if not dry_run:
     # Skip if we already have asset shas.
     release_url = os.environ["RH_RELEASE_URL"]
-    gh = get_gh_object(False)
+    owner, repo = os.environ["RH_REPOSITORY"].split("/")
+    auth = os.environ["GITHUB_ACCESS_TOKEN"]
+    gh = get_gh_object(False, owner=owner, repo=repo, token=auth)
     release = release_for_url(gh, release_url)
     for asset in release.assets:
         if asset.name == "asset_shas.json":
