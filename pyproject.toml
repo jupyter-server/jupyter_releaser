@@ -57,6 +57,9 @@ jupyter-releaser = "jupyter_releaser.cli:main"
 [tool.hatch.version]
 path = "jupyter_releaser/__init__.py"
 
+[tool.jupyter-releaser]
+post-version-spec = "dev"
+
 [tool.jupyter-releaser.hooks]
 after-populate-release = "bash ./.github/scripts/bump_tag.sh"
 

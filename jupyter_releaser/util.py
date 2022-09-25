@@ -30,6 +30,7 @@ from packaging.version import Version
 from packaging.version import parse as parse_version
 from pkginfo import Wheel
 
+from jupyter_releaser.changelog import extract_current_version
 from jupyter_releaser.tee import run as tee
 
 PYPROJECT = Path("pyproject.toml")
@@ -277,15 +278,22 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):
         assert isinstance(v, Version)
 
         if v.is_devrelease:
-            # bump from the version in the changelog.
-            if version_spec in ["patch", "next"]:
-                raise ValueError(
-                    "We do not support 'patch' or 'next' when dev versions are used, please use an explicit version."
-                )
+            # bump from the version in the changelog unless the spec is dev.
+            vc = parse_version(extract_current_version(changelog_path))
+            assert isinstance(vc, Version)
 
-            # Drop the dev portion and move to the minor release.
+            if version_spec in ["patch", "next"]:
+                if vc.is_prerelease:
+                    assert vc.pre is not None
+                    # Bump to the next prerelease.
+                    version_spec = f"{vc.major}.{vc.minor}.{vc.micro}{vc.pre[0]}{vc.pre[1] + 1}"
+                else:
+                    # Bump to the next micro.
+                    version_spec = f"{vc.major}.{vc.minor}.{vc.micro + 1}"
+
+            # Move to the minor release
             elif version_spec == "minor":
-                version_spec = f"{v.major}.{v.minor}.{v.micro}"
+                version_spec = f"{vc.major}.{v.minor+1}.0"
 
             # Bump to the next dev version.
             elif version_spec == "dev":
