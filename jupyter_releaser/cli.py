@@ -511,7 +511,7 @@ def tag_release(dist_dir, release_message, tag_format, tag_message, no_git_tag_w
 @add_options(post_version_spec_options)
 @click.argument("assets", nargs=-1)
 @use_checkout_dir()
-def draft_release(
+def populate_release(
     ref,
     branch,
     repo,
@@ -525,8 +525,7 @@ def draft_release(
     post_version_message,
     assets,
 ):
-    """Publish Draft GitHub release"""
-    lib.draft_release(
+    lib.populate_release(
         ref,
         branch,
         repo,

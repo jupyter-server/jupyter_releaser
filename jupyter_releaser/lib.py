@@ -188,7 +188,7 @@ def tag_release(dist_dir, release_message, tag_format, tag_message, no_git_tag_w
         npm.tag_workspace_packages()
 
 
-def draft_release(
+def populate_release(
     ref,
     branch,
     repo,
@@ -202,7 +202,7 @@ def draft_release(
     post_version_message,
     assets,
 ):
-    """Publish Draft GitHub release and handle post version bump"""
+    """Populate release assets and push tags and commits"""
     branch = branch or util.get_branch()
     assets = assets or glob(f"{dist_dir}/*")
     body = changelog.extract_current(changelog_path)

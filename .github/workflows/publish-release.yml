@@ -50,7 +50,7 @@ jobs:
         with:
           token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
           target: ${{ github.event.inputs.target }}
-          release_url: ${{ steps.draft-release.outputs.release_url }}
+          release_url: ${{ steps.populate-release.outputs.release_url }}
 
       - name: "** Next Step **"
         if: ${{ success() }}

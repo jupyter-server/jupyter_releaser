@@ -58,7 +58,7 @@ jupyter-releaser = "jupyter_releaser.cli:main"
 path = "jupyter_releaser/__init__.py"
 
 [tool.jupyter-releaser.hooks]
-after-draft-release = "bash ./.github/scripts/bump_tag.sh"
+after-populate-release = "bash ./.github/scripts/bump_tag.sh"
 
 [tool.pytest.ini_options]
 addopts = "-raXs --durations 10 --color=yes --doctest-modules"

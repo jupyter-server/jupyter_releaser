@@ -436,11 +436,11 @@ def test_tag_release(py_package, runner, build_mock, git_prep):
     assert "after-tag-release" in log
 
 
-def test_draft_release_dry_run(py_dist, mocker, runner, git_prep, draft_release):
+def test_populate_release_dry_run(py_dist, mocker, runner, git_prep, draft_release):
     # Publish the release - dry run
     runner(
         [
-            "draft-release",
+            "populate-release-release",
             "--dry-run",
             "--post-version-spec",
             "1.1.0.dev0",
@@ -452,15 +452,15 @@ def test_draft_release_dry_run(py_dist, mocker, runner, git_prep, draft_release)
     )
 
     log = get_log()
-    assert "before-draft-release" in log
-    assert "after-draft-release" in log
+    assert "before-populate-release" in log
+    assert "after-populate-release" in log
 
 
-def test_draft_release_final(npm_dist, runner, mock_github, git_prep, draft_release):
+def test_populate_release_final(npm_dist, runner, mock_github, git_prep, draft_release):
     # Publish the release
     os.environ["GITHUB_ACTIONS"] = "true"
     os.environ["RH_RELEASE_URL"] = draft_release
-    runner(["draft-release"])
+    runner(["populate-release"])
 
 
 def test_delete_release(npm_dist, runner, mock_github, git_prep, draft_release):
@@ -468,7 +468,7 @@ def test_delete_release(npm_dist, runner, mock_github, git_prep, draft_release):
     # Mimic being on GitHub actions so we get the magic output
     os.environ["GITHUB_ACTIONS"] = "true"
     os.environ["RH_RELEASE_URL"] = draft_release
-    result = runner(["draft-release"])
+    result = runner(["populate-release"])
 
     # Delete the release
     runner(["delete-release"])
