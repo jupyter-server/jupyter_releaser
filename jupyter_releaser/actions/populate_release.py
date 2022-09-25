@@ -38,6 +38,7 @@ if not os.environ.get("RH_RELEASE_URL"):
 
 run_action("jupyter-releaser prep-git")
 run_action("jupyter-releaser bump-version")
+run_action("jupyter-releaser extract-changelog")
 
 # Make sure npm comes before python in case it produces
 # files for the python package

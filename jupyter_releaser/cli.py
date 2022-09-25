@@ -349,6 +349,15 @@ def bump_version(version_spec, version_cmd, changelog_path, python_packages):
 
 
 @main.command()
+@add_options(auth_options)
+@add_options(changelog_path_options)
+@add_options(release_url_options)
+@use_checkout_dir()
+def extract_changelog(auth, changelog_path, release_url):
+    lib.extract_changelog(auth, changelog_path, release_url)
+
+
+@main.command()
 @add_options(changelog_options)
 @use_checkout_dir()
 def build_changelog(

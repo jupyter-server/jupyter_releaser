@@ -72,6 +72,9 @@ def draft_changelog(
     if f"v{version}" in tags.splitlines():
         raise ValueError(f"Tag v{version} already exists")
 
+    current = changelog.extract_current(changelog_path)
+    util.log(f"\n\nCurrent Changelog Entry:\n{current}")
+
     # Check out any unstaged files from version bump
     # If this is an automated changelog PR, there may be no effective changes
     try:
@@ -79,9 +82,6 @@ def draft_changelog(
     except CalledProcessError as e:
         util.log(str(e))
         return
-
-    current = changelog.extract_current(changelog_path)
-    util.log(f"\n\nCurrent Changelog Entry:\n{current}")
 
     util.log(f"\n\nCreating draft GitHub release for {version}")
     owner, repo_name = repo.split("/")
@@ -506,6 +506,14 @@ def prep_git(ref, branch, repo, auth, username, url):
     os.chdir(orig_dir)
 
     return branch
+
+
+def extract_changelog(auth, changelog_path, release_url):
+    """Extract the changelog from the draft GH release body and update it."""
+    match = util.parse_release_url(release_url)
+    gh = util.get_gh_object(dry_run=False, owner=match["owner"], repo=match["repo"], token=auth)
+    release = util.release_for_url(gh, release_url)
+    changelog.update_changelog(changelog_path, release.body)
 
 
 def forwardport_changelog(auth, ref, branch, repo, username, changelog_path, dry_run, release_url):
