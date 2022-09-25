@@ -5,18 +5,30 @@ import os
 import sys
 
 from jupyter_releaser.actions.common import run_action, setup
-from jupyter_releaser.util import actions_output, ensure_sha, log
+from jupyter_releaser.util import (
+    actions_output,
+    ensure_sha,
+    get_gh_object,
+    log,
+    release_for_url,
+)
 
-data = setup()
-
-if len(data.get("asset_shas", [])):
-    log("Skipping populate assets")
-    actions_output("release_url", os.environ["RH_RELEASE_URL"])
-    sys.exit(0)
+setup()
 
 dry_run = os.environ.get("RH_DRY_RUN", "").lower() == "true"
 
 if not dry_run:
+    # Skip if we already have asset shas.
+    release_url = os.environ["RH_RELEASE_URL"]
+    gh = get_gh_object(False)
+    release = release_for_url(gh, release_url)
+    for asset in release.assets:
+        if asset.name == "asset_shas.json":
+            log("Skipping populate assets")
+            actions_output("release_url", release_url)
+            sys.exit(0)
+
+    # Ensure the branch sha has not changed.
     ensure_sha()
 
 if not os.environ.get("RH_RELEASE_URL"):
