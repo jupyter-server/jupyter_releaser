@@ -406,35 +406,6 @@ def draft_changelog(
 
 
 @main.command()
-@add_options(changelog_options)
-@click.option("--output", envvar="RH_CHANGELOG_OUTPUT", help="The output file for changelog entry")
-@use_checkout_dir()
-def check_changelog(
-    ref,
-    branch,
-    repo,
-    auth,
-    changelog_path,
-    since,
-    since_last_stable,
-    resolve_backports,
-    output,
-):
-    """Check changelog entry"""
-    changelog.check_entry(
-        ref,
-        branch,
-        repo,
-        auth,
-        changelog_path,
-        since,
-        since_last_stable,
-        resolve_backports,
-        output,
-    )
-
-
-@main.command()
 @add_options(dist_dir_options)
 @add_options(python_packages_options)
 @use_checkout_dir()
@@ -540,7 +511,7 @@ def tag_release(dist_dir, release_message, tag_format, tag_message, no_git_tag_w
 @add_options(post_version_spec_options)
 @click.argument("assets", nargs=-1)
 @use_checkout_dir()
-def draft_release(
+def populate_release(
     ref,
     branch,
     repo,
@@ -554,8 +525,7 @@ def draft_release(
     post_version_message,
     assets,
 ):
-    """Publish Draft GitHub release"""
-    lib.draft_release(
+    lib.populate_release(
         ref,
         branch,
         repo,

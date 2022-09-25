@@ -21,7 +21,7 @@ from jupyter_releaser.tests.util import (
     get_log,
     mock_changelog_entry,
 )
-from jupyter_releaser.util import GIT_FETCH_CMD, bump_version, normalize_path, run
+from jupyter_releaser.util import GIT_FETCH_CMD, normalize_path, run
 
 
 def test_prep_git_simple(py_package, runner):
@@ -152,7 +152,6 @@ npm-cmd: RH_NPM_COMMAND
 npm-install-options: RH_NPM_INSTALL_OPTIONS
 npm-registry: NPM_REGISTRY
 npm-token: NPM_TOKEN
-output: RH_CHANGELOG_OUTPUT
 post-version-message: RH_POST_VERSION_MESSAGE
 post-version-spec: RH_POST_VERSION_SPEC
 pydist-check-cmd: RH_PYDIST_CHECK_CMD
@@ -344,29 +343,6 @@ def test_draft_changelog_lerna(workspace_package, mocker, runner, mock_github, g
     runner(["draft-changelog", "--version-spec", VERSION_SPEC])
 
 
-def test_check_changelog(py_package, tmp_path, mocker, runner, git_prep):
-    changelog_entry = mock_changelog_entry(py_package, runner, mocker)
-    output_path = "output.md"
-
-    # prep the release
-    bump_version(VERSION_SPEC)
-
-    runner(
-        ["check-changelog", "--changelog-path", changelog_entry, "--output", output_path],
-    )
-
-    log = get_log()
-    assert "before-check-changelog" in log
-    assert "after-check-changelog" in log
-
-    output = Path(util.CHECKOUT_NAME) / output_path
-    assert PR_ENTRY in output.read_text(encoding="utf-8")
-    changelog_entry = Path(util.CHECKOUT_NAME) / changelog_entry
-    text = changelog_entry.read_text(encoding="utf-8")
-    assert f"{changelog.START_MARKER}\n\n## {VERSION_SPEC}" in text
-    assert changelog.END_MARKER in text
-
-
 def test_build_python(py_package, runner, build_mock, git_prep):
     runner(["build-python"])
 
@@ -460,11 +436,11 @@ def test_tag_release(py_package, runner, build_mock, git_prep):
     assert "after-tag-release" in log
 
 
-def test_draft_release_dry_run(py_dist, mocker, runner, git_prep, draft_release):
+def test_populate_release_dry_run(py_dist, mocker, runner, git_prep, draft_release):
     # Publish the release - dry run
     runner(
         [
-            "draft-release",
+            "populate-release",
             "--dry-run",
             "--post-version-spec",
             "1.1.0.dev0",
@@ -476,15 +452,15 @@ def test_draft_release_dry_run(py_dist, mocker, runner, git_prep, draft_release)
     )
 
     log = get_log()
-    assert "before-draft-release" in log
-    assert "after-draft-release" in log
+    assert "before-populate-release" in log
+    assert "after-populate-release" in log
 
 
-def test_draft_release_final(npm_dist, runner, mock_github, git_prep, draft_release):
+def test_populate_release_final(npm_dist, runner, mock_github, git_prep, draft_release):
     # Publish the release
     os.environ["GITHUB_ACTIONS"] = "true"
     os.environ["RH_RELEASE_URL"] = draft_release
-    runner(["draft-release"])
+    runner(["populate-release"])
 
 
 def test_delete_release(npm_dist, runner, mock_github, git_prep, draft_release):
@@ -492,7 +468,7 @@ def test_delete_release(npm_dist, runner, mock_github, git_prep, draft_release):
     # Mimic being on GitHub actions so we get the magic output
     os.environ["GITHUB_ACTIONS"] = "true"
     os.environ["RH_RELEASE_URL"] = draft_release
-    result = runner(["draft-release"])
+    result = runner(["populate-release"])
 
     # Delete the release
     runner(["delete-release"])
