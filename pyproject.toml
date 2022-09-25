@@ -57,7 +57,7 @@ jupyter-releaser = "jupyter_releaser.cli:main"
 [tool.hatch.version]
 path = "jupyter_releaser/__init__.py"
 
-[tool.jupyter-releaser]
+[tool.jupyter-releaser.options]
 post-version-spec = "dev"
 
 [tool.jupyter-releaser.hooks]
