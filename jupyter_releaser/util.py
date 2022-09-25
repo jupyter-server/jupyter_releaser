@@ -538,9 +538,16 @@ def prepare_environment(fetch_draft_release=True):
 
     # Set the branch when using check release.
     if not os.environ.get("RH_BRANCH") and dry_run:
-        ref = os.environ["GITHUB_REF"]
-        log(f"Using GITHUB_REF: {ref}")
-        os.environ["RH_BRANCH"] = "/".join(ref.split("/")[2:])
+        if os.environ.get("GITHUB_BASE_REF"):
+            base_ref = os.environ.get("GITHUB_BASE_REF", "")
+            log(f"Using GITHUB_BASE_REF: ${base_ref}")
+            os.environ["RH_BRANCH"] = base_ref
+
+        else:
+            # e.g refs/head/foo or refs/tag/bar
+            ref = os.environ["GITHUB_REF"]
+            log(f"Using GITHUB_REF: {ref}")
+            os.environ["RH_BRANCH"] = "/".join(ref.split("/")[2:])
 
     # Start the mock GitHub server if in a dry run.
     if dry_run:
