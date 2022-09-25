@@ -440,7 +440,7 @@ def test_populate_release_dry_run(py_dist, mocker, runner, git_prep, draft_relea
     # Publish the release - dry run
     runner(
         [
-            "populate-release-release",
+            "populate-release",
             "--dry-run",
             "--post-version-spec",
             "1.1.0.dev0",
