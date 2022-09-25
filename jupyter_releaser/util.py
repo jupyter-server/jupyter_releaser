@@ -480,17 +480,12 @@ def upload_assets(gh, assets, release, auth):
         gh.upload_file(release, fpath)
         asset_shas[os.path.basename(fpath)] = compute_sha256(fpath)
 
-    # Update the metadata file to include the shas
-    for asset in release.assets:
-        if asset.name == "metadata.json":
-            with tempfile.TemporaryDirectory() as td:
-                metadata_file = fetch_release_asset(td, asset, auth)
-                with open(metadata_file) as fid:
-                    metadata = json.load(fid)
-                metadata["asset_shas"] = asset_shas
-                with open(metadata_file, "w") as fid:
-                    json.dump(metadata, fid)
-                gh.upload_file(release, os.path.join(td, "metadata.json"))
+    # Create an asset_shas file.
+    with tempfile.TemporaryDirectory() as td:
+        asset_shas_file = os.path.join(td, "asset_shas.json")
+        with open(asset_shas_file, "w") as fid:
+            json.dump(asset_shas, fid)
+        gh.upload_file(release, asset_shas_file)
 
     return release
 

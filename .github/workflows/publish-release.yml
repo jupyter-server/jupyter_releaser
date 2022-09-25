@@ -16,7 +16,7 @@ on:
         required: false
 
 jobs:
-  full_release:
+  publish_release:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true

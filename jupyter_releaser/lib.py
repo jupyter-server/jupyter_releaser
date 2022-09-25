@@ -288,18 +288,18 @@ def extract_release(auth, dist_dir, dry_run, release_url):
         util.fetch_release_asset(dist_dir, asset, auth)
 
     # Validate the shas of all the files
-    metadata_file = dist / "metadata.json"
-    with open(metadata_file) as fid:
-        asset_shas = json.load(fid)["asset_shas"]
-    metadata_file.unlink()
+    asset_shas_file = dist / "asset_shas.json"
+    with open(asset_shas_file) as fid:
+        asset_shas = json.load(fid)
+    asset_shas_file.unlink()
 
     for asset in assets:
-        if asset.name == "metadata.json":
+        if asset.name.endswith(".json"):
             continue
         if asset.name not in asset_shas:
-            raise ValueError(f"{asset.name} was not found in metadata file")
+            raise ValueError(f"{asset.name} was not found in asset_shas file")
         if util.compute_sha256(dist / asset.name) != asset_shas[asset.name]:
-            raise ValueError(f"sha for {asset.name} does not match metadata file")
+            raise ValueError(f"sha for {asset.name} does not match asset_shas file")
 
     os.chdir(orig_dir)
 
