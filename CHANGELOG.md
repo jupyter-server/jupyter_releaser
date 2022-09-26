@@ -2,6 +2,24 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.25.0
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...33996f2b913c752a7c57f8a840ee72a77c4395f9))
+
+### Bugs fixed
+
+- fix default registry again [#409](https://github.com/jupyter-server/jupyter_releaser/pull/409) ([@blink1073](https://github.com/blink1073))
+- Fix default twine registry [#407](https://github.com/jupyter-server/jupyter_releaser/pull/407) ([@blink1073](https://github.com/blink1073))
+- Fix handling of twine repository url [#403](https://github.com/jupyter-server/jupyter_releaser/pull/403) ([@blink1073](https://github.com/blink1073))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-09-20&to=2022-09-26&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-09-20..2022-09-26&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-09-20..2022-09-26&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.24.3
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...0146419f57e6194a6433e76ff1160adfa50105be))
@@ -17,8 +35,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-09-19&to=2022-09-20&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-09-19..2022-09-20&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2022-09-19..2022-09-20&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.24.2
 
