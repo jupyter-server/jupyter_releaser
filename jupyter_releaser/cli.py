@@ -601,7 +601,7 @@ def extract_release(auth, dist_dir, dry_run, release_url):
     "--twine-repository-url",
     help="The pypi registry to target for publishing",
     envvar="TWINE_REPOSITORY_URL",
-    default="https://pypi.org/legacy/",
+    default="https://upload.pypi.org/legacy/",
 )
 @add_options(dry_run_options)
 @add_options(python_packages_options)
