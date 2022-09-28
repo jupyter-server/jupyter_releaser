@@ -53,7 +53,14 @@ repos:
       - id: mypy
         args: ["--config-file", "pyproject.toml"]
         additional_dependencies:
-          [pytest, click, importlib_resources, types-requests, fastapi]
+          [
+            pytest,
+            click,
+            importlib_resources,
+            types-requests,
+            fastapi,
+            mdformat,
+          ]
         stages: [manual]
 
   - repo: https://github.com/sirosen/check-jsonschema
