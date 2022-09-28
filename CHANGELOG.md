@@ -136,10 +136,10 @@
 ### Maintenance and upkeep improvements
 
 - Fix flake8 v5 compat [#354](https://github.com/jupyter-server/jupyter_releaser/pull/354) ([@blink1073](https://github.com/blink1073))
-- [pre-commit.ci] pre-commit autoupdate [#353](https://github.com/jupyter-server/jupyter_releaser/pull/353) ([@pre-commit-ci](https://github.com/pre-commit-ci))
-- [pre-commit.ci] pre-commit autoupdate [#351](https://github.com/jupyter-server/jupyter_releaser/pull/351) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+- \[pre-commit.ci\] pre-commit autoupdate [#353](https://github.com/jupyter-server/jupyter_releaser/pull/353) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+- \[pre-commit.ci\] pre-commit autoupdate [#351](https://github.com/jupyter-server/jupyter_releaser/pull/351) ([@pre-commit-ci](https://github.com/pre-commit-ci))
 - Use version template in pyproject [#350](https://github.com/jupyter-server/jupyter_releaser/pull/350) ([@blink1073](https://github.com/blink1073))
-- [pre-commit.ci] pre-commit autoupdate [#349](https://github.com/jupyter-server/jupyter_releaser/pull/349) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+- \[pre-commit.ci\] pre-commit autoupdate [#349](https://github.com/jupyter-server/jupyter_releaser/pull/349) ([@pre-commit-ci](https://github.com/pre-commit-ci))
 
 ### Contributors to this release
 
@@ -185,9 +185,9 @@
 
 ### Maintenance and upkeep improvements
 
-- [pre-commit.ci] pre-commit autoupdate [#338](https://github.com/jupyter-server/jupyter_releaser/pull/338) ([@pre-commit-ci](https://github.com/pre-commit-ci))
-- [pre-commit.ci] pre-commit autoupdate [#336](https://github.com/jupyter-server/jupyter_releaser/pull/336) ([@pre-commit-ci](https://github.com/pre-commit-ci))
-- [pre-commit.ci] pre-commit autoupdate [#334](https://github.com/jupyter-server/jupyter_releaser/pull/334) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+- \[pre-commit.ci\] pre-commit autoupdate [#338](https://github.com/jupyter-server/jupyter_releaser/pull/338) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+- \[pre-commit.ci\] pre-commit autoupdate [#336](https://github.com/jupyter-server/jupyter_releaser/pull/336) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+- \[pre-commit.ci\] pre-commit autoupdate [#334](https://github.com/jupyter-server/jupyter_releaser/pull/334) ([@pre-commit-ci](https://github.com/pre-commit-ci))
 
 ### Contributors to this release
 
@@ -219,9 +219,9 @@
 
 ### Maintenance and upkeep improvements
 
-- [pre-commit.ci] pre-commit autoupdate [#328](https://github.com/jupyter-server/jupyter_releaser/pull/328) ([@pre-commit-ci](https://github.com/pre-commit-ci))
-- [pre-commit.ci] pre-commit autoupdate [#327](https://github.com/jupyter-server/jupyter_releaser/pull/327) ([@pre-commit-ci](https://github.com/pre-commit-ci))
-- [pre-commit.ci] pre-commit autoupdate [#326](https://github.com/jupyter-server/jupyter_releaser/pull/326) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+- \[pre-commit.ci\] pre-commit autoupdate [#328](https://github.com/jupyter-server/jupyter_releaser/pull/328) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+- \[pre-commit.ci\] pre-commit autoupdate [#327](https://github.com/jupyter-server/jupyter_releaser/pull/327) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+- \[pre-commit.ci\] pre-commit autoupdate [#326](https://github.com/jupyter-server/jupyter_releaser/pull/326) ([@pre-commit-ci](https://github.com/pre-commit-ci))
 
 ### Contributors to this release
 
@@ -261,12 +261,12 @@
 
 ### Maintenance and upkeep improvements
 
-- [pre-commit.ci] pre-commit autoupdate [#318](https://github.com/jupyter-server/jupyter_releaser/pull/318) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+- \[pre-commit.ci\] pre-commit autoupdate [#318](https://github.com/jupyter-server/jupyter_releaser/pull/318) ([@pre-commit-ci](https://github.com/pre-commit-ci))
 - Remove dead link [#317](https://github.com/jupyter-server/jupyter_releaser/pull/317) ([@blink1073](https://github.com/blink1073))
-- [pre-commit.ci] pre-commit autoupdate [#316](https://github.com/jupyter-server/jupyter_releaser/pull/316) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+- \[pre-commit.ci\] pre-commit autoupdate [#316](https://github.com/jupyter-server/jupyter_releaser/pull/316) ([@pre-commit-ci](https://github.com/pre-commit-ci))
 - Handle license [#315](https://github.com/jupyter-server/jupyter_releaser/pull/315) ([@blink1073](https://github.com/blink1073))
 - Allow bot PRs to be auto labeled [#314](https://github.com/jupyter-server/jupyter_releaser/pull/314) ([@blink1073](https://github.com/blink1073))
-- [pre-commit.ci] pre-commit autoupdate [#313](https://github.com/jupyter-server/jupyter_releaser/pull/313) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+- \[pre-commit.ci\] pre-commit autoupdate [#313](https://github.com/jupyter-server/jupyter_releaser/pull/313) ([@pre-commit-ci](https://github.com/pre-commit-ci))
 - Switch to flit [#311](https://github.com/jupyter-server/jupyter_releaser/pull/311) ([@blink1073](https://github.com/blink1073))
 
 ### Contributors to this release
@@ -299,7 +299,7 @@
 
 ### Maintenance and upkeep improvements
 
-- [pre-commit.ci] pre-commit autoupdate [#305](https://github.com/jupyter-server/jupyter_releaser/pull/305) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+- \[pre-commit.ci\] pre-commit autoupdate [#305](https://github.com/jupyter-server/jupyter_releaser/pull/305) ([@pre-commit-ci](https://github.com/pre-commit-ci))
 
 ### Contributors to this release
 
@@ -324,7 +324,7 @@
 ### Maintenance and upkeep improvements
 
 - Clean up pytest and add mypy handling [#300](https://github.com/jupyter-server/jupyter_releaser/pull/300) ([@blink1073](https://github.com/blink1073))
-- [pre-commit.ci] pre-commit autoupdate [#299](https://github.com/jupyter-server/jupyter_releaser/pull/299) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+- \[pre-commit.ci\] pre-commit autoupdate [#299](https://github.com/jupyter-server/jupyter_releaser/pull/299) ([@pre-commit-ci](https://github.com/pre-commit-ci))
 - Clean up pre-commit [#295](https://github.com/jupyter-server/jupyter_releaser/pull/295) ([@blink1073](https://github.com/blink1073))
 
 ### Contributors to this release
@@ -363,7 +363,7 @@
 ### Maintenance and upkeep improvements
 
 - Clean up check links output [#289](https://github.com/jupyter-server/jupyter_releaser/pull/289) ([@blink1073](https://github.com/blink1073))
-- [pre-commit.ci] pre-commit autoupdate [#286](https://github.com/jupyter-server/jupyter_releaser/pull/286) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+- \[pre-commit.ci\] pre-commit autoupdate [#286](https://github.com/jupyter-server/jupyter_releaser/pull/286) ([@pre-commit-ci](https://github.com/pre-commit-ci))
 
 ### Contributors to this release
 
@@ -606,10 +606,13 @@
 ### Maintenance and upkeep improvements
 
 - Fix missing quote in Draft Changelog [#217](https://github.com/jupyter-server/jupyter_releaser/pull/217) ([@jtpio](https://github.com/jtpio))
+
 - Cleanup Docs and Base Setup Action [#214](https://github.com/jupyter-server/jupyter_releaser/pull/214) ([@blink1073](https://github.com/blink1073))
 
 - Beautify rendering of the configuration file list [#220](https://github.com/jupyter-server/jupyter_releaser/pull/220) ([@krassowski](https://github.com/krassowski))
+
 - Fix a typo (missing `=`) [#219](https://github.com/jupyter-server/jupyter_releaser/pull/219) ([@krassowski](https://github.com/krassowski))
+
 - Cleanup Docs and Base Setup Action [#214](https://github.com/jupyter-server/jupyter_releaser/pull/214) ([@blink1073](https://github.com/blink1073))
 
 ### Contributors to this release
