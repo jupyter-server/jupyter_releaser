@@ -27,6 +27,7 @@ dependencies = [
     "github-activity~=0.2",
     "importlib_resources",
     "jsonschema>=3.0.1",
+    "mdformat",
     "packaging",
     "pkginfo",
     "pypiserver",
