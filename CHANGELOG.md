@@ -16,7 +16,7 @@
 
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-09-19&to=2022-09-20&type=c))
 
-[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-09-19..2022-09-20&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2022-09-19..2022-09-20&type=Issues)
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-09-19..2022-09-20&type=Issues)
 
 <!-- <END NEW CHANGELOG ENTRY> -->
 
@@ -77,7 +77,7 @@
 
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-08-22&to=2022-09-15&type=c))
 
-[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-08-22..2022-09-15&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-08-22..2022-09-15&type=Issues) | [@davidbrochart](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Adavidbrochart+updated%3A2022-08-22..2022-09-15&type=Issues) | [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2022-08-22..2022-09-15&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2022-08-22..2022-09-15&type=Issues)
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-08-22..2022-09-15&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-08-22..2022-09-15&type=Issues) | [@davidbrochart](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Adavidbrochart+updated%3A2022-08-22..2022-09-15&type=Issues) | [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2022-08-22..2022-09-15&type=Issues)
 
 ## 0.23.3
 
@@ -136,16 +136,13 @@
 ### Maintenance and upkeep improvements
 
 - Fix flake8 v5 compat [#354](https://github.com/jupyter-server/jupyter_releaser/pull/354) ([@blink1073](https://github.com/blink1073))
-- \[pre-commit.ci\] pre-commit autoupdate [#353](https://github.com/jupyter-server/jupyter_releaser/pull/353) ([@pre-commit-ci](https://github.com/pre-commit-ci))
-- \[pre-commit.ci\] pre-commit autoupdate [#351](https://github.com/jupyter-server/jupyter_releaser/pull/351) ([@pre-commit-ci](https://github.com/pre-commit-ci))
 - Use version template in pyproject [#350](https://github.com/jupyter-server/jupyter_releaser/pull/350) ([@blink1073](https://github.com/blink1073))
-- \[pre-commit.ci\] pre-commit autoupdate [#349](https://github.com/jupyter-server/jupyter_releaser/pull/349) ([@pre-commit-ci](https://github.com/pre-commit-ci))
 
 ### Contributors to this release
 
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-07-11&to=2022-08-08&type=c))
 
-[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-07-11..2022-08-08&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-07-11..2022-08-08&type=Issues) | [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2022-07-11..2022-08-08&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2022-07-11..2022-08-08&type=Issues)
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-07-11..2022-08-08&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-07-11..2022-08-08&type=Issues) | [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2022-07-11..2022-08-08&type=Issues)
 
 ## 0.22.5
 
@@ -183,17 +180,11 @@
 
 - Fix handling of versions when dev versions are used [#341](https://github.com/jupyter-server/jupyter_releaser/pull/341) ([@blink1073](https://github.com/blink1073))
 
-### Maintenance and upkeep improvements
-
-- \[pre-commit.ci\] pre-commit autoupdate [#338](https://github.com/jupyter-server/jupyter_releaser/pull/338) ([@pre-commit-ci](https://github.com/pre-commit-ci))
-- \[pre-commit.ci\] pre-commit autoupdate [#336](https://github.com/jupyter-server/jupyter_releaser/pull/336) ([@pre-commit-ci](https://github.com/pre-commit-ci))
-- \[pre-commit.ci\] pre-commit autoupdate [#334](https://github.com/jupyter-server/jupyter_releaser/pull/334) ([@pre-commit-ci](https://github.com/pre-commit-ci))
-
 ### Contributors to this release
 
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-06-14&to=2022-07-07&type=c))
 
-[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-06-14..2022-07-07&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-06-14..2022-07-07&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2022-06-14..2022-07-07&type=Issues)
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-06-14..2022-07-07&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-06-14..2022-07-07&type=Issues)
 
 ## 0.22.2
 
@@ -217,17 +208,11 @@
 
 - Add hatchling handling [#329](https://github.com/jupyter-server/jupyter_releaser/pull/329) ([@blink1073](https://github.com/blink1073))
 
-### Maintenance and upkeep improvements
-
-- \[pre-commit.ci\] pre-commit autoupdate [#328](https://github.com/jupyter-server/jupyter_releaser/pull/328) ([@pre-commit-ci](https://github.com/pre-commit-ci))
-- \[pre-commit.ci\] pre-commit autoupdate [#327](https://github.com/jupyter-server/jupyter_releaser/pull/327) ([@pre-commit-ci](https://github.com/pre-commit-ci))
-- \[pre-commit.ci\] pre-commit autoupdate [#326](https://github.com/jupyter-server/jupyter_releaser/pull/326) ([@pre-commit-ci](https://github.com/pre-commit-ci))
-
 ### Contributors to this release
 
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-05-19&to=2022-06-14&type=c))
 
-[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-05-19..2022-06-14&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-05-19..2022-06-14&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2022-05-19..2022-06-14&type=Issues)
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-05-19..2022-06-14&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-05-19..2022-06-14&type=Issues)
 
 ## 0.22.0
 
@@ -261,19 +246,16 @@
 
 ### Maintenance and upkeep improvements
 
-- \[pre-commit.ci\] pre-commit autoupdate [#318](https://github.com/jupyter-server/jupyter_releaser/pull/318) ([@pre-commit-ci](https://github.com/pre-commit-ci))
 - Remove dead link [#317](https://github.com/jupyter-server/jupyter_releaser/pull/317) ([@blink1073](https://github.com/blink1073))
-- \[pre-commit.ci\] pre-commit autoupdate [#316](https://github.com/jupyter-server/jupyter_releaser/pull/316) ([@pre-commit-ci](https://github.com/pre-commit-ci))
 - Handle license [#315](https://github.com/jupyter-server/jupyter_releaser/pull/315) ([@blink1073](https://github.com/blink1073))
 - Allow bot PRs to be auto labeled [#314](https://github.com/jupyter-server/jupyter_releaser/pull/314) ([@blink1073](https://github.com/blink1073))
-- \[pre-commit.ci\] pre-commit autoupdate [#313](https://github.com/jupyter-server/jupyter_releaser/pull/313) ([@pre-commit-ci](https://github.com/pre-commit-ci))
 - Switch to flit [#311](https://github.com/jupyter-server/jupyter_releaser/pull/311) ([@blink1073](https://github.com/blink1073))
 
 ### Contributors to this release
 
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-05-02&to=2022-05-18&type=c))
 
-[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-05-02..2022-05-18&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-05-02..2022-05-18&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2022-05-02..2022-05-18&type=Issues)
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-05-02..2022-05-18&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-05-02..2022-05-18&type=Issues)
 
 ## 0.20.0
 
@@ -297,15 +279,11 @@
 
 - Add handling of pydist resource paths [#306](https://github.com/jupyter-server/jupyter_releaser/pull/306) ([@blink1073](https://github.com/blink1073))
 
-### Maintenance and upkeep improvements
-
-- \[pre-commit.ci\] pre-commit autoupdate [#305](https://github.com/jupyter-server/jupyter_releaser/pull/305) ([@pre-commit-ci](https://github.com/pre-commit-ci))
-
 ### Contributors to this release
 
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-04-18&to=2022-04-25&type=c))
 
-[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-04-18..2022-04-25&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-04-18..2022-04-25&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2022-04-18..2022-04-25&type=Issues)
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-04-18..2022-04-25&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-04-18..2022-04-25&type=Issues)
 
 ## 0.18.0
 
@@ -324,14 +302,13 @@
 ### Maintenance and upkeep improvements
 
 - Clean up pytest and add mypy handling [#300](https://github.com/jupyter-server/jupyter_releaser/pull/300) ([@blink1073](https://github.com/blink1073))
-- \[pre-commit.ci\] pre-commit autoupdate [#299](https://github.com/jupyter-server/jupyter_releaser/pull/299) ([@pre-commit-ci](https://github.com/pre-commit-ci))
 - Clean up pre-commit [#295](https://github.com/jupyter-server/jupyter_releaser/pull/295) ([@blink1073](https://github.com/blink1073))
 
 ### Contributors to this release
 
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-04-07&to=2022-04-18&type=c))
 
-[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-04-07..2022-04-18&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-04-07..2022-04-18&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2022-04-07..2022-04-18&type=Issues)
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-04-07..2022-04-18&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-04-07..2022-04-18&type=Issues)
 
 ## 0.17.0
 
@@ -363,13 +340,12 @@
 ### Maintenance and upkeep improvements
 
 - Clean up check links output [#289](https://github.com/jupyter-server/jupyter_releaser/pull/289) ([@blink1073](https://github.com/blink1073))
-- \[pre-commit.ci\] pre-commit autoupdate [#286](https://github.com/jupyter-server/jupyter_releaser/pull/286) ([@pre-commit-ci](https://github.com/pre-commit-ci))
 
 ### Contributors to this release
 
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-04-04&to=2022-04-06&type=c))
 
-[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-04-04..2022-04-06&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-04-04..2022-04-06&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2022-04-04..2022-04-06&type=Issues)
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-04-04..2022-04-06&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-04-04..2022-04-06&type=Issues)
 
 ## 0.15.1
 
