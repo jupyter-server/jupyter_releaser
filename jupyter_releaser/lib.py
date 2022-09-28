@@ -12,6 +12,7 @@ from glob import glob
 from pathlib import Path
 from subprocess import CalledProcessError
 
+import mdformat
 import toml
 from packaging.version import parse as parse_version
 from pkginfo import SDist, Wheel
@@ -513,7 +514,8 @@ def extract_changelog(dry_run, auth, changelog_path, release_url):
     match = util.parse_release_url(release_url)
     gh = util.get_gh_object(dry_run=dry_run, owner=match["owner"], repo=match["repo"], token=auth)
     release = util.release_for_url(gh, release_url)
-    changelog.update_changelog(changelog_path, release.body)
+    changelog_text = mdformat.text(release.body)
+    changelog.update_changelog(changelog_path, changelog_text)
 
 
 def forwardport_changelog(auth, ref, branch, repo, username, changelog_path, dry_run, release_url):
