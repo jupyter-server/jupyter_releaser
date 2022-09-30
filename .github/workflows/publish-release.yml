@@ -31,7 +31,7 @@ jobs:
 
       - name: Populate Release
         id: populate-release
-        uses: ./.github/actions/populate-release
+        uses: jupyter-releaser/.github/actions/populate-release@version2
         with:
           token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
           target: ${{ github.event.inputs.target }}
@@ -46,7 +46,7 @@ jobs:
           PYPI_TOKEN_MAP: ${{ secrets.PYPI_TOKEN_MAP }}
           TWINE_USERNAME: __token__
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        uses: ./.github/actions/finalize-release
+        uses: jupyter-releaser/.github/actions/finalize-release@version2
         with:
           token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
           target: ${{ github.event.inputs.target }}

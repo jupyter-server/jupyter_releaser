@@ -23,8 +23,12 @@ To install the latest release locally, make sure you have
 
 See the [adoption docs](https://jupyter-releaser.readthedocs.io/en/latest/how_to_guides/convert_repo.html).
 
-## Workflows
+## Actions
 
-Detailed workflows are available to draft a changelog, draft a release, publish a release, and check a release.
+GitHub actions scripts are available to draft a changelog, draft a release, publish a release, and check a release.
 
-See the [workflow details documentation](https://jupyter-releaser.readthedocs.io/en/latest/background/theory.html#workflow-details) for more information.
+See the [action details documentation](https://jupyter-releaser.readthedocs.io/en/latest/background/theory.html#action-details) for more information.
+
+The actions can be run on a [fork](https://jupyter-releaser.readthedocs.io/en/latest/how_to_guides/convert_repo_from_releaser.html#) of `jupyter_releaser` and target multiple
+repositories, or run as workflows on the [source repositories](https://jupyter-releaser.readthedocs.io/en/latest/how_to_guides/convert_repo_from_repo), using
+shared credentials.
