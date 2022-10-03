@@ -6,6 +6,7 @@ Step-by-step guides. Covers key tasks and operations and common problems
    :maxdepth: 1
    :caption: Contents:
 
-   convert_repo
+   convert_repo_from_releaser
+   convert_repo_from_repo
    write_config
    maintain_fork

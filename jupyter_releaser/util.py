@@ -443,6 +443,53 @@ def parse_release_url(release_url):
     return match
 
 
+def fetch_release_asset(target_dir, asset, auth):
+    """Fetch a release asset into a target directory."""
+    log(f"Fetching {asset.name}...")
+    url = asset.url
+    headers = dict(Authorization=f"token {auth}", Accept="application/octet-stream")
+    path = Path(target_dir) / asset.name
+    with requests.get(url, headers=headers, stream=True) as r:
+        r.raise_for_status()
+        with open(path, "wb") as f:
+            for chunk in r.iter_content(chunk_size=8192):
+                f.write(chunk)
+    return path
+
+
+def fetch_release_asset_data(asset, auth):
+    """Fetch the data for a release asset."""
+    log(f"Fetching data for {asset.name}...")
+    url = asset.url
+    headers = dict(Authorization=f"token {auth}", Accept="application/octet-stream")
+
+    sink = BytesIO()
+    with requests.get(url, headers=headers, stream=True) as r:
+        r.raise_for_status()
+        for chunk in r.iter_content(chunk_size=8192):
+            sink.write(chunk)
+    sink.seek(0)
+    return json.loads(sink.read().decode("utf-8"))
+
+
+def upload_assets(gh, assets, release, auth):
+    """Upload assets to a release."""
+    log(f"Uploading assets: {assets}")
+    asset_shas = {}
+    for fpath in assets:
+        gh.upload_file(release, fpath)
+        asset_shas[os.path.basename(fpath)] = compute_sha256(fpath)
+
+    # Create an asset_shas file.
+    with tempfile.TemporaryDirectory() as td:
+        asset_shas_file = os.path.join(td, "asset_shas.json")
+        with open(asset_shas_file, "w") as fid:
+            json.dump(asset_shas, fid)
+        gh.upload_file(release, asset_shas_file)
+
+    return release
+
+
 def extract_metadata_from_release_url(gh, release_url, auth):
     log(f"Extracting metadata for release: {release_url}")
     release = release_for_url(gh, release_url)
@@ -452,17 +499,7 @@ def extract_metadata_from_release_url(gh, release_url, auth):
         if asset.name != METADATA_JSON.name:
             continue
 
-        log(f"Fetching {asset.name}...")
-        url = asset.url
-        headers = dict(Authorization=f"token {auth}", Accept="application/octet-stream")
-
-        sink = BytesIO()
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            for chunk in r.iter_content(chunk_size=8192):
-                sink.write(chunk)
-        sink.seek(0)
-        data = json.loads(sink.read().decode("utf-8"))
+        data = fetch_release_asset_data(asset, auth)
 
     if data is None:
         raise ValueError(
@@ -492,13 +529,10 @@ def prepare_environment(fetch_draft_release=True):
     if not os.environ.get("RH_REF"):
         os.environ["RH_REF"] = os.environ["GITHUB_REF"]
 
-    check_release = os.environ.get("RH_IS_CHECK_RELEASE", "").lower() == "true"
-    if not os.environ.get("RH_DRY_RUN") and check_release:
-        os.environ["RH_DRY_RUN"] = "true"
     dry_run = os.environ.get("RH_DRY_RUN", "").lower() == "true"
 
     # Set the branch when using check release.
-    if not os.environ.get("RH_BRANCH") and check_release:
+    if not os.environ.get("RH_BRANCH") and dry_run:
         if os.environ.get("GITHUB_BASE_REF"):
             base_ref = os.environ.get("GITHUB_BASE_REF", "")
             log(f"Using GITHUB_BASE_REF: ${base_ref}")
@@ -558,6 +592,17 @@ def handle_since():
         log("No last stable found!")
     os.chdir(curr_dir)
     return since
+
+
+def ensure_sha():
+    """Ensure the sha of the remote branch matches the expected sha"""
+    current_sha = os.environ["RH_CURRENT_SHA"]
+    branch = os.environ["RH_BRANCH"]
+    remote_name = get_remote_name(False)
+    run(f"git fetch {remote_name} {branch}")
+    sha = run(f"git rev-parse {remote_name}/{branch}")
+    if sha != current_sha:
+        raise ValueError(f"{branch} is ahead of expected sha {current_sha}")
 
 
 def get_gh_object(dry_run=False, **kwargs):

@@ -349,6 +349,16 @@ def bump_version(version_spec, version_cmd, changelog_path, python_packages):
 
 
 @main.command()
+@add_options(dry_run_options)
+@add_options(auth_options)
+@add_options(changelog_path_options)
+@add_options(release_url_options)
+@use_checkout_dir()
+def extract_changelog(dry_run, auth, changelog_path, release_url):
+    lib.extract_changelog(dry_run, auth, changelog_path, release_url)
+
+
+@main.command()
 @add_options(changelog_options)
 @use_checkout_dir()
 def build_changelog(
@@ -402,35 +412,6 @@ def draft_changelog(
         dry_run,
         post_version_spec,
         post_version_message,
-    )
-
-
-@main.command()
-@add_options(changelog_options)
-@click.option("--output", envvar="RH_CHANGELOG_OUTPUT", help="The output file for changelog entry")
-@use_checkout_dir()
-def check_changelog(
-    ref,
-    branch,
-    repo,
-    auth,
-    changelog_path,
-    since,
-    since_last_stable,
-    resolve_backports,
-    output,
-):
-    """Check changelog entry"""
-    changelog.check_entry(
-        ref,
-        branch,
-        repo,
-        auth,
-        changelog_path,
-        since,
-        since_last_stable,
-        resolve_backports,
-        output,
     )
 
 
@@ -499,54 +480,6 @@ def check_npm(dist_dir, npm_install_options):
 
 
 @main.command()
-@use_checkout_dir()
-def check_manifest():
-    """Check the project manifest"""
-    # Only run the check if are using setuptools as the backend
-    if not util.PYPROJECT.exists() and util.SETUP_PY.exists():
-        util.run("pipx run check-manifest -v")
-        return
-
-    if util.PYPROJECT.exists():
-        content = util.PYPROJECT.read_text("utf-8")
-        if "setuptools.build_meta" in content:
-            util.run("pipx run check-manifest -v")
-            return
-
-    util.log("Skipping check-manifest")
-
-
-@main.command()
-@click.option(
-    "--ignore-glob",
-    default=[],
-    multiple=True,
-    help="Ignore test file paths based on glob pattern",
-)
-@click.option(
-    "--ignore-links",
-    multiple=True,
-    help="Ignore links based on regex pattern(s)",
-)
-@click.option(
-    "--cache-file",
-    envvar="RH_CACHE_FILE",
-    default="~/.cache/releaser-link-check",
-    help="The cache file to use",
-)
-@click.option(
-    "--links-expire",
-    default=604800,
-    envvar="RH_LINKS_EXPIRE",
-    help="Duration in seconds for links to be cached (default one week)",
-)
-@use_checkout_dir()
-def check_links(ignore_glob, ignore_links, cache_file, links_expire):
-    """Check URLs for HTML-containing files."""
-    lib.check_links(ignore_glob, ignore_links, cache_file, links_expire)
-
-
-@main.command()
 @add_options(dist_dir_options)
 @click.option(
     "--release-message",
@@ -588,7 +521,7 @@ def tag_release(dist_dir, release_message, tag_format, tag_message, no_git_tag_w
 @add_options(post_version_spec_options)
 @click.argument("assets", nargs=-1)
 @use_checkout_dir()
-def draft_release(
+def populate_release(
     ref,
     branch,
     repo,
@@ -602,8 +535,7 @@ def draft_release(
     post_version_message,
     assets,
 ):
-    """Publish Draft GitHub release"""
-    lib.draft_release(
+    lib.populate_release(
         ref,
         branch,
         repo,
@@ -633,30 +565,14 @@ def delete_release(auth, dry_run, release_url):
 @add_options(auth_options)
 @add_options(dist_dir_options)
 @add_options(dry_run_options)
-@add_options(npm_install_options)
-@add_options(pydist_check_options)
-@add_options(check_imports_options)
 @add_options(release_url_options)
-def extract_release(
-    auth,
-    dist_dir,
-    dry_run,
-    release_url,
-    npm_install_options,
-    pydist_check_cmd,
-    pydist_resource_paths,
-    check_imports,
-):
+def extract_release(auth, dist_dir, dry_run, release_url):
     """Download and verify assets from a draft GitHub release"""
     lib.extract_release(
         auth,
         dist_dir,
         dry_run,
         release_url,
-        npm_install_options,
-        pydist_check_cmd,
-        pydist_resource_paths,
-        check_imports,
     )
 
 

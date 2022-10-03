@@ -27,9 +27,9 @@ dependencies = [
     "github-activity~=0.2",
     "importlib_resources",
     "jsonschema>=3.0.1",
+    "mdformat",
     "packaging",
     "pkginfo",
-    "pytest-check-links>=0.7",
     "pypiserver",
     "pipx",
     "requests",
@@ -58,11 +58,8 @@ jupyter-releaser = "jupyter_releaser.cli:main"
 [tool.hatch.version]
 path = "jupyter_releaser/__init__.py"
 
-[tool.jupyter-releaser]
-skip = ["check-links"]
-
 [tool.jupyter-releaser.hooks]
-after-draft-release = "bash ./.github/scripts/bump_tag.sh"
+after-populate-release = "bash ./.github/scripts/bump_tag.sh"
 
 [tool.pytest.ini_options]
 addopts = "-raXs --durations 10 --color=yes --doctest-modules"

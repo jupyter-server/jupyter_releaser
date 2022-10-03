@@ -37,8 +37,6 @@ Example `.jupyter-releaser.toml`:
 [options]
 dist_dir = "mydist"
 
-skip = ["check-links"]
-
 [hooks]
 before-tag-version = "npm run pre:tag:script"
 ```
@@ -50,7 +48,6 @@ Example `pyproject.toml` section:
 dist_dir = "mydist"
 
 [tool.jupyter-releaser]
-skip = ["check-links"]
 
 [tool.jupyter-releaser.hooks]
 after-build-python = ["python scripts/cleanup.py", "python scripts/send_email.py"]
@@ -65,7 +62,7 @@ Example `package.json`:
     "options": {
       "dist_dir": "mydist"
     },
-    "skip": ["check-manifest"],
+    "skip": ["check-npm"],
     "hooks": {
       "before-publish-dist": "npm run pre:publish:dist"
     }

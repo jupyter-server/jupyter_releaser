@@ -1,4 +1,4 @@
-name: "Step 1: Draft Changelog"
+name: "Step 1: Prep Release"
 on:
   workflow_dispatch:
     inputs:
@@ -23,7 +23,7 @@ on:
         required: false
         type: boolean
 jobs:
-  draft_changelog:
+  prep_release:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
@@ -34,11 +34,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Setup
-        uses: ./.github/actions/common
+        uses: jupyter-releaser/.github/actions/common@version2
 
-      - name: Draft Changelog
-        id: draft-changelog
-        uses: ./.github/actions/draft-changelog
+      - name: Prep Release
+        id: prep-release
+        uses: jupyter-releaser/.github/actions/prep-release@version2
         with:
           token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
           version_spec: ${{ github.event.inputs.version_spec }}
@@ -50,8 +50,7 @@ jobs:
 
       - name: "** Next Step **"
         run: |
-          echo "Review PR: ${{ steps.draft-changelog.outputs.pr_url }}"
-          echo "Optional): Review Draft Release: ${{ steps.draft-changelog.outputs.release_url }}"
+          echo "Optional): Review Draft Release: ${{ steps.prep-release.outputs.release_url }}"
           echo "## Next Step" >> $GITHUB_STEP_SUMMARY
-          echo "Review PR: ${{ steps.draft-changelog.outputs.pr_url }}" >> $GITHUB_STEP_SUMMARY
-          echo "(Optional): Review Draft Release: ${{ steps.draft-changelog.outputs.release_url }}" >> $GITHUB_STEP_SUMMARY
+          echo "(Optional): Review Draft Release: ${{ steps.prep-release.outputs.release_url }}" >> $GITHUB_STEP_SUMMARY
+          echo "Run Step 2: Publish Release workflow"

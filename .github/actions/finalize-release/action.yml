@@ -1,4 +1,4 @@
-name: "Publish Release"
+name: "Finalize Release"
 description: "Publish assets and finalize GitHub release"
 inputs:
   token:
@@ -24,10 +24,10 @@ inputs:
 outputs:
   release_url:
     description: "The html URL of the GitHub release"
-    value: ${{ steps.publish-release.outputs.release_url }}
+    value: ${{ steps.finalize-release.outputs.release_url }}
   pr_url:
     description: "The html URL of the forwardport PR if applicable"
-    value: ${{ steps.publish-release.outputs.pr_url }}
+    value: ${{ steps.finalize-release.outputs.pr_url }}
 
 runs:
   using: "composite"
@@ -40,7 +40,7 @@ runs:
         then
             pip install -q git+https://github.com/jupyter-server/jupyter_releaser.git@v1
         fi
-    - id: publish-release
+    - id: finalize-release
       shell: bash -eux {0}
       run: |
         export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
@@ -49,4 +49,4 @@ runs:
         export RH_RELEASE_URL=${{ inputs.release_url }}
         export RH_STEPS_TO_SKIP=${{ inputs.steps_to_skip }}
         export RH_BRANCH=${{ inputs.branch }}
-        python -m jupyter_releaser.actions.publish_release
+        python -m jupyter_releaser.actions.finalize_release

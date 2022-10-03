@@ -25,11 +25,7 @@ def build_dist(dist_dir, clean=True):
         for pkg in glob(f"{dest}/*.gz") + glob(f"{dest}/*.whl"):
             os.remove(pkg)
 
-    if PYPROJECT.exists():
-        util.run(f"pipx run build --outdir {dest} .", quiet=True, show_cwd=True)
-    elif SETUP_PY.exists():
-        util.run(f"python setup.py sdist --dist-dir {dest}", quiet=True)
-        util.run(f"python setup.py bdist_wheel --dist-dir {dest}", quiet=True)
+    util.run(f"pipx run build --outdir {dest} .", quiet=True, show_cwd=True)
 
 
 def check_dist(

@@ -18,11 +18,10 @@ from jupyter_releaser.tests.util import (
     PR_ENTRY,
     VERSION_SPEC,
     create_draft_release,
-    create_tag_ref,
     get_log,
     mock_changelog_entry,
 )
-from jupyter_releaser.util import GIT_FETCH_CMD, bump_version, normalize_path, run
+from jupyter_releaser.util import GIT_FETCH_CMD, normalize_path, run
 
 
 def test_prep_git_simple(py_package, runner):
@@ -145,17 +144,14 @@ def test_list_envvars(runner):
         == """
 auth: GITHUB_ACCESS_TOKEN
 branch: RH_BRANCH
-cache-file: RH_CACHE_FILE
 changelog-path: RH_CHANGELOG
 check-imports: RH_CHECK_IMPORTS
 dist-dir: RH_DIST_DIR
 dry-run: RH_DRY_RUN
-links-expire: RH_LINKS_EXPIRE
 npm-cmd: RH_NPM_COMMAND
 npm-install-options: RH_NPM_INSTALL_OPTIONS
 npm-registry: NPM_REGISTRY
 npm-token: NPM_TOKEN
-output: RH_CHANGELOG_OUTPUT
 post-version-message: RH_POST_VERSION_MESSAGE
 post-version-spec: RH_POST_VERSION_SPEC
 pydist-check-cmd: RH_PYDIST_CHECK_CMD
@@ -347,58 +343,6 @@ def test_draft_changelog_lerna(workspace_package, mocker, runner, mock_github, g
     runner(["draft-changelog", "--version-spec", VERSION_SPEC])
 
 
-def test_check_links(py_package, runner):
-    readme = Path("README.md")
-    text = readme.read_text(encoding="utf-8")
-    text += "\nhttps://apod.nasa.gov/apod/astropix.html\n"
-    readme.write_text(text, encoding="utf-8")
-
-    config = Path(util.JUPYTER_RELEASER_CONFIG)
-    config_data = util.toml.loads(config.read_text(encoding="utf-8"))
-    config_data["options"] = {"ignore-glob": ["FOO.md"]}
-    config.write_text(util.toml.dumps(config_data), encoding="utf-8")
-
-    util.run("git commit -a -m 'update files'")
-
-    runner(["prep-git", "--git-url", py_package])
-    runner(["check-links"])
-
-    log = get_log()
-    assert "before-check-links" in log
-    assert "after-check-links" in log
-
-    foo = Path(util.CHECKOUT_NAME) / "FOO.md"
-    foo.write_text("http://127.0.0.1:5555")
-
-    bar = Path(util.CHECKOUT_NAME) / "BAR BAZ.md"
-    bar.write_text("")
-
-    runner(["check-links"])
-
-
-def test_check_changelog(py_package, tmp_path, mocker, runner, git_prep):
-    changelog_entry = mock_changelog_entry(py_package, runner, mocker)
-    output_path = "output.md"
-
-    # prep the release
-    bump_version(VERSION_SPEC)
-
-    runner(
-        ["check-changelog", "--changelog-path", changelog_entry, "--output", output_path],
-    )
-
-    log = get_log()
-    assert "before-check-changelog" in log
-    assert "after-check-changelog" in log
-
-    output = Path(util.CHECKOUT_NAME) / output_path
-    assert PR_ENTRY in output.read_text(encoding="utf-8")
-    changelog_entry = Path(util.CHECKOUT_NAME) / changelog_entry
-    text = changelog_entry.read_text(encoding="utf-8")
-    assert f"{changelog.START_MARKER}\n\n## {VERSION_SPEC}" in text
-    assert changelog.END_MARKER in text
-
-
 def test_build_python(py_package, runner, build_mock, git_prep):
     runner(["build-python"])
 
@@ -471,18 +415,6 @@ def test_handle_npm_lerna(workspace_package, runner, git_prep):
     runner(["check-npm"])
 
 
-def test_check_manifest(py_package, runner, git_prep):
-    runner(["check-manifest"])
-
-    log = get_log()
-    assert "before-check-manifest" in log
-    assert "after-check-manifest" in log
-
-
-def test_check_manifest_npm(npm_package, runner, git_prep):
-    runner(["check-manifest"])
-
-
 def test_tag_release(py_package, runner, build_mock, git_prep):
     # Bump the version
     runner(["bump-version", "--version-spec", VERSION_SPEC])
@@ -504,11 +436,11 @@ def test_tag_release(py_package, runner, build_mock, git_prep):
     assert "after-tag-release" in log
 
 
-def test_draft_release_dry_run(py_dist, mocker, runner, git_prep, draft_release):
+def test_populate_release_dry_run(py_dist, mocker, runner, git_prep, draft_release):
     # Publish the release - dry run
     runner(
         [
-            "draft-release",
+            "populate-release",
             "--dry-run",
             "--post-version-spec",
             "1.1.0.dev0",
@@ -520,15 +452,15 @@ def test_draft_release_dry_run(py_dist, mocker, runner, git_prep, draft_release)
     )
 
     log = get_log()
-    assert "before-draft-release" in log
-    assert "after-draft-release" in log
+    assert "before-populate-release" in log
+    assert "after-populate-release" in log
 
 
-def test_draft_release_final(npm_dist, runner, mock_github, git_prep, draft_release):
+def test_populate_release_final(npm_dist, runner, mock_github, git_prep, draft_release):
     # Publish the release
     os.environ["GITHUB_ACTIONS"] = "true"
     os.environ["RH_RELEASE_URL"] = draft_release
-    runner(["draft-release"])
+    runner(["populate-release"])
 
 
 def test_delete_release(npm_dist, runner, mock_github, git_prep, draft_release):
@@ -536,7 +468,7 @@ def test_delete_release(npm_dist, runner, mock_github, git_prep, draft_release):
     # Mimic being on GitHub actions so we get the magic output
     os.environ["GITHUB_ACTIONS"] = "true"
     os.environ["RH_RELEASE_URL"] = draft_release
-    result = runner(["draft-release"])
+    result = runner(["populate-release"])
 
     # Delete the release
     runner(["delete-release"])
@@ -559,13 +491,10 @@ def test_extract_dist_py(py_package, runner, mocker, mock_github, tmp_path, git_
     # Finalize the release
     runner(["tag-release"])
 
-    # Create a tag ref
-    ref = create_tag_ref()
-
     # Create the release.
     dist_dir = os.path.join(util.CHECKOUT_NAME, "dist")
-    release = create_draft_release(ref, glob(f"{dist_dir}/*.*"))
-    shutil.rmtree(f"{util.CHECKOUT_NAME}/dist")
+    release = create_draft_release("bar", glob(f"{dist_dir}/*.*"))
+    shutil.rmtree(dist_dir)
 
     os.environ["RH_RELEASE_URL"] = release.html_url
     runner(["extract-release"])
@@ -596,14 +525,10 @@ def test_extract_dist_multipy(py_multipackage, runner, mocker, mock_github, tmp_
     # Finalize the release
     runner(["tag-release"])
 
-    # Create a tag ref
-    ref = create_tag_ref()
-
     # Create the release.
     dist_dir = os.path.join(util.CHECKOUT_NAME, "dist")
-    release = create_draft_release(ref, glob(f"{dist_dir}/*.*"))
-
-    shutil.rmtree(f"{util.CHECKOUT_NAME}/dist")
+    release = create_draft_release("bar", glob(f"{dist_dir}/*.*"))
+    shutil.rmtree(dist_dir)
 
     os.environ["RH_RELEASE_URL"] = release.html_url
     runner(["extract-release"])
@@ -618,13 +543,10 @@ def test_extract_dist_multipy(py_multipackage, runner, mocker, mock_github, tmp_
     reason="See https://bugs.python.org/issue26660",
 )
 def test_extract_dist_npm(npm_dist, runner, mocker, mock_github, tmp_path):
-    # Create a tag ref
-    ref = create_tag_ref()
-
     # Create the release.
     dist_dir = os.path.join(util.CHECKOUT_NAME, "dist")
-    release = create_draft_release(ref, glob(f"{dist_dir}/*.*"))
-    shutil.rmtree(f"{util.CHECKOUT_NAME}/dist")
+    release = create_draft_release("bar", glob(f"{dist_dir}/*.*"))
+    shutil.rmtree(dist_dir)
 
     os.environ["RH_RELEASE_URL"] = release.html_url
     runner(["extract-release"])
@@ -655,7 +577,7 @@ def test_publish_assets_py(py_package, runner, mocker, git_prep, mock_github):
     mock_run = mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
 
     dist_dir = py_package / util.CHECKOUT_NAME / "dist"
-    release = create_draft_release()
+    release = create_draft_release(files=glob(f"{dist_dir}/*.*"))
     os.environ["RH_RELEASE_URL"] = release.html_url
     runner(["publish-assets", "--dist-dir", dist_dir, "--dry-run"])
     assert called == 2, called

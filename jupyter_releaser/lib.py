@@ -5,16 +5,14 @@ import os
 import os.path as osp
 import re
 import shutil
-import sys
 import tempfile
-import typing as t
 import uuid
 from datetime import datetime
 from glob import glob
 from pathlib import Path
 from subprocess import CalledProcessError
 
-import requests
+import mdformat
 import toml
 from packaging.version import parse as parse_version
 from pkginfo import SDist, Wheel
@@ -44,69 +42,6 @@ def bump_version(version_spec, version_cmd, changelog_path):
     return version
 
 
-def check_links(ignore_glob, ignore_links, cache_file, links_expire):
-    """Check URLs for HTML-containing files."""
-    cache_dir = osp.expanduser(cache_file).replace(os.sep, "/")
-    os.makedirs(cache_dir, exist_ok=True)
-    python = sys.executable.replace(os.sep, "/")
-    cmd = f"{python} -m pytest --noconftest --check-links --check-links-cache "
-    cmd += f"--check-links-cache-expire-after {links_expire} "
-    cmd += "-raXs --color yes --quiet "
-    cmd += f"--check-links-cache-name {cache_dir}/check-release-links "
-    # do not run doctests, since they might depend on other state.
-    cmd += "-p no:doctest "
-    # ignore package pytest configuration,
-    # since we aren't running their tests
-    cmd += "-c _IGNORE_CONFIG"
-
-    ignored = []
-    for spec in ignore_glob:
-        cmd += f' --ignore-glob "{spec}"'
-        ignored.extend(glob(spec, recursive=True))
-
-    ignore_links = list(ignore_links) + [
-        "https://github.com/.*/(pull|issues)/.*",
-        "https://github.com/search?",
-        "http://localhost.*",
-        # https://github.com/github/feedback/discussions/14773
-        "https://docs.github.com/.*",
-    ]
-
-    for spec in ignore_links:
-        cmd += f' --check-links-ignore "{spec}"'
-
-    cmd += " --ignore-glob node_modules"
-
-    # Gather all of the markdown, RST, and ipynb files
-    files: t.List[str] = []
-    for ext in [".md", ".rst", ".ipynb"]:
-        matched = glob(f"**/*{ext}", recursive=True)
-        files.extend(m for m in matched if m not in ignored and "node_modules" not in m)
-
-    util.log("Checking files with options:")
-    util.log(cmd)
-
-    fails = 0
-    separator = f"\n\n{'-' * 80}\n"
-    for f in files:
-        file_cmd = cmd + f' "{f}"'
-        try:
-            util.log(f"{separator}{f}...")
-            util.run(file_cmd, shell=False, echo=False)
-        except Exception as e:
-            # Return code 5 means no tests were run (no links found)
-            if e.returncode != 5:  # type:ignore[attr-defined]
-                try:
-                    util.log(f"\n{f} (second attempt)...\n")
-                    util.run(file_cmd + " --lf", shell=False, echo=False)
-                except Exception:
-                    fails += 1
-                    if fails == 3:
-                        raise RuntimeError("Found three failed links, bailing")
-    if fails:
-        raise RuntimeError(f"Encountered failures in {fails} file(s)")
-
-
 def draft_changelog(
     version_spec,
     ref,
@@ -132,10 +67,14 @@ def draft_changelog(
     npm_versions = None
     if util.PACKAGE_JSON.exists():
         npm_versions = npm.get_package_versions(version)
+        util.log(npm_versions)
 
     tags = util.run("git --no-pager tag", quiet=True)
     if f"v{version}" in tags.splitlines():
         raise ValueError(f"Tag v{version} already exists")
+
+    current = changelog.extract_current(changelog_path)
+    util.log(f"\n\nCurrent Changelog Entry:\n{current}")
 
     # Check out any unstaged files from version bump
     # If this is an automated changelog PR, there may be no effective changes
@@ -145,14 +84,7 @@ def draft_changelog(
         util.log(str(e))
         return
 
-    current = changelog.extract_current(changelog_path)
-    util.log(f"\n\nCurrent Changelog Entry:\n{current}")
-
-    title = f"{changelog.PR_PREFIX} for {version} on {branch}"
-    commit_message = f'git commit -a -m "{title}"'
-    body = title
-
-    util.log(f"Creating draft GitHub release for {version}")
+    util.log(f"\n\nCreating draft GitHub release for {version}")
     owner, repo_name = repo.split("/")
     gh = util.get_gh_object(dry_run=dry_run, owner=owner, repo=repo_name, token=auth)
 
@@ -174,23 +106,8 @@ def draft_changelog(
             json.dump(data, fid)
 
         release = gh.create_release(
-            f"v{version}", branch, f"v{version}", body, True, prerelease, files=[metadata_path]
+            f"v{version}", branch, f"v{version}", current, True, prerelease, files=[metadata_path]
         )
-
-    if npm_versions:
-        body += f"\n```{npm_versions}\n```"
-
-    body += '\n\nAfter merging this PR run the "Full Release" Workflow on your fork of `jupyter_releaser` with the following inputs'
-    body += f"""
-| Input  | Value |
-| ------------- | ------------- |
-| Draft Release | {release.html_url}  |
-"""
-    if since_last_stable:
-        body += "| Since Last Stable | true |"
-    elif since:
-        body += f"| Since | {since} |"
-    util.log(body)
 
     # Remove draft releases over a day old
     if bool(os.environ.get("GITHUB_ACTIONS")):
@@ -202,8 +119,6 @@ def draft_changelog(
             delta = datetime.utcnow() - d_created
             if delta.days > 0:
                 gh.repos.delete_release(rel.id)
-
-    make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=dry_run)
 
     # Set the GitHub action output for the release url.
     util.actions_output("release_url", release.html_url)
@@ -274,7 +189,7 @@ def tag_release(dist_dir, release_message, tag_format, tag_message, no_git_tag_w
         npm.tag_workspace_packages()
 
 
-def draft_release(
+def populate_release(
     ref,
     branch,
     repo,
@@ -288,7 +203,7 @@ def draft_release(
     post_version_message,
     assets,
 ):
-    """Publish Draft GitHub release and handle post version bump"""
+    """Populate release assets and push tags and commits"""
     branch = branch or util.get_branch()
     assets = assets or glob(f"{dist_dir}/*")
     body = changelog.extract_current(changelog_path)
@@ -310,12 +225,8 @@ def draft_release(
     remote_name = util.get_remote_name(dry_run)
     remote_url = util.run(f"git config --get remote.{remote_name}.url")
     if not os.path.exists(remote_url):
+        util.ensure_sha()
         util.run(f"git push {remote_name} HEAD:{branch} --follow-tags --tags")
-
-    # Upload the assets to the draft release.
-    util.log(f"Uploading assets: {assets}")
-    for fpath in assets:
-        gh.upload_file(release, fpath)
 
     # Set the body of the release with the changelog contents.
     # Get the new release since the draft release might change urls.
@@ -328,6 +239,9 @@ def draft_release(
         True,
         release.prerelease,
     )
+
+    # Upload the assets to the draft release.
+    release = util.upload_assets(gh, assets, release, auth)
 
     # Set the GitHub action output
     util.actions_output("release_url", release.html_url)
@@ -348,16 +262,7 @@ def delete_release(auth, release_url, dry_run=False):
     gh.repos.delete_release(release.id)
 
 
-def extract_release(
-    auth,
-    dist_dir,
-    dry_run,
-    release_url,
-    npm_install_options,
-    pydist_check_cmd,
-    pydist_resource_paths,
-    python_imports,
-):
+def extract_release(auth, dist_dir, dry_run, release_url):
     """Download and verify assets from a draft GitHub release"""
     match = util.parse_release_url(release_url)
     owner, repo = match["owner"], match["repo"]
@@ -373,11 +278,6 @@ def extract_release(
     orig_dir = os.getcwd()
     os.chdir(util.CHECKOUT_NAME)
 
-    # Read in the config
-    config = util.read_config()
-    options = config.get("options", {})
-    npm_install_options = npm_install_options or options.get("npm-install-options", "")
-
     # Clean the dist folder
     dist = Path(dist_dir)
     if dist.exists():
@@ -386,68 +286,21 @@ def extract_release(
 
     # Fetch, validate, and publish assets
     for asset in assets:
-        util.log(f"Fetching {asset.name}...")
-        url = asset.url
-        headers = dict(Authorization=f"token {auth}", Accept="application/octet-stream")
-        path = dist / asset.name
-        with requests.get(url, headers=headers, stream=True) as r:
-            r.raise_for_status()
-            with open(path, "wb") as f:
-                for chunk in r.iter_content(chunk_size=8192):
-                    f.write(chunk)
+        util.fetch_release_asset(dist_dir, asset, auth)
 
-    # Check all npm packages
-    npm.check_dist(dist, npm_install_options)
+    # Validate the shas of all the files
+    asset_shas_file = dist / "asset_shas.json"
+    with open(asset_shas_file) as fid:
+        asset_shas = json.load(fid)
+    asset_shas_file.unlink()
 
-    # Check python packages individually
     for asset in assets:
-        suffix = Path(asset.name).suffix
-        if suffix in [".gz", ".whl"]:
-            python.check_dist(
-                dist / asset.name,
-                check_cmd=pydist_check_cmd,
-                python_imports=python_imports,
-                resource_paths=pydist_resource_paths,
-            )
-        elif suffix == ".tgz":
-            pass  # already handled
-        else:
-            util.log(f"Nothing to check for {asset.name}")
-
-    # Skip sha validation for dry runs since the remote tag will not exist
-    if dry_run:
-        os.chdir(orig_dir)
-        return
-
-    tag_name = release.tag_name
-
-    sha = None
-    for tag in gh.list_tags(tag_name):
-        if tag.ref == f"refs/tags/{tag_name}":
-            sha = tag.object.sha
-            break
-    if sha is None:
-        raise ValueError("Could not find tag")
-
-    # Get the commmit message for the tag
-    commit_message = ""
-    commit_message = util.run(f"git log --format=%B -n 1 {sha}")
-
-    for asset in filter(lambda a: a.name != util.METADATA_JSON.name, assets):
-        # Check the sha against the published sha
-        valid = False
-        path = dist / asset.name
-        sha = util.compute_sha256(path)
-
-        for line in commit_message.splitlines():
-            if asset.name in line:
-                if sha in line:
-                    valid = True
-                else:
-                    util.log("Mismatched sha!")
-
-        if not valid:  # pragma: no cover
-            raise ValueError(f"Invalid file {asset.name}")
+        if asset.name.endswith(".json"):
+            continue
+        if asset.name not in asset_shas:
+            raise ValueError(f"{asset.name} was not found in asset_shas file")
+        if util.compute_sha256(dist / asset.name) != asset_shas[asset.name]:
+            raise ValueError(f"sha for {asset.name} does not match asset_shas file")
 
     os.chdir(orig_dir)
 
@@ -654,6 +507,15 @@ def prep_git(ref, branch, repo, auth, username, url):
     os.chdir(orig_dir)
 
     return branch
+
+
+def extract_changelog(dry_run, auth, changelog_path, release_url):
+    """Extract the changelog from the draft GH release body and update it."""
+    match = util.parse_release_url(release_url)
+    gh = util.get_gh_object(dry_run=dry_run, owner=match["owner"], repo=match["repo"], token=auth)
+    release = util.release_for_url(gh, release_url)
+    changelog_text = mdformat.text(release.body)
+    changelog.update_changelog(changelog_path, changelog_text)
 
 
 def forwardport_changelog(auth, ref, branch, repo, username, changelog_path, dry_run, release_url):

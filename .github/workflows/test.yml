@@ -30,14 +30,9 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Setup
-        uses: ./.github/actions/common
-
-      - name: Check Links
-        uses: ./.github/actions/check-links
+      - uses: actions/checkout@v2
+      - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
+      - uses: jupyterlab/maintainer-tools/.github/actions/check-links@v1
 
   test:
     runs-on: ${{ matrix.os }}
@@ -140,31 +135,25 @@ jobs:
       - name: Setup
         uses: ./.github/actions/common
 
-      - name: draft-changelog
-        uses: ./.github/actions/draft-changelog
-        env:
-          RH_IS_CHECK_RELEASE: "true"
+      - name: prep-release
+        uses: ./.github/actions/prep-release
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           version_spec: 10.10.10
           dry_run: true
 
-      - name: draft-release
-        uses: ./.github/actions/draft-release
-        env:
-          RH_IS_CHECK_RELEASE: "true"
+      - name: populate-release
+        uses: ./.github/actions/populate-release
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          release_url: ${{ steps.draft-changelog.outputs.release_url }}
+          release_url: ${{ steps.prep-release.outputs.release_url }}
           dry_run: true
 
       - name: publish-release
-        uses: ./.github/actions/publish-release
-        env:
-          RH_IS_CHECK_RELEASE: "true"
+        uses: ./.github/actions/finalize-release
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          release_url: ${{ steps.draft-changelog.outputs.release_url }}
+          release_url: ${{ steps.populate-release.outputs.release_url }}
           dry_run: true
 
   check: # This job does nothing and is only used for the branch protection
