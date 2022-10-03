@@ -6,5 +6,6 @@ Tutorials. A hands-on introduction to Jupyter Releaser for maintainers.
    :maxdepth: 1
    :caption: Contents:
 
-   making_first_release
+   making_release_from_repo
+   making_release_from_releaser
    generate_changelog
