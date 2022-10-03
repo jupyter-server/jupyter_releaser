@@ -2,6 +2,27 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.0.0a0
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...aa1abbf0f1126aab3130fb0d9427425c85ecd468))
+
+### Bugs fixed
+
+- Another workflow fix [#418](https://github.com/jupyter-server/jupyter_releaser/pull/418) ([@blink1073](https://github.com/blink1073))
+
+### Maintenance and upkeep improvements
+
+- Fix action targets [#417](https://github.com/jupyter-server/jupyter_releaser/pull/417) ([@blink1073](https://github.com/blink1073))
+- Merge v2 into main [#415](https://github.com/jupyter-server/jupyter_releaser/pull/415) ([@blink1073](https://github.com/blink1073))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-09-26&to=2022-10-03&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-09-26..2022-10-03&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-09-26..2022-10-03&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2022-09-26..2022-10-03&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.25.0
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...33996f2b913c752a7c57f8a840ee72a77c4395f9))
@@ -17,8 +38,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-09-20&to=2022-09-26&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-09-20..2022-09-26&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-09-20..2022-09-26&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.24.3
 
