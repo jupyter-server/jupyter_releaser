@@ -2,6 +2,26 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.0.0a1
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...2d957e05d510f5a707760141a9b18d63464f80cd))
+
+### Bugs fixed
+
+- Add more debugging to ensure_sha [#422](https://github.com/jupyter-server/jupyter_releaser/pull/422) ([@blink1073](https://github.com/blink1073))
+
+### Maintenance and upkeep improvements
+
+- Switch to v2 tag [#419](https://github.com/jupyter-server/jupyter_releaser/pull/419) ([@blink1073](https://github.com/blink1073))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-10-03&to=2022-10-05&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-10-03..2022-10-05&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2022-10-03..2022-10-05&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.0.0a0
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v1...aa1abbf0f1126aab3130fb0d9427425c85ecd468))
@@ -20,8 +40,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-09-26&to=2022-10-03&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-09-26..2022-10-03&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-09-26..2022-10-03&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2022-09-26..2022-10-03&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.25.0
 
