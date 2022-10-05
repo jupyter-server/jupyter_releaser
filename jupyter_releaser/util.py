@@ -598,11 +598,13 @@ def ensure_sha():
     """Ensure the sha of the remote branch matches the expected sha"""
     current_sha = os.environ["RH_CURRENT_SHA"]
     branch = os.environ["RH_BRANCH"]
+    log("Ensuring sha...")
     remote_name = get_remote_name(False)
-    run(f"git fetch {remote_name} {branch}")
-    sha = run(f"git rev-parse {remote_name}/{branch}")
+    run(f"git remote -v", echo=True)
+    run(f"git fetch {remote_name} {branch}", echo=True)
+    sha = run(f"git rev-parse {remote_name}/{branch}", echo=True)
     if sha != current_sha:
-        raise ValueError(f"{branch} is ahead of expected sha {current_sha}")
+        raise ValueError(f"{branch} current sha {sha} is not equal to expected sha {current_sha}")
 
 
 def get_gh_object(dry_run=False, **kwargs):
