@@ -600,7 +600,7 @@ def ensure_sha():
     branch = os.environ["RH_BRANCH"]
     log("Ensuring sha...")
     remote_name = get_remote_name(False)
-    run(f"git remote -v", echo=True)
+    run("git remote -v", echo=True)
     run(f"git fetch {remote_name} {branch}", echo=True)
     sha = run(f"git rev-parse {remote_name}/{branch}", echo=True)
     if sha != current_sha:
