@@ -558,13 +558,6 @@ def prepare_environment(fetch_draft_release=True):
     auth = os.environ.get("GITHUB_ACCESS_TOKEN", "")
     gh = get_gh_object(dry_run=dry_run, owner=owner, repo=repo_name, token=auth)
 
-    # Ensure the user is an admin.
-    if not dry_run:
-        user = gh.users.get_authenticated()["login"]
-        collab_level = gh.repos.get_collaborator_permission_level(user)
-        if not collab_level["permission"] == "admin":
-            raise RuntimeError(f"User {user} does not have admin permission")
-
     # Get the latest draft release if none is given.
     release_url = os.environ.get("RH_RELEASE_URL")
     log(f"Environment release url was {release_url}")
