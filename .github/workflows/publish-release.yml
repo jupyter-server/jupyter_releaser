@@ -17,8 +17,8 @@ on:
 
 jobs:
   publish_release:
-    permission:
-      content: write
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true

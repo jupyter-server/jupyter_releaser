@@ -25,7 +25,7 @@ on:
 jobs:
   prep_release:
     permissions:
-      content: write
+      contents: write
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
