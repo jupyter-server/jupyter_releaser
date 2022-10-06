@@ -21,7 +21,7 @@ To install the latest release locally, make sure you have
 
 ## Checklist for Adoption
 
-See the [adoption docs](https://jupyter-releaser.readthedocs.io/en/latest/how_to_guides/convert_repo.html).
+See the [adoption guides](https://jupyter-releaser.readthedocs.io/en/latest/how_to_guides/index.html).
 
 ## Actions
 
