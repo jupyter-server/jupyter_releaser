@@ -29,14 +29,15 @@ for asset in release.assets:
 
 dry_run = os.environ.get("RH_DRY_RUN", "").lower() == "true"
 
-if not dry_run:
-    # Ensure the branch sha has not changed.
-    ensure_sha()
-
 if not os.environ.get("RH_RELEASE_URL"):
     raise RuntimeError("Cannot complete Draft Release, no draft GitHub release url found!")
 
 run_action("jupyter-releaser prep-git")
+
+if not dry_run:
+    # Ensure the branch sha has not changed.
+    ensure_sha()
+
 run_action("jupyter-releaser bump-version")
 run_action("jupyter-releaser extract-changelog")
 
