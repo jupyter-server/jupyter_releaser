@@ -14,15 +14,12 @@ See [checklist](#Checklist-for-Adoption) below for details:
 
 ## Checklist for Adoption
 
-- [ ] Add a [GitHub Access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with access to target GitHub repo to run GitHub Actions, saved as
-      `ADMIN_GITHUB_TOKEN` in the [repository secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository).
-      The token needs to have `public_repo` and `repo:status` permissions.
 - [ ] Add access token for the [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github) stored as `PYPI_TOKEN`.
       _Note_ For security reasons, it is recommended that you scope the access
       to a single repository.
 - [ ] If needed, add access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens), saved as `NPM_TOKEN`.
-- [ ] Enable tag protection for all tags (`*`), to ensure that only users
-      with admin write permissions can publish witht he shared credentials.
+- [ ] Ensure that only trusted users with 2FA have admin access to the
+      repository, since they will be able to trigger releases.
 - [ ] Switch to Markdown Changelog
   - We recommend [MyST](https://myst-parser.readthedocs.io/en/latest/?badge=latest), especially if some of your docs are in reStructuredText.
   - Can use `pandoc -s changelog.rst -o changelog.md` and some hand edits as needed.
