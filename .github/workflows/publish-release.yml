@@ -19,6 +19,7 @@ jobs:
   publish_release:
     permissions:
       contents: write
+      metadata: read
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
