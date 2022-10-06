@@ -30,4 +30,4 @@ GitHub actions scripts are available to draft a changelog, draft a release, publ
 See the [action details documentation](https://jupyter-releaser.readthedocs.io/en/latest/background/theory.html#action-details) for more information.
 
 The actions can be run on a [fork](https://jupyter-releaser.readthedocs.io/en/latest/how_to_guides/convert_repo_from_releaser.html#) of `jupyter_releaser` and target multiple
-repositories, or run as workflows on the [source repositories](https://jupyter-releaser.readthedocs.io/en/latest/how_to_guides/convert_repo_from_repo), using
+repositories, or run as workflows on the [source repositories](https://jupyter-releaser.readthedocs.io/en/latest/how_to_guides/convert_repo_from_repo), using shared credentials.
