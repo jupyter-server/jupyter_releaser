@@ -604,7 +604,7 @@ def ensure_sha():
     run(f"git fetch {remote_name} {branch}", echo=True)
     sha = run(f"git rev-parse {remote_name}/{branch}", echo=True)
     if sha != current_sha:
-        log(f"{branch} current sha {sha} is not equal to expected sha {current_sha}")
+        raise RuntimeError(f"{branch} current sha {sha} is not equal to expected sha {current_sha}")
 
 
 def get_gh_object(dry_run=False, **kwargs):
