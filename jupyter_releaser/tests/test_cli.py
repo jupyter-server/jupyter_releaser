@@ -94,19 +94,18 @@ def test_prep_git_full(py_package, tmp_path, mocker, runner):
     os.mkdir(util.CHECKOUT_NAME)
 
     runner(["prep-git"], env=env)
+
     mock_run.assert_has_calls(
         [
+            call("echo before-prep-git >> 'log.txt'"),
             call("git config --global user.email"),
-            call(
-                'git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"'
-            ),
-            call('git config --global user.name "GitHub Action"'),
             call("git init .jupyter_releaser_checkout"),
             call("git remote add origin https://snuffy:abc123@github.com/baz/bar.git"),
             call(f"{GIT_FETCH_CMD} --tags --force"),
             call(f"{GIT_FETCH_CMD} +refs/pull/42:refs/pull/42"),
             call(f"{GIT_FETCH_CMD} refs/pull/42"),
             call("git checkout -B foo refs/pull/42"),
+            call("git symbolic-ref -q HEAD"),
         ]
     )
 
