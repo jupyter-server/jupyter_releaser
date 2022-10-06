@@ -18,8 +18,8 @@ See [checklist](#Checklist-for-Adoption) below for details:
       _Note_ For security reasons, it is recommended that you scope the access
       to a single repository.
 - [ ] If needed, add access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens), saved as `NPM_TOKEN`.
-- [ ] Enable tag protection for all tags (`*`), to ensure that only users
-      with admin write permissions can publish witht he shared credentials.
+- [ ] Ensure that only trusted users with 2FA have admin access to the
+      repository, since they will be able to trigger releases.
 - [ ] Switch to Markdown Changelog
   - We recommend [MyST](https://myst-parser.readthedocs.io/en/latest/?badge=latest), especially if some of your docs are in reStructuredText.
   - Can use `pandoc -s changelog.rst -o changelog.md` and some hand edits as needed.
