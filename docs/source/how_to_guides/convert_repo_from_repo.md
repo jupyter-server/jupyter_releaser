@@ -14,9 +14,6 @@ See [checklist](#Checklist-for-Adoption) below for details:
 
 ## Checklist for Adoption
 
-- [ ] Add a [GitHub Access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with access to target GitHub repo to run GitHub Actions, saved as
-      `ADMIN_GITHUB_TOKEN` in the [repository secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository).
-      The token needs to have `public_repo` and `repo:status` permissions.
 - [ ] Add access token for the [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github) stored as `PYPI_TOKEN`.
       _Note_ For security reasons, it is recommended that you scope the access
       to a single repository.
