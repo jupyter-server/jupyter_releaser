@@ -47,6 +47,7 @@ runs:
       shell: bash -eux {0}
       run: |
         export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
+        export GITHUB_ACTOR=${{ gitub.actor }}
         export RH_REPOSITORY=${{ inputs.target }}
         if [ ! -z ${{ inputs.branch }} ]; then
           export RH_BRANCH=${{ inputs.branch }}

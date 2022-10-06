@@ -560,7 +560,7 @@ def prepare_environment(fetch_draft_release=True):
 
     # Ensure the user is an admin.
     if not dry_run:
-        user = gh.users.get_authenticated()["login"]
+        user = os.environ["GITHUB_ACTOR"]
         collab_level = gh.repos.get_collaborator_permission_level(user)
         if not collab_level["permission"] == "admin":
             raise RuntimeError(f"User {user} does not have admin permission")
