@@ -169,7 +169,8 @@ def get_version():
         # If this is a hatchling project, use hatch to get
         # the dynamic version.
         if data.get("build-system", {}).get("build-backend") == "hatchling.build":
-            return run("pipx run hatch version").split("\n")[-1]
+            cmd = _get_hatch_version_cmd()
+            return run(cmd).split("\n")[-1]
 
     if SETUP_PY.exists():
         warnings.warn("Using deprecated setup.py invocation")
@@ -236,6 +237,12 @@ def create_release_commit(version, release_message=None, dist_dir="dist"):
     return shas
 
 
+def _get_hatch_version_cmd():
+    if shutil.which("hatch"):
+        return "hatch version"
+    return "pipx run hatch version"
+
+
 def bump_version(version_spec, *, changelog_path="", version_cmd=""):
     """Bump the version"""
     # Look for config files to determine version command if not given
@@ -252,7 +259,7 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):
             if "tool.tbump" in pyproject_text:
                 version_cmd = version_cmd or TBUMP_CMD
             elif "hatchling.build" in pyproject_text:
-                version_cmd = version_cmd or "pipx run hatch version"
+                version_cmd = version_cmd or _get_hatch_version_cmd()
 
         if SETUP_CFG.exists():
             if "bumpversion" in SETUP_CFG.read_text(encoding="utf-8"):
