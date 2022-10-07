@@ -562,9 +562,14 @@ def prepare_environment(fetch_draft_release=True):
     if not dry_run:
         user = os.environ["GITHUB_ACTOR"]
         log(f"Getting permission level for {user}")
-        collab_level = gh.repos.get_collaborator_permission_level(user)
-        if not collab_level["permission"] == "admin":
-            raise RuntimeError(f"User {user} does not have admin permission")
+        try:
+            collab_level = gh.repos.get_collaborator_permission_level(user)
+            if not collab_level["permission"] == "admin":
+                raise RuntimeError(f"User {user} does not have admin permission")
+            log(f"User was admin!")
+        except Exception as e:
+            log("Could not get user level, assuming we are on releaser fork")
+            log(str(e))
 
     # Get the latest draft release if none is given.
     release_url = os.environ.get("RH_RELEASE_URL")
