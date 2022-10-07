@@ -44,7 +44,7 @@ runs:
       shell: bash -eux {0}
       run: |
         export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
-        export GITHUB_ACTOR=${{ github.actor }}
+        export GITHUB_ACTOR=${{ github.triggering_actor }}
         export RH_REPOSITORY=${{ inputs.target }}
         export RH_DRY_RUN=${{ inputs.dry_run }}
         export RH_RELEASE_URL=${{ inputs.release_url }}
