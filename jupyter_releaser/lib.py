@@ -410,19 +410,20 @@ def prep_git(ref, branch, repo, auth, username, url):
     """Set up git"""
     repo = repo or util.get_repo()
 
-    user_name = ""
     try:
-        user_name = util.run("git config --global user.email")
+        util.run("git config --global user.email")
+        has_git_config = True
     except Exception:
-        pass
+        has_git_config = False
 
-    if not user_name:
-        # Use email address for the GitHub Actions bot
+    if not has_git_config:
+        # Default to the GitHub Actions bot
         # https://github.community/t/github-actions-bot-email-address/17204/6
+        git_user_name = username or "41898282+github-actions[bot]"
         util.run(
-            'git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"'
+            f'git config --global user.email "{git_user_name}@users.noreply.github.com"', echo=True
         )
-        util.run('git config --global user.name "GitHub Action"')
+        util.run(f'git config --global user.name "{git_user_name}"', echo=True)
 
     # Set up the repository
     checkout_dir = os.environ.get("RH_CHECKOUT_DIR", util.CHECKOUT_NAME)
