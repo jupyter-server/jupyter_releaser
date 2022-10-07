@@ -2,6 +2,28 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.0.0a3
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...9e9e128e9beebae69cc13f096df5116a232aa1b2))
+
+### Enhancements made
+
+- Handle Git Actor and Permissions [#429](https://github.com/jupyter-server/jupyter_releaser/pull/429) ([@blink1073](https://github.com/blink1073))
+
+### Bugs fixed
+
+- Use admin token [#431](https://github.com/jupyter-server/jupyter_releaser/pull/431) ([@blink1073](https://github.com/blink1073))
+- Try fixing admin handling [#430](https://github.com/jupyter-server/jupyter_releaser/pull/430) ([@blink1073](https://github.com/blink1073))
+- Fix ensure_sha [#427](https://github.com/jupyter-server/jupyter_releaser/pull/427) ([@blink1073](https://github.com/blink1073))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-10-06&to=2022-10-07&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-10-06..2022-10-07&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-10-06..2022-10-07&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.0.0a2
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...e02f046e3426f3e667e03125beee6f92f0f59798))
@@ -20,8 +42,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-10-05&to=2022-10-06&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-10-05..2022-10-06&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-10-05..2022-10-06&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.0.0a1
 
