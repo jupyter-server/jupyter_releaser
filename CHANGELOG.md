@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.0.0a4
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...dac36eb6a14efaaa582fa9ce11782755b5c37c56))
+
+### Maintenance and upkeep improvements
+
+- Use global hatch if available [#432](https://github.com/jupyter-server/jupyter_releaser/pull/432) ([@blink1073](https://github.com/blink1073))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-10-07&to=2022-10-07&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-10-07..2022-10-07&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.0.0a3
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...9e9e128e9beebae69cc13f096df5116a232aa1b2))
@@ -21,8 +37,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-10-06&to=2022-10-07&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-10-06..2022-10-07&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-10-06..2022-10-07&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.0.0a2
 
