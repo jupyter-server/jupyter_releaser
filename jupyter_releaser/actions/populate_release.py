@@ -33,11 +33,7 @@ if not os.environ.get("RH_RELEASE_URL"):
     raise RuntimeError("Cannot complete Draft Release, no draft GitHub release url found!")
 
 run_action("jupyter-releaser prep-git")
-
-if not dry_run:
-    # Ensure the branch sha has not changed.
-    ensure_sha()
-
+run_action("jupyter-releaser ensure-sha")
 run_action("jupyter-releaser bump-version")
 run_action("jupyter-releaser extract-changelog")
 
@@ -48,7 +44,5 @@ run_action("jupyter-releaser check-npm")
 run_action("jupyter-releaser build-python")
 run_action("jupyter-releaser check-python")
 run_action("jupyter-releaser tag-release")
-
-if not dry_run:
-    ensure_sha()
+run_action("jupyter-releaser ensure-sha")
 run_action("jupyter-releaser populate-release")

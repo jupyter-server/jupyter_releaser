@@ -644,6 +644,17 @@ def publish_release(auth, dry_run, release_url):
 
 
 @main.command()
+@add_options(branch_options)
+@add_options(dry_run_options)
+@click.option(
+    "--expected-sha", help="The expected sha of the branch HEAD", envvar="RH_EXPECTED_SHA"
+)
+@use_checkout_dir()
+def ensure_sha(branch, dry_run, expected_sha):
+    util.ensure_sha(dry_run, expected_sha, branch)
+
+
+@main.command()
 @add_options(auth_options)
 @add_options(branch_options)
 @add_options(username_options)

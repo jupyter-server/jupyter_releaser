@@ -98,7 +98,7 @@ def draft_changelog(
         version=version,
         post_version_spec=post_version_spec,
         post_version_message=post_version_message,
-        current_sha=current_sha,
+        expected_sha=current_sha,
     )
     with tempfile.TemporaryDirectory() as d:
         metadata_path = Path(d) / util.METADATA_JSON
