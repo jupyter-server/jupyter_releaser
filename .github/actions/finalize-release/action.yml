@@ -40,6 +40,7 @@ runs:
         then
             pip install -q git+https://github.com/jupyter-server/jupyter_releaser.git@v1
         fi
+
     - id: finalize-release
       shell: bash -eux {0}
       run: |
@@ -51,3 +52,21 @@ runs:
         export RH_STEPS_TO_SKIP=${{ inputs.steps_to_skip }}
         export RH_BRANCH=${{ inputs.branch }}
         python -m jupyter_releaser.actions.finalize_release
+
+    - if: ${{ success() }}
+      run: |
+        echo "## Next Step" >> $GITHUB_STEP_SUMMARY
+        echo "Verify the final release" >> $GITHUB_STEP_SUMMARY
+        echo ${{ steps.finalize-release.outputs.release_url }} >> $GITHUB_STEP_SUMMARY
+        if [ ! -z "${{ steps.finalize-release.outputs.pr_url }}" ]; then
+           echo "Merge the forwardport PR"
+           echo ${{ steps.finalize-release.outputs.pr_url }}
+           echo "Merge the forwardport PR" >> $GITHUB_STEP_SUMMARY
+           echo ${{ steps.finalize-release.outputs.pr_url }} >> $GITHUB_STEP_SUMMARY
+        fi
+
+    - if: ${{ failure() }}
+      run: |
+        echo "## Failure Message" >> $GITHUB_STEP_SUMMARY
+        echo ":x: Failed to Publish the Draft Release Url:" >> $GITHUB_STEP_SUMMARY
+        echo ${{ inputs.release_url }} >> $GITHUB_STEP_SUMMARY

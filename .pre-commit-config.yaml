@@ -72,3 +72,13 @@ repos:
         types: [yaml]
         args: ["--schemafile", "https://json.schemastore.org/github-workflow"]
         stages: [manual]
+
+  - repo: https://github.com/sirosen/check-jsonschema
+    rev: 0.18.3
+    hooks:
+      - id: check-jsonschema
+        name: "Check Example Workflows"
+        files: ^example-workflows/
+        types: [yaml]
+        args: ["--schemafile", "https://json.schemastore.org/github-workflow"]
+        stages: [manual]

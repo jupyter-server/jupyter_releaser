@@ -49,3 +49,9 @@ runs:
         export RH_RELEASE_URL=${{ inputs.release_url }}
         export RH_BRANCH=${{ inputs.branch }}
         python -m jupyter_releaser.actions.populate_release
+
+    - if: ${{ failure() }}
+      run: |
+        echo "## Failure Message" >> $GITHUB_STEP_SUMMARY
+        echo ":x: Failed to Publish the Draft Release Url:" >> $GITHUB_STEP_SUMMARY
+        echo ${{ steps.populate-release.outputs.release_url }} >> $GITHUB_STEP_SUMMARY

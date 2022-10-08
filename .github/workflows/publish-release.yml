@@ -57,21 +57,9 @@ jobs:
         run: |
           echo "Verify the final release"
           echo ${{ steps.finalize-release.outputs.release_url }}
-          echo "## Next Step" >> $GITHUB_STEP_SUMMARY
-          echo "Verify the final release" >> $GITHUB_STEP_SUMMARY
-          echo ${{ steps.finalize-release.outputs.release_url }} >> $GITHUB_STEP_SUMMARY
-          if [ ! -z "${{ steps.finalize-release.outputs.pr_url }}" ]; then
-             echo "Merge the forwardport PR"
-             echo ${{ steps.finalize-release.outputs.pr_url }}
-             echo "Merge the forwardport PR" >> $GITHUB_STEP_SUMMARY
-             echo ${{ steps.finalize-release.outputs.pr_url }} >> $GITHUB_STEP_SUMMARY
-          fi
 
       - name: "** Failure Message **"
         if: ${{ failure() }}
         run: |
           echo "Failed to Publish the Draft Release Url:"
           echo ${{ steps.populate-release.outputs.release_url }}
-          echo "## Failure Message" >> $GITHUB_STEP_SUMMARY
-          echo ":x: Failed to Publish the Draft Release Url:" >> $GITHUB_STEP_SUMMARY
-          echo ${{ steps.populate-release.outputs.release_url }} >> $GITHUB_STEP_SUMMARY
