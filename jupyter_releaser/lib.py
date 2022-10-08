@@ -225,7 +225,6 @@ def populate_release(
     remote_name = util.get_remote_name(dry_run)
     remote_url = util.run(f"git config --get remote.{remote_name}.url")
     if not os.path.exists(remote_url):
-        util.ensure_sha()
         util.run(f"git push {remote_name} HEAD:{branch} --follow-tags --tags")
 
     # Set the body of the release with the changelog contents.

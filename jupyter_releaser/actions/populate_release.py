@@ -5,13 +5,7 @@ import os
 import sys
 
 from jupyter_releaser.actions.common import run_action, setup
-from jupyter_releaser.util import (
-    actions_output,
-    ensure_sha,
-    get_gh_object,
-    log,
-    release_for_url,
-)
+from jupyter_releaser.util import actions_output, get_gh_object, log, release_for_url
 
 setup()
 

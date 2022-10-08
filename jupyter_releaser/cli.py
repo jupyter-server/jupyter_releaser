@@ -650,7 +650,7 @@ def publish_release(auth, dry_run, release_url):
     "--expected-sha", help="The expected sha of the branch HEAD", envvar="RH_EXPECTED_SHA"
 )
 @use_checkout_dir()
-def ensure_sha(branch, dry_run, expected_sha):
+def ensure_sha(ref, branch, repo, dry_run, expected_sha):
     util.ensure_sha(dry_run, expected_sha, branch)
 
 
