@@ -2,9 +2,6 @@ name: "Step 2: Publish Release"
 on:
   workflow_dispatch:
     inputs:
-      target:
-        description: "The owner/repo GitHub target"
-        required: false
       branch:
         description: "The target branch"
         required: false
@@ -18,13 +15,16 @@ on:
 jobs:
   publish_release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
+
       - name: Populate Release
         id: populate-release
         uses: jupyter-server/jupyter_releaser/.github/actions/populate-release@v2
         with:
-          token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           target: ${{ github.event.inputs.target }}
           branch: ${{ github.event.inputs.branch }}
           release_url: ${{ github.event.inputs.release_url }}
@@ -39,7 +39,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         uses: jupyter-server/jupyter-releaser/.github/actions/finalize-release@v2
         with:
-          token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           target: ${{ github.event.inputs.target }}
           release_url: ${{ steps.populate-release.outputs.release_url }}
 
