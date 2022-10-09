@@ -6,7 +6,6 @@ import shutil
 import time
 from pathlib import Path
 
-import pytest
 import toml
 from ghapi.core import GhApi
 
