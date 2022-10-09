@@ -76,10 +76,9 @@ def draft_changelog(
     current = changelog.extract_current(changelog_path)
     util.log(f"\n\nCurrent Changelog Entry:\n{current}")
 
-    # Check out any unstaged files from version bump
-    # If this is an automated changelog PR, there may be no effective changes
+    # Check out all changed files.
     try:
-        util.run("git checkout -- .")
+        util.run("git checkout .")
     except CalledProcessError as e:
         util.log(str(e))
         return
