@@ -1,8 +1,9 @@
 name: Check Release
 on:
   push:
-    branches: ["main"]
+    branches: ["*"]
   pull_request:
+    branches: ["*"]
   release:
     types: [published]
   schedule:
@@ -12,9 +13,14 @@ jobs:
   check_release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
-      - uses: ./.github/actions/check-release
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup
+        uses: ./.github/actions/common
+
+      - name: Check Release
+        uses: ./.github/actions/check-release
         with:
           version_spec: 10.10.10
           token: ${{ secrets.GITHUB_TOKEN }}
