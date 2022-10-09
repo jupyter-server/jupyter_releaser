@@ -75,7 +75,7 @@ class ReleaseHelperGroup(click.Group):
                 value = os.environ[str(param.envvar)]
                 if "token" in name.lower():
                     value = "***"
-                util.log(f"Using env value for {name}: {value}")
+                util.log(f"Using env value for {name}: '{value}'")
                 continue
 
             # Handle cli and options overrides.
@@ -84,7 +84,9 @@ class ReleaseHelperGroup(click.Group):
                 # Defer to cli overrides
                 if arg not in ctx.args:
                     val = options.get(name, options.get(name.replace("_", "-")))
-                    util.log(f"Adding option override for {arg}")
+                    if "token" in arg.lower():
+                        val = "***"
+                    util.log(f"Adding option override for {arg}: '{val}")
                     if isinstance(val, list):
                         for v in val:
                             ctx.args.append(arg)
@@ -94,10 +96,13 @@ class ReleaseHelperGroup(click.Group):
                         ctx.args.append(val)
                     continue
                 else:
-                    util.log(f"Using cli arg for {name}")
+                    val = ctx.args[ctx.args.index(arg) + 1]
+                    if "token" in name.lower():
+                        val = "***"
+                    util.log(f"Using cli arg for {name}: '{val}'")
                     continue
 
-            util.log(f"Using default value for {name}")
+            util.log(f"Using default value for {name}: '{param.default}'")
 
         util.log(f'{"~" * 50}\n\n')
 
