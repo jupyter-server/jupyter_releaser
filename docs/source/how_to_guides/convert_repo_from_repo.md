@@ -4,7 +4,7 @@ Follow the steps below to convert a repository to use Jupyter Releaser for relea
 
 ## Prerequisites
 
-See [checklist](#Checklist-for-Adoption) below for details:
+See [hecklist below for details:
 
 - Markdown changelog
 - Bump version configuration (if using Python), for example [hatch](https://hatch.pypa.io/latest/)
@@ -76,7 +76,7 @@ _Note_ The check release action needs `contents: write` [permission](https://doc
 
 - [ ] Copy `prep-release.yml` and `publish-release.yml` from the `example-workflows` folder in this repository.
 
-- [ ] Optionally add [configuration](#Configuration) to the repository if non-standard options or hooks are needed.
+- [ ] Optionally add configuration to the repository if non-standard options or hooks are needed.
 
 - [ ] If desired, add `check_release` job, changelog, and `hatch` support to other active release branches
 

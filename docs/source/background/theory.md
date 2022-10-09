@@ -48,7 +48,7 @@ Detailed workflows are available to draft a changelog, draft a release, publish 
 - Adds a commit that includes the hashes of the dist files
 - Creates an annotated version tag in standard format
 - If given, bumps the version using the post version spec. he post version
-  spec can also be given as a setting, [Write Releaser Config Guide](../how_to_guides/write_config.html#automatic-dev-versions).
+  spec can also be given as a setting, [Write Releaser Config Guide](../how_to_guides/write_config).
 - Verifies that the SHA of the most recent commit has not changed on the target
   branch, preventing a mismatch of release commit.
 - Pushes the commits and tag to the target `branch`
