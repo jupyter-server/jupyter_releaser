@@ -57,7 +57,8 @@ class ReleaseHelperGroup(click.Group):
 
         # Print a separation header
         util.log(f'\n\n{"-" * 50}')
-        util.log(f"\n{cmd_name}\n")
+        util.log(f"\n\n{cmd_name}\n\n")
+        util.log(f'\n\n{"-" * 50}')
 
         if cmd_name in skip or cmd_name.replace("-", "_") in skip:
             util.log("*** Skipping based on skip config")
