@@ -56,7 +56,7 @@ class ReleaseHelperGroup(click.Group):
         skip += os.environ.get("RH_STEPS_TO_SKIP", "").split(",")
 
         # Print a separation header
-        util.log(f'\n\n\n{"-" * 50}')
+        util.log(f'\n\n{"-" * 50}')
         util.log(f"\n\n{cmd_name}\n\n")
         util.log(f'\n\n{"-" * 50}')
 
@@ -99,7 +99,7 @@ class ReleaseHelperGroup(click.Group):
 
             util.log(f"Using default value for {name}")
 
-        util.log(f'{"-" * 50}\n\n')
+        util.log(f'{"~" * 50}\n\n')
 
         # Handle before hooks
         before = f"before-{cmd_name}"
