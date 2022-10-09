@@ -298,12 +298,10 @@ def test_bump_version_dev(py_package):
     assert util.get_version() == "0.1.0.dev0"
     util.bump_version("dev")
     assert util.get_version() == "0.1.0.dev1"
-    with pytest.raises(ValueError):
-        util.bump_version("next")
-    with pytest.raises(ValueError):
-        util.bump_version("patch")
+    util.bump_version("next")
+    util.bump_version("patch")
     util.bump_version("minor")
-    assert util.get_version() == "0.1.0"
+    assert util.get_version() == "0.2.0"
 
 
 def test_get_config_python(py_package):

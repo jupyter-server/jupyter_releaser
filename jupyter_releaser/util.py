@@ -288,14 +288,23 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):
             # Import here to avoid circular import.
             from jupyter_releaser.changelog import extract_current_version
 
-            vc = parse_version(extract_current_version(changelog_path))
-            assert isinstance(vc, Version)
+            try:
+                vc = parse_version(extract_current_version(changelog_path))
+                assert isinstance(vc, Version)
+            except ValueError:
+                vc = v
 
             if version_spec in ["patch", "next"]:
                 if vc.is_prerelease:
-                    assert vc.pre is not None
-                    # Bump to the next prerelease.
-                    version_spec = f"{vc.major}.{vc.minor}.{vc.micro}{vc.pre[0]}{vc.pre[1] + 1}"
+                    if vc.is_devrelease:
+                        # Bump to the next dev release.
+                        assert vc.dev is not None
+                        version_spec = f"{vc.major}.{vc.minor}.{vc.micro}{vc.dev}{vc.dev + 1}"
+                    else:
+                        assert vc.pre is not None
+                        # Bump to the next prerelease.
+                        version_spec = f"{vc.major}.{vc.minor}.{vc.micro}{vc.pre[0]}{vc.pre[1] + 1}"
+
                 else:
                     # Bump to the next micro.
                     version_spec = f"{vc.major}.{vc.minor}.{vc.micro + 1}"
@@ -310,9 +319,13 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):
                 version_spec = f"{v.major}.{v.minor}.{v.micro}.dev{v.dev + 1}"
 
         else:
-            # Bump to next minor for dev.
+            # Handle dev version spec.
             if version_spec == "dev":
-                version_spec = f"{v.major}.{v.minor + 1}.0.dev0"
+                if v.pre:
+                    version_spec = f"{v.major}.{v.minor}.{v.micro}.dev0"
+                # Bump to next minor dev.
+                else:
+                    version_spec = f"{v.major}.{v.minor + 1}.0.dev0"
 
             # For next, go to next prerelease or patch if it is a final version.
             elif version_spec == "next":
