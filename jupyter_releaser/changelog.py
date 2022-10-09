@@ -192,9 +192,6 @@ def update_changelog(changelog_path, entry):
     changelog = insert_entry(changelog, entry, version=version)
     Path(changelog_path).write_text(changelog, encoding="utf-8")
 
-    # Stage changelog
-    util.run(f"git add {util.normalize_path(changelog_path)}")
-
 
 def insert_entry(changelog, entry, version=None):
     """Insert the entry into the existing changelog."""
@@ -349,7 +346,7 @@ def extract_current(changelog_path):
 def extract_current_version(changelog_path):
     """Extract the current released version from the changelog"""
     body = extract_current(changelog_path)
-    match = re.match(r"#+ ([\d.]+)", body.strip())
+    match = re.match(r"#+ (\d\S+)", body.strip())
     if not match:
         raise ValueError("Could not find previous version")
     return match.groups()[0]
