@@ -51,6 +51,7 @@ runs:
         python -m jupyter_releaser.actions.populate_release
 
     - if: ${{ failure() }}
+      shell: bash -eux {0}
       run: |
         echo "## Failure Message" >> $GITHUB_STEP_SUMMARY
         echo ":x: Failed to Publish the Draft Release Url:" >> $GITHUB_STEP_SUMMARY

@@ -54,6 +54,7 @@ runs:
         python -m jupyter_releaser.actions.finalize_release
 
     - if: ${{ success() }}
+      shell: bash -eux {0}
       run: |
         echo "## Next Step" >> $GITHUB_STEP_SUMMARY
         echo "Verify the final release" >> $GITHUB_STEP_SUMMARY
@@ -66,6 +67,7 @@ runs:
         fi
 
     - if: ${{ failure() }}
+      shell: bash -eux {0}
       run: |
         echo "## Failure Message" >> $GITHUB_STEP_SUMMARY
         echo ":x: Failed to Publish the Draft Release Url:" >> $GITHUB_STEP_SUMMARY
