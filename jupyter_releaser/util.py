@@ -63,7 +63,7 @@ def run(cmd, **kwargs):
     """Run a command as a subprocess and get the output as a string"""
     quiet_error = kwargs.pop("quiet_error", False)
     show_cwd = kwargs.pop("show_cwd", False)
-    quiet = kwargs.pop("quiet", False)
+    quiet = kwargs.get("quiet", False)
     echo = kwargs.pop("echo", False)
 
     if echo:
@@ -78,7 +78,6 @@ def run(cmd, **kwargs):
         # subprocess methods
         return _run_win(cmd, **kwargs)
 
-    quiet = kwargs.get("quiet")
     kwargs.setdefault("check", True)
 
     try:
