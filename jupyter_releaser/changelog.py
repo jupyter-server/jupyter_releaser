@@ -192,9 +192,6 @@ def update_changelog(changelog_path, entry):
     changelog = insert_entry(changelog, entry, version=version)
     Path(changelog_path).write_text(changelog, encoding="utf-8")
 
-    # Stage changelog
-    util.run(f"git add {util.normalize_path(changelog_path)}")
-
 
 def insert_entry(changelog, entry, version=None):
     """Insert the entry into the existing changelog."""
