@@ -83,7 +83,7 @@ def draft_changelog(
         util.log(str(e))
         return
 
-    util.log("git status", echo=True)
+    util.run("git status", echo=True)
     util.log(f"\n\nCreating draft GitHub release for {version}")
     owner, repo_name = repo.split("/")
     gh = util.get_gh_object(dry_run=dry_run, owner=owner, repo=repo_name, token=auth)
