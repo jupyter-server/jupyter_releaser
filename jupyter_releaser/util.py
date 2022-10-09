@@ -281,6 +281,7 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):
     # Add some convenience options on top of "tbump" and "hatch"
     if "tbump" in version_cmd or "hatch" in version_cmd:
         v = parse_version(get_version())
+        log(f"Current version was: {v}")
         assert isinstance(v, Version)
 
         if v.is_devrelease:
@@ -290,6 +291,7 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):
 
             try:
                 vc = parse_version(extract_current_version(changelog_path))
+                log(f"Changelog version was: {vc}")
                 assert isinstance(vc, Version)
             except ValueError:
                 vc = v
@@ -344,7 +346,7 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):
                 version_spec = f"{v.major}.{v.minor + 1}.0"
 
     # Bump the version
-    run(f"{version_cmd} {version_spec}")
+    run(f"{version_cmd} {version_spec}", echo=True)
 
     return get_version()
 
