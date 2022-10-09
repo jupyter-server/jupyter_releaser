@@ -614,17 +614,19 @@ def handle_since():
     return since
 
 
-def ensure_sha():
+def ensure_sha(dry_run, expected_sha, branch):
     """Ensure the sha of the remote branch matches the expected sha"""
-    current_sha = os.environ["RH_CURRENT_SHA"]
-    branch = os.environ["RH_BRANCH"]
     log("Ensuring sha...")
     remote_name = get_remote_name(False)
     run("git remote -v", echo=True)
     run(f"git fetch {remote_name} {branch}", echo=True)
     sha = run(f"git rev-parse {remote_name}/{branch}", echo=True)
-    if sha != current_sha:
-        raise RuntimeError(f"{branch} current sha {sha} is not equal to expected sha {current_sha}")
+    if sha != expected_sha:
+        msg = f"{branch} current sha {sha} is not equal to expected sha {expected_sha}"
+        if dry_run:
+            log(msg)
+        else:
+            raise RuntimeError(msg)
 
 
 def get_gh_object(dry_run=False, **kwargs):
