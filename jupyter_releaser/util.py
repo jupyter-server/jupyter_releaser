@@ -575,8 +575,8 @@ def prepare_environment(fetch_draft_release=True):
                 raise RuntimeError(f"User {user} does not have admin permission")
             log("User was admin!")
         except Exception as e:
-            log("Could not get user level, assuming we are on releaser fork")
             log(str(e))
+            raise RuntimeError("Could not get user permission level, assuming user was not admin!")
 
     # Get the latest draft release if none is given.
     release_url = os.environ.get("RH_RELEASE_URL")

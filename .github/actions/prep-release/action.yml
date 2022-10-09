@@ -59,3 +59,9 @@ runs:
         export RH_SINCE_LAST_STABLE=${{ inputs.since_last_stable }}
 
         python -m jupyter_releaser.actions.prep_release
+
+    - shell: bash -eux {0}
+      run: |
+        echo "## Next Step" >> $GITHUB_STEP_SUMMARY
+        echo "(Optional): Review Draft Release: ${{ steps.prep-release.outputs.release_url }}" >> $GITHUB_STEP_SUMMARY
+        echo "Run Step 2: Publish Release workflow"

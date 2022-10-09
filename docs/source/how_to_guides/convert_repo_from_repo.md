@@ -14,12 +14,10 @@ See [checklist](#Checklist-for-Adoption) below for details:
 
 ## Checklist for Adoption
 
-- [ ] Add a [GitHub Access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with access to target GitHub repo to run GitHub Actions, saved as
-      `ADMIN_GITHUB_TOKEN` in the [repository secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository).
-      The token needs to have `public_repo` and `repo:status` permissions.
 - [ ] Add access token for the [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github) stored as `PYPI_TOKEN`.
       _Note_ For security reasons, it is recommended that you scope the access
-      to a single repository.
+      to a single repository. Additionally, this token should belong to a
+      bot account and not a single user.
 - [ ] If needed, add access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens), saved as `NPM_TOKEN`.
 - [ ] Ensure that only trusted users with 2FA have admin access to the
       repository, since they will be able to trigger releases.
@@ -76,8 +74,7 @@ _Note_ The check release action needs `contents: write` [permission](https://doc
 
 - [ ] Update or add `RELEASE.md` that describes the onboarding and release process, e.g.
 
-- [ ] Copy `prep-release.yml` and `publish-release.yml` from this repository
-      and remove the "target" input, since the target will be your own repo.
+- [ ] Copy `prep-release.yml` and `publish-release.yml` from the `example-workflows` folder in this repository.
 
 - [ ] Optionally add [configuration](#Configuration) to the repository if non-standard options or hooks are needed.
 
