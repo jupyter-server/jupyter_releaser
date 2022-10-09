@@ -57,9 +57,7 @@ jobs:
 
       - name: Run the tests on Windows and MacOS
         if: ${{ matrix.os != 'ubuntu-latest' }}
-        run: |
-          python -m pip install -e ".[test]"
-          python -m pytest -vv -s
+        run: hatch run test:test -s
 
   generate-changelog:
     runs-on: ubuntu-20.04
