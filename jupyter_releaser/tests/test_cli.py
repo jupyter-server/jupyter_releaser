@@ -147,6 +147,7 @@ changelog-path: RH_CHANGELOG
 check-imports: RH_CHECK_IMPORTS
 dist-dir: RH_DIST_DIR
 dry-run: RH_DRY_RUN
+expected-sha: RH_EXPECTED_SHA
 npm-cmd: RH_NPM_COMMAND
 npm-install-options: RH_NPM_INSTALL_OPTIONS
 npm-registry: NPM_REGISTRY
@@ -808,3 +809,13 @@ def test_forwardport_changelog_has_new(npm_package, runner, mocker, mock_github,
 ## 1.0.1
 """
     assert expected in text, text
+
+
+def test_ensure_sha(npm_package, runner, git_prep):
+    sha = util.run("git rev-parse HEAD", cwd=util.CHECKOUT_NAME)
+    current = util.run("git branch --show-current", cwd=util.CHECKOUT_NAME)
+    runner(["ensure-sha", "--branch", current, "--expected-sha", sha])
+    runner(["ensure-sha", "--branch", current, "--expected-sha", "abc", "--dry-run"])
+
+    with pytest.raises(RuntimeError):
+        runner(["ensure-sha", "--branch", current, "--expected-sha", "abc"])
