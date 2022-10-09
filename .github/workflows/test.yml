@@ -52,15 +52,14 @@ jobs:
         if: ${{ matrix.os == 'ubuntu-latest' }}
         run: |
           hatch run cov:test
+          pip install codecov
+          codecov
 
       - name: Run the tests on Windows and MacOS
         if: ${{ matrix.os != 'ubuntu-latest' }}
-        run: python -m pytest -vv -s
-
-      - name: Coverage
         run: |
-          pip install codecov
-          codecov
+          pip install -e ".[test]"
+          python -m pytest -vv -s
 
   generate-changelog:
     runs-on: ubuntu-20.04
