@@ -49,7 +49,7 @@ jobs:
       - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
 
       - name: Run the tests with coverage on Ubuntu and MacOS
-        if: ${{ matrix.os == 'windows-latest' }}
+        if: ${{ matrix.os != 'windows-latest' }}
         run: hatch run cov:test
 
       - name: Run the tests on Windows
