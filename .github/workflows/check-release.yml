@@ -22,5 +22,4 @@ jobs:
       - name: Check Release
         uses: ./.github/actions/check-release
         with:
-          version_spec: 10.10.10
           token: ${{ secrets.GITHUB_TOKEN }}

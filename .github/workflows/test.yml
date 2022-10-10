@@ -105,7 +105,6 @@ jobs:
         uses: ./.github/actions/prep-release
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          version_spec: 10.10.10
           dry_run: true
 
       - name: populate-release

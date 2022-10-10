@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling>=1.0"]
+requires = ["hatchling>=1.11"]
 build-backend = "hatchling.build"
 
 [project]
@@ -66,6 +66,7 @@ jupyter-releaser = "jupyter_releaser.cli:main"
 
 [tool.hatch.version]
 path = "jupyter_releaser/__init__.py"
+validate-bump = false
 
 [tool.hatch.envs.docs]
 features = ["docs"]
@@ -88,6 +89,9 @@ test = "python -m pytest $ARGS --cov-fail-under 80 {args}"
 
 [tool.jupyter-releaser.hooks]
 after-populate-release = "bash ./.github/scripts/bump_tag.sh"
+
+[tool.jupyter-releaser.options]
+post-version-spec = "dev"
 
 [tool.pytest.ini_options]
 addopts = "-raXs --durations 10 --color=yes --doctest-modules"

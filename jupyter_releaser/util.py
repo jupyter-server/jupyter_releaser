@@ -63,7 +63,7 @@ def run(cmd, **kwargs):
     """Run a command as a subprocess and get the output as a string"""
     quiet_error = kwargs.pop("quiet_error", False)
     show_cwd = kwargs.pop("show_cwd", False)
-    quiet = kwargs.pop("quiet", False)
+    quiet = kwargs.get("quiet", False)
     echo = kwargs.pop("echo", False)
 
     if echo:
@@ -78,7 +78,6 @@ def run(cmd, **kwargs):
         # subprocess methods
         return _run_win(cmd, **kwargs)
 
-    quiet = kwargs.get("quiet")
     kwargs.setdefault("check", True)
 
     try:
@@ -281,18 +280,39 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):
     # Add some convenience options on top of "tbump" and "hatch"
     if "tbump" in version_cmd or "hatch" in version_cmd:
         v = parse_version(get_version())
+        log(f"Current version was: {v}")
         assert isinstance(v, Version)
 
         if v.is_devrelease:
-            # bump from the version in the changelog.
-            if version_spec in ["patch", "next"]:
-                raise ValueError(
-                    "We do not support 'patch' or 'next' when dev versions are used, please use an explicit version."
-                )
+            # bump from the version in the changelog unless the spec is dev.
+            # Import here to avoid circular import.
+            from jupyter_releaser.changelog import extract_current_version
 
-            # Drop the dev portion and move to the minor release.
+            try:
+                vc = parse_version(extract_current_version(changelog_path))
+                log(f"Changelog version was: {vc}")
+                assert isinstance(vc, Version)
+            except ValueError:
+                vc = v
+
+            if version_spec in ["patch", "next"]:
+                if vc.is_prerelease:
+                    if vc.is_devrelease:
+                        # Bump to the next dev release.
+                        assert vc.dev is not None
+                        version_spec = f"{vc.major}.{vc.minor}.{vc.micro}{vc.dev}{vc.dev + 1}"
+                    else:
+                        assert vc.pre is not None
+                        # Bump to the next prerelease.
+                        version_spec = f"{vc.major}.{vc.minor}.{vc.micro}{vc.pre[0]}{vc.pre[1] + 1}"
+
+                else:
+                    # Bump to the next micro.
+                    version_spec = f"{vc.major}.{vc.minor}.{vc.micro + 1}"
+
+            # Move to the minor release
             elif version_spec == "minor":
-                version_spec = f"{v.major}.{v.minor}.{v.micro}"
+                version_spec = f"{vc.major}.{v.minor+1}.0"
 
             # Bump to the next dev version.
             elif version_spec == "dev":
@@ -300,9 +320,13 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):
                 version_spec = f"{v.major}.{v.minor}.{v.micro}.dev{v.dev + 1}"
 
         else:
-            # Bump to next minor for dev.
+            # Handle dev version spec.
             if version_spec == "dev":
-                version_spec = f"{v.major}.{v.minor + 1}.0.dev0"
+                if v.pre:
+                    version_spec = f"{v.major}.{v.minor}.{v.micro}.dev0"
+                # Bump to next minor dev.
+                else:
+                    version_spec = f"{v.major}.{v.minor + 1}.0.dev0"
 
             # For next, go to next prerelease or patch if it is a final version.
             elif version_spec == "next":
@@ -321,7 +345,7 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):
                 version_spec = f"{v.major}.{v.minor + 1}.0"
 
     # Bump the version
-    run(f"{version_cmd} {version_spec}")
+    run(f"{version_cmd} {version_spec}", echo=True)
 
     return get_version()
 
