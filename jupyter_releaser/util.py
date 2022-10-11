@@ -395,10 +395,11 @@ def latest_draft_release(gh, branch=None):
 
 
 def actions_output(name, value):
-    "Print the special GitHub Actions `::set-output` line for `name::value`"
+    """Handle setting an action output on GitHub"""
     log(f"\n\nSetting output {name}={value}")
-    if "GITHUB_ACTIONS" in os.environ:
-        log(f"::set-output name={name}::{value}")
+    if "GITHUB_ENV" in os.environ:
+        with open("GITHUB_ENV", "wa") as fid:
+            fid.write(f"{name}={value}\n")
 
 
 def get_latest_tag(source, since_last_stable=False):
