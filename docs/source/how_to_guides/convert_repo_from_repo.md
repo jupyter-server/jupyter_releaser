@@ -14,11 +14,18 @@ See [checklist](#Checklist-for-Adoption) below for details:
 
 ## Checklist for Adoption
 
+- [ ] Add a GitHub [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token), preferably from a "machine user" GitHub
+      account that has write access to the repository. The token will need "public_repo", and "repo:status" permissions. Save the token as `ADMIN_GITHUB_TOKEN`
+      in the [repository secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository). We need this
+      access token to allow for branch protection rules, which block the pushing
+      of commits when using the `GITHUB_TOKEN`, even when run from an admin user
+      account.
 - [ ] Add access token for the [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github) stored as `PYPI_TOKEN`.
       _Note_ For security reasons, it is recommended that you scope the access
       to a single repository. Additionally, this token should belong to a
-      bot account and not a single user.
-- [ ] If needed, add access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens), saved as `NPM_TOKEN`.
+      machine account and not a user account.
+- [ ] If needed, add access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens), saved as `NPM_TOKEN`. Again this should
+      be created using a machine account that only has publish access.
 - [ ] Ensure that only trusted users with 2FA have admin access to the
       repository, since they will be able to trigger releases.
 - [ ] Switch to Markdown Changelog
@@ -47,17 +54,19 @@ if match["rest"]:
 version_info = tuple(parts)
 ```
 
+- If you need to keep node and python versions in sync, use [hatch-nodejs-version](https://github.com/agoose77/hatch-nodejs-version). See [nbformat](https://github.com/jupyter/nbformat/blob/main/pyproject.toml) for example.
+
 - [ ] Add a GitHub Actions CI step to run the `check_release` action. For example:
 
 ```yaml
 - name: Check Release
-  if: ${{ matrix.python-version == '3.9' }}
-  uses: jupyter-server/jupyter_releaser/.github/actions/check-release@v1
+  uses: jupyter-server/jupyter_releaser/.github/actions/check-release@v2
   with:
     token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-_Note_ The check release action needs `contents: write` [permission](https://docs.github.com/en/actions/reference/authentication-in-a-workflow#modifying-the-permissions-for-the-github_token).
+- This should be run on `push` and `pull` request events. You can copy
+  the `check-release.yml` from this repo as an example.
 
 - [ ] If you would like the release assets to be uploaded as artifacts, add the following step after the `check_release` action:
 
@@ -72,7 +81,7 @@ _Note_ The check release action needs `contents: write` [permission](https://doc
 - [ ] Add a workflow that uses the [`enforce-label`](https://github.com/jupyterlab/maintainer-tools#enforce-labels) action from `jupyterlab/maintainer-tools` to ensure that all PRs have on of the triage labels used to
       categorize the changelog.
 
-- [ ] Update or add `RELEASE.md` that describes the onboarding and release process, e.g.
+- [ ] Update or add `RELEASE.md` that describes the onboarding and release process, e.g. [jupyter_server](https://github.com/jupyter-server/jupyter_server/blob/main/RELEASE.md).
 
 - [ ] Copy `prep-release.yml` and `publish-release.yml` from the `example-workflows` folder in this repository.
 
