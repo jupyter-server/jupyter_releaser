@@ -702,7 +702,7 @@ def ensure_mock_github():
         import fastapi  # noqa
         import univcorn  # type: ignore  # noqa
     except ImportError:
-        run(f"{python} -m pip install fastapi uvicorn")
+        run(f"'{python}' -m pip install fastapi uvicorn")
 
     proc = subprocess.Popen([python, "-m", "uvicorn", "jupyter_releaser.mock_github:app"])
 
