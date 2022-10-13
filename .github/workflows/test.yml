@@ -4,6 +4,10 @@ on:
     branches: ["main"]
   pull_request:
 
+defaults:
+  run:
+    shell: bash -eux {0}
+
 jobs:
   # Run "pre-commit run --all-files --hook-stage=manual"
   pre-commit:
@@ -28,7 +32,6 @@ jobs:
 
   check-links:
     runs-on: ubuntu-20.04
-
     steps:
       - uses: actions/checkout@v2
       - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
@@ -42,35 +45,34 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.8", "3.10"]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Setup
-        uses: ./.github/actions/common
-
-      - name: Install the Test dependencies
-        run: |
-          pip install -e .[test] codecov
+      - uses: actions/checkout@v2
+      - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
 
       - name: Run the tests with coverage on Ubuntu
         if: ${{ matrix.os == 'ubuntu-latest' }}
         run: |
-          python -m pytest -vv --cov jupyter_releaser --cov-branch --cov-report term-missing:skip-covered
+          hatch run cov:test
+          pip install codecov
+          codecov
 
-      - name: Run the tests on Windows and macOS
+      - name: Run the tests on Windows and MacOS
         if: ${{ matrix.os != 'ubuntu-latest' }}
-        run: |
-          python -m pytest -vv -s
+        run: hatch run test:test -s
 
-      - name: Verify the Generate Changelog Action
-        if: ${{ matrix.os == 'ubuntu' }}
-        env:
+  generate-changelog:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v2
+      - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
+      - env:
           GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RH_REPOSITORY: jupyter-server/jupyter_releaser
           RH_SINCE: v0.10.2
           RH_UNTIL: v0.10.3
         run: |
           set -eux
+          pip install -e .
           python -m jupyter_releaser.actions.generate-changelog
           cat CHANGELOG_ENTRY.md
           # Check for version entry contents
@@ -85,55 +87,19 @@ jobs:
           python -m jupyter_releaser.actions.generate-changelog
           cat CHANGELOG_ENTRY.md
 
-      - name: Coverage
-        run: |
-          codecov
-
   docs:
     runs-on: ubuntu-20.04
     timeout-minutes: 10
-    defaults:
-      run:
-        shell: bash -l {0}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Setup
-        uses: ./.github/actions/common
-
-      - name: Setup conda
-        uses: conda-incubator/setup-miniconda@v2
-        with:
-          auto-update-conda: true
-          activate-environment: jupyter_releaser_documentation
-          environment-file: docs/environment.yml
-          python-version: "3.10"
-          auto-activate-base: false
-
-      - name: Cache conda
-        uses: actions/cache@v2
-        with:
-          path: ~/conda_pkgs_dir
-          key: ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{
-            hashFiles('docs/environment.yml') }}
-
-      - name: Build docs
-        run: |
-          set -eux
-          pip install .
-          pushd docs
-          make html
-          popd
+      - uses: actions/checkout@v2
+      - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
+      - run: hatch run docs:build
 
   check_local_actions:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Setup
-        uses: ./.github/actions/common
+      - uses: actions/checkout@v2
+      - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
 
       - name: prep-release
         uses: ./.github/actions/prep-release

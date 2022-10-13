@@ -4,7 +4,7 @@ Follow the steps below to convert a repository to use Jupyter Releaser for relea
 
 ## Prerequisites
 
-See [checklist](#Checklist-for-Adoption) below for details:
+See checklist below for details:
 
 - Markdown changelog
 - Bump version configuration (if using Python), for example [tbump](https://github.com/dmerejkowsky/tbump)
@@ -94,7 +94,7 @@ _Note_ The check release action needs `contents: write` [permission](https://doc
 
 - [ ] Set up a fork of `jupyter-releaser` if you have not yet done so.
 - [ ] Run through the release process, targeting this repo and the appropriate branch
-- [ ] Optionally add [configuration](#Configuration) to the target repository if non-standard options or hooks are needed.
+- [ ] Optionally add configuration to the target repository if non-standard options or hooks are needed.
 - [ ] If desired, add `check_release` job, changelog, and `tbump` support to other active release branches
 - [ ] Try out the `Draft Changelog` and `Draft Release` process against a fork of the target repo first so you don't accidentally push tags and GitHub releases to the source repository.
 - [ ] Try the `Publish Release` process using a prerelease version before publishing a final version.

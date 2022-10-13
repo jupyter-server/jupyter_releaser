@@ -26,16 +26,14 @@ jobs:
       matrix:
         python-version: ["3.10"]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Setup
-        uses: ./.github/actions/common
-
-      - name: Install the Extra Python dependencies
+      - uses: actions/checkout@v2
+      - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
+      - name: Install Dependencies
+        shell: bash
         run: |
           sudo apt-get install pandoc
-          pip install pypandoc
+          pip install -e .
+          pip install pandoc
 
       - name: Generate the Changelog
         env:
