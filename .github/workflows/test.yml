@@ -46,18 +46,21 @@ jobs:
         python-version: ["3.8", "3.10"]
     steps:
       - uses: actions/checkout@v2
-      - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
+      - uses: actions/python-setup@v3
 
       - name: Run the tests with coverage on Ubuntu
         if: ${{ matrix.os == 'ubuntu-latest' }}
         run: |
+          pipx install hatch
           hatch run cov:test
           pip install codecov
           codecov
 
       - name: Run the tests on Windows and MacOS
         if: ${{ matrix.os != 'ubuntu-latest' }}
-        run: hatch run test:test -s
+        run: |
+          pipx install hatch
+          hatch run test:test -s
 
   generate-changelog:
     runs-on: ubuntu-20.04
