@@ -59,7 +59,7 @@ jobs:
       - name: Run the tests on Windows and MacOS
         if: ${{ matrix.os != 'ubuntu-latest' }}
         run: |
-          pipx install hatch
+          pip install hatch
           hatch run test:test -s
 
   generate-changelog:
