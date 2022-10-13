@@ -46,7 +46,7 @@ jobs:
         python-version: ["3.8", "3.10"]
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/python-setup@v3
+      - uses: actions/setup-python@v3
 
       - name: Run the tests with coverage on Ubuntu
         if: ${{ matrix.os == 'ubuntu-latest' }}
