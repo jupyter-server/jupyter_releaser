@@ -411,8 +411,7 @@ def prep_git(ref, branch, repo, auth, username, url):
     repo = repo or util.get_repo()
 
     try:
-        util.run("git config user.email")
-        has_git_config = True
+        has_git_config = util.run("git config user.email").strip()
     except Exception:
         has_git_config = False
 
