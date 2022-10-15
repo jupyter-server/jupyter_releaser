@@ -8,6 +8,9 @@ defaults:
   run:
     shell: bash -eux {0}
 
+env:
+  PYTHONDONTWRITEBYTECODE: 1
+
 jobs:
   # Run "pre-commit run --all-files --hook-stage=manual"
   pre-commit:

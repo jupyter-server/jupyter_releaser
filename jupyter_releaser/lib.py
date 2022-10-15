@@ -248,7 +248,8 @@ def populate_release(
 
 def delete_release(auth, release_url, dry_run=False):
     """Delete a draft GitHub release by url to the release page"""
-    match = re.match(util.RELEASE_HTML_PATTERN, release_url)
+    pattern = util.RELEASE_HTML_PATTERN % util.get_mock_github_url()
+    match = re.match(pattern, release_url)
     match = match or re.match(util.RELEASE_API_PATTERN, release_url)
     if not match:
         raise ValueError(f"Release url is not valid: {release_url}")
@@ -410,7 +411,7 @@ def prep_git(ref, branch, repo, auth, username, url):
     repo = repo or util.get_repo()
 
     try:
-        util.run("git config --global user.email")
+        util.run("git config user.email")
         has_git_config = True
     except Exception:
         has_git_config = False
@@ -419,10 +420,8 @@ def prep_git(ref, branch, repo, auth, username, url):
         # Default to the GitHub Actions bot
         # https://github.community/t/github-actions-bot-email-address/17204/6
         git_user_name = username or "41898282+github-actions[bot]"
-        util.run(
-            f'git config --global user.email "{git_user_name}@users.noreply.github.com"', echo=True
-        )
-        util.run(f'git config --global user.name "{git_user_name}"', echo=True)
+        util.run(f'git config user.email "{git_user_name}@users.noreply.github.com"', echo=True)
+        util.run(f'git config user.name "{git_user_name}"', echo=True)
 
     # Set up the repository
     checkout_dir = os.environ.get("RH_CHECKOUT_DIR", util.CHECKOUT_NAME)

@@ -98,7 +98,7 @@ def test_prep_git_full(py_package, tmp_path, mocker, runner):
     mock_run.assert_has_calls(
         [
             call("echo before-prep-git >> 'log.txt'"),
-            call("git config --global user.email"),
+            call("git config user.email"),
             call("git init .jupyter_releaser_checkout"),
             call("git remote add origin https://snuffy:abc123@github.com/baz/bar.git"),
             call(f"{GIT_FETCH_CMD} --tags --force"),

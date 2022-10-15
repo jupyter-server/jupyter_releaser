@@ -20,6 +20,7 @@ from glob import glob
 from io import BytesIO
 from pathlib import Path
 from subprocess import PIPE, CalledProcessError, check_output
+from urllib.parse import urlparse
 
 import requests
 import toml
@@ -45,13 +46,12 @@ BUF_SIZE = 65536
 TBUMP_CMD = "pipx run tbump --non-interactive --only-patch"
 
 CHECKOUT_NAME = ".jupyter_releaser_checkout"
-
-MOCK_GITHUB_URL = "http://127.0.0.1:8000"
-RELEASE_HTML_PATTERN = f"(?:https://github.com|{MOCK_GITHUB_URL})/(?P<owner>[^/]+)/(?P<repo>[^/]+)/releases/tag/(?P<tag>.*)"
+RELEASE_HTML_PATTERN = (
+    "(?:https://github.com|%s)/(?P<owner>[^/]+)/(?P<repo>[^/]+)/releases/tag/(?P<tag>.*)"
+)
 RELEASE_API_PATTERN = (
     "https://api.github.com/repos/(?P<owner>[^/]+)/(?P<repo>[^/]+)/releases/tags/(?P<tag>.*)"
 )
-
 
 SCHEMA = files("jupyter_releaser").joinpath("schema.json").read_text()
 SCHEMA = json.loads(SCHEMA)
@@ -468,7 +468,8 @@ def read_config():
 
 def parse_release_url(release_url):
     """Parse a release url into a regex match"""
-    match = re.match(RELEASE_HTML_PATTERN, release_url)
+    pattern = RELEASE_HTML_PATTERN % get_mock_github_url()
+    match = re.match(pattern, release_url)
     match = match or re.match(RELEASE_API_PATTERN, release_url)
     if not match:
         raise ValueError(f"Release url is not valid: {release_url}")
@@ -686,13 +687,20 @@ def get_remote_name(dry_run):
     return "test"
 
 
+def get_mock_github_url():
+    port = os.environ.get("MOCK_GITHUB_PORT", "8000")
+    return f"http://127.0.0.1:{port}"
+
+
 def ensure_mock_github():
     """Check for or start a mock github server."""
-    core.GH_HOST = MOCK_GITHUB_URL
+    core.GH_HOST = host = get_mock_github_url()
+    port = urlparse(host).port
+
     log("Ensuring mock GitHub")
     # First see if it is already running.
     try:
-        requests.get(MOCK_GITHUB_URL)
+        requests.get(host)
         return
     except requests.ConnectionError:
         pass
@@ -705,7 +713,9 @@ def ensure_mock_github():
     except ImportError:
         run(f"'{python}' -m pip install fastapi uvicorn")
 
-    proc = subprocess.Popen([python, "-m", "uvicorn", "jupyter_releaser.mock_github:app"])
+    proc = subprocess.Popen(
+        [python, "-m", "uvicorn", "jupyter_releaser.mock_github:app", "--port", str(port)]
+    )
 
     try:
         ret = proc.wait(1)
@@ -718,7 +728,7 @@ def ensure_mock_github():
 
     while 1:
         try:
-            requests.get(MOCK_GITHUB_URL)
+            requests.get(host)
             break
         except requests.ConnectionError:
             pass

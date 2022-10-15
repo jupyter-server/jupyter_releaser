@@ -10,7 +10,7 @@ from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from jupyter_releaser.util import MOCK_GITHUB_URL
+from jupyter_releaser.util import get_mock_github_url
 
 app = FastAPI()
 
@@ -131,9 +131,10 @@ async def create_a_release(owner: str, repo: str, request: Request) -> Release:
     """https://docs.github.com/en/rest/releases/releases#create-a-release"""
     release_id = uuid.uuid4().int
     data = await request.json()
-    url = f"{MOCK_GITHUB_URL}/repos/{owner}/{repo}/releases/{release_id}"
-    html_url = f"{MOCK_GITHUB_URL}/{owner}/{repo}/releases/tag/{data['tag_name']}"
-    upload_url = f"{MOCK_GITHUB_URL}/repos/{owner}/{repo}/releases/{release_id}/assets"
+    base_url = get_mock_github_url()
+    url = f"{base_url}/repos/{owner}/{repo}/releases/{release_id}"
+    html_url = f"{base_url}/{owner}/{repo}/releases/tag/{data['tag_name']}"
+    upload_url = f"{base_url}/repos/{owner}/{repo}/releases/{release_id}/assets"
     fmt_str = r"%Y-%m-%dT%H:%M:%SZ"
     created_at = datetime.datetime.utcnow().strftime(fmt_str)
     model = Release(
@@ -164,6 +165,7 @@ async def update_a_release(owner: str, repo: str, release_id: int, request: Requ
 @app.post("/repos/{owner}/{repo}/releases/{release_id}/assets")
 async def upload_a_release_asset(owner: str, repo: str, release_id: int, request: Request) -> None:
     """https://docs.github.com/en/rest/releases/assets#upload-a-release-asset"""
+    base_url = get_mock_github_url()
     model = releases[str(release_id)]
     asset_id = uuid.uuid4().int
     name = request.query_params["name"]
@@ -171,7 +173,7 @@ async def upload_a_release_asset(owner: str, repo: str, release_id: int, request
         async for chunk in request.stream():
             fid.write(chunk)
     headers = request.headers
-    url = f"{MOCK_GITHUB_URL}/static/{asset_id}"
+    url = f"{base_url}/static/{asset_id}"
     asset = Asset(
         id=asset_id,
         name=name,
