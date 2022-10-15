@@ -410,18 +410,6 @@ def prep_git(ref, branch, repo, auth, username, url):
     """Set up git"""
     repo = repo or util.get_repo()
 
-    try:
-        has_git_config = util.run("git config user.email").strip()
-    except Exception:
-        has_git_config = False
-
-    if not has_git_config:
-        # Default to the GitHub Actions bot
-        # https://github.community/t/github-actions-bot-email-address/17204/6
-        git_user_name = username or "41898282+github-actions[bot]"
-        util.run(f'git config user.email "{git_user_name}@users.noreply.github.com"', echo=True)
-        util.run(f'git config user.name "{git_user_name}"', echo=True)
-
     # Set up the repository
     checkout_dir = os.environ.get("RH_CHECKOUT_DIR", util.CHECKOUT_NAME)
     checkout_exists = False
@@ -501,6 +489,18 @@ def prep_git(ref, branch, repo, auth, username, url):
     # npm install otherwise
     elif util.PACKAGE_JSON.exists():
         util.run("npm install")
+
+    try:
+        has_git_config = util.run("git config user.email").strip()
+    except Exception:
+        has_git_config = False
+
+    if not has_git_config:
+        # Default to the GitHub Actions bot
+        # https://github.community/t/github-actions-bot-email-address/17204/6
+        git_user_name = username or "41898282+github-actions[bot]"
+        util.run(f'git config user.email "{git_user_name}@users.noreply.github.com"', echo=True)
+        util.run(f'git config user.name "{git_user_name}"', echo=True)
 
     os.chdir(orig_dir)
 
