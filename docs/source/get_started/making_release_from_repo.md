@@ -15,7 +15,7 @@ already uses Jupyter Releaser using workflows on its own repository.
 - Click on the "Run workflow" dropdown button on the right
 - Fill in the appropriate parameters
 
-  ![Prep Release Workflow Dialog](../images/draft_changelog.png)
+  ![Prep Release Workflow Dialog](../images/prep_release_repo.png)
 
   - The "New Version Spec" will usually be the full version (e.g. 0.7.1). Repos using `tbump` can also use the "next" or "patch"
     option, which will bump the micro version (or the build version in the case of a prerelease). The "minor" option allows projects using "tbump" to bump
@@ -29,13 +29,13 @@ already uses Jupyter Releaser using workflows on its own repository.
   - The workflow will create a draft GitHub release to the target
     repository and branch, with the draft changelog contents.
 
-  ![Prep Release Changelog Workflow Next Step](../images/draft_changelog_next_step.png)
+  ![Prep Release Changelog Workflow Next Step](../images/prep_release_next_step.png)
 
 ## Review Changelog
 
 - Go to the draft GitHub Release created by the "Prep Release" workflow
 
-  ![Prep Release Workflow Pull Request](../images/draft_changelog_pr.png)
+  ![Draft GitHub Release](../images/draft_github_release.png)
 
 - Review the contents, fixing typos or otherwise editing as necessary.
 - If there is a section called "Other Merged PRs", it means those PRs did not have one of the appropriate labels. If desired, you can go label those PRs and then re-run the workflow, or move the entries manually to the desired section. The appropriate labels are: bug, maintenance, enhancement, feature, and documentation.
@@ -48,7 +48,7 @@ already uses Jupyter Releaser using workflows on its own repository.
 - (Optional) Fill in draft GitHub Release URL given by the Changelog PR.
   If you leave it blank it will use the most recent draft GitHub release.
 
-  ![Publish Release Workflow Dialog](../images/draft_release.png)
+  ![Publish Release Workflow Dialog](../images/publish_release_repo.png)
 
 - The workflow will finish the GitHub release and publish assets to the appropriate registries.
 - If the workflow is not targeting the default branch, it will also generate a forward-port pull request for the changelog entry to the default branch.
