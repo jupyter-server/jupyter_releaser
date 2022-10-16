@@ -95,7 +95,7 @@ after-populate-release = "bash ./.github/scripts/bump_tag.sh"
 post-version-spec = "dev"
 
 [tool.pytest.ini_options]
-addopts = "-raXs --durations 10 --color=yes --doctest-modules -p no:pastebin -p no:nose -n auto"
+addopts = "-raXs --durations 10 --color=yes --doctest-modules -p no:pastebin -p no:nose"
 testpaths = [
     "jupyter_releaser/tests/"
 ]
