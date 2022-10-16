@@ -99,7 +99,7 @@ def get_pypi_token(release_url, python_package):
     pypi_token_map = os.environ.get("PYPI_TOKEN_MAP", "").replace(r"\n", "\n")
     if pypi_token_map and release_url:
         parts = (
-            release_url.replace(util.MOCK_GITHUB_URL + "/", "")
+            release_url.replace(util.get_mock_github_url() + "/", "")
             .replace("https://github.com/", "")
             .split("/")
         )

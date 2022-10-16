@@ -8,6 +8,9 @@ defaults:
   run:
     shell: bash -eux {0}
 
+env:
+  PYTHONDONTWRITEBYTECODE: 1
+
 jobs:
   # Run "pre-commit run --all-files --hook-stage=manual"
   pre-commit:
@@ -51,13 +54,13 @@ jobs:
       - name: Run the tests with coverage on Ubuntu
         if: ${{ matrix.os == 'ubuntu-latest' }}
         run: |
-          hatch run cov:test
+          hatch run cov:test -n auto || hatch run test:test --lf
           pip install codecov
           codecov
 
       - name: Run the tests on Windows and MacOS
         if: ${{ matrix.os != 'ubuntu-latest' }}
-        run: hatch run test:test -s
+        run: hatch run test:test -s -n auto || hatch run test:test -s --lf
 
   generate-changelog:
     runs-on: ubuntu-20.04

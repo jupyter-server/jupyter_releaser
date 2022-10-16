@@ -18,6 +18,15 @@ from jupyter_releaser.util import ensure_mock_github, run
 
 
 @fixture(autouse=True)
+def github_port(worker_id):
+    # The worker id will be of the form "gw123" unless xdist is disabled,
+    # in which case it will be "master".
+    if worker_id == "master":
+        return
+    os.environ["MOCK_GITHUB_PORT"] = str(8000 + int(worker_id[2:]))
+
+
+@fixture(autouse=True)
 def mock_env(mocker):
     """Clear unwanted environment variables"""
     # Anything that starts with RH_ or GITHUB_
@@ -29,13 +38,6 @@ def mock_env(mocker):
                 del env[key]
 
     mocker.patch.dict(os.environ, env, clear=True)
-
-    try:
-        run("git config --global user.name")
-    except Exception:
-        run("git config --global user.name snuffy")
-        run("git config --global user.email snuffy@sesame.com")
-
     yield
 
 

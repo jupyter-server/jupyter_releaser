@@ -58,6 +58,7 @@ test = [
     "pytest>=7.0",
     "pytest-cov",
     "pytest-mock",
+    "pytest-xdist[psutil]",
     "uvicorn"
 ]
 
@@ -94,7 +95,7 @@ after-populate-release = "bash ./.github/scripts/bump_tag.sh"
 post-version-spec = "dev"
 
 [tool.pytest.ini_options]
-addopts = "-raXs --durations 10 --color=yes --doctest-modules"
+addopts = "-raXs --durations 10 --color=yes --doctest-modules -p no:pastebin -p no:nose"
 testpaths = [
     "jupyter_releaser/tests/"
 ]
