@@ -13,7 +13,6 @@ from pathlib import Path
 from subprocess import CalledProcessError
 
 import mdformat
-import toml
 from packaging.version import parse as parse_version
 from pkginfo import SDist, Wheel
 
