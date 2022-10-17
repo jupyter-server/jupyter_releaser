@@ -13,7 +13,6 @@ from pathlib import Path
 from subprocess import CalledProcessError
 
 import mdformat
-import toml
 from packaging.version import parse as parse_version
 from pkginfo import SDist, Wheel
 
@@ -470,25 +469,6 @@ def prep_git(ref, branch, repo, auth, username, url):
         util.run("git symbolic-ref -q HEAD")
     except Exception:
         util.run(f"git switch -c {branch}")
-
-    # Install the package
-    # install python package in editable mode with dev and test deps
-    if util.PYPROJECT.exists():
-        # check the package can be installed first
-        text = util.PYPROJECT.read_text(encoding="utf-8")
-        data = toml.loads(text)
-        if data.get("build-system"):
-            util.run('pip install -q -e ".[dev,test]"')
-
-    # prefer yarn if yarn lock exists
-    elif util.YARN_LOCK.exists():
-        if not shutil.which("yarn"):
-            util.run("npm install -g yarn")
-        util.run("yarn")
-
-    # npm install otherwise
-    elif util.PACKAGE_JSON.exists():
-        util.run("npm install")
 
     try:
         has_git_config = util.run("git config user.email").strip()
