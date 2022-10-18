@@ -2,6 +2,36 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.0.0a6
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...75dbb5c0fe0c5182706c4c39acbaf7570aa171a3))
+
+### Bugs fixed
+
+- Do no install the package by default [#449](https://github.com/jupyter-server/jupyter_releaser/pull/449) ([@blink1073](https://github.com/blink1073))
+- Fix variable name for GitHub output [#444](https://github.com/jupyter-server/jupyter_releaser/pull/444) ([@blink1073](https://github.com/blink1073))
+
+### Maintenance and upkeep improvements
+
+- Remove flake8 file [#447](https://github.com/jupyter-server/jupyter_releaser/pull/447) ([@blink1073](https://github.com/blink1073))
+- Improve test speed [#445](https://github.com/jupyter-server/jupyter_releaser/pull/445) ([@blink1073](https://github.com/blink1073))
+- Update handling of action outputs [#442](https://github.com/jupyter-server/jupyter_releaser/pull/442) ([@blink1073](https://github.com/blink1073))
+- Use hatch envs and clean up workflows [#436](https://github.com/jupyter-server/jupyter_releaser/pull/436) ([@blink1073](https://github.com/blink1073))
+
+### Documentation improvements
+
+- Update conversion instructions [#450](https://github.com/jupyter-server/jupyter_releaser/pull/450) ([@blink1073](https://github.com/blink1073))
+- Update screenshots for Version 2 [#446](https://github.com/jupyter-server/jupyter_releaser/pull/446) ([@blink1073](https://github.com/blink1073))
+- Update how-to guides [#443](https://github.com/jupyter-server/jupyter_releaser/pull/443) ([@blink1073](https://github.com/blink1073))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-10-10&to=2022-10-18&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-10-10..2022-10-18&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2022-10-10..2022-10-18&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2022-10-10..2022-10-18&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.0.0a4
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...dac36eb6a14efaaa582fa9ce11782755b5c37c56))
@@ -15,8 +45,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-10-07&to=2022-10-07&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-10-07..2022-10-07&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.0.0a3
 
