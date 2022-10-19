@@ -398,7 +398,7 @@ def actions_output(name, value):
     """Handle setting an action output on GitHub"""
     log(f"\n\nSetting output {name}={value}")
     if "GITHUB_OUTPUT" in os.environ:
-        with open("GITHUB_OUTPUT", "a") as fid:
+        with open(os.environ["GITHUB_OUTPUT"], "a") as fid:
             fid.write(f"{name}={value}\n")
 
 
