@@ -2,11 +2,25 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.0.0a8
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...dfe1c9f37b303e740feec182df337c208997e2a8))
+
+### Bugs fixed
+
+- Fix handling of `GITHUB_OUTPUT` [#451](https://github.com/jupyter-server/jupyter_releaser/pull/451) ([@jtpio](https://github.com/jtpio))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-10-19&to=2022-10-19&type=c))
+
+[@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2022-10-19..2022-10-19&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.0.0a7
 
 No merged PRs
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.0.0a6
 
