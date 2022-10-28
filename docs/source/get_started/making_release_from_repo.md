@@ -17,19 +17,20 @@ already uses Jupyter Releaser using workflows on its own repository.
 
   ![Prep Release Workflow Dialog](../images/prep_release_repo.png)
 
-  - The "New Version Spec" will usually be the full version (e.g. 0.7.1). Repos using `tbump` can also use the "next" or "patch"
-    option, which will bump the micro version (or the build version in the case of a prerelease). The "minor" option allows projects using "tbump" to bump
-    to the next minor version directly. Note: The "next" and "patch" options
-    are not available when using dev versions, you must use explicit versions
+- The "New Version Spec" will usually be the full version (e.g. 0.7.1). Repos using `tbump` can also use:
+  - "next" or "patch" option, which will bump the micro version (or the build version in the case of a prerelease).
+    Note: The "next" and "patch" options are not available when using dev versions, you must use explicit versions
     instead.
-  - Use the "since" field to select PRs prior to the latest tag to include in the release
-  - Type "true" in the "since the last stable git tag" if you would like to include PRs since the last non-prerelease version tagged on the target repository and branch.
-  - The additional "Post Version Spec" field should be used if your repo uses a dev version (e.g. 0.7.0.dev0)
-  - The workflow will use the GitHub API to find the relevant pull requests and make an appropriate changelog entry.
-  - The workflow will create a draft GitHub release to the target
-    repository and branch, with the draft changelog contents.
+  - "minor" option, which will bump to the next minor version directly.
+  - "release" option, which will start making prereleases (a0, a1...)
+- Use the "since" field to select PRs prior to the latest tag to include in the release
+- Type "true" in the "since the last stable git tag" if you would like to include PRs since the last non-prerelease version tagged on the target repository and branch.
+- The additional "Post Version Spec" field should be used if your repo uses a dev version (e.g. 0.7.0.dev0)
+- The workflow will use the GitHub API to find the relevant pull requests and make an appropriate changelog entry.
+- The workflow will create a draft GitHub release to the target
+  repository and branch, with the draft changelog contents.
 
-  ![Prep Release Changelog Workflow Next Step](../images/prep_release_next_step.png)
+![Prep Release Changelog Workflow Next Step](../images/prep_release_next_step.png)
 
 ## Review Changelog
 
