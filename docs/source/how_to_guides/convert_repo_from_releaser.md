@@ -17,13 +17,15 @@ See checklist below for details:
 A. Prep the `jupyter_releaser` fork:
 
 - [ ] Clone this repository onto your GitHub user account.
+
 - [ ] Add a GitHub [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) with access to target GitHub repo to run
-      GitHub Actions, saved as `ADMIN_GITHUB_TOKEN` in the
-      [repository secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository).
-      The token will need "public_repo", and "repo:status" permissions.
+  GitHub Actions, saved as `ADMIN_GITHUB_TOKEN` in the
+  [repository secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository).
+  The token will need "public_repo", and "repo:status" permissions.
+
 - [ ] Add access token for the [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github) stored as `PYPI_TOKEN`.
-      _Note_ For security reasons, it is recommended that you scope the access
-      to a single repository, and use a variable called `PYPI_TOKEN_MAP` that is formatted as follows:
+  _Note_ For security reasons, it is recommended that you scope the access
+  to a single repository, and use a variable called `PYPI_TOKEN_MAP` that is formatted as follows:
 
   ```text
   owner1/repo1,token1
@@ -47,7 +49,7 @@ B. Prep target repository:
   - Note that [directives](https://myst-parser.readthedocs.io/en/latest/using/syntax.html#syntax-directives) can still be used
 - [ ] Add HTML start and end comment markers to Changelog file - see example in [CHANGELOG.md](https://github.com/jupyter-server/jupyter_releaser/blob/main/CHANGELOG.md) (view in raw mode)
 - [ ] We recommend using [hatch](https://hatch.pypa.io/latest/) for your
-      build system and for version handling.
+  build system and for version handling.
   - If previously providing `version_info` like `version_info = (1, 7, 0, '.dev', '0')`, use a pattern like the one below in your version file:
 
 ```toml
@@ -94,7 +96,7 @@ version_info = tuple(parts)
 ````
 
 - [ ] Add a workflow that uses the [`enforce-label`](https://github.com/jupyterlab/maintainer-tools#enforce-labels) action from `jupyterlab/maintainer-tools` to ensure that all PRs have on of the triage labels used to
-      categorize the changelog.
+  categorize the changelog.
 
 - [ ] Update or add `RELEASE.md` that describes the onboarding and release process, e.g. [jupyter_server](https://github.com/jupyter-server/jupyter_server/blob/main/RELEASE.md).
 
