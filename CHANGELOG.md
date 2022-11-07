@@ -2,6 +2,135 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.0.0
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v0.9.8...87903196bc2951c87f59882cac32c55579ea37f1))
+
+### Enhancements made
+
+- Simplify security handling [#434](https://github.com/jupyter-server/jupyter_releaser/pull/434) ([@blink1073](https://github.com/blink1073))
+- Handle Git Actor and Permissions [#429](https://github.com/jupyter-server/jupyter_releaser/pull/429) ([@blink1073](https://github.com/blink1073))
+- Better handling of git actor [#424](https://github.com/jupyter-server/jupyter_releaser/pull/424) ([@blink1073](https://github.com/blink1073))
+- Use "hatchling version" as a version command where applicable [#374](https://github.com/jupyter-server/jupyter_releaser/pull/374) ([@blink1073](https://github.com/blink1073))
+- Refactor and Simplify Workflows [#363](https://github.com/jupyter-server/jupyter_releaser/pull/363) ([@blink1073](https://github.com/blink1073))
+- Highlight next step using GitHub step summary [#357](https://github.com/jupyter-server/jupyter_releaser/pull/357) ([@fcollonval](https://github.com/fcollonval))
+- Use bare git for dry run [#356](https://github.com/jupyter-server/jupyter_releaser/pull/356) ([@blink1073](https://github.com/blink1073))
+- Use mock github when in dry run mode [#355](https://github.com/jupyter-server/jupyter_releaser/pull/355) ([@blink1073](https://github.com/blink1073))
+- Add mock github api [#352](https://github.com/jupyter-server/jupyter_releaser/pull/352) ([@blink1073](https://github.com/blink1073))
+- Fix pip install in git checkout [#319](https://github.com/jupyter-server/jupyter_releaser/pull/319) ([@blink1073](https://github.com/blink1073))
+- Add handling of pydist resource paths [#306](https://github.com/jupyter-server/jupyter_releaser/pull/306) ([@blink1073](https://github.com/blink1073))
+- Handle manual backport PRs [#303](https://github.com/jupyter-server/jupyter_releaser/pull/303) ([@blink1073](https://github.com/blink1073))
+- Add a utility to get the latest draft release for a given repo [#301](https://github.com/jupyter-server/jupyter_releaser/pull/301) ([@blink1073](https://github.com/blink1073))
+- Add ability to parse github release changelog [#298](https://github.com/jupyter-server/jupyter_releaser/pull/298) ([@blink1073](https://github.com/blink1073))
+- Use print groups and input types [#288](https://github.com/jupyter-server/jupyter_releaser/pull/288) ([@blink1073](https://github.com/blink1073))
+- Improve handling of dev versions [#287](https://github.com/jupyter-server/jupyter_releaser/pull/287) ([@blink1073](https://github.com/blink1073))
+- Add support for dynamic versions [#279](https://github.com/jupyter-server/jupyter_releaser/pull/279) ([@blink1073](https://github.com/blink1073))
+- Support static version in pyproject.toml [#275](https://github.com/jupyter-server/jupyter_releaser/pull/275) ([@blink1073](https://github.com/blink1073))
+- Add documentation label to changelog PR [#259](https://github.com/jupyter-server/jupyter_releaser/pull/259) ([@blink1073](https://github.com/blink1073))
+- Make twine check strict by default [#258](https://github.com/jupyter-server/jupyter_releaser/pull/258) ([@blink1073](https://github.com/blink1073))
+- Use a more efficient fetch [#257](https://github.com/jupyter-server/jupyter_releaser/pull/257) ([@blink1073](https://github.com/blink1073))
+- Add support for minor release [#256](https://github.com/jupyter-server/jupyter_releaser/pull/256) ([@blink1073](https://github.com/blink1073))
+- ignore package pytest config [#246](https://github.com/jupyter-server/jupyter_releaser/pull/246) ([@minrk](https://github.com/minrk))
+- Add configurable python target to check-python [#238](https://github.com/jupyter-server/jupyter_releaser/pull/238) ([@fcollonval](https://github.com/fcollonval))
+- Use the last line of the `python setup.py --version` command to get the Python version [#232](https://github.com/jupyter-server/jupyter_releaser/pull/232) ([@jtpio](https://github.com/jtpio))
+
+### Bugs fixed
+
+- Fix handling of `GITHUB_OUTPUT` [#451](https://github.com/jupyter-server/jupyter_releaser/pull/451) ([@jtpio](https://github.com/jtpio))
+- Do no install the package by default [#449](https://github.com/jupyter-server/jupyter_releaser/pull/449) ([@blink1073](https://github.com/blink1073))
+- Fix variable name for GitHub output [#444](https://github.com/jupyter-server/jupyter_releaser/pull/444) ([@blink1073](https://github.com/blink1073))
+- Allow dev versions [#437](https://github.com/jupyter-server/jupyter_releaser/pull/437) ([@blink1073](https://github.com/blink1073))
+- Fix handling of ensure sha [#435](https://github.com/jupyter-server/jupyter_releaser/pull/435) ([@blink1073](https://github.com/blink1073))
+- Use admin token [#431](https://github.com/jupyter-server/jupyter_releaser/pull/431) ([@blink1073](https://github.com/blink1073))
+- Try fixing admin handling [#430](https://github.com/jupyter-server/jupyter_releaser/pull/430) ([@blink1073](https://github.com/blink1073))
+- Fix ensure_sha [#427](https://github.com/jupyter-server/jupyter_releaser/pull/427) ([@blink1073](https://github.com/blink1073))
+- Stop erroring on ensure_sha for now [#426](https://github.com/jupyter-server/jupyter_releaser/pull/426) ([@blink1073](https://github.com/blink1073))
+- Revert "Better handling of git actor" [#425](https://github.com/jupyter-server/jupyter_releaser/pull/425) ([@blink1073](https://github.com/blink1073))
+- Add more debugging to ensure_sha [#422](https://github.com/jupyter-server/jupyter_releaser/pull/422) ([@blink1073](https://github.com/blink1073))
+- Another workflow fix [#418](https://github.com/jupyter-server/jupyter_releaser/pull/418) ([@blink1073](https://github.com/blink1073))
+- fix default registry again [#409](https://github.com/jupyter-server/jupyter_releaser/pull/409) ([@blink1073](https://github.com/blink1073))
+- Fix default twine registry [#407](https://github.com/jupyter-server/jupyter_releaser/pull/407) ([@blink1073](https://github.com/blink1073))
+- Fix handling of twine repository url [#403](https://github.com/jupyter-server/jupyter_releaser/pull/403) ([@blink1073](https://github.com/blink1073))
+- Fix handling of check manifest [#392](https://github.com/jupyter-server/jupyter_releaser/pull/392) ([@blink1073](https://github.com/blink1073))
+- Clean up handling of draft release metadata [#387](https://github.com/jupyter-server/jupyter_releaser/pull/387) ([@blink1073](https://github.com/blink1073))
+- Fix handling of fetch_draft_release param [#383](https://github.com/jupyter-server/jupyter_releaser/pull/383) ([@blink1073](https://github.com/blink1073))
+- Do not fetch draft release in check_changelog [#381](https://github.com/jupyter-server/jupyter_releaser/pull/381) ([@blink1073](https://github.com/blink1073))
+- Fix publish-release [#378](https://github.com/jupyter-server/jupyter_releaser/pull/378) ([@fcollonval](https://github.com/fcollonval))
+- Get repository from release url if given [#377](https://github.com/jupyter-server/jupyter_releaser/pull/377) ([@blink1073](https://github.com/blink1073))
+- Store ref in metadata file [#375](https://github.com/jupyter-server/jupyter_releaser/pull/375) ([@blink1073](https://github.com/blink1073))
+- Fix the input parameter since_last_stable when running a full release [#366](https://github.com/jupyter-server/jupyter_releaser/pull/366) ([@brichet](https://github.com/brichet))
+- Revert changes to make changelog pr [#364](https://github.com/jupyter-server/jupyter_releaser/pull/364) ([@blink1073](https://github.com/blink1073))
+- Fix changelog pr for dry run [#362](https://github.com/jupyter-server/jupyter_releaser/pull/362) ([@blink1073](https://github.com/blink1073))
+- Revert to using stash apply instead of merge [#360](https://github.com/jupyter-server/jupyter_releaser/pull/360) ([@fcollonval](https://github.com/fcollonval))
+- Revert changes to handle dev versions [#347](https://github.com/jupyter-server/jupyter_releaser/pull/347) ([@blink1073](https://github.com/blink1073))
+- Fix dev version handling in check release [#343](https://github.com/jupyter-server/jupyter_releaser/pull/343) ([@blink1073](https://github.com/blink1073))
+- Fix handling of versions when dev versions are used [#341](https://github.com/jupyter-server/jupyter_releaser/pull/341) ([@blink1073](https://github.com/blink1073))
+- Fix a bug when retrieving package version [#331](https://github.com/jupyter-server/jupyter_releaser/pull/331) ([@brichet](https://github.com/brichet))
+- Add hatchling handling [#329](https://github.com/jupyter-server/jupyter_releaser/pull/329) ([@blink1073](https://github.com/blink1073))
+- Check build-system before installing [#322](https://github.com/jupyter-server/jupyter_releaser/pull/322) ([@jtpio](https://github.com/jtpio))
+- Fix handling of nested resource files [#308](https://github.com/jupyter-server/jupyter_releaser/pull/308) ([@blink1073](https://github.com/blink1073))
+- Only run check-manifest if using setuptools [#302](https://github.com/jupyter-server/jupyter_releaser/pull/302) ([@blink1073](https://github.com/blink1073))
+- Use setup.py --version by default [#284](https://github.com/jupyter-server/jupyter_releaser/pull/284) ([@blink1073](https://github.com/blink1073))
+- Fix check_links on macOS [#282](https://github.com/jupyter-server/jupyter_releaser/pull/282) ([@blink1073](https://github.com/blink1073))
+- Fix listing of tags [#281](https://github.com/jupyter-server/jupyter_releaser/pull/281) ([@jtpio](https://github.com/jtpio))
+- Include explicit package data [#270](https://github.com/jupyter-server/jupyter_releaser/pull/270) ([@blink1073](https://github.com/blink1073))
+- forward python imports for checking with extract_release [#268](https://github.com/jupyter-server/jupyter_releaser/pull/268) ([@wolfv](https://github.com/wolfv))
+- Forwardport changelog before publishing github release [#265](https://github.com/jupyter-server/jupyter_releaser/pull/265) ([@blink1073](https://github.com/blink1073))
+- Create forwardport PR after publishing [#262](https://github.com/jupyter-server/jupyter_releaser/pull/262) ([@blink1073](https://github.com/blink1073))
+- Select first commit if there is no tags [#261](https://github.com/jupyter-server/jupyter_releaser/pull/261) ([@hbcarlos](https://github.com/hbcarlos))
+- Test empty changelog [#243](https://github.com/jupyter-server/jupyter_releaser/pull/243) ([@hbcarlos](https://github.com/hbcarlos))
+- Fix handling of doctest skip [#241](https://github.com/jupyter-server/jupyter_releaser/pull/241) ([@blink1073](https://github.com/blink1073))
+- Skip doctests when checking links [#239](https://github.com/jupyter-server/jupyter_releaser/pull/239) ([@blink1073](https://github.com/blink1073))
+- Add configurable python target to check-python [#238](https://github.com/jupyter-server/jupyter_releaser/pull/238) ([@fcollonval](https://github.com/fcollonval))
+
+### Maintenance and upkeep improvements
+
+- Maintenance cleanup [#457](https://github.com/jupyter-server/jupyter_releaser/pull/457) ([@blink1073](https://github.com/blink1073))
+- Remove flake8 file [#447](https://github.com/jupyter-server/jupyter_releaser/pull/447) ([@blink1073](https://github.com/blink1073))
+- Improve test speed [#445](https://github.com/jupyter-server/jupyter_releaser/pull/445) ([@blink1073](https://github.com/blink1073))
+- Update handling of action outputs [#442](https://github.com/jupyter-server/jupyter_releaser/pull/442) ([@blink1073](https://github.com/blink1073))
+- Use hatch envs and clean up workflows [#436](https://github.com/jupyter-server/jupyter_releaser/pull/436) ([@blink1073](https://github.com/blink1073))
+- Use global hatch if available [#432](https://github.com/jupyter-server/jupyter_releaser/pull/432) ([@blink1073](https://github.com/blink1073))
+- Switch to v2 tag [#419](https://github.com/jupyter-server/jupyter_releaser/pull/419) ([@blink1073](https://github.com/blink1073))
+- Fix action targets [#417](https://github.com/jupyter-server/jupyter_releaser/pull/417) ([@blink1073](https://github.com/blink1073))
+- Merge v2 into main [#415](https://github.com/jupyter-server/jupyter_releaser/pull/415) ([@blink1073](https://github.com/blink1073))
+- Use pipx for cli scripts and hatch for hatch version [#389](https://github.com/jupyter-server/jupyter_releaser/pull/389) ([@blink1073](https://github.com/blink1073))
+- More workflow cleanup [#380](https://github.com/jupyter-server/jupyter_releaser/pull/380) ([@blink1073](https://github.com/blink1073))
+- Clean up workflows [#379](https://github.com/jupyter-server/jupyter_releaser/pull/379) ([@blink1073](https://github.com/blink1073))
+- Fix flake8 v5 compat [#354](https://github.com/jupyter-server/jupyter_releaser/pull/354) ([@blink1073](https://github.com/blink1073))
+- Use version template in pyproject [#350](https://github.com/jupyter-server/jupyter_releaser/pull/350) ([@blink1073](https://github.com/blink1073))
+- Switch to hatch backend [#323](https://github.com/jupyter-server/jupyter_releaser/pull/323) ([@blink1073](https://github.com/blink1073))
+- Remove dead link [#317](https://github.com/jupyter-server/jupyter_releaser/pull/317) ([@blink1073](https://github.com/blink1073))
+- Handle license [#315](https://github.com/jupyter-server/jupyter_releaser/pull/315) ([@blink1073](https://github.com/blink1073))
+- Allow bot PRs to be auto labeled [#314](https://github.com/jupyter-server/jupyter_releaser/pull/314) ([@blink1073](https://github.com/blink1073))
+- Switch to flit [#311](https://github.com/jupyter-server/jupyter_releaser/pull/311) ([@blink1073](https://github.com/blink1073))
+- Clean up pytest and add mypy handling [#300](https://github.com/jupyter-server/jupyter_releaser/pull/300) ([@blink1073](https://github.com/blink1073))
+- Clean up pre-commit [#295](https://github.com/jupyter-server/jupyter_releaser/pull/295) ([@blink1073](https://github.com/blink1073))
+- Update check-links and settings [#292](https://github.com/jupyter-server/jupyter_releaser/pull/292) ([@blink1073](https://github.com/blink1073))
+- Clean up check links output [#289](https://github.com/jupyter-server/jupyter_releaser/pull/289) ([@blink1073](https://github.com/blink1073))
+- Update to `tbump~=6.7` [#252](https://github.com/jupyter-server/jupyter_releaser/pull/252) ([@jtpio](https://github.com/jtpio))
+- Update `setuptools` [#251](https://github.com/jupyter-server/jupyter_releaser/pull/251) ([@jtpio](https://github.com/jtpio))
+- Update generate-changelog test [#236](https://github.com/jupyter-server/jupyter_releaser/pull/236) ([@blink1073](https://github.com/blink1073))
+- Run CI on Python 3.10 [#234](https://github.com/jupyter-server/jupyter_releaser/pull/234) ([@jtpio](https://github.com/jtpio))
+- Update to the new `main` default branch [#233](https://github.com/jupyter-server/jupyter_releaser/pull/233) ([@jtpio](https://github.com/jtpio))
+
+### Documentation improvements
+
+- Add docs for starting making prereleases [#454](https://github.com/jupyter-server/jupyter_releaser/pull/454) ([@martinRenou](https://github.com/martinRenou))
+- Update conversion instructions [#450](https://github.com/jupyter-server/jupyter_releaser/pull/450) ([@blink1073](https://github.com/blink1073))
+- Update screenshots for Version 2 [#446](https://github.com/jupyter-server/jupyter_releaser/pull/446) ([@blink1073](https://github.com/blink1073))
+- Update how-to guides [#443](https://github.com/jupyter-server/jupyter_releaser/pull/443) ([@blink1073](https://github.com/blink1073))
+- add step N to actions to make it easier [#324](https://github.com/jupyter-server/jupyter_releaser/pull/324) ([@wolfv](https://github.com/wolfv))
+- Fix docs on config values [#291](https://github.com/jupyter-server/jupyter_releaser/pull/291) ([@blink1073](https://github.com/blink1073))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-11-23&to=2022-11-07&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-11-23..2022-11-07&type=Issues) | [@brichet](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Abrichet+updated%3A2021-11-23..2022-11-07&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2021-11-23..2022-11-07&type=Issues) | [@davidbrochart](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Adavidbrochart+updated%3A2021-11-23..2022-11-07&type=Issues) | [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2021-11-23..2022-11-07&type=Issues) | [@hbcarlos](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ahbcarlos+updated%3A2021-11-23..2022-11-07&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-11-23..2022-11-07&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3AmartinRenou+updated%3A2021-11-23..2022-11-07&type=Issues) | [@minrk](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Aminrk+updated%3A2021-11-23..2022-11-07&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2021-11-23..2022-11-07&type=Issues) | [@welcome](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Awelcome+updated%3A2021-11-23..2022-11-07&type=Issues) | [@wolfv](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Awolfv+updated%3A2021-11-23..2022-11-07&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.0.0a8
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...dfe1c9f37b303e740feec182df337c208997e2a8))
@@ -15,8 +144,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-10-19&to=2022-10-19&type=c))
 
 [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2022-10-19..2022-10-19&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.0.0a7
 
