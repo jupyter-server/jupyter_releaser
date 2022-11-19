@@ -72,22 +72,18 @@ repos:
           ]
         stages: [manual]
 
-  - repo: https://github.com/sirosen/check-jsonschema
+  - repo: https://github.com/python-jsonschema/check-jsonschema
     rev: 0.19.1
     hooks:
-      - id: check-jsonschema
+      - id: check-github-workflows
         name: "Check GitHub Workflows"
         files: ^\.github/workflows/
         types: [yaml]
-        args: ["--schemafile", "https://json.schemastore.org/github-workflow"]
-        stages: [manual]
 
-  - repo: https://github.com/sirosen/check-jsonschema
+  - repo: https://github.com/python-jsonschema/check-jsonschema
     rev: 0.19.1
     hooks:
-      - id: check-jsonschema
+      - id: check-github-workflows
         name: "Check Example Workflows"
         files: ^example-workflows/
         types: [yaml]
-        args: ["--schemafile", "https://json.schemastore.org/github-workflow"]
-        stages: [manual]

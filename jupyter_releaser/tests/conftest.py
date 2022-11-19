@@ -29,8 +29,8 @@ def github_port(worker_id):
 @fixture(autouse=True)
 def mock_env(mocker):
     """Clear unwanted environment variables"""
-    # Anything that starts with RH_ or GITHUB_
-    prefixes = ["GITHUB_", "RH_"]
+    # Anything that starts with RH_ or GITHUB_ or PIP
+    prefixes = ["GITHUB_", "RH_", "PIP_"]
     env = os.environ.copy()
     for key in list(env):
         for prefix in prefixes:
