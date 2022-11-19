@@ -12,28 +12,14 @@ env:
   PYTHONDONTWRITEBYTECODE: 1
 
 jobs:
-  # Run "pre-commit run --all-files --hook-stage=manual"
-  pre-commit:
-    runs-on: ubuntu-20.04
-    timeout-minutes: 5
+  pre_commit:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
-      - uses: pre-commit/action@v2.0.0
-        with:
-          extra_args: --all-files --hook-stage=manual
-      - name: Help message if pre-commit fail
-        if: ${{ failure() }}
-        run: |
-          echo "You can install pre-commit hooks to automatically run formatting"
-          echo "on each commit with:"
-          echo "    pre-commit install"
-          echo "or you can run by hand on staged files with"
-          echo "    pre-commit run"
-          echo "or after-the-fact on already committed files with"
-          echo "    pre-commit run --all-files --hook-stage=manual"
+      - uses: jupyterlab/maintainer-tools/.github/actions/pre-commit@v1
 
-  check-links:
+  check_links:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -54,15 +40,15 @@ jobs:
       - name: Run the tests with coverage on Ubuntu
         if: ${{ matrix.os == 'ubuntu-latest' }}
         run: |
-          hatch run cov:test -n auto || hatch run test:test --lf
+          hatch run cov:test -n auto --cov-fail-under 80 || hatch run test:test --lf
           pip install codecov
           codecov
 
       - name: Run the tests on Windows and MacOS
         if: ${{ matrix.os != 'ubuntu-latest' }}
-        run: hatch run test:test -s -n auto || hatch run test:test -s --lf
+        run: hatch run cov:test -s -n auto || hatch run cov:test -s --lf
 
-  generate-changelog:
+  generate_changelog:
     runs-on: ubuntu-20.04
     timeout-minutes: 10
     steps:
@@ -89,6 +75,37 @@ jobs:
           pip install pypandoc
           python -m jupyter_releaser.actions.generate-changelog
           cat CHANGELOG_ENTRY.md
+
+  test_minimum_versions:
+    name: Test Minimum Versions
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
+        with:
+          python_version: "3.8"
+      - uses: jupyterlab/maintainer-tools/.github/actions/install-minimums@v1
+        with:
+          only_create_file: 1
+      - name: Run the unit tests
+        run: |
+          export PIP_CONSTRAINT="./contraints_file.txt"
+          hatch run test:nowarn || hatch run test:nowarn --lf
+
+  test_prereleases:
+    name: Test Prereleases
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v3
+      - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
+        with:
+          python_version: "3.11"
+      - name: Run the tests
+        run: |
+          export PIP_PRE=1
+          hatch run test:nowarn || hatch run test:nowarn --lf
 
   docs:
     runs-on: ubuntu-20.04
@@ -127,12 +144,14 @@ jobs:
   check: # This job does nothing and is only used for the branch protection
     if: always()
     needs:
-      - check-links
+      - check_links
       - test
       - docs
-      - pre-commit
+      - pre_commit
       - check_local_actions
-      - generate-changelog
+      - test_minimum_versions
+      - test_prereleases
+      - generate_changelog
     runs-on: ubuntu-latest
     steps:
       - name: Decide whether the needed jobs succeeded or failed
