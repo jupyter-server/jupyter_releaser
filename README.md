@@ -1,5 +1,9 @@
 # Jupyter Releaser
 
+[![Build Status](https://github.com/jupyter-server/releaser/actions/workflows/test.yml/badge.svg?query=branch%3Amain++)](https://github.com/jupyter-server/jupyter_releaser/actions/workflows/test.yml/badge.svg?query=branch%3Amain++)
+[![codecov](https://codecov.io/gh/jupyter-server/jupyter_releaser/branch/main/graph/badge.svg?token=6OPBSEMMUG)](https://codecov.io/gh/jupyter-server/jupyter_releaser)
+[![Documentation Status](https://readthedocs.org/projects/jupyter-releaser/badge/?version=latest)](http://jupyter-releaser.readthedocs.io/en/latest/?badge=latest)
+
 **Jupyter Releaser** contains a set of helper scripts and GitHub Actions to aid in automated releases of Python and npm packages.
 
 ## Installation
