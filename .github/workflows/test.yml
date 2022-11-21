@@ -41,12 +41,15 @@ jobs:
         if: ${{ matrix.os == 'ubuntu-latest' }}
         run: |
           hatch run cov:test -n auto --cov-fail-under 80 || hatch run test:test --lf
-          pip install codecov
-          codecov
 
       - name: Run the tests on Windows and MacOS
         if: ${{ matrix.os != 'ubuntu-latest' }}
         run: hatch run cov:test -s -n auto || hatch run cov:test -s --lf
+
+      - name: Codecov
+        run: |
+          pip install codecov
+          codecov
 
   generate_changelog:
     runs-on: ubuntu-20.04
@@ -90,7 +93,6 @@ jobs:
           only_create_file: 1
       - name: Run the unit tests
         run: |
-          export PIP_CONSTRAINT="./contraints_file.txt"
           hatch run test:nowarn || hatch run test:nowarn --lf
 
   test_prereleases:
@@ -104,8 +106,7 @@ jobs:
           python_version: "3.11"
       - name: Run the tests
         run: |
-          export PIP_PRE=1
-          hatch run test:nowarn || hatch run test:nowarn --lf
+          PIP_PRE=1 hatch run test:nowarn || hatch run test:nowarn --lf
 
   docs:
     runs-on: ubuntu-20.04
