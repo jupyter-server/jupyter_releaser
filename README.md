@@ -1,6 +1,6 @@
 # Jupyter Releaser
 
-[![Build Status](https://github.com/jupyter-server/releaser/actions/workflows/test.yml/badge.svg?query=branch%3Amain++)](https://github.com/jupyter-server/jupyter_releaser/actions/workflows/test.yml/badge.svg?query=branch%3Amain++)
+[![Build Status](https://github.com/jupyter-server/jupyter-releaser/actions/workflows/test.yml/badge.svg?query=branch%3Amain++)](https://github.com/jupyter-server/jupyter_releaser/actions/workflows/test.yml/badge.svg?query=branch%3Amain++)
 [![codecov](https://codecov.io/gh/jupyter-server/jupyter_releaser/branch/main/graph/badge.svg?token=6OPBSEMMUG)](https://codecov.io/gh/jupyter-server/jupyter_releaser)
 [![Documentation Status](https://readthedocs.org/projects/jupyter-releaser/badge/?version=latest)](http://jupyter-releaser.readthedocs.io/en/latest/?badge=latest)
 
