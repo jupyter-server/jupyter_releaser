@@ -103,11 +103,11 @@ async def _stream_subprocess(args: str, **kwargs: Any) -> CompletedProcess:
     tasks = []
     if process.stdout:
         tasks.append(
-            loop.create_task(_read_stream(process.stdout, lambda l: tee_func(l, out, stdout)))
+            loop.create_task(_read_stream(process.stdout, lambda li: tee_func(li, out, stdout)))
         )
     if process.stderr:
         tasks.append(
-            loop.create_task(_read_stream(process.stderr, lambda l: tee_func(l, err, stderr)))
+            loop.create_task(_read_stream(process.stderr, lambda li: tee_func(li, err, stderr)))
         )
 
     await asyncio.wait(set(tasks))
