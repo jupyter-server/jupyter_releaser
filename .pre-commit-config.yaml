@@ -42,13 +42,13 @@ repos:
           [mdformat-gfm, mdformat-frontmatter, mdformat-footnote]
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.2.2
+    rev: v3.3.0
     hooks:
       - id: pyupgrade
         args: [--py38-plus]
 
   - repo: https://github.com/john-hen/Flake8-pyproject
-    rev: 1.2.1
+    rev: 1.2.2
     hooks:
       - id: Flake8-pyproject
         alias: flake8
