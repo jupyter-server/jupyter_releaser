@@ -12,12 +12,18 @@ env:
   PYTHONDONTWRITEBYTECODE: 1
 
 jobs:
-  pre_commit:
+  lint:
+    name: Test Lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
-      - uses: jupyterlab/maintainer-tools/.github/actions/pre-commit@v1
+      -  name: Run Linters
+         run: |
+          hatch run typing:test
+          hatch run lint:style
+          pipx run 'validate-pyproject[all]' pyproject.toml
+          pipx run doc8 --max-line-length=200
 
   check_links:
     runs-on: ubuntu-20.04
@@ -145,7 +151,7 @@ jobs:
       - check_links
       - test
       - docs
-      - pre_commit
+      - lint
       - check_local_actions
       - test_minimum_versions
       - test_prereleases

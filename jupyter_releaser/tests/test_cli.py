@@ -480,7 +480,7 @@ def test_delete_release(npm_dist, runner, mock_github, git_prep, draft_release):
 
 
 @pytest.mark.skipif(
-    os.name == "nt" and sys.version_info.major == 3 and sys.version_info.minor < 8,
+    os.name == "nt" and sys.version_info < (3, 8),
     reason="See https://bugs.python.org/issue26660",
 )
 def test_extract_dist_py(py_package, runner, mocker, mock_github, tmp_path, git_prep):
@@ -506,7 +506,7 @@ def test_extract_dist_py(py_package, runner, mocker, mock_github, tmp_path, git_
 
 
 @pytest.mark.skipif(
-    os.name == "nt" and sys.version_info.major == 3 and sys.version_info.minor < 8,
+    os.name == "nt" and sys.version_info < (3, 8),
     reason="See https://bugs.python.org/issue26660",
 )
 def test_extract_dist_multipy(py_multipackage, runner, mocker, mock_github, tmp_path, git_prep):
@@ -540,7 +540,7 @@ def test_extract_dist_multipy(py_multipackage, runner, mocker, mock_github, tmp_
 
 
 @pytest.mark.skipif(
-    os.name == "nt" and sys.version_info.major == 3 and sys.version_info.minor < 8,
+    os.name == "nt" and sys.version_info < (3, 8),
     reason="See https://bugs.python.org/issue26660",
 )
 def test_extract_dist_npm(npm_dist, runner, mocker, mock_github, tmp_path):
