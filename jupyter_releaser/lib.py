@@ -87,18 +87,18 @@ def draft_changelog(
     owner, repo_name = repo.split("/")
     gh = util.get_gh_object(dry_run=dry_run, owner=owner, repo=repo_name, token=auth)
 
-    data = dict(
-        version_spec=version_spec,
-        ref=ref,
-        branch=branch,
-        repo=repo,
-        since=since,
-        since_last_stable=since_last_stable,
-        version=version,
-        post_version_spec=post_version_spec,
-        post_version_message=post_version_message,
-        expected_sha=current_sha,
-    )
+    data = {
+        "version_spec": version_spec,
+        "ref": ref,
+        "branch": branch,
+        "repo": repo,
+        "since": since,
+        "since_last_stable": since_last_stable,
+        "version": version,
+        "post_version_spec": post_version_spec,
+        "post_version_message": post_version_message,
+        "expected_sha": current_sha,
+    }
     with tempfile.TemporaryDirectory() as d:
         metadata_path = Path(d) / util.METADATA_JSON
         with open(metadata_path, "w") as fid:

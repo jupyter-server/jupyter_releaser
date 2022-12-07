@@ -203,7 +203,7 @@ def test_get_empty_changelog(py_package, mocker):
         auth=None,
     )
 
-    assert not ("...None" in resp)
+    assert "...None" not in resp
 
 
 def test_splice_github_entry(py_package, mocker):

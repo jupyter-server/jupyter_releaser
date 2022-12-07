@@ -480,7 +480,7 @@ def fetch_release_asset(target_dir, asset, auth):
     """Fetch a release asset into a target directory."""
     log(f"Fetching {asset.name}...")
     url = asset.url
-    headers = dict(Authorization=f"token {auth}", Accept="application/octet-stream")
+    headers = {"Authorization": f"token {auth}", "Accept": "application/octet-stream"}
     path = Path(target_dir) / asset.name
     with requests.get(url, headers=headers, stream=True) as r:
         r.raise_for_status()
@@ -494,7 +494,7 @@ def fetch_release_asset_data(asset, auth):
     """Fetch the data for a release asset."""
     log(f"Fetching data for {asset.name}...")
     url = asset.url
-    headers = dict(Authorization=f"token {auth}", Accept="application/octet-stream")
+    headers = {"Authorization": f"token {auth}", "Accept": "application/octet-stream"}
 
     sink = BytesIO()
     with requests.get(url, headers=headers, stream=True) as r:
@@ -602,7 +602,9 @@ def prepare_environment(fetch_draft_release=True):
             log("User was admin!")
         except Exception as e:
             log(str(e))
-            raise RuntimeError("Could not get user permission level, assuming user was not admin!")
+            raise RuntimeError(
+                "Could not get user permission level, assuming user was not admin!"
+            ) from None
 
     # Get the latest draft release if none is given.
     release_url = os.environ.get("RH_RELEASE_URL")
