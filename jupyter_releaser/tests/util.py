@@ -87,16 +87,16 @@ LICENSE_TEMPLATE = "A fake license\n"
 README_TEMPLATE = "A fake readme\n"
 
 
-def pyproject_template(project_name="foo", sub_packages=None):
+def pyproject_template(project_name="foo", module_name="foo", sub_packages=None):
     sub_packages = sub_packages or []
     res = f"""
 [build-system]
-requires = ["hatchling>=1.5.0"]
+requires = ["hatchling>=1.11"]
 build-backend = "hatchling.build"
 
 [project]
 name = "{project_name}"
-version = "0.0.1"
+dynamic = ["version"]
 description = "My package description"
 readme = "README.md"
 license = {{file = "LICENSE"}}
@@ -104,6 +104,10 @@ authors = [
   {{email = "foo@foo.com"}},
   {{name = "foo"}}
 ]
+
+[tool.hatch.version]
+path = "{module_name}.py"
+validate-bump = false
 
 [project.urls]
 homepage = "https://foo.com"
@@ -117,31 +121,6 @@ python_packages = {sub_packages}
 
 
 PY_MODULE_TEMPLATE = '__version__ = "0.0.1"\n'
-
-
-TBUMP_BASE_TEMPLATE = r"""
-[version]
-current = "0.0.1"
-regex = '''
-  (?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)
-  ((?P<channel>a|b|rc|.dev)(?P<release>\d+))?
-'''
-
-[git]
-message_template = "Bump to {new_version}"
-tag_template = "v{new_version}"
-"""
-
-
-def tbump_py_template(package_name="foo"):
-    return f"""
-[[file]]
-src = "{package_name}.py"
-
-[[file]]
-src = "pyproject.toml"
-"""
-
 
 TBUMP_NPM_TEMPLATE = """
 [[file]]
@@ -209,20 +188,10 @@ def create_python_package(git_repo, multi=False, not_matching_name=False):
 
         module_name = module_name or package_name
 
-        setuppy = git_repo / "setup.py"
-        setuppy.write_text(SETUP_PY_TEMPLATE, encoding="utf-8")
-
-        setuppy = git_repo / "setup.cfg"
-        setuppy.write_text(setup_cfg_template(package_name, module_name), encoding="utf-8")
-
-        tbump = git_repo / "tbump.toml"
-        tbump.write_text(
-            TBUMP_BASE_TEMPLATE + tbump_py_template(package_name),
-            encoding="utf-8",
-        )
-
         pyproject = git_repo / "pyproject.toml"
-        pyproject.write_text(pyproject_template(package_name, sub_packages), encoding="utf-8")
+        pyproject.write_text(
+            pyproject_template(package_name, module_name, sub_packages), encoding="utf-8"
+        )
 
         foopy = git_repo / f"{module_name}.py"
         foopy.write_text(PY_MODULE_TEMPLATE, encoding="utf-8")

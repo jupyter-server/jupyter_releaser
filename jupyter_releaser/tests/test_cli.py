@@ -389,6 +389,11 @@ def test_check_python_resource_path(monkeypatch, py_package, runner, build_mock,
     path = bar_dir / "baz.txt"
     path.write_text("hello", encoding="utf-8")
 
+    pyproject = Path(util.CHECKOUT_NAME / util.PYPROJECT)
+    pyproject_text = pyproject.read_text('utf-8')
+    pyproject_text = pyproject_text.replace("foo.py", "foo/__init__.py")
+    pyproject.write_text(pyproject_text, "utf-8")
+
     runner(["build-python"])
     runner(["check-python"])
 

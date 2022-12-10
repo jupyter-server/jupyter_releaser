@@ -25,31 +25,7 @@ def test_get_repo(git_repo, mocker):
     assert util.get_repo() == repo
 
 
-def test_get_version_pyproject_static(py_package):
-    assert util.get_version() == "0.0.1"
-    util.bump_version("0.0.2a0")
-    assert util.get_version() == "0.0.2a0"
-
-
-def test_get_version_pyproject_dynamic(py_package):
-    py_project = py_package / "pyproject.toml"
-    text = py_project.read_text(encoding="utf-8")
-    text = text.replace("""[project]\nversion = "0.0.1\"""", "")
-    py_project.write_text(text, encoding="utf-8")
-    assert util.get_version() == "0.0.1"
-
-
-def test_get_version_hatchling(py_package):
-    py_project = py_package / "pyproject.toml"
-    with open(py_project) as fid:
-        data = toml.load(fid)
-    del data["project"]["version"]
-    data["build-system"] = {"requires": ["hatchling>=1.0"], "build-backend": "hatchling.build"}
-    with open(py_project, "w") as fid:
-        fid.write(str(py_project))
-
-
-def test_get_version_setuppy(py_package):
+def test_get_version_pyproject_hatch(py_package):
     assert util.get_version() == "0.0.1"
     util.bump_version("0.0.2a0")
     assert util.get_version() == "0.0.2a0"
@@ -252,8 +228,7 @@ def test_create_release_commit_hybrid(py_package, build_mock):
     data["version"] = version
     pkg_json.write_text(json.dumps(data, indent=4), encoding="utf-8")
     util.run("pre-commit run --all-files", check=False)
-    txt = (py_package / "tbump.toml").read_text(encoding="utf-8")
-    txt += testutil.TBUMP_NPM_TEMPLATE
+    txt = testutil.TBUMP_NPM_TEMPLATE
     (py_package / "tbump.toml").write_text(txt, encoding="utf-8")
 
     util.run("pipx run build .")
@@ -293,14 +268,20 @@ def test_bump_version_reg(py_package):
 
 
 def test_bump_version_dev(py_package):
-    util.bump_version("dev")
+    util.bump_version("dev", changelog_path="CHANGELOG.md")
     assert util.get_version() == "0.1.0.dev0"
-    util.bump_version("dev")
+    util.bump_version("dev", changelog_path="CHANGELOG.md")
     assert util.get_version() == "0.1.0.dev1"
-    util.bump_version("next")
-    util.bump_version("patch")
-    util.bump_version("minor")
-    assert util.get_version() == "0.2.0"
+    util.bump_version("next", changelog_path="CHANGELOG.md")
+    assert util.get_version() == "0.0.3"
+    util.bump_version("dev", changelog_path="CHANGELOG.md")
+    assert util.get_version() == "0.1.0.dev0"
+    util.bump_version("patch", changelog_path="CHANGELOG.md")
+    assert util.get_version() == "0.0.3"
+    util.bump_version("dev", changelog_path="CHANGELOG.md")
+    assert util.get_version() == "0.1.0.dev0"
+    util.bump_version("minor", changelog_path="CHANGELOG.md")
+    assert util.get_version() == "0.1.0"
 
 
 def test_get_config_python(py_package):
