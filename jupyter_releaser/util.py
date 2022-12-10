@@ -279,6 +279,7 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):
 
     # Add some convenience options on top of "tbump" and "hatch"
     if "tbump" in version_cmd or "hatch" in version_cmd:
+
         v = parse_version(get_version())
         log(f"Current version was: {v}")
         assert isinstance(v, Version)
@@ -300,7 +301,7 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):
                     if vc.is_devrelease:
                         # Bump to the next dev release.
                         assert vc.dev is not None
-                        version_spec = f"{vc.major}.{vc.minor}.{vc.micro}{vc.dev}{vc.dev + 1}"
+                        version_spec = f"{vc.major}.{vc.minor}.{vc.micro}.dev{vc.dev + 1}"
                     else:
                         assert vc.pre is not None
                         # Bump to the next prerelease.
@@ -312,7 +313,7 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):
 
             # Move to the minor release
             elif version_spec == "minor":
-                version_spec = f"{vc.major}.{v.minor+1}.0"
+                version_spec = f"{vc.major}.{vc.minor+1}.0"
 
             # Bump to the next dev version.
             elif version_spec == "dev":
