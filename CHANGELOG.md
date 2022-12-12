@@ -2,6 +2,33 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.0.1
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...1638a079ee146dcae0ac2be755fa287d9cb70464))
+
+### Bugs fixed
+
+- Fix handling of dev mode [#473](https://github.com/jupyter-server/jupyter_releaser/pull/473) ([@blink1073](https://github.com/blink1073))
+
+### Maintenance and upkeep improvements
+
+- Add log when loading configuration [#475](https://github.com/jupyter-server/jupyter_releaser/pull/475) ([@fcollonval](https://github.com/fcollonval))
+- Adopt ruff and address lint [#471](https://github.com/jupyter-server/jupyter_releaser/pull/471) ([@blink1073](https://github.com/blink1073))
+- Bump actions/upload-artifact from 2 to 3 [#469](https://github.com/jupyter-server/jupyter_releaser/pull/469) ([@dependabot](https://github.com/dependabot))
+- Add dependabot config [#468](https://github.com/jupyter-server/jupyter_releaser/pull/468) ([@blink1073](https://github.com/blink1073))
+- Update to `actions/checkout@v3` [#467](https://github.com/jupyter-server/jupyter_releaser/pull/467) ([@jtpio](https://github.com/jtpio))
+- Use base setup dependency type [#465](https://github.com/jupyter-server/jupyter_releaser/pull/465) ([@blink1073](https://github.com/blink1073))
+- CI Cleanup [#463](https://github.com/jupyter-server/jupyter_releaser/pull/463) ([@blink1073](https://github.com/blink1073))
+- CI Cleanup [#462](https://github.com/jupyter-server/jupyter_releaser/pull/462) ([@blink1073](https://github.com/blink1073))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-11-07&to=2022-12-12&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-11-07..2022-12-12&type=Issues) | [@codecov](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov+updated%3A2022-11-07..2022-12-12&type=Issues) | [@dependabot](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Adependabot+updated%3A2022-11-07..2022-12-12&type=Issues) | [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2022-11-07..2022-12-12&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2022-11-07..2022-12-12&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2022-11-07..2022-12-12&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.0.0
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v0.9.8...87903196bc2951c87f59882cac32c55579ea37f1))
@@ -128,8 +155,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2021-11-23&to=2022-11-07&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2021-11-23..2022-11-07&type=Issues) | [@brichet](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Abrichet+updated%3A2021-11-23..2022-11-07&type=Issues) | [@codecov-commenter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov-commenter+updated%3A2021-11-23..2022-11-07&type=Issues) | [@davidbrochart](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Adavidbrochart+updated%3A2021-11-23..2022-11-07&type=Issues) | [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2021-11-23..2022-11-07&type=Issues) | [@hbcarlos](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ahbcarlos+updated%3A2021-11-23..2022-11-07&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2021-11-23..2022-11-07&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3AmartinRenou+updated%3A2021-11-23..2022-11-07&type=Issues) | [@minrk](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Aminrk+updated%3A2021-11-23..2022-11-07&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2021-11-23..2022-11-07&type=Issues) | [@welcome](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Awelcome+updated%3A2021-11-23..2022-11-07&type=Issues) | [@wolfv](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Awolfv+updated%3A2021-11-23..2022-11-07&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.0.0a8
 
