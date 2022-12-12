@@ -449,17 +449,26 @@ def read_config():
 
     if JUPYTER_RELEASER_CONFIG.exists():
         config = toml.loads(JUPYTER_RELEASER_CONFIG.read_text(encoding="utf-8"))
+        log(f"jupyter-releaser configuration loaded from {JUPYTER_RELEASER_CONFIG}.")
 
-    if not config and PYPROJECT.exists():
+    if PYPROJECT.exists():
         data = toml.loads(PYPROJECT.read_text(encoding="utf-8"))
         pyproject_config = data.get("tool", {}).get("jupyter-releaser")
         if pyproject_config:
-            config = pyproject_config
+            if not config:
+                config = pyproject_config
+                log(f"jupyter-releaser configuration loaded from {PYPROJECT}.")
+            else:
+                log(f"Ignoring jupyter-releaser configuration from {PYPROJECT}.")
 
-    if not config and PACKAGE_JSON.exists():
+    if PACKAGE_JSON.exists():
         data = json.loads(PACKAGE_JSON.read_text(encoding="utf-8"))
         if "jupyter-releaser" in data:
-            config = data["jupyter-releaser"]
+            if not config:
+                config = data["jupyter-releaser"]
+                log(f"jupyter-releaser configuration loaded from {PACKAGE_JSON}.")
+            else:
+                log(f"Ignoring jupyter-releaser configuration from {PACKAGE_JSON}.")
 
     config = config or {}
     validator = Validator(SCHEMA)
