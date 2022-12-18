@@ -4,7 +4,7 @@ Follow the steps below to convert a repository to use Jupyter Releaser for relea
 
 ## Prerequisites
 
-See \[hecklist below for details:
+See checklist below for details:
 
 - Markdown changelog
 - Bump version configuration (if using Python), for example [hatch](https://hatch.pypa.io/latest/)
