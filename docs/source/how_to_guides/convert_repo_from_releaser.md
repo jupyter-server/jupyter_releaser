@@ -81,9 +81,7 @@ version_info = tuple(parts)
 ```
 
 - This should be run on `push` and `pull` request events. You can copy
-  the `check-release.yml` from this repo as an example. ${{ secrets.GITHUB_TOKEN }}
-
-````
+  the `check-release.yml` from this repo as an example.
 
 - [ ] If you would like the release assets to be uploaded as artifacts, add the following step after the `check_release` action:
 
@@ -93,7 +91,7 @@ version_info = tuple(parts)
   with:
     name: jupyter-releaser-dist-${{ github.run_number }}
     path: .jupyter_releaser_checkout/dist
-````
+```
 
 - [ ] Add a workflow that uses the [`enforce-label`](https://github.com/jupyterlab/maintainer-tools#enforce-labels) action from `jupyterlab/maintainer-tools` to ensure that all PRs have on of the triage labels used to
   categorize the changelog.
