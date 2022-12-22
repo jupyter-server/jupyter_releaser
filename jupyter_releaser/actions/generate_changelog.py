@@ -3,12 +3,12 @@ from pathlib import Path
 
 from jupyter_releaser.actions.common import run_action
 from jupyter_releaser.changelog import get_version_entry
-from jupyter_releaser.util import CHECKOUT_NAME, get_branch
+from jupyter_releaser.util import CHECKOUT_NAME, get_branch, handle_since
 
 target = os.environ.get("RH_REPOSITORY")
 branch = os.environ.get("RH_BRANCH", "<default>")
 ref = os.environ.get("RH_REF")
-since = os.environ.get("RH_SINCE")
+since = handle_since()
 until = os.environ.get("RH_UNTIL")
 convert_to_rst = os.environ.get("RH_CONVERT_TO_RST", "")
 
