@@ -632,7 +632,7 @@ def prepare_environment(fetch_draft_release=True):
     return release_url
 
 
-def handle_since():
+def handle_since() -> str:
     """Capture the "since" argument in case we add tags before checking changelog."""
     since = os.environ.get("RH_SINCE")
     if since:
