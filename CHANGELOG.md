@@ -2,6 +2,32 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.1.0
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...2072877a9b442a4d3e13bcfde69f11eeee5de237))
+
+### Enhancements made
+
+- Add since_last_stable support in generate changelog [#482](https://github.com/jupyter-server/jupyter_releaser/pull/482) ([@blink1073](https://github.com/blink1073))
+- Add more default python dist checks [#481](https://github.com/jupyter-server/jupyter_releaser/pull/481) ([@blink1073](https://github.com/blink1073))
+
+### Maintenance and upkeep improvements
+
+- ci cleanup [#478](https://github.com/jupyter-server/jupyter_releaser/pull/478) ([@blink1073](https://github.com/blink1073))
+
+### Documentation improvements
+
+- Fix typo(?) 2 [#477](https://github.com/jupyter-server/jupyter_releaser/pull/477) ([@krassowski](https://github.com/krassowski))
+- Fix typo 1 [#476](https://github.com/jupyter-server/jupyter_releaser/pull/476) ([@krassowski](https://github.com/krassowski))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-12-12&to=2022-12-22&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-12-12..2022-12-22&type=Issues) | [@codecov](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov+updated%3A2022-12-12..2022-12-22&type=Issues) | [@krassowski](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2022-12-12..2022-12-22&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.0.1
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...1638a079ee146dcae0ac2be755fa287d9cb70464))
@@ -26,8 +52,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-11-07&to=2022-12-12&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-11-07..2022-12-12&type=Issues) | [@codecov](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov+updated%3A2022-11-07..2022-12-12&type=Issues) | [@dependabot](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Adependabot+updated%3A2022-11-07..2022-12-12&type=Issues) | [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2022-11-07..2022-12-12&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2022-11-07..2022-12-12&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2022-11-07..2022-12-12&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.0.0
 
