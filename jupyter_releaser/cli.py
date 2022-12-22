@@ -297,7 +297,7 @@ pydist_check_options = [
         envvar="RH_EXTRA_PYDIST_CHECK_CMDS",
         default=[
             "pipx run 'validate-pyproject[all]' pyproject.toml",
-            "pipx run check-wheel-contents --ignore W002 {dist_file}",
+            "pipx run check-wheel-contents --ignore W002 {dist_dir}",
         ],
         multiple=True,
         help="Extra checks to run against the pydist file",

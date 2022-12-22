@@ -39,6 +39,7 @@ def check_dist(
     """Check a Python package locally (not as a cli)"""
     resource_paths = resource_paths or []
     dist_file = util.normalize_path(dist_file)
+    dist_dir = os.path.dirname(dist_file)  # used for check cmds.
 
     for cmd in [check_cmd] + list(extra_check_cmds or []):
         util.run(cmd.format(**locals()))
