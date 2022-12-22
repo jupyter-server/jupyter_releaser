@@ -40,7 +40,7 @@ def check_dist(
     resource_paths = resource_paths or []
     dist_file = util.normalize_path(dist_file)
 
-    for cmd in [check_cmd] + (extra_check_cmds or []):
+    for cmd in [check_cmd] + list(extra_check_cmds or []):
         util.run(cmd.format(**locals()))
 
     test_commands = []
