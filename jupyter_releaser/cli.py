@@ -289,7 +289,7 @@ pydist_check_options = [
     click.option(
         "--pydist-check-cmd",
         envvar="RH_PYDIST_CHECK_CMD",
-        default="pipx run twine check --strict",
+        default="pipx twine check --strict; pipx run 'validate-pyproject[all]' pyproject.toml; pipx run check-wheel-contents --ignore W002 dist",
         help="The command to use to check a python distribution file",
     ),
     click.option(
