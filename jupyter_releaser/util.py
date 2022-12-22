@@ -634,9 +634,10 @@ def prepare_environment(fetch_draft_release=True):
 
 def handle_since():
     """Capture the "since" argument in case we add tags before checking changelog."""
-    if os.environ.get("RH_SINCE"):
-        log(f"Using RH_SINCE from env: {os.environ.get('RH_SINCE')}")
-        return
+    since = os.environ.get("RH_SINCE")
+    if since:
+        log(f"Using RH_SINCE from env: {since}")
+        return since
     curr_dir = os.getcwd()
     os.chdir(CHECKOUT_NAME)
     since_last_stable_env = os.environ.get("RH_SINCE_LAST_STABLE", "")
