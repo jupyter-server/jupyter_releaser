@@ -147,7 +147,11 @@ def run(args: Union[str, List[str]], **kwargs: Any) -> CompletedProcess:
 
     check = kwargs.get("check", False)
 
-    loop = asyncio.get_event_loop_policy().get_event_loop()
+    try:
+        loop = asyncio.get_event_loop()
+    except Exception:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
     result = loop.run_until_complete(_stream_subprocess(cmd, **kwargs))
     atexit.register(loop.close)
 

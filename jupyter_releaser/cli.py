@@ -289,8 +289,18 @@ pydist_check_options = [
     click.option(
         "--pydist-check-cmd",
         envvar="RH_PYDIST_CHECK_CMD",
-        default="pipx run twine check --strict",
+        default="pipx run twine check --strict {dist_file}",
         help="The command to use to check a python distribution file",
+    ),
+    click.option(
+        "--pydist-extra-check-cmds",
+        envvar="RH_EXTRA_PYDIST_CHECK_CMDS",
+        default=[
+            "pipx run 'validate-pyproject[all]' pyproject.toml",
+            "pipx run check-wheel-contents --ignore W002 {dist_dir}",
+        ],
+        multiple=True,
+        help="Extra checks to run against the pydist file",
     ),
     click.option(
         "--pydist-resource-paths",
@@ -446,7 +456,9 @@ def build_python(dist_dir, python_packages):
 @add_options(check_imports_options)
 @add_options(pydist_check_options)
 @use_checkout_dir()
-def check_python(dist_dir, check_imports, pydist_check_cmd, pydist_resource_paths):
+def check_python(
+    dist_dir, check_imports, pydist_check_cmd, pydist_extra_check_cmds, pydist_resource_paths
+):
     """Check Python dist files"""
     for dist_file in glob(f"{dist_dir}/*"):
         if Path(dist_file).suffix not in [".gz", ".whl"]:
@@ -457,6 +469,7 @@ def check_python(dist_dir, check_imports, pydist_check_cmd, pydist_resource_path
             dist_file,
             python_imports=check_imports,
             check_cmd=pydist_check_cmd,
+            extra_check_cmds=pydist_extra_check_cmds,
             resource_paths=pydist_resource_paths,
         )
 
