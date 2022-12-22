@@ -32,7 +32,7 @@ def check_dist(
     dist_file,
     test_cmd="",
     python_imports=None,
-    check_cmd="pipx twine check --strict",
+    check_cmd="pipx twine check --strict; pipx run 'validate-pyproject[all]' pyproject.toml; pipx run check-wheel-contents --ignore W002 dist",
     resource_paths=None,
 ):
     """Check a Python package locally (not as a cli)"""
