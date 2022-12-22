@@ -156,7 +156,7 @@ npm-token: NPM_TOKEN
 post-version-message: RH_POST_VERSION_MESSAGE
 post-version-spec: RH_POST_VERSION_SPEC
 pydist-check-cmd: RH_PYDIST_CHECK_CMD
-pytest-extra-check-cmds: RH_EXTRA_PYDIST_CHECK_CMDS
+pydist-extra-check-cmds: RH_EXTRA_PYDIST_CHECK_CMDS
 pydist-resource-paths: RH_PYDIST_RESOURCE_PATHS
 python-packages: RH_PYTHON_PACKAGES
 ref: RH_REF
