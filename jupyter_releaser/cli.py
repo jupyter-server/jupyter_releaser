@@ -293,7 +293,7 @@ pydist_check_options = [
         help="The command to use to check a python distribution file",
     ),
     click.option(
-        "--pydist-extra-checks",
+        "--pydist-extra-check-cmds",
         envvar="RH_EXTRA_PYDIST_CHECK_CMDS",
         default=[
             "pipx run 'validate-pyproject[all]' pyproject.toml', 'pipx run check-wheel-contents --ignore W002 {dist_file}"
