@@ -73,7 +73,7 @@ jobs:
         run: |
           set -eux
           pip install -e .
-          python -m jupyter_releaser.actions.generate-changelog
+          python -m jupyter_releaser.actions.generate_changelog
           cat CHANGELOG_ENTRY.md
           # Check for version entry contents
           cat CHANGELOG_ENTRY.md | grep -q "#234"
@@ -84,7 +84,7 @@ jobs:
           export RH_CONVERT_TO_RST=true
           sudo apt-get install pandoc
           pip install pypandoc
-          python -m jupyter_releaser.actions.generate-changelog
+          python -m jupyter_releaser.actions.generate_changelog
           cat CHANGELOG_ENTRY.md
 
   test_minimum_versions:
