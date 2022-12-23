@@ -1,3 +1,4 @@
+"""Library functions for Jupyter Releaser."""
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 import json
@@ -124,6 +125,7 @@ def draft_changelog(
 
 
 def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=False):
+    """Make a changelog PR."""
     repo = repo or util.get_repo()
     branch = branch or util.get_branch()
 

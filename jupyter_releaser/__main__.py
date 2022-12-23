@@ -1,3 +1,4 @@
+"""The main entry point for Jupyter Releaser."""
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 from jupyter_releaser.cli import main
