@@ -1,7 +1,6 @@
+"""Jupyter Releaser Utils."""
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
-# Of the form:
-# https://github.com/{owner}/{repo}/releases/tag/{tag}
 import atexit
 import hashlib
 import json
@@ -534,6 +533,7 @@ def upload_assets(gh, assets, release, auth):
 
 
 def extract_metadata_from_release_url(gh, release_url, auth):
+    """Extract the metadata for a release given a url."""
     log(f"Extracting metadata for release: {release_url}")
     release = release_for_url(gh, release_url)
 
@@ -701,6 +701,7 @@ def get_remote_name(dry_run):
 
 
 def get_mock_github_url():
+    """Get the mock github url."""
     port = os.environ.get("MOCK_GITHUB_PORT", "8000")
     return f"http://127.0.0.1:{port}"
 

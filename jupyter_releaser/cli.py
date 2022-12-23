@@ -1,3 +1,4 @@
+"""CLI for Jupyter Releaser."""
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 import os
@@ -371,6 +372,7 @@ def bump_version(version_spec, version_cmd, changelog_path, python_packages):
 @add_options(release_url_options)
 @use_checkout_dir()
 def extract_changelog(dry_run, auth, changelog_path, release_url):
+    """Extract the changelog entry."""
     lib.extract_changelog(dry_run, auth, changelog_path, release_url)
 
 
@@ -554,6 +556,7 @@ def populate_release(
     post_version_message,
     assets,
 ):
+    """Populate a release."""
     lib.populate_release(
         ref,
         branch,
@@ -670,6 +673,7 @@ def publish_release(auth, dry_run, release_url):
 )
 @use_checkout_dir()
 def ensure_sha(ref, branch, repo, dry_run, expected_sha):
+    """Ensure that a sha has not changed."""
     util.ensure_sha(dry_run, expected_sha, branch)
 
 

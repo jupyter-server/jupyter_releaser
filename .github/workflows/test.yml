@@ -24,7 +24,7 @@ jobs:
          run: |
           hatch run typing:test
           hatch run lint:style
-          pipx run 'validate-pyproject[all]' pyproject.toml
+          pipx run interrogate -v jupyter_releaser
           pipx run doc8 --max-line-length=200
 
   check_links:
@@ -114,7 +114,7 @@ jobs:
           hatch run test:nowarn || hatch run test:nowarn --lf
 
   docs:
-    runs-on: ubuntu-20.04
+    runs-on: windows-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v3

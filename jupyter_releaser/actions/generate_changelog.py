@@ -1,3 +1,4 @@
+"""Generate a changelog."""
 import os
 from pathlib import Path
 

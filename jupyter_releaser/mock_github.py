@@ -1,3 +1,4 @@
+"""A mock GitHub API implementation."""
 import atexit
 import datetime
 import json
@@ -25,6 +26,7 @@ app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 
 def load_from_file(name, klass):
+    """Load data from a file to a model."""
     source_file = os.path.join(static_dir, name + ".json")
     if not os.path.exists(source_file):
         return {}
@@ -40,6 +42,7 @@ def load_from_file(name, klass):
 
 
 def write_to_file(name, data):
+    """Write model data to a file."""
     source_file = os.path.join(static_dir, name + ".json")
     result = {}
     for key in data:
@@ -52,6 +55,8 @@ def write_to_file(name, data):
 
 
 class Asset(BaseModel):
+    """An asset model."""
+
     id: int
     name: str
     content_type: str
@@ -68,6 +73,8 @@ class Asset(BaseModel):
 
 
 class Release(BaseModel):
+    """A release model."""
+
     assets_url: str = ""
     upload_url: str
     tarball_url: str = ""
@@ -89,11 +96,15 @@ class Release(BaseModel):
 
 
 class User(BaseModel):
+    """A user model."""
+
     login: str = "bar"
     html_url: str = "http://bar.com"
 
 
 class PullRequest(BaseModel):
+    """A pull request model."""
+
     number: int = 0
     html_url: str = "http://foo.com"
     title: str = "foo"
@@ -101,10 +112,14 @@ class PullRequest(BaseModel):
 
 
 class TagObject(BaseModel):
+    """A tab object model."""
+
     sha: str
 
 
 class Tag(BaseModel):
+    """A tag model."""
+
     ref: str
     object: TagObject
 
@@ -117,6 +132,7 @@ tag_refs: Dict[str, "Tag"] = load_from_file("tag_refs", Tag)
 
 @app.get("/")
 def read_root():
+    """Get the root handler."""
     return {"Hello": "World"}
 
 

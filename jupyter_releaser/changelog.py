@@ -1,3 +1,4 @@
+"""Changelog utilities for Jupyter Releaser."""
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 import re
@@ -177,6 +178,7 @@ def build_entry(
 
 
 def update_changelog(changelog_path, entry):
+    """Update a changelog with a new entry."""
     # Get the new version
     version = util.get_version()
 
