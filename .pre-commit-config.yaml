@@ -28,6 +28,8 @@ repos:
     rev: 0.7.16
     hooks:
       - id: mdformat
+        additional_dependencies:
+          [mdformat-gfm, mdformat-frontmatter, mdformat-footnote]
 
   - repo: https://github.com/psf/black
     rev: 22.10.0
