@@ -48,7 +48,7 @@ try:
 except ImportError:
     pass
 
-myst_enable_extensions = ["html_image"]
+myst_enable_extensions = ["html_image", "tasklist"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
