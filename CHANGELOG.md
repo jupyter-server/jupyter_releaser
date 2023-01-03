@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.1.3
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...872a0b9357b03a7ebf804a65250aa616e91d7178))
+
+### Maintenance and upkeep improvements
+
+- Remove CLI option ignore for check-wheel-contents [#487](https://github.com/jupyter-server/jupyter_releaser/pull/487) ([@fcollonval](https://github.com/fcollonval))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2023-01-03&to=2023-01-03&type=c))
+
+[@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2023-01-03..2023-01-03&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.1.2
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...38a6f3bf55afba6afd8df11f196bc9b1c61a65e8))
@@ -20,8 +36,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2022-12-22&to=2023-01-03&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2022-12-22..2023-01-03&type=Issues) | [@codecov](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov+updated%3A2022-12-22..2023-01-03&type=Issues) | [@krassowski](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2022-12-22..2023-01-03&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2022-12-22..2023-01-03&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.1.1
 
