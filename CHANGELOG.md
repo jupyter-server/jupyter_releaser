@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.1.4
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...e9d498b2398a2880e06d45f4119a1d537fe48402))
+
+### Bugs fixed
+
+- Pass the authentication to `format_pr_entry` [#489](https://github.com/jupyter-server/jupyter_releaser/pull/489) ([@fcollonval](https://github.com/fcollonval))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2023-01-03&to=2023-01-09&type=c))
+
+[@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2023-01-03..2023-01-09&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.1.3
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...872a0b9357b03a7ebf804a65250aa616e91d7178))
@@ -15,8 +31,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2023-01-03&to=2023-01-03&type=c))
 
 [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2023-01-03..2023-01-03&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.1.2
 
