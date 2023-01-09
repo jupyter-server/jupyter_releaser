@@ -12,6 +12,7 @@ from datetime import datetime
 from glob import glob
 from pathlib import Path
 from subprocess import CalledProcessError
+from typing import Type, Union
 
 import mdformat
 from packaging.version import parse as parse_version
@@ -355,6 +356,7 @@ def publish_assets(
         util.log(f"Handling dist file {path}")
         suffix = Path(path).suffix
         if suffix in [".gz", ".whl"]:
+            dist: Union[Type[SDist], Type[Wheel]]
             if suffix == ".gz":
                 dist = SDist
             else:
