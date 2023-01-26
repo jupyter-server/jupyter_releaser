@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.1.5
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...2acb616f67cf9edc926bf5d877a434f59dbb0ee6))
+
+### Enhancements made
+
+- Add whitelist for http request in yarn [#491](https://github.com/jupyter-server/jupyter_releaser/pull/491) ([@brichet](https://github.com/brichet))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2023-01-09&to=2023-01-26&type=c))
+
+[@brichet](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Abrichet+updated%3A2023-01-09..2023-01-26&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.1.4
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...e9d498b2398a2880e06d45f4119a1d537fe48402))
@@ -15,8 +31,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2023-01-03&to=2023-01-09&type=c))
 
 [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2023-01-03..2023-01-09&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.1.3
 
