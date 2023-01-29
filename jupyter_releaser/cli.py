@@ -17,7 +17,7 @@ class ReleaseHelperGroup(click.Group):
 
     _needs_checkout_dir: t.Dict[str, bool] = {}
 
-    def invoke(self, ctx):
+    def invoke(self, ctx):  # noqa
         """Handle jupyter-releaser config while invoking a command"""
         # Get the command name and make sure it is valid
         cmd_name = ctx.protected_args[0]
@@ -28,9 +28,8 @@ class ReleaseHelperGroup(click.Group):
             envvars: t.Dict[str, str] = {}
             for cmd_name in self.commands:
                 for param in self.commands[cmd_name].params:
-                    if isinstance(param, click.Option):
-                        if param.envvar:
-                            envvars[str(param.name)] = str(param.envvar)
+                    if isinstance(param, click.Option) and param.envvar:
+                        envvars[str(param.name)] = str(param.envvar)
 
             for key in sorted(envvars):
                 util.log(f"{key.replace('_', '-')}: {envvars[key]}")
@@ -41,7 +40,8 @@ class ReleaseHelperGroup(click.Group):
 
         if cmd_name.replace("-", "_") in self._needs_checkout_dir:
             if not osp.exists(util.CHECKOUT_NAME):
-                raise ValueError("Please run prep-git first")
+                msg = "Please run prep-git first"
+                raise ValueError(msg)
             os.chdir(util.CHECKOUT_NAME)
 
         # Read in the config

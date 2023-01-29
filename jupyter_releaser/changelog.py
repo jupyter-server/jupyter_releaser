@@ -94,10 +94,7 @@ def get_version_entry(
 
     util.log(f"Getting changes to {repo} since {since} on branch {branch}...")
 
-    if until:
-        until = until.replace("%", "")
-    else:
-        until = None
+    until = until.replace("%", "") if until else None
 
     md = generate_activity_md(
         repo,
@@ -115,10 +112,7 @@ def get_version_entry(
 
     entry = md.replace("[full changelog]", "[Full Changelog]")
 
-    if until:
-        entry = entry.replace("...None", f"...{until}")
-    else:
-        entry = entry.replace("...None", "")
+    entry = entry.replace("...None", f"...{until}") if until else entry.replace("...None", "")
 
     entry = entry.splitlines()[2:]
 
@@ -186,10 +180,12 @@ def update_changelog(changelog_path, entry):
     changelog = Path(changelog_path).read_text(encoding="utf-8")
 
     if START_MARKER not in changelog or END_MARKER not in changelog:
-        raise ValueError("Missing insert marker for changelog")
+        msg = "Missing insert marker for changelog"
+        raise ValueError(msg)
 
     if changelog.find(START_MARKER) != changelog.rfind(START_MARKER):
-        raise ValueError("Insert marker appears more than once in changelog")
+        msg = "Insert marker appears more than once in changelog"
+        raise ValueError(msg)
 
     changelog = insert_entry(changelog, entry, version=version)
     Path(changelog_path).write_text(changelog, encoding="utf-8")
@@ -222,13 +218,13 @@ def insert_entry(changelog, entry, version=None):
     return format(changelog)
 
 
-def format(changelog):
+def format(changelog):  # noqa
     """Clean up changelog formatting"""
     changelog = re.sub(r"\n\n+", r"\n\n", changelog)
     return re.sub(r"\n\n+$", r"\n", changelog)
 
 
-def check_entry(
+def check_entry(  # noqa
     ref,
     branch,
     repo,
@@ -252,10 +248,12 @@ def check_entry(
     end = changelog.find(END_MARKER)
 
     if start == -1 or end == -1:  # pragma: no cover
-        raise ValueError("Missing new changelog entry delimiter(s)")
+        msg = "Missing new changelog entry delimiter(s)"
+        raise ValueError(msg)
 
     if start != changelog.rfind(START_MARKER):  # pragma: no cover
-        raise ValueError("Insert marker appears more than once in changelog")
+        msg = "Insert marker appears more than once in changelog"
+        raise ValueError(msg)
 
     final_entry = changelog[start + len(START_MARKER) : end]
 
@@ -274,7 +272,8 @@ def check_entry(
 
     if f"# {version}" not in final_entry:  # pragma: no cover
         util.log(final_entry)
-        raise ValueError(f"Did not find entry for {version}")
+        msg = f"Did not find entry for {version}"
+        raise ValueError(msg)
 
     final_prs = re.findall(r"\[#(\d+)\]", final_entry)
     raw_prs = re.findall(r"\[#(\d+)\]", raw_entry)
@@ -289,10 +288,12 @@ def check_entry(
         if skip:
             continue
         if f"[#{pr}]" not in final_entry:  # pragma: no cover
-            raise ValueError(f"Missing PR #{pr} in changelog")
+            msg = f"Missing PR #{pr} in changelog"
+            raise ValueError(msg)
     for pr in final_prs:
         if f"[#{pr}]" not in raw_entry:  # pragma: no cover
-            raise ValueError(f"PR #{pr} does not belong in changelog for {version}")
+            msg = f"PR #{pr} does not belong in changelog for {version}"
+            raise ValueError(msg)
 
     if output:
         Path(output).write_text(final_entry, encoding="utf-8")
@@ -327,7 +328,7 @@ def splice_github_entry(orig_entry, github_entry):
         if preamble.startswith("## "):
             preamble = preamble.replace("## ", "### ")
 
-        lines = preamble.splitlines() + [""] + lines
+        lines = [*preamble.splitlines(), "", *lines]
 
     return "\n".join(lines)
 
@@ -350,5 +351,6 @@ def extract_current_version(changelog_path):
     body = extract_current(changelog_path)
     match = re.match(r"#+ (\d\S+)", body.strip())
     if not match:
-        raise ValueError("Could not find previous version")
+        msg = "Could not find previous version"
+        raise ValueError(msg)
     return match.groups()[0]

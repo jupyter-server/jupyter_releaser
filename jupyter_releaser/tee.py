@@ -52,7 +52,7 @@ async def _read_stream(stream: StreamReader, callback: Callable[..., Any]) -> No
             break
 
 
-async def _stream_subprocess(args: str, **kwargs: Any) -> CompletedProcess:
+async def _stream_subprocess(args: str, **kwargs: Any) -> CompletedProcess:  # noqa
     platform_settings: Dict[str, Any] = {}
     if platform.system() == "Windows":
         platform_settings["env"] = os.environ
@@ -61,10 +61,10 @@ async def _stream_subprocess(args: str, **kwargs: Any) -> CompletedProcess:
     tee = kwargs.get("tee", True)
     stdout = kwargs.get("stdout", sys.stdout)
     if stdout == subprocess.DEVNULL or not tee:
-        stdout = open(os.devnull, "w")
+        stdout = open(os.devnull, "w")  # noqa
     stderr = kwargs.get("stderr", sys.stderr)
     if stderr == subprocess.DEVNULL or not tee:
-        stderr = open(os.devnull, "w")
+        stderr = open(os.devnull, "w")  # noqa
 
     # We need to tell subprocess which shell to use when running shell-like
     # commands.

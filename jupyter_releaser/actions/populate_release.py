@@ -25,7 +25,8 @@ for asset in release.assets:
 dry_run = os.environ.get("RH_DRY_RUN", "").lower() == "true"
 
 if not os.environ.get("RH_RELEASE_URL"):
-    raise RuntimeError("Cannot complete Draft Release, no draft GitHub release url found!")
+    msg = "Cannot complete Draft Release, no draft GitHub release url found!"
+    raise RuntimeError(msg)
 
 run_action("jupyter-releaser prep-git")
 run_action("jupyter-releaser ensure-sha")

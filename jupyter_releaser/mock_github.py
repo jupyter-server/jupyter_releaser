@@ -1,10 +1,10 @@
 """A mock GitHub API implementation."""
 import atexit
-import datetime
 import json
 import os
 import tempfile
 import uuid
+from datetime import datetime, timezone
 from typing import Dict, List
 
 from fastapi import FastAPI, Request
@@ -57,7 +57,7 @@ def write_to_file(name, data):
 class Asset(BaseModel):
     """An asset model."""
 
-    id: int
+    id: int  # noqa
     name: str
     content_type: str
     size: int
@@ -83,7 +83,7 @@ class Release(BaseModel):
     published_at: str = ""
     draft: bool
     body: str = ""
-    id: int
+    id: int  # noqa
     node_id: str = ""
     author: str = ""
     html_url: str
@@ -121,7 +121,7 @@ class Tag(BaseModel):
     """A tag model."""
 
     ref: str
-    object: TagObject
+    object: TagObject  # noqa
 
 
 releases: Dict[str, "Release"] = load_from_file("releases", Release)
@@ -152,7 +152,7 @@ async def create_a_release(owner: str, repo: str, request: Request) -> Release:
     html_url = f"{base_url}/{owner}/{repo}/releases/tag/{data['tag_name']}"
     upload_url = f"{base_url}/repos/{owner}/{repo}/releases/{release_id}/assets"
     fmt_str = r"%Y-%m-%dT%H:%M:%SZ"
-    created_at = datetime.datetime.utcnow().strftime(fmt_str)
+    created_at = datetime.now(tz=timezone.utc).strftime(fmt_str)
     model = Release(
         id=release_id,
         url=url,

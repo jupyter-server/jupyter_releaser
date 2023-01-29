@@ -81,7 +81,8 @@ def extract_dist(dist_dir, target):
         if "main" in data:
             main = osp.join(target, "package", data["main"])
             if not osp.exists(main):
-                raise ValueError(f"{name} is missing 'main' file {data['main']}")
+                msg = f"{name} is missing 'main' file {data['main']}"
+                raise ValueError(msg)
 
         shutil.move(str(target / "package"), str(pkg_dir))
 
