@@ -42,7 +42,7 @@ def check_dist(
     dist_file = util.normalize_path(dist_file)
     dist_dir = os.path.dirname(dist_file)  # used for check cmds.
 
-    for cmd in [check_cmd] + list(extra_check_cmds or []):
+    for cmd in [check_cmd, *list(extra_check_cmds or [])]:
         util.run(cmd.format(**locals()))
 
     test_commands = []

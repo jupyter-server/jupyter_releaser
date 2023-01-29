@@ -44,7 +44,7 @@ def test_mock_github(mock_github):
     for asset in release.assets:
         headers = dict(Authorization=f"token {auth}", Accept="application/octet-stream")
         print(asset.name)
-        with requests.get(asset.url, headers=headers, stream=True) as r:
+        with requests.get(asset.url, headers=headers, stream=True, timeout=60) as r:
             r.raise_for_status()
             for _ in r.iter_content(chunk_size=8192):
                 pass

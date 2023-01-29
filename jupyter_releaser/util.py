@@ -189,7 +189,9 @@ def get_version():
     if PACKAGE_JSON.exists():
         return json.loads(PACKAGE_JSON.read_text(encoding="utf-8")).get("version", "")
 
-    raise ValueError("No version identifier could be found!")
+    msg = "No version identifier could be found!"
+
+    raise ValueError(msg)
 
 
 def normalize_path(path):
@@ -241,7 +243,7 @@ def _get_hatch_version_cmd():
     return "pipx run hatch version"
 
 
-def bump_version(version_spec, *, changelog_path="", version_cmd=""):
+def bump_version(version_spec, *, changelog_path="", version_cmd=""):  # noqa
     """Bump the version"""
     # Look for config files to determine version command if not given
     if not version_cmd:
@@ -259,22 +261,19 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):
             elif "hatchling.build" in pyproject_text:
                 version_cmd = version_cmd or _get_hatch_version_cmd()
 
-        if SETUP_CFG.exists():
-            if "bumpversion" in SETUP_CFG.read_text(encoding="utf-8"):
-                version_cmd = version_cmd or "bump2version"
+        if SETUP_CFG.exists() and "bumpversion" in SETUP_CFG.read_text(encoding="utf-8"):
+            version_cmd = version_cmd or "bump2version"
 
     if not version_cmd and PACKAGE_JSON.exists():
         version_cmd = "npm version --git-tag-version false"
 
     if not version_cmd:  # pragma: no cover
-        raise ValueError("Please specify a version bump command to run")
+        msg = "Please specify a version bump command to run"
+        raise ValueError(msg)
 
     # Assign default values if no version spec was given
     if not version_spec:
-        if "tbump" in version_cmd or "hatch" in version_cmd:
-            version_spec = "next"
-        else:
-            version_spec = "patch"
+        version_spec = "next" if "tbump" in version_cmd or "hatch" in version_cmd else "patch"
 
     # Add some convenience options on top of "tbump" and "hatch"
     if "tbump" in version_cmd or "hatch" in version_cmd:
@@ -365,7 +364,8 @@ def release_for_url(gh, url):
         if rel.html_url == url or rel.url == url:
             release = rel
     if not release:
-        raise ValueError(f"No release found for url {url}")
+        msg = f"No release found for url {url}"
+        raise ValueError(msg)
     return release
 
 
@@ -383,7 +383,7 @@ def latest_draft_release(gh, branch=None):
         if branch and release.target_commitish != branch:
             continue
         created = release.created_at
-        d_created = datetime.strptime(created, r"%Y-%m-%dT%H:%M:%SZ")
+        d_created = datetime.strptime(created, r"%Y-%m-%dT%H:%M:%SZ")  # noqa
         if newest_time is None or d_created > newest_time:
             newest_time = d_created
             newest_release = release
@@ -438,7 +438,7 @@ def retry(cmd, **kwargs):
             return
         except Exception as e:
             attempt += 1
-            if attempt == 3:
+            if attempt == 3:  # noqa
                 raise e
 
 
@@ -481,7 +481,8 @@ def parse_release_url(release_url):
     match = re.match(pattern, release_url)
     match = match or re.match(RELEASE_API_PATTERN, release_url)
     if not match:
-        raise ValueError(f"Release url is not valid: {release_url}")
+        msg = f"Release url is not valid: {release_url}"
+        raise ValueError(msg)
     return match
 
 
@@ -491,7 +492,7 @@ def fetch_release_asset(target_dir, asset, auth):
     url = asset.url
     headers = {"Authorization": f"token {auth}", "Accept": "application/octet-stream"}
     path = Path(target_dir) / asset.name
-    with requests.get(url, headers=headers, stream=True) as r:
+    with requests.get(url, headers=headers, stream=True, timeout=60) as r:
         r.raise_for_status()
         with open(path, "wb") as f:
             for chunk in r.iter_content(chunk_size=8192):
@@ -506,7 +507,7 @@ def fetch_release_asset_data(asset, auth):
     headers = {"Authorization": f"token {auth}", "Accept": "application/octet-stream"}
 
     sink = BytesIO()
-    with requests.get(url, headers=headers, stream=True) as r:
+    with requests.get(url, headers=headers, stream=True, timeout=60) as r:
         r.raise_for_status()
         for chunk in r.iter_content(chunk_size=8192):
             sink.write(chunk)
@@ -545,9 +546,8 @@ def extract_metadata_from_release_url(gh, release_url, auth):
         data = fetch_release_asset_data(asset, auth)
 
     if data is None:
-        raise ValueError(
-            f'Could not find "{METADATA_JSON.name}" file in draft release {release_url}'
-        )
+        msg = f'Could not find "{METADATA_JSON.name}" file in draft release {release_url}'
+        raise ValueError(msg)
 
     # Update environment variables.
     for key, value in data.items():
@@ -558,7 +558,7 @@ def extract_metadata_from_release_url(gh, release_url, auth):
     return data
 
 
-def prepare_environment(fetch_draft_release=True):
+def prepare_environment(fetch_draft_release=True):  # noqa
     """Prepare the environment variables, for use when running one of the
     action scripts."""
     # Set up env variables
@@ -607,14 +607,14 @@ def prepare_environment(fetch_draft_release=True):
         log(f"Getting permission level for {user}")
         try:
             collab_level = gh.repos.get_collaborator_permission_level(user)
-            if not collab_level["permission"] == "admin":
-                raise RuntimeError(f"User {user} does not have admin permission")
+            if collab_level["permission"] != "admin":
+                msg = f"User {user} does not have admin permission"
+                raise RuntimeError(msg)
             log("User was admin!")
         except Exception as e:
             log(str(e))
-            raise RuntimeError(
-                "Could not get user permission level, assuming user was not admin!"
-            ) from None
+            msg = "Could not get user permission level, assuming user was not admin!"
+            raise RuntimeError(msg) from None
 
     # Get the latest draft release if none is given.
     release_url = os.environ.get("RH_RELEASE_URL")
@@ -689,7 +689,7 @@ def get_remote_name(dry_run):
         try:
             run(f"git remote add test {_local_remote}")
         except Exception:
-            pass
+            pass  # noqa
         return "test"
 
     tfile = tempfile.NamedTemporaryFile(suffix=".git")
@@ -706,7 +706,7 @@ def get_mock_github_url():
     return f"http://127.0.0.1:{port}"
 
 
-def ensure_mock_github():
+def ensure_mock_github():  # noqa
     """Check for or start a mock github server."""
     core.GH_HOST = host = get_mock_github_url()
     port = urlparse(host).port
@@ -714,7 +714,7 @@ def ensure_mock_github():
     log("Ensuring mock GitHub")
     # First see if it is already running.
     try:
-        requests.get(host)
+        requests.get(host, timeout=60)
         return
     except requests.ConnectionError:
         pass
@@ -734,7 +734,8 @@ def ensure_mock_github():
     try:
         ret = proc.wait(1)
         if ret > 0:
-            raise ValueError(f"mock_github failed with {proc.returncode}")
+            msg = f"mock_github failed with {proc.returncode}"
+            raise ValueError(msg)
     except subprocess.TimeoutExpired:
         pass
     log("Mock GitHub started")
@@ -742,7 +743,7 @@ def ensure_mock_github():
 
     while 1:
         try:
-            requests.get(host)
+            requests.get(host, timeout=60)
             break
         except requests.ConnectionError:
             pass

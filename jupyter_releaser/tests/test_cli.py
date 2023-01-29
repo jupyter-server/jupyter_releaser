@@ -576,9 +576,8 @@ def test_publish_assets_py(py_package, runner, mocker, git_prep, mock_github):
 
     def wrapped(cmd, **kwargs):
         nonlocal called
-        if "twine upload" in cmd:
-            if kwargs["env"]["TWINE_PASSWORD"] == "foo-token":
-                called += 1
+        if "twine upload" in cmd and kwargs["env"]["TWINE_PASSWORD"] == "foo-token":
+            called += 1
         return orig_run(cmd, **kwargs)
 
     mock_run = mocker.patch("jupyter_releaser.util.run", wraps=wrapped)

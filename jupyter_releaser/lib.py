@@ -8,7 +8,7 @@ import re
 import shutil
 import tempfile
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from glob import glob
 from pathlib import Path
 from subprocess import CalledProcessError
@@ -31,7 +31,8 @@ def bump_version(version_spec, version_cmd, changelog_path):
     parsed = parse_version(version)
 
     if util.SETUP_PY.exists() and not hasattr(parsed, "major"):
-        raise ValueError(f"Invalid version {version}")
+        msg = f"Invalid version {version}"
+        raise ValueError(msg)
 
     # Bail if tag already exists
     tag_name = f"v{version}"
@@ -72,7 +73,8 @@ def draft_changelog(
 
     tags = util.run("git --no-pager tag", quiet=True)
     if f"v{version}" in tags.splitlines():
-        raise ValueError(f"Tag v{version} already exists")
+        msg = f"Tag v{version} already exists"
+        raise ValueError(msg)
 
     current = changelog.extract_current(changelog_path)
     util.log(f"\n\nCurrent Changelog Entry:\n{current}")
@@ -116,8 +118,10 @@ def draft_changelog(
             if str(rel.draft).lower() == "false":
                 continue
             created = rel.created_at
-            d_created = datetime.strptime(created, r"%Y-%m-%dT%H:%M:%SZ")
-            delta = datetime.utcnow() - d_created
+            d_created = datetime.strptime(created, r"%Y-%m-%dT%H:%M:%SZ").astimezone(
+                tz=timezone.utc
+            )
+            delta = datetime.now(tz=timezone.utc) - d_created
             if delta.days > 0:
                 gh.repos.delete_release(rel.id)
 
@@ -254,7 +258,8 @@ def delete_release(auth, release_url, dry_run=False):
     match = re.match(pattern, release_url)
     match = match or re.match(util.RELEASE_API_PATTERN, release_url)
     if not match:
-        raise ValueError(f"Release url is not valid: {release_url}")
+        msg = f"Release url is not valid: {release_url}"
+        raise ValueError(msg)
 
     gh = util.get_gh_object(dry_run=dry_run, owner=match["owner"], repo=match["repo"], token=auth)
     release = util.release_for_url(gh, release_url)
@@ -300,14 +305,16 @@ def extract_release(auth, dist_dir, dry_run, release_url):
         if asset.name.endswith(".json"):
             continue
         if asset.name not in asset_shas:
-            raise ValueError(f"{asset.name} was not found in asset_shas file")
+            msg = f"{asset.name} was not found in asset_shas file"
+            raise ValueError(msg)
         if util.compute_sha256(dist / asset.name) != asset_shas[asset.name]:
-            raise ValueError(f"sha for {asset.name} does not match asset_shas file")
+            msg = f"sha for {asset.name} does not match asset_shas file"
+            raise ValueError(msg)
 
     os.chdir(orig_dir)
 
 
-def publish_assets(
+def publish_assets(  # noqa
     dist_dir,
     npm_token,
     npm_cmd,
@@ -321,7 +328,7 @@ def publish_assets(
     """Publish release asset(s)"""
     os.environ["NPM_REGISTRY"] = npm_registry
     os.environ["TWINE_REPOSITORY_URL"] = twine_repository_url
-    twine_token = ""
+    twine_token = ""  # noqa
 
     if len(glob(f"{dist_dir}/*.tgz")):
         npm.handle_npm_config(npm_token)
@@ -330,10 +337,7 @@ def publish_assets(
 
     res = python_package.split(":")
     python_package_path = res[0]
-    if len(res) == 2:
-        python_package_name = res[1].replace("-", "_")
-    else:
-        python_package_name = ""
+    python_package_name = res[1].replace("-", "_") if len(res) == 2 else ""  # noqa
 
     if release_url and len(glob(f"{dist_dir}/*.whl")):
         twine_token = python.get_pypi_token(release_url, python_package_path)
@@ -357,10 +361,7 @@ def publish_assets(
         suffix = Path(path).suffix
         if suffix in [".gz", ".whl"]:
             dist: Union[Type[SDist], Type[Wheel]]
-            if suffix == ".gz":
-                dist = SDist
-            else:
-                dist = Wheel
+            dist = SDist if suffix == ".gz" else Wheel
             pkg = dist(path)
             if not python_package_name or python_package_name == pkg.name:
                 env = os.environ.copy()
@@ -409,7 +410,7 @@ def publish_release(auth, dry_run, release_url):
     util.actions_output("release_url", release.html_url)
 
 
-def prep_git(ref, branch, repo, auth, username, url):
+def prep_git(ref, branch, repo, auth, username, url):  # noqa
     """Set up git"""
     repo = repo or util.get_repo()
 
@@ -538,7 +539,8 @@ def forwardport_changelog(auth, ref, branch, repo, username, changelog_path, dry
             break
 
     if not prev_header:
-        raise ValueError("No anchor for previous entry")
+        msg = "No anchor for previous entry"
+        raise ValueError(msg)
 
     # Check out the branch again
     util.run(f"git checkout -B {branch} origin/{branch}")
