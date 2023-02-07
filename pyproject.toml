@@ -97,10 +97,10 @@ test = "mypy --install-types --non-interactive {args:jupyter_releaser}"
 
 [tool.hatch.envs.lint]
 dependencies = [
-  "black==22.12.0",
+  "black==23.1.0",
   "mdformat>0.7",
   "mdformat-gfm>=0.3.5",
-  "ruff==0.0.237"
+  "ruff==0.0.242"
 ]
 detached = true
 [tool.hatch.envs.lint.scripts]
@@ -202,7 +202,9 @@ ignore = [
   # N802 Function name `CreateWellKnownSid` should be lowercase
   "N802", "N803",
   # S101 Use of `assert` detected
-  "S101"
+  "S101",
+  # PLR0913 Too many arguments to function call
+  "PLR0913",
 ]
 unfixable = [
   # Don't touch print statements

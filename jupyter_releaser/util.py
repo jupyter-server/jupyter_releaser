@@ -277,7 +277,6 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):  # noqa
 
     # Add some convenience options on top of "tbump" and "hatch"
     if "tbump" in version_cmd or "hatch" in version_cmd:
-
         v = parse_version(get_version())
         log(f"Current version was: {v}")
         assert isinstance(v, Version)

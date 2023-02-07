@@ -63,7 +63,7 @@ def check_dist(
     # run the test command in the venv
     with TemporaryDirectory() as td:
         env_path = util.normalize_path(osp.abspath(td))
-        if os.name == "nt":  # pragma: no cover
+        if os.name == "nt":  # noqa  # pragma: no cover
             bin_path = f"{env_path}/Scripts/"
         else:
             bin_path = f"{env_path}/bin"

@@ -183,7 +183,6 @@ def get_log():
 
 def create_python_package(git_repo, multi=False, not_matching_name=False):
     def write_files(git_repo, sub_packages=None, package_name="foo", module_name=None):
-
         sub_packages = sub_packages or []
 
         module_name = module_name or package_name

@@ -92,7 +92,6 @@ def extract_dist(dist_dir, target):
 def check_dist(dist_dir, install_options):
     """Check npm dist file(s) in a dist dir"""
     with TemporaryDirectory() as td:
-
         util.run("npm init -y", cwd=td, quiet=True)
         names = []
         staging = Path(td) / "staging"
