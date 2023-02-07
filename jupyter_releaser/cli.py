@@ -314,6 +314,7 @@ pydist_check_options = [
 
 def add_options(options):
     """Add extracted common options to a click command"""
+
     # https://stackoverflow.com/a/40195800
     def _add_options(func):
         for option in reversed(options):

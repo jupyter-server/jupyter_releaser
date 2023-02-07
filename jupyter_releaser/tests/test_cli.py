@@ -680,7 +680,6 @@ def test_publish_release(npm_dist, runner, mocker, mock_github, draft_release):
 
 
 def test_config_file(py_package, runner, mocker, git_prep):
-
     config = Path(util.CHECKOUT_NAME) / util.JUPYTER_RELEASER_CONFIG
     config_data = util.toml.loads(config.read_text(encoding="utf-8"))
     config_data["options"] = {"dist-dir": "foo"}
@@ -707,7 +706,6 @@ def test_config_file(py_package, runner, mocker, git_prep):
 
 
 def test_config_file_env_override(py_package, runner, mocker, git_prep):
-
     orig_run = util.run
     called = False
 

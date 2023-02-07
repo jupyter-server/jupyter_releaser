@@ -116,7 +116,7 @@ def get_version_entry(
 
     entry = entry.splitlines()[2:]
 
-    for (ind, line) in enumerate(entry):
+    for ind, line in enumerate(entry):
         # Look for a backport, either manual or automatic.
         match = re.search(r"Backport PR #(\d+) on branch", line)
         if match:
@@ -311,7 +311,7 @@ def splice_github_entry(orig_entry, github_entry):
         lut[pr] = title
 
     lines = orig_entry.splitlines()
-    for (ind, line) in enumerate(lines):
+    for ind, line in enumerate(lines):
         match = re.match(cl_regex, line)
         if not match:
             continue
