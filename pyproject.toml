@@ -202,7 +202,7 @@ ignore = [
   # N802 Function name `CreateWellKnownSid` should be lowercase
   "N802", "N803",
   # S101 Use of `assert` detected
-  "S101"
+  "S101",
   # PLR0913 Too many arguments to function call
   "PLR0913",
 ]
