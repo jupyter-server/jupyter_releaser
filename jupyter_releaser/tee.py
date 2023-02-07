@@ -137,7 +137,7 @@ def run(args: Union[str, List[str]], **kwargs: Any) -> CompletedProcess:
     quiet: False - Avoid printing output
     show_cwd: False - Prints the current working directory.
     """
-    if isinstance(args, str):
+    if isinstance(args, str):  # noqa
         cmd = args
     else:
         # run was called with a list instead of a single item but asyncio

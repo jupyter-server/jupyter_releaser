@@ -203,6 +203,8 @@ ignore = [
   "N802", "N803",
   # S101 Use of `assert` detected
   "S101"
+  # PLR0913 Too many arguments to function call
+  "PLR0913",
 ]
 unfixable = [
   # Don't touch print statements
