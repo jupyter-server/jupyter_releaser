@@ -328,7 +328,7 @@ def publish_assets(  # noqa
     """Publish release asset(s)"""
     os.environ["NPM_REGISTRY"] = npm_registry
     os.environ["TWINE_REPOSITORY_URL"] = twine_repository_url
-    twine_token = "" 
+    twine_token = ""
 
     if len(glob(f"{dist_dir}/*.tgz")):
         npm.handle_npm_config(npm_token)
