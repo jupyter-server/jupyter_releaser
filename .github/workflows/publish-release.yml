@@ -17,6 +17,9 @@ on:
 jobs:
   publish_release:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['18.13.0']
     steps:
       - name: Checkout
         uses: actions/checkout@v2
