@@ -52,7 +52,7 @@ async def _read_stream(stream: StreamReader, callback: Callable[..., Any]) -> No
             break
 
 
-async def _stream_subprocess(args: str, **kwargs: Any) -> CompletedProcess:  # noqa
+async def _stream_subprocess(args: str, **kwargs: Any) -> CompletedProcess:
     platform_settings: Dict[str, Any] = {}
     if platform.system() == "Windows":
         platform_settings["env"] = os.environ

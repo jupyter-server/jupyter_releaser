@@ -193,7 +193,7 @@ async def upload_a_release_asset(owner: str, repo: str, release_id: int, request
     asset = Asset(
         id=asset_id,
         name=name,
-        size=headers["content-length"],
+        size=int(headers["content-length"]),
         url=url,
         content_type=headers["content-type"],
     )
