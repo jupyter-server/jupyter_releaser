@@ -226,7 +226,7 @@ def create_release_commit(version, release_message=None, dist_dir="dist"):
         cmd += ' -m "SHA256 hashes:"'
 
     for path in sorted(files):
-        path = normalize_path(path)
+        path = normalize_path(path)  # noqa
         sha256 = compute_sha256(path)
         shas[path] = sha256
         name = osp.basename(path)
@@ -319,7 +319,7 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):  # noqa
 
         else:
             # Handle dev version spec.
-            if version_spec == "dev":
+            if version_spec == "dev":  # noqa
                 if v.pre:
                     version_spec = f"{v.major}.{v.minor}.{v.micro}.dev0"
                 # Bump to next minor dev.
@@ -680,15 +680,15 @@ _local_remote = None
 
 def get_remote_name(dry_run):
     """Get the appropriate remote git name."""
-    global _local_remote
+    global _local_remote  # noqa
     if not dry_run:
         return "origin"
 
     if _local_remote:
         try:
             run(f"git remote add test {_local_remote}")
-        except Exception:
-            pass  # noqa
+        except Exception:  # noqa
+            pass
         return "test"
 
     tfile = tempfile.NamedTemporaryFile(suffix=".git")
@@ -705,7 +705,7 @@ def get_mock_github_url():
     return f"http://127.0.0.1:{port}"
 
 
-def ensure_mock_github():  # noqa
+def ensure_mock_github():
     """Check for or start a mock github server."""
     core.GH_HOST = host = get_mock_github_url()
     port = urlparse(host).port
