@@ -224,7 +224,7 @@ def format(changelog):  # noqa
     return re.sub(r"\n\n+$", r"\n", changelog)
 
 
-def check_entry(  # noqa
+def check_entry(
     ref,
     branch,
     repo,
