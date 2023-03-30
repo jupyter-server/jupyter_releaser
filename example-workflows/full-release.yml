@@ -23,7 +23,7 @@ on:
         description: "Comma separated list of steps to skip during Populate Release"
         required: false
 jobs:
-  prep_release:
+  full_release:
     runs-on: ubuntu-latest
     steps:
       - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
