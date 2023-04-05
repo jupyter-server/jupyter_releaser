@@ -171,7 +171,7 @@ def get_version():
             return run(cmd).split("\n")[-1]
 
     if SETUP_PY.exists():
-        warnings.warn("Using deprecated setup.py invocation")
+        warnings.warn("Using deprecated setup.py invocation", stacklevel=2)
         try:
             return run("python setup.py --version").split("\n")[-1]
         except CalledProcessError as e:

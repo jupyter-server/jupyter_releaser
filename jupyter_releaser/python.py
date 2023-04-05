@@ -77,7 +77,7 @@ def check_dist(
             for cmd in test_commands:
                 util.run(f"{bin_path}/{cmd}")
         except CalledProcessError as e:
-            if test_cmd == "":
+            if test_cmd == "":  # noqa
                 util.log(
                     'You may need to set "check_imports" to appropriate Python package names in the config file.'
                 )
