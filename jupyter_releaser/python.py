@@ -129,7 +129,7 @@ def start_local_pypi():
     """Start a local PyPI server"""
     temp_dir = TemporaryDirectory()
     cmd = f"pypi-server run -p 8081  -P . -a . -o  -v {temp_dir.name}"
-    proc = Popen(shlex.split(cmd), stdout=PIPE)
+    proc = Popen(shlex.split(cmd), stdout=PIPE)  # noqa
     # Wait for the server to start
     while True:
         assert proc.stdout is not None
