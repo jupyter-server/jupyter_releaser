@@ -110,7 +110,7 @@ def _run_win(cmd, **kwargs):
     check = kwargs.pop("check", True)
 
     try:
-        output = check_output(parts, **kwargs).decode("utf-8").strip()
+        output = check_output(parts, **kwargs).decode("utf-8").strip()  # noqa
         log(output)
         return output
     except CalledProcessError as e:
@@ -727,7 +727,7 @@ def ensure_mock_github():
         run(f"'{python}' -m pip install fastapi uvicorn")
 
     proc = subprocess.Popen(
-        [python, "-m", "uvicorn", "jupyter_releaser.mock_github:app", "--port", str(port)]
+        [python, "-m", "uvicorn", "jupyter_releaser.mock_github:app", "--port", str(port)]  # noqa
     )
 
     try:
