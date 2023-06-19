@@ -600,6 +600,7 @@ def extract_release(auth, dist_dir, dry_run, release_url):
 
 
 @main.command()
+@add_options(auth_options)
 @add_options(dist_dir_options)
 @click.option("--npm-token", help="A token for the npm release", envvar="NPM_TOKEN")
 @click.option(
@@ -626,17 +627,25 @@ def extract_release(auth, dist_dir, dry_run, release_url):
     envvar="TWINE_REPOSITORY_URL",
     default="https://upload.pypi.org/legacy/",
 )
+@click.option(
+    "--npm-tag",
+    help="The npm tag. It defaults to 'next' if it is a prerelease otherwise to 'latest'.",
+    envvar="NPM_TAG",
+    default="",
+)
 @add_options(dry_run_options)
 @add_options(python_packages_options)
 @add_options(release_url_options)
 @use_checkout_dir()
 def publish_assets(
+    auth,
     dist_dir,
     npm_token,
     npm_cmd,
     twine_cmd,
     npm_registry,
     twine_repository_url,
+    npm_tag,
     dry_run,
     release_url,
     python_packages,
@@ -644,12 +653,14 @@ def publish_assets(
     """Publish release asset(s)"""
     for python_package in python_packages:
         lib.publish_assets(
+            auth,
             dist_dir,
             npm_token,
             npm_cmd,
             twine_cmd,
             npm_registry,
             twine_repository_url,
+            npm_tag,
             dry_run,
             release_url,
             python_package,
