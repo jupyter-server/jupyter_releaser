@@ -20,7 +20,7 @@ from jupyter_releaser import util
 PYPROJECT = util.PYPROJECT
 SETUP_PY = util.SETUP_PY
 
-PYPI_GH_API_TOKEN_URL = "https://pypi.org/_/oidc/github/mint-token"
+PYPI_GH_API_TOKEN_URL = "https://pypi.org/_/oidc/github/mint-token"  # noqa
 
 
 def build_dist(dist_dir, clean=True):
@@ -135,7 +135,7 @@ def fetch_pypi_api_token() -> "str":
 
     util.log("Fetching PyPI API token...")
     sink = BytesIO()
-    with requests.post(PYPI_GH_API_TOKEN_URL, json={"token": oidc_token}) as r:
+    with requests.post(PYPI_GH_API_TOKEN_URL, json={"token": oidc_token}, timeout=10) as r:
         r.raise_for_status()
         for chunk in r.iter_content(chunk_size=8192):
             sink.write(chunk)
