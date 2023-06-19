@@ -10,8 +10,8 @@ See checklist below for details:
 - Bump version configuration (if using Python), for example [hatch](https://hatch.pypa.io/latest/)
 - [Access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with access to target GitHub repo to run GitHub Actions.
 - Set up:
-  - [_modern way_] [Add a trusted publisher](https://docs.pypi.org/trusted-publishers/adding-a-publisher/) to your PyPI project
-  - [_legacy way_] Access token for the [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github)
+  - \[_modern way_\] [Add a trusted publisher](https://docs.pypi.org/trusted-publishers/adding-a-publisher/) to your PyPI project
+  - \[_legacy way_\] Access token for the [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github)
 - If needed, access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens).
 
 ## Checklist for Adoption
@@ -33,6 +33,7 @@ See checklist below for details:
   _Note_ For security reasons, it is recommended that you scope the access
   to a single repository. Additionally, this token should belong to a
   machine account and not a user account.
+
 </details>
 
 <details><summary>Using PyPI trusted publisher (modern way)</summary>

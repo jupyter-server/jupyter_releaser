@@ -37,6 +37,7 @@ already uses Jupyter Releaser.
     owner1/repo1/path/to/package1,token1
     owner1/repo1/path/to/package2,token2
     ```
+
 </details>
 
 <details><summary>Using PyPI trusted publisher (modern way)</summary>
