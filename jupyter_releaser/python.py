@@ -2,19 +2,24 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 import atexit
+import json
 import os
 import os.path as osp
 import re
 import shlex
 from glob import glob
+from io import BytesIO
 from pathlib import Path
 from subprocess import PIPE, CalledProcessError, Popen
 from tempfile import TemporaryDirectory
 
+import requests
 from jupyter_releaser import util
 
 PYPROJECT = util.PYPROJECT
 SETUP_PY = util.SETUP_PY
+
+PYPI_GH_API_TOKEN_URL = "https://pypi.org/_/oidc/github/mint-token"
 
 
 def build_dist(dist_dir, clean=True):
@@ -95,11 +100,58 @@ assert PackagePath('{resource_path}') in files('{name}')
             util.run(cmd)
 
 
+def fetch_pypi_api_token() -> "str":
+    """Fetch the PyPI API token for trusted publishers
+    
+    This implements the manual steps described in https://docs.pypi.org/trusted-publishers/using-a-publisher/
+    as of June 19th, 2023.
+
+    It returns an empty string if it fails.
+    """
+    util.log(f"Fetching PyPI OIDC token...")
+
+    url = os.environ.get(util.GH_ID_TOKEN_URL_VAR, "")
+    auth = os.environ.get(util.GH_ID_TOKEN_TOKEN_VAR, "")
+    if not url or not auth:
+        util.log(f"Please verify that you have granted `id-token: write` permission to the publish workflow.")
+        return ""
+    
+    headers = {"Authorization": f"bearer {auth}", "Accept": "application/octet-stream"}
+
+    sink = BytesIO()
+    with requests.get(f"{url}&audience=pypi", headers=headers, stream=True, timeout=60) as r:
+        r.raise_for_status()
+        for chunk in r.iter_content(chunk_size=8192):
+            sink.write(chunk)
+    sink.seek(0)
+    oidc_token = json.loads(sink.read().decode("utf-8")).get("value", "")
+
+    if not oidc_token:
+        util.log("Failed to fetch the OIDC token from PyPI.")
+        return ""
+    
+    util.log(f"Fetching PyPI API token...")
+    sink = BytesIO()
+    with requests.post(PYPI_GH_API_TOKEN_URL, json={"token": oidc_token}) as r:
+        r.raise_for_status()
+        for chunk in r.iter_content(chunk_size=8192):
+            sink.write(chunk)
+    sink.seek(0)
+    api_token = json.loads(sink.read().decode("utf-8")).get("token", "")
+
+    return api_token
+
+
 def get_pypi_token(release_url, python_package):
     """Get the PyPI token
 
     Note: Do not print the token in CI since it will not be sanitized
     if it comes from the PYPI_TOKEN_MAP"""
+    trusted_token = os.environ.get(util.GH_ID_TOKEN_TOKEN_VAR, "")
+
+    if trusted_token:
+        return fetch_pypi_api_token()
+
     twine_pwd = os.environ.get("PYPI_TOKEN", "")
     pypi_token_map = os.environ.get("PYPI_TOKEN_MAP", "").replace(r"\n", "\n")
     if pypi_token_map and release_url:

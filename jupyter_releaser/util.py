@@ -57,6 +57,9 @@ SCHEMA = json.loads(SCHEMA)
 
 GIT_FETCH_CMD = "git fetch origin --filter=blob:none --quiet"
 
+GH_ID_TOKEN_URL_VAR = "ACTIONS_ID_TOKEN_REQUEST_URL"
+GH_ID_TOKEN_TOKEN_VAR = "ACTIONS_ID_TOKEN_REQUEST_TOKEN"
+
 
 def run(cmd, **kwargs):
     """Run a command as a subprocess and get the output as a string"""
