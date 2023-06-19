@@ -140,7 +140,7 @@ def handle_npm_config(npm_token):
         util.log("Turning on NPM provenance as id-token permission is set.")
         # See documentation https://docs.npmjs.com/generating-provenance-statements
         # Also https://github.blog/2023-04-19-introducing-npm-package-provenance/
-        text += f"\nprovenance=true"
+        text += "\nprovenance=true"
 
     text = text.strip() + "\n"
     util.log(f"writing npm config to {npmrc}")

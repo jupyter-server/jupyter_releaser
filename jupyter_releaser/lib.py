@@ -345,7 +345,7 @@ def publish_assets(  # noqa
         if twine_token:
             # tell GitHub Actions to mask the token in any console logs,
             # to avoid leaking it
-            util.run(f"echo \"::add-mask::{twine_token}\"")
+            util.run(f'echo "::add-mask::{twine_token}"')
 
     if dry_run:
         # Start local pypi server with no auth, allowing overwrites,

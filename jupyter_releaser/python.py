@@ -14,6 +14,7 @@ from subprocess import PIPE, CalledProcessError, Popen
 from tempfile import TemporaryDirectory
 
 import requests
+
 from jupyter_releaser import util
 
 PYPROJECT = util.PYPROJECT
@@ -102,20 +103,22 @@ assert PackagePath('{resource_path}') in files('{name}')
 
 def fetch_pypi_api_token() -> "str":
     """Fetch the PyPI API token for trusted publishers
-    
+
     This implements the manual steps described in https://docs.pypi.org/trusted-publishers/using-a-publisher/
     as of June 19th, 2023.
 
     It returns an empty string if it fails.
     """
-    util.log(f"Fetching PyPI OIDC token...")
+    util.log("Fetching PyPI OIDC token...")
 
     url = os.environ.get(util.GH_ID_TOKEN_URL_VAR, "")
     auth = os.environ.get(util.GH_ID_TOKEN_TOKEN_VAR, "")
     if not url or not auth:
-        util.log(f"Please verify that you have granted `id-token: write` permission to the publish workflow.")
+        util.log(
+            "Please verify that you have granted `id-token: write` permission to the publish workflow."
+        )
         return ""
-    
+
     headers = {"Authorization": f"bearer {auth}", "Accept": "application/octet-stream"}
 
     sink = BytesIO()
@@ -129,8 +132,8 @@ def fetch_pypi_api_token() -> "str":
     if not oidc_token:
         util.log("Failed to fetch the OIDC token from PyPI.")
         return ""
-    
-    util.log(f"Fetching PyPI API token...")
+
+    util.log("Fetching PyPI API token...")
     sink = BytesIO()
     with requests.post(PYPI_GH_API_TOKEN_URL, json={"token": oidc_token}) as r:
         r.raise_for_status()
