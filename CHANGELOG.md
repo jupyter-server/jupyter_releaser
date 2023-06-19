@@ -2,6 +2,30 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.1.6
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...0b4c9cc2b257e799794c6d02735b659da09e2336))
+
+### Maintenance and upkeep improvements
+
+- Pin ghapi [#512](https://github.com/jupyter-server/jupyter_releaser/pull/512) ([@blink1073](https://github.com/blink1073))
+- Use local coverage [#503](https://github.com/jupyter-server/jupyter_releaser/pull/503) ([@blink1073](https://github.com/blink1073))
+- Remove `target` from the example releaser workflows [#500](https://github.com/jupyter-server/jupyter_releaser/pull/500) ([@jtpio](https://github.com/jtpio))
+- Update ruff and address typing error [#498](https://github.com/jupyter-server/jupyter_releaser/pull/498) ([@blink1073](https://github.com/blink1073))
+- Add more linting [#492](https://github.com/jupyter-server/jupyter_releaser/pull/492) ([@blink1073](https://github.com/blink1073))
+
+### Documentation improvements
+
+- Add a Full Release workflow to the example workflows [#501](https://github.com/jupyter-server/jupyter_releaser/pull/501) ([@jtpio](https://github.com/jtpio))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2023-01-26&to=2023-06-19&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2023-01-26..2023-06-19&type=Issues) | [@codecov](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov+updated%3A2023-01-26..2023-06-19&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2023-01-26..2023-06-19&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2023-01-26..2023-06-19&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.1.5
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...2acb616f67cf9edc926bf5d877a434f59dbb0ee6))
@@ -15,8 +39,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2023-01-09&to=2023-01-26&type=c))
 
 [@brichet](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Abrichet+updated%3A2023-01-09..2023-01-26&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.1.4
 
