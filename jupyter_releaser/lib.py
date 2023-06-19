@@ -337,7 +337,7 @@ def publish_assets(  # noqa
         npm.handle_npm_config(npm_token)
         if npm_token:
             util.run("npm whoami")
-        # check i
+        # check if this is a prerelease
         match = util.parse_release_url(release_url)
         owner, repo = match["owner"], match["repo"]
 

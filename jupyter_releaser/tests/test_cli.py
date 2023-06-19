@@ -152,6 +152,7 @@ expected-sha: RH_EXPECTED_SHA
 npm-cmd: RH_NPM_COMMAND
 npm-install-options: RH_NPM_INSTALL_OPTIONS
 npm-registry: NPM_REGISTRY
+npm-tag: NPM_TAG
 npm-token: NPM_TOKEN
 post-version-message: RH_POST_VERSION_MESSAGE
 post-version-spec: RH_POST_VERSION_SPEC
