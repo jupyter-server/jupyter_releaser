@@ -16,6 +16,10 @@ already uses Jupyter Releaser.
 
 - Add the token as `ADMIN_GITHUB_TOKEN` in the [repository secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository) of your fork. The token must have `repo` and `workflow` scopes.
 
+- Set up PyPI:
+
+<details><summary>Using PyPI token (legacy way)</summary>
+
 - If the repo generates PyPI release(s), create a scoped PyPI [token](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github). We recommend using a scoped token for security reasons.
 
 - You can store the token as `PYPI_TOKEN` in your fork's `Secrets`.
@@ -34,7 +38,20 @@ already uses Jupyter Releaser.
     owner1/repo1/path/to/package2,token2
     ```
 
+</details>
+
+<details><summary>Using PyPI trusted publisher (modern way)</summary>
+
+- Set up your PyPI project by [adding a trusted publisher](https://docs.pypi.org/trusted-publishers/adding-a-publisher/)
+  - if you use the example workflows, the _workflow name_ is `publish-release.yml` (or `full-release.yml`) and the
+    _environment_ should be left blank.
+- Ensure the publish release job as `permissions`: `id-token : write` (see the [documentation](https://docs.pypi.org/trusted-publishers/using-a-publisher/))
+
+</details>
+
 - If the repo generates npm release(s), add access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens), saved as `NPM_TOKEN` in "Secrets".
+
+> If you want to set _provenance_ on your package, you need to ensure the publish release job as `permissions`: `id-token : write` (see the [documentation](https://docs.npmjs.com/generating-provenance-statements#publishing-packages-with-provenance-via-github-actions)).
 
 ## Prep Release
 

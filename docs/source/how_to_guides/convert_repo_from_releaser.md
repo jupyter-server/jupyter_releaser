@@ -23,7 +23,11 @@ A. Prep the `jupyter_releaser` fork:
   [repository secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository).
   The token will need "public_repo", and "repo:status" permissions.
 
-- [ ] Add access token for the [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github) stored as `PYPI_TOKEN`.
+- [ ] Set up PyPI:
+
+<details><summary>Using PyPI token (legacy way)</summary>
+
+- Add access token for the [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github) stored as `PYPI_TOKEN`.
   _Note_ For security reasons, it is recommended that you scope the access
   to a single repository, and use a variable called `PYPI_TOKEN_MAP` that is formatted as follows:
 
@@ -39,7 +43,20 @@ A. Prep the `jupyter_releaser` fork:
   owner1/repo1/path/to/package2,token2
   ```
 
+</details>
+
+<details><summary>Using PyPI trusted publisher (modern way)</summary>
+
+- Set up your PyPI project by [adding a trusted publisher](https://docs.pypi.org/trusted-publishers/adding-a-publisher/)
+  - if you use the example workflows, the _workflow name_ is `publish-release.yml` (or `full-release.yml`) and the
+    _environment_ should be left blank.
+- Ensure the publish release job as `permissions`: `id-token : write` (see the [documentation](https://docs.pypi.org/trusted-publishers/using-a-publisher/))
+
+</details>
+
 - [ ] If needed, add access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens), saved as `NPM_TOKEN`.
+
+> If you want to set _provenance_ on your package, you need to ensure the publish release job as `permissions`: `id-token : write` (see the [documentation](https://docs.npmjs.com/generating-provenance-statements#publishing-packages-with-provenance-via-github-actions)).
 
 B. Prep target repository:
 

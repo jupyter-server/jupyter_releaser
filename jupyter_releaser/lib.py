@@ -342,6 +342,11 @@ def publish_assets(  # noqa
     if release_url and len(glob(f"{dist_dir}/*.whl")):
         twine_token = python.get_pypi_token(release_url, python_package_path)
 
+        if twine_token:
+            # tell GitHub Actions to mask the token in any console logs,
+            # to avoid leaking it
+            util.run(f'echo "::add-mask::{twine_token}"')
+
     if dry_run:
         # Start local pypi server with no auth, allowing overwrites,
         # in a temporary directory

@@ -25,6 +25,10 @@ on:
 jobs:
   full_release:
     runs-on: ubuntu-latest
+    permissions:
+      # This is useful if you want to use PyPI trusted publisher
+      # and NPM provenance
+      id-token: write
     steps:
       - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
 
@@ -51,9 +55,10 @@ jobs:
       - name: Finalize Release
         id: finalize-release
         env:
-          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
-          PYPI_TOKEN_MAP: ${{ secrets.PYPI_TOKEN_MAP }}
-          TWINE_USERNAME: __token__
+          # The following are needed if you use legacy PyPI set up
+          # PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+          # PYPI_TOKEN_MAP: ${{ secrets.PYPI_TOKEN_MAP }}
+          # TWINE_USERNAME: __token__
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         uses: jupyter-server/jupyter-releaser/.github/actions/finalize-release@v2
         with:

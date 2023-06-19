@@ -135,6 +135,13 @@ def handle_npm_config(npm_token):
             auth_entry = ""
 
     text += f"\n{reg_entry}\n{auth_entry}"
+
+    if os.environ.get(util.GH_ID_TOKEN_TOKEN_VAR, ""):
+        util.log("Turning on NPM provenance as id-token permission is set.")
+        # See documentation https://docs.npmjs.com/generating-provenance-statements
+        # Also https://github.blog/2023-04-19-introducing-npm-package-provenance/
+        text += "\nprovenance=true"
+
     text = text.strip() + "\n"
     util.log(f"writing npm config to {npmrc}")
     npmrc.write_text(text, encoding="utf-8")
