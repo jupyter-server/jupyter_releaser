@@ -349,7 +349,9 @@ def publish_assets(  # noqa
             npm_tag = npm_tag or ("next" if is_prerelease else "latest")
             npm_cmd = f"{npm_cmd} --tag {npm_tag}"
         elif npm_tag:
-            warnings.warn(f"The NPM tag '{npm_tag}' will be ignored as at tag option is set in NPM command; '{npm_cmd}'.")
+            warnings.warn(
+                f"The NPM tag '{npm_tag}' will be ignored as at tag option is set in NPM command; '{npm_cmd}'."
+            )
 
     res = python_package.split(":")
     python_package_path = res[0]
