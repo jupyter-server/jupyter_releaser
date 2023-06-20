@@ -351,7 +351,7 @@ def publish_assets(  # noqa
         elif npm_tag:
             warnings.warn(
                 f"The NPM tag '{npm_tag}' will be ignored as at tag option is set in NPM command; '{npm_cmd}'.",
-                stacklevel=2
+                stacklevel=2,
             )
 
     res = python_package.split(":")
