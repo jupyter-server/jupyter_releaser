@@ -2,6 +2,31 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.2.0
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...b1388d01b8d28ea077fab281bd78ecc1c9c18773))
+
+### Enhancements made
+
+- Add support for PyPI trusted publisher and NPM provenance [#511](https://github.com/jupyter-server/jupyter_releaser/pull/511) ([@fcollonval](https://github.com/fcollonval))
+- Dynamically set the NPM tag [#510](https://github.com/jupyter-server/jupyter_releaser/pull/510) ([@fcollonval](https://github.com/fcollonval))
+
+### Bugs fixed
+
+- Fix package version target [#514](https://github.com/jupyter-server/jupyter_releaser/pull/514) ([@fcollonval](https://github.com/fcollonval))
+
+### Documentation improvements
+
+- Fix doc edition links [#515](https://github.com/jupyter-server/jupyter_releaser/pull/515) ([@fcollonval](https://github.com/fcollonval))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2023-06-19&to=2023-06-20&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2023-06-19..2023-06-20&type=Issues) | [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2023-06-19..2023-06-20&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.1.6
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...0b4c9cc2b257e799794c6d02735b659da09e2336))
@@ -23,8 +48,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2023-01-26&to=2023-06-19&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2023-01-26..2023-06-19&type=Issues) | [@codecov](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Acodecov+updated%3A2023-01-26..2023-06-19&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2023-01-26..2023-06-19&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2023-01-26..2023-06-19&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.1.5
 
