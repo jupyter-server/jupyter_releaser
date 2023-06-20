@@ -8,6 +8,7 @@ import re
 import shutil
 import tempfile
 import uuid
+import warnings
 from datetime import datetime, timezone
 from glob import glob
 from pathlib import Path
@@ -315,12 +316,14 @@ def extract_release(auth, dist_dir, dry_run, release_url):
 
 
 def publish_assets(  # noqa
+    auth,
     dist_dir,
     npm_token,
     npm_cmd,
     twine_cmd,
     npm_registry,
     twine_repository_url,
+    npm_tag,
     dry_run,
     release_url,
     python_package,
@@ -334,6 +337,22 @@ def publish_assets(  # noqa
         npm.handle_npm_config(npm_token)
         if npm_token:
             util.run("npm whoami")
+        # check if this is a prerelease
+        match = util.parse_release_url(release_url)
+        owner, repo = match["owner"], match["repo"]
+
+        gh = util.get_gh_object(dry_run=dry_run, owner=owner, repo=repo, token=auth)
+        release = util.release_for_url(gh, release_url)
+        is_prerelease = release.prerelease
+
+        if " --tag " not in npm_cmd:
+            npm_tag = npm_tag or ("next" if is_prerelease else "latest")
+            npm_cmd = f"{npm_cmd} --tag {npm_tag}"
+        elif npm_tag:
+            warnings.warn(
+                f"The NPM tag '{npm_tag}' will be ignored as at tag option is set in NPM command; '{npm_cmd}'.",
+                stacklevel=2,
+            )
 
     res = python_package.split(":")
     python_package_path = res[0]

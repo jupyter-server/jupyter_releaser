@@ -152,6 +152,7 @@ expected-sha: RH_EXPECTED_SHA
 npm-cmd: RH_NPM_COMMAND
 npm-install-options: RH_NPM_INSTALL_OPTIONS
 npm-registry: NPM_REGISTRY
+npm-tag: NPM_TAG
 npm-token: NPM_TOKEN
 post-version-message: RH_POST_VERSION_MESSAGE
 post-version-spec: RH_POST_VERSION_SPEC
@@ -593,21 +594,25 @@ def test_publish_assets_py(py_package, runner, mocker, git_prep, mock_github):
     assert "after-publish-assets" in log
 
 
-def test_publish_assets_npm(npm_dist, runner, mocker):
+def test_publish_assets_npm(npm_dist, runner, mocker, mock_github):
+    # Create the release.
     dist_dir = npm_dist / util.CHECKOUT_NAME / "dist"
+    release = create_draft_release("bar", glob(f"{dist_dir!s}/*.*"))
+
+    os.environ["RH_RELEASE_URL"] = release.html_url
+
     orig_run = util.run
     called = 0
 
     def wrapped(cmd, **kwargs):
         nonlocal called
-        if cmd.startswith("npm publish --dry-run"):
+        if cmd.startswith("npm publish --dry-run --tag next"):
             called += 1
         return orig_run(cmd, **kwargs)
 
     mock_run = mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
 
     runner(["publish-assets", "--npm-cmd", "npm publish --dry-run", "--dist-dir", dist_dir])
-
     assert called == 3, called
 
 
