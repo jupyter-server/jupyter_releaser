@@ -49,7 +49,7 @@ def write_to_file(name, data):
         value = data[key]
         if isinstance(value, BaseModel):
             if hasattr(value, 'model_dump_json'):
-                value = json.loads(value.model_dump_json())  # type:ignore
+                value = json.loads(value.model_dump_json())
             else:
                 value = json.loads(value.json())
         result[key] = value
