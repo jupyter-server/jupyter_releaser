@@ -89,7 +89,7 @@ def get_version_entry(
     branch = branch or util.get_branch()
     since = since or util.get_latest_tag(ref or branch, since_last_stable)
 
-    if since == "":  # noqa
+    if since == "":
         since = util.get_first_commit(ref or branch)
 
     util.log(f"Getting changes to {repo} since {since} on branch {branch}...")

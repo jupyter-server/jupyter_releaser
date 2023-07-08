@@ -15,7 +15,7 @@ from jupyter_releaser import changelog, lib, npm, python, util
 class ReleaseHelperGroup(click.Group):
     """Click group tailored to jupyter-releaser"""
 
-    _needs_checkout_dir: t.Dict[str, bool] = {}
+    _needs_checkout_dir: t.Dict[str, bool] = {}  # noqa
 
     def invoke(self, ctx):  # noqa
         """Handle jupyter-releaser config while invoking a command"""
