@@ -146,7 +146,7 @@ class ReleaseHelperGroup(click.Group):
         return self.commands.keys()
 
 
-@click.group(cls=ReleaseHelperGroup)
+@click.group(cls=ReleaseHelperGroup)  # type:ignore[arg-type]
 @click.option("--force", default=False, help="Force a command to run even when skipped by config")
 def main(force):
     """Jupyter Releaser scripts"""
@@ -154,7 +154,7 @@ def main(force):
 
 
 # Extracted common options
-version_spec_options = [
+version_spec_options: t.Any = [
     click.option(
         "--version-spec",
         envvar="RH_VERSION_SPEC",
@@ -164,7 +164,7 @@ version_spec_options = [
 ]
 
 
-post_version_spec_options = [
+post_version_spec_options: t.Any = [
     click.option(
         "--post-version-spec",
         envvar="RH_POST_VERSION_SPEC",
@@ -179,24 +179,26 @@ post_version_spec_options = [
     ),
 ]
 
-version_cmd_options = [
+version_cmd_options: t.Any = [
     click.option("--version-cmd", envvar="RH_VERSION_COMMAND", help="The version command")
 ]
 
 
-branch_options = [
+branch_options: t.Any = [
     click.option("--ref", envvar="RH_REF", help="The source reference"),
     click.option("--branch", envvar="RH_BRANCH", help="The target branch"),
     click.option("--repo", envvar="RH_REPOSITORY", help="The git repo"),
 ]
 
-auth_options = [
+auth_options: t.Any = [
     click.option("--auth", envvar="GITHUB_ACCESS_TOKEN", help="The GitHub auth token"),
 ]
 
-username_options = [click.option("--username", envvar="GITHUB_ACTOR", help="The git username")]
+username_options: t.Any = [
+    click.option("--username", envvar="GITHUB_ACTOR", help="The git username")
+]
 
-dist_dir_options = [
+dist_dir_options: t.Any = [
     click.option(
         "--dist-dir",
         envvar="RH_DIST_DIR",
@@ -205,7 +207,7 @@ dist_dir_options = [
     )
 ]
 
-python_packages_options = [
+python_packages_options: t.Any = [
     click.option(
         "--python-packages",
         envvar="RH_PYTHON_PACKAGES",
@@ -215,7 +217,7 @@ python_packages_options = [
     )
 ]
 
-check_imports_options = [
+check_imports_options: t.Any = [
     click.option(
         "--check-imports",
         envvar="RH_CHECK_IMPORTS",
@@ -225,20 +227,20 @@ check_imports_options = [
     )
 ]
 
-dry_run_options = [
+dry_run_options: t.Any = [
     click.option("--dry-run", is_flag=True, envvar="RH_DRY_RUN", help="Run as a dry run")
 ]
 
 
-git_url_options = [click.option("--git-url", help="A custom url for the git repository")]
+git_url_options: t.Any = [click.option("--git-url", help="A custom url for the git repository")]
 
 
-release_url_options = [
+release_url_options: t.Any = [
     click.option("--release-url", envvar="RH_RELEASE_URL", help="A draft GitHub release url")
 ]
 
 
-changelog_path_options = [
+changelog_path_options: t.Any = [
     click.option(
         "--changelog-path",
         envvar="RH_CHANGELOG",
@@ -247,7 +249,7 @@ changelog_path_options = [
     ),
 ]
 
-since_options = [
+since_options: t.Any = [
     click.option(
         "--since",
         envvar="RH_SINCE",
@@ -262,7 +264,7 @@ since_options = [
     ),
 ]
 
-changelog_options = (
+changelog_options: t.Any = (
     branch_options
     + auth_options
     + changelog_path_options
@@ -277,7 +279,7 @@ changelog_options = (
     ]
 )
 
-npm_install_options = [
+npm_install_options: t.Any = [
     click.option(
         "--npm-install-options",
         envvar="RH_NPM_INSTALL_OPTIONS",
@@ -286,7 +288,7 @@ npm_install_options = [
     )
 ]
 
-pydist_check_options = [
+pydist_check_options: t.Any = [
     click.option(
         "--pydist-check-cmd",
         envvar="RH_PYDIST_CHECK_CMD",
