@@ -48,7 +48,10 @@ def write_to_file(name, data):
     for key in data:
         value = data[key]
         if isinstance(value, BaseModel):
-            value = json.loads(value.json())
+            if hasattr(value, 'model_dump_json'):
+                value = json.loads(value.model_dump_json())  # type:ignore
+            else:
+                value = json.loads(value.json())
         result[key] = value
     with open(source_file, "w") as fid:
         json.dump(result, fid)
@@ -145,7 +148,7 @@ def list_releases(owner: str, repo: str) -> List[Release]:
 @app.post("/repos/{owner}/{repo}/releases")
 async def create_a_release(owner: str, repo: str, request: Request) -> Release:
     """https://docs.github.com/en/rest/releases/releases#create-a-release"""
-    release_id = uuid.uuid4().int
+    release_id = uuid.uuid4().int % (2**32 - 1)
     data = await request.json()
     base_url = get_mock_github_url()
     url = f"{base_url}/repos/{owner}/{repo}/releases/{release_id}"
@@ -183,7 +186,7 @@ async def upload_a_release_asset(owner: str, repo: str, release_id: int, request
     """https://docs.github.com/en/rest/releases/assets#upload-a-release-asset"""
     base_url = get_mock_github_url()
     model = releases[str(release_id)]
-    asset_id = uuid.uuid4().int
+    asset_id = uuid.uuid4().int % (2**32 - 1)
     name = request.query_params["name"]
     with open(f"{static_dir}/{asset_id}", "wb") as fid:
         async for chunk in request.stream():
@@ -242,7 +245,11 @@ def create_a_pull_request(owner: str, repo: str) -> PullRequest:
 @app.post("/repos/{owner}/{repo}/issues/{issue_number}/labels")
 def add_labels_to_an_issue(owner: str, repo: str, issue_number: int) -> BaseModel:
     """https://docs.github.com/en/rest/issues/labels#add-labels-to-an-issue"""
-    return BaseModel()
+
+    class _Inner(BaseModel):
+        pass
+
+    return _Inner()
 
 
 @app.post("/repos/{owner}/{repo}/git/refs")
