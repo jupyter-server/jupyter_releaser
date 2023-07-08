@@ -139,7 +139,7 @@ def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=F
     pr_branch = f"changelog-{uuid.uuid1().hex}"
 
     if not dry_run:
-        dirty = util.run("git --no-pager diff --stat") != ""  # noqa
+        dirty = util.run("git --no-pager diff --stat") != ""
         if dirty:
             util.run("git stash")
         util.run(f"{util.GIT_FETCH_CMD} {branch}")
