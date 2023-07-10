@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.2.1
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...0469672a12bfdcd2d1c7834e05a82aaeec59f103))
+
+### Maintenance and upkeep improvements
+
+- Fix compat with pydantic 2 [#518](https://github.com/jupyter-server/jupyter_releaser/pull/518) ([@blink1073](https://github.com/blink1073))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2023-06-20&to=2023-07-10&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2023-06-20..2023-07-10&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2023-06-20..2023-07-10&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.2.0
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...b1388d01b8d28ea077fab281bd78ecc1c9c18773))
@@ -24,8 +40,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2023-06-19&to=2023-06-20&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2023-06-19..2023-06-20&type=Issues) | [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2023-06-19..2023-06-20&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.1.6
 
