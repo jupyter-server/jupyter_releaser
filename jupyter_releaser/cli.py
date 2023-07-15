@@ -146,7 +146,7 @@ class ReleaseHelperGroup(click.Group):
         return self.commands.keys()
 
 
-@click.group(cls=ReleaseHelperGroup)  # type:ignore[arg-type]
+@click.group(cls=ReleaseHelperGroup)
 @click.option("--force", default=False, help="Force a command to run even when skipped by config")
 def main(force):
     """Jupyter Releaser scripts"""
