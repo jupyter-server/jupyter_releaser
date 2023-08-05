@@ -527,7 +527,15 @@ def check_npm(dist_dir, npm_install_options):
 @add_options(dry_run_options)
 @use_checkout_dir()
 def tag_release(
-    ref, branch, dist_dir, release_commit, tag_format, tag_message, no_git_tag_workspace, dry_run
+    ref,
+    branch,
+    repo,
+    dist_dir,
+    release_commit,
+    tag_format,
+    tag_message,
+    no_git_tag_workspace,
+    dry_run,
 ):
     """Create release commit and tag"""
     lib.tag_release(
