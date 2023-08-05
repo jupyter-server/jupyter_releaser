@@ -504,13 +504,9 @@ def check_npm(dist_dir, npm_install_options):
 
 
 @main.command()
+@add_options(branch_options)
 @add_options(dist_dir_options)
-@click.option(
-    "--release-message",
-    envvar="RH_RELEASE_MESSAGE",
-    default="Publish {version}",
-    help="The message to use for the release commit",
-)
+@click.option("--release-commit", envvar="RH_RELEASE_COMMIT", help="The release commit sha")
 @click.option(
     "--tag-format",
     envvar="RH_TAG_FORMAT",
@@ -528,10 +524,15 @@ def check_npm(dist_dir, npm_install_options):
     is_flag=True,
     help="Whether to skip tagging npm workspace packages",
 )
+@add_options(dry_run_options)
 @use_checkout_dir()
-def tag_release(dist_dir, release_message, tag_format, tag_message, no_git_tag_workspace):
+def tag_release(
+    ref, branch, dist_dir, release_commit, tag_format, tag_message, no_git_tag_workspace, dry_run
+):
     """Create release commit and tag"""
-    lib.tag_release(dist_dir, release_message, tag_format, tag_message, no_git_tag_workspace)
+    lib.tag_release(
+        branch, dist_dir, release_commit, tag_format, tag_message, no_git_tag_workspace, dry_run
+    )
 
 
 @main.command()
@@ -543,6 +544,12 @@ def tag_release(dist_dir, release_message, tag_format, tag_message, no_git_tag_w
 @add_options(dry_run_options)
 @add_options(release_url_options)
 @add_options(post_version_spec_options)
+@click.option(
+    "--release-message",
+    envvar="RH_RELEASE_MESSAGE",
+    default="Publish {version}",
+    help="The message to use for the release commit",
+)
 @click.argument("assets", nargs=-1)
 @use_checkout_dir()
 def populate_release(
@@ -557,6 +564,7 @@ def populate_release(
     release_url,
     post_version_spec,
     post_version_message,
+    release_message,
     assets,
 ):
     """Populate a release."""
@@ -572,6 +580,7 @@ def populate_release(
         release_url,
         post_version_spec,
         post_version_message,
+        release_message,
         assets,
     )
 

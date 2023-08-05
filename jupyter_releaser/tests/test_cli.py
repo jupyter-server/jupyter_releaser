@@ -161,6 +161,7 @@ pydist-extra-check-cmds: RH_EXTRA_PYDIST_CHECK_CMDS
 pydist-resource-paths: RH_PYDIST_RESOURCE_PATHS
 python-packages: RH_PYTHON_PACKAGES
 ref: RH_REF
+release-commit: RH_RELEASE_COMMIT
 release-message: RH_RELEASE_MESSAGE
 release-url: RH_RELEASE_URL
 repo: RH_REPOSITORY
@@ -428,12 +429,11 @@ def test_tag_release(py_package, runner, build_mock, git_prep):
     runner(["bump-version", "--version-spec", VERSION_SPEC])
     # Create the dist files
     util.run("pipx run build .", cwd=util.CHECKOUT_NAME)
+
     # Tag the release
     runner(
         [
             "tag-release",
-            "--release-message",
-            "hi {version}",
             "--tag-message",
             "no thanks",
         ]
@@ -496,9 +496,6 @@ def test_extract_dist_py(py_package, runner, mocker, mock_github, tmp_path, git_
     # Create the dist files
     run("pipx run build .", cwd=util.CHECKOUT_NAME)
 
-    # Finalize the release
-    runner(["tag-release"])
-
     # Create the release.
     dist_dir = os.path.join(util.CHECKOUT_NAME, "dist")
     release = create_draft_release("bar", glob(f"{dist_dir}/*.*"))
@@ -529,9 +526,6 @@ def test_extract_dist_multipy(py_multipackage, runner, mocker, mock_github, tmp_
             cwd=Path(util.CHECKOUT_NAME) / package["rel_path"],
         )
         files.extend(glob(dist_dir + "/*.*"))
-
-    # Finalize the release
-    runner(["tag-release"])
 
     # Create the release.
     dist_dir = os.path.join(util.CHECKOUT_NAME, "dist")

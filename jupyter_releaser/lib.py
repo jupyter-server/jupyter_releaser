@@ -130,13 +130,15 @@ def draft_changelog(
     util.actions_output("release_url", release.html_url)
 
 
-def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=False):
-    """Make a changelog PR."""
+def handle_pr(
+    auth, branch, repo, title, commit_message, body, pr_type="forwardport", dry_run=False
+):
+    """Handle a PR."""
     repo = repo or util.get_repo()
     branch = branch or util.get_branch()
 
     # Make a new branch with a uuid suffix
-    pr_branch = f"changelog-{uuid.uuid1().hex}"
+    pr_branch = f"{pr_type}-{uuid.uuid1().hex}"
 
     if not dry_run:
         dirty = util.run("git --no-pager diff --stat") != ""
@@ -171,20 +173,35 @@ def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=F
     # Try to add the documentation label to the PR.
     number = pull.number
     try:
-        gh.issues.add_labels(number, ["documentation"])
+        if pr_type == "forwardport":
+            gh.issues.add_labels(number, ["documentation"])
+        else:
+            gh.issues.add_labels(number, ["maintenance"])
     except Exception as e:
         print(e)
+
+    if pr_type == "release":
+        # Merge the release PR
+        sha = util.run("git rev-parse HEAD")
+        gh.pulls.merge(owner, repo, number, title, title, sha, "merge")
+
+        # Delete the remote branch
+        if not dry_run:
+            util.run(f"git push origin --delete {pr_branch}", echo=True)
 
     util.actions_output("pr_url", pull.html_url)
 
 
-def tag_release(dist_dir, release_message, tag_format, tag_message, no_git_tag_workspace):
-    """Create release commit and tag"""
-    # Get the new version
-    version = util.get_version()
+def tag_release(
+    branch, dist_dir, release_commit, tag_format, tag_message, no_git_tag_workspace, dry_run
+):
+    """Create release tag and push it"""
 
-    # Create the release commit
-    util.create_release_commit(version, release_message, dist_dir)
+    # Check out the release commit.
+    if release_commit:
+        util.run(f'git checkout {release_commit}')
+
+    version = util.get_version()
 
     # Create the annotated release tag
     tag_name = tag_format.format(version=version)
@@ -194,6 +211,12 @@ def tag_release(dist_dir, release_message, tag_format, tag_message, no_git_tag_w
     # Create release tags for workspace packages if given
     if not no_git_tag_workspace:
         npm.tag_workspace_packages()
+
+    # Push the tag(s) to the remote.
+    remote_name = util.get_remote_name(dry_run)
+    remote_url = util.run(f"git config --get remote.{remote_name}.url")
+    if not os.path.exists(remote_url):
+        util.run(f"git push {remote_name} HEAD:{branch} --follow-tags --tags")
 
 
 def populate_release(
@@ -208,15 +231,21 @@ def populate_release(
     release_url,
     post_version_spec,
     post_version_message,
+    release_message,
     assets,
 ):
     """Populate release assets and push tags and commits"""
     branch = branch or util.get_branch()
     assets = assets or glob(f"{dist_dir}/*")
     body = changelog.extract_current(changelog_path)
+    version = util.get_version()
 
     match = util.parse_release_url(release_url)
     owner, repo_name = match["owner"], match["repo"]
+
+    # Create the release commit.
+    util.create_release_commit(version, release_message, dist_dir)
+    release_commit = util.run('git rev-parse HEAD')
 
     # Bump to post version if given.
     if post_version_spec:
@@ -229,10 +258,14 @@ def populate_release(
     gh = util.get_gh_object(dry_run=dry_run, owner=owner, repo=repo_name, token=auth)
     release = util.release_for_url(gh, release_url)
 
-    remote_name = util.get_remote_name(dry_run)
-    remote_url = util.run(f"git config --get remote.{remote_name}.url")
-    if not os.path.exists(remote_url):
-        util.run(f"git push {remote_name} HEAD:{branch} --follow-tags --tags")
+    # Create a release PR.
+    title = f"Release {version}"
+    commit_message = f'git commit -a -m "{title}"'
+    body = title
+    handle_pr(auth, branch, repo, title, commit_message, body, pr_type="release", dry_run=dry_run)
+
+    # Clean up after ourselves.
+    util.run(f"git checkout {branch}")
 
     # Set the body of the release with the changelog contents.
     # Get the new release since the draft release might change urls.
@@ -246,8 +279,18 @@ def populate_release(
         release.prerelease,
     )
 
-    # Upload the assets to the draft release.
-    release = util.upload_assets(gh, assets, release, auth)
+    # Update the metadata to include the release commit.
+    metadata = util.extract_metadata_from_release_url(gh, release_url, auth)
+    metadata['release_commit'] = release_commit
+    with tempfile.TemporaryDirectory() as d:
+        metadata_path = Path(d) / util.METADATA_JSON
+        with open(metadata_path, "w") as fid:
+            json.dump(metadata, fid)
+
+        assets.append(metadata_path)
+
+        # Upload the assets to the draft release.
+        release = util.upload_assets(gh, assets, release, auth)
 
     # Set the GitHub action output
     util.actions_output("release_url", release.html_url)
@@ -597,7 +640,7 @@ def forwardport_changelog(auth, ref, branch, repo, username, changelog_path, dry
     commit_message = f'git commit -a -m "{title}"'
     body = title
 
-    make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=dry_run)
+    handle_pr(auth, branch, repo, title, commit_message, body, dry_run=dry_run)
 
     # Clean up after ourselves
     util.run(f"git checkout {source_branch}")

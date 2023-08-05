@@ -132,9 +132,6 @@ def py_dist(py_package, runner, mocker, build_mock, git_prep):
     # Create the dist files
     util.run("pipx run build .", cwd=util.CHECKOUT_NAME, quiet=True)
 
-    # Finalize the release
-    runner(["tag-release"])
-
     return py_package
 
 
@@ -144,9 +141,6 @@ def npm_dist(workspace_package, runner, mocker, git_prep):
 
     # Create the dist files
     runner(["build-npm"])
-
-    # Finalize the release
-    runner(["tag-release"])
 
     return workspace_package
 
