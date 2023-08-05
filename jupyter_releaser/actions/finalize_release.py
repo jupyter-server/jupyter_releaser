@@ -16,5 +16,6 @@ run_action("jupyter-releaser publish-assets")
 
 if release_url:
     run_action("jupyter-releaser prep-git")
-    run_action("jupyter-releaser publish-release")
+    run_action("jupyter-releaser tag-release")
     run_action("jupyter-releaser forwardport-changelog")
+    run_action("jupyter-releaser publish-release")
