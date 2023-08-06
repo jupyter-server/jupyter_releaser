@@ -161,27 +161,27 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
         util.run(f"git push origin {pr_branch}", echo=True)
 
     # title, head, base, body, maintainer_can_modify, draft, issue
-    print('Creating a PR"')
+    util.log('Creating a PR"')
     pull = gh.pulls.create(title, head, base, body, maintainer_can_modify, False, None)
-    print(f'Created a PR: {pull.number}')
+    util.log(f'Created a PR: {pull.number}')
 
     # Try to add the documentation label to the PR.
     number = pull.number
-    print("Adding label")
+    util.log("Adding label")
     try:
         if pr_type == "forwardport":
             gh.issues.add_labels(number, ["documentation"])
         else:
             gh.issues.add_labels(number, ["maintenance"])
     except Exception as e:
-        print(e)
-    print("Added label")
+        util.log(e)
+    util.log("Added label")
 
     if pr_type == "release":
         # Merge the release PR
         sha = util.run("git rev-parse HEAD")
         commit_message = util.run(f"git log --format=%B -n 1 {sha}")
-        print(f"Merging the PR {number}")
+        util.log(f"Merging the PR {number}")
         gh.pulls.merge(number, title, commit_message, sha, "rebase")
 
         # Delete the remote branch
@@ -270,6 +270,7 @@ def populate_release(
 
     # Set the body of the release with the changelog contents.
     # Get the new release since the draft release might change urls.
+    util.log("Updating release")
     release = gh.repos.update_release(
         release.id,
         release.tag_name,
@@ -281,7 +282,7 @@ def populate_release(
     )
 
     # Update the metadata to include the release commit.
-    metadata = util.extract_metadata_from_release_url(gh, release_url, auth)
+    metadata = util.extract_metadata_from_release_url(gh, release.html_url, auth)
     metadata['release_commit'] = release_commit
     with tempfile.TemporaryDirectory() as d:
         metadata_path = Path(d) / util.METADATA_JSON
