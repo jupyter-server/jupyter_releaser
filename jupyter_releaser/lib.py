@@ -130,7 +130,7 @@ def draft_changelog(
     util.actions_output("release_url", release.html_url)
 
 
-def handle_pr(
+def handle_pr(  # noqa
     auth, branch, repo, title, commit_message, body, pr_type="forwardport", dry_run=False
 ):
     """Handle a PR."""
@@ -150,11 +150,12 @@ def handle_pr(
             util.run("git stash apply")
 
     # Add a commit with the message
-    try:
-        util.run(commit_message)
-    except CalledProcessError as e:
-        util.log(str(e))
-        return
+    if commit_message:
+        try:
+            util.run(commit_message)
+        except CalledProcessError as e:
+            util.log(str(e))
+            return
 
     # Create the pull
     owner, repo_name = repo.split("/")
@@ -260,9 +261,8 @@ def populate_release(
 
     # Create a release PR.
     title = f"Release {version}"
-    commit_message = f'git commit -a -m "{title}"'
     body = title
-    handle_pr(auth, branch, repo, title, commit_message, body, pr_type="release", dry_run=dry_run)
+    handle_pr(auth, branch, repo, title, "", body, pr_type="release", dry_run=dry_run)
 
     # Clean up after ourselves.
     util.run(f"git checkout {branch}")
