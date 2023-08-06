@@ -130,32 +130,24 @@ def draft_changelog(
     util.actions_output("release_url", release.html_url)
 
 
-def handle_pr(  # noqa
-    auth, branch, repo, title, commit_message, body, pr_type="forwardport", dry_run=False
-):
-    """Handle a PR."""
-    repo = repo or util.get_repo()
-    branch = branch or util.get_branch()
-
+def make_pr_branch(branch, prefix, dry_run=False):
     # Make a new branch with a uuid suffix
-    pr_branch = f"{pr_type}-{uuid.uuid1().hex}"
+    pr_branch = f"{prefix}-{uuid.uuid1().hex}"
+    dirty = util.run("git --no-pager diff --stat") != ""
+    if dirty:
+        msg = "Branch is not clean"
+        raise ValueError(msg)
 
     if not dry_run:
-        dirty = util.run("git --no-pager diff --stat") != ""
-        if dirty:
-            util.run("git stash")
         util.run(f"{util.GIT_FETCH_CMD} {branch}")
-        util.run(f"git checkout -b {pr_branch} origin/{branch}")
-        if dirty:
-            util.run("git stash apply")
 
-    # Add a commit with the message
-    if commit_message:
-        try:
-            util.run(commit_message)
-        except CalledProcessError as e:
-            util.log(str(e))
-            return
+    util.run(f"git checkout -b {pr_branch} origin/{branch}")
+    return pr_branch
+
+
+def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport", dry_run=False):
+    """Handle a PR."""
+    repo = repo or util.get_repo()
 
     # Create the pull
     owner, repo_name = repo.split("/")
@@ -168,7 +160,7 @@ def handle_pr(  # noqa
     if not dry_run:
         util.run(f"git push origin {pr_branch}", echo=True)
 
-    #  title, head, base, body, maintainer_can_modify, draft, issue
+    # title, head, base, body, maintainer_can_modify, draft, issue
     pull = gh.pulls.create(title, head, base, body, maintainer_can_modify, False, None)
 
     # Try to add the documentation label to the PR.
@@ -244,6 +236,8 @@ def populate_release(
     match = util.parse_release_url(release_url)
     owner, repo_name = match["owner"], match["repo"]
 
+    pr_branch = make_pr_branch(branch, "release", dry_run)
+
     # Create the release commit.
     util.create_release_commit(version, release_message, dist_dir)
     release_commit = util.run('git rev-parse HEAD')
@@ -262,7 +256,7 @@ def populate_release(
     # Create a release PR.
     title = f"Release {version}"
     body = title
-    handle_pr(auth, branch, repo, title, "", body, pr_type="release", dry_run=dry_run)
+    handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="release", dry_run=dry_run)
 
     # Clean up after ourselves.
     util.run(f"git checkout {branch}")
@@ -633,14 +627,21 @@ def forwardport_changelog(auth, ref, branch, repo, username, changelog_path, dry
             default_log[:insertion_point] + entry + default_log[insertion_point:]
         )
 
+    pr_branch = make_pr_branch(branch, "forwardport", dry_run)
+
     Path(changelog_path).write_text(default_log, encoding="utf-8")
 
-    # Create a forward port PR
+    # Add a commit with the message
     title = f"{changelog.PR_PREFIX} Forward Ported from {tag}"
-    commit_message = f'git commit -a -m "{title}"'
-    body = title
+    try:
+        util.run(f'git commit -a -m "{title}"')
+    except CalledProcessError as e:
+        util.log(str(e))
+        return
 
-    handle_pr(auth, branch, repo, title, commit_message, body, dry_run=dry_run)
+    # Create the forward port PR
+    body = title
+    handle_pr(auth, branch, pr_branch, repo, title, body, dry_run=dry_run)
 
     # Clean up after ourselves
     util.run(f"git checkout {source_branch}")
