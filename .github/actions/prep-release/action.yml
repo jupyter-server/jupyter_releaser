@@ -41,8 +41,12 @@ runs:
         if ! command -v jupyter-releaser &> /dev/null
         then
             echo "hi"
-            echo "${{ github.action_repository}}"
-            echo "${{ github.action_path }}"
+            cd "${{ github.action_path }}"
+            pwd
+            cd ..
+            ls
+            cd ..
+            ls
             pip install -q git+https://github.com/.git@
         fi
 
