@@ -20,15 +20,7 @@ runs:
         # Install Jupyter Releaser from git unless we are testing Releaser itself
         if ! command -v jupyter-releaser &> /dev/null
         then
-            echo "${{ github.action_path }}"
-            cd "${{ github.action_path }}"
-            cd ..
-            pwd
-            ls
-            cd ..
-            pwd
-            ls
-            pip install -q git+https://github.com/blink1073/jupyter_releaser.git@use-pr-for-changes
+            pip install -q git+https://github.com/${{ github.action_repository}}.git@${{ github.action_ref }}
         fi
 
     - id: prep-release
