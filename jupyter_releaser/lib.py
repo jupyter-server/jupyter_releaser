@@ -180,8 +180,9 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
     if pr_type == "release":
         # Merge the release PR
         sha = util.run("git rev-parse HEAD")
+        commit_message = util.run(f"git log --format=%B -n 1 {sha}")
         print(f"Merging the PR {number}")
-        gh.pulls.merge(owner, repo, number, title, title, sha, "merge")
+        gh.pulls.merge(number, title, commit_message, sha, "merge")
 
         # Delete the remote branch
         if not dry_run:
