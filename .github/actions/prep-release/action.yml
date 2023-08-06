@@ -37,19 +37,12 @@ runs:
     - name: install-releaser
       shell: bash -eux {0}
       run: |
-        # Install Jupyter Releaser from git unless we are testing Releaser itself
+        # Install Jupyter Releaser if it is not already installed
         if ! command -v jupyter-releaser &> /dev/null
         then
-            echo "hi"
             cd "${{ github.action_path }}"
-            pwd
-            cd ..
-            ls
-            cd ..
-            ls
-            cd ..
-            ls
-            pip install -q git+https://github.com/.git@
+            cd ../../..
+            pip install -e .
         fi
 
     - id: prep-release
