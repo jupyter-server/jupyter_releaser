@@ -40,7 +40,10 @@ runs:
         # Install Jupyter Releaser from git unless we are testing Releaser itself
         if ! command -v jupyter-releaser &> /dev/null
         then
-            pip install -q git+https://github.com/${{ github.action_repository}}.git@${{ github.action_ref }}
+            echo "hi"
+            echo "${{ github.action_repository}}"
+            echo "${{ github.action_ref }}"
+            pip install -q git+https://github.com/.git@
         fi
 
     - id: prep-release
