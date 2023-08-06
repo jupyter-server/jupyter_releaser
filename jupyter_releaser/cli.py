@@ -506,7 +506,9 @@ def check_npm(dist_dir, npm_install_options):
 @main.command()
 @add_options(branch_options)
 @add_options(dist_dir_options)
-@click.option("--release-commit", envvar="RH_RELEASE_COMMIT", help="The release commit sha")
+@click.option(
+    "--release-commit", envvar="RH_RELEASE_COMMIT", default="", help="The release commit sha"
+)
 @click.option(
     "--tag-format",
     envvar="RH_TAG_FORMAT",
