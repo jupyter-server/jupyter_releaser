@@ -35,6 +35,10 @@ runs:
         # Install Jupyter Releaser from git unless we are testing Releaser itself
         if ! command -v jupyter-releaser &> /dev/null
         then
+            pwd
+            ls
+            ls ..
+            ls ../..; true
             pip install -q git+https://github.com/blink1073/jupyter_releaser.git@use-pr-for-changes
         fi
 
