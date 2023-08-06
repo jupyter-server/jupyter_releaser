@@ -161,10 +161,13 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
         util.run(f"git push origin {pr_branch}", echo=True)
 
     # title, head, base, body, maintainer_can_modify, draft, issue
+    print('Creating a PR"')
     pull = gh.pulls.create(title, head, base, body, maintainer_can_modify, False, None)
+    print(f'Created a PR: {pull.number}')
 
     # Try to add the documentation label to the PR.
     number = pull.number
+    print("Adding label")
     try:
         if pr_type == "forwardport":
             gh.issues.add_labels(number, ["documentation"])
@@ -172,10 +175,12 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
             gh.issues.add_labels(number, ["maintenance"])
     except Exception as e:
         print(e)
+    print("Added label")
 
     if pr_type == "release":
         # Merge the release PR
         sha = util.run("git rev-parse HEAD")
+        print(f"Merging the PR {number}")
         gh.pulls.merge(owner, repo, number, title, title, sha, "merge")
 
         # Delete the remote branch
@@ -236,6 +241,7 @@ def populate_release(
     match = util.parse_release_url(release_url)
     owner, repo_name = match["owner"], match["repo"]
 
+    util.run('git add .')
     pr_branch = make_pr_branch(branch, "release", dry_run)
 
     # Create the release commit.
