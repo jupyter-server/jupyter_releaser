@@ -135,13 +135,13 @@ def make_pr_branch(branch, prefix, dry_run=False):
     pr_branch = f"{prefix}-{uuid.uuid1().hex}"
     dirty = util.run("git --no-pager diff --stat") != ""
     if dirty:
-        msg = "Branch is not clean"
-        raise ValueError(msg)
-
+        util.run("git stash")
     if not dry_run:
         util.run(f"{util.GIT_FETCH_CMD} {branch}")
-
     util.run(f"git checkout -b {pr_branch} origin/{branch}")
+    if dirty:
+        util.run("git stash apply")
+
     return pr_branch
 
 
