@@ -47,6 +47,8 @@ runs:
             ls
             cd ..
             ls
+            cd ..
+            ls
             pip install -q git+https://github.com/.git@
         fi
 
