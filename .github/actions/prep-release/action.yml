@@ -42,7 +42,7 @@ runs:
         then
             echo "hi"
             echo "${{ github.action_repository}}"
-            echo "${{ github.action_ref }}"
+            echo "${{ github.action_path }}"
             pip install -q git+https://github.com/.git@
         fi
 
