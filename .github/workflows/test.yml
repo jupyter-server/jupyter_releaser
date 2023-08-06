@@ -132,9 +132,6 @@ jobs:
       - uses: actions/checkout@v3
       - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
 
-      - name: Self install
-        run: pip install .
-
       - name: prep-release
         uses: ./.github/actions/prep-release
         with:
