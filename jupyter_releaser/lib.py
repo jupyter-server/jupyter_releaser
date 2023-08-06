@@ -284,6 +284,13 @@ def populate_release(
     # Update the metadata to include the release commit.
     metadata = util.extract_metadata_from_release_url(gh, release.html_url, auth)
     metadata['release_commit'] = release_commit
+
+    # Delete the old metadata file
+    for item in gh.repos.list_release_assets(release.id):
+        if item.name == 'metadata.json':
+            gh.repos.delete_release_asset(item.id)
+            break
+
     with tempfile.TemporaryDirectory() as d:
         metadata_path = Path(d) / util.METADATA_JSON
         with open(metadata_path, "w") as fid:
