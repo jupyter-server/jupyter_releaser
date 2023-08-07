@@ -560,7 +560,7 @@ def extract_metadata_from_release_url(gh, release_url, auth):
     return data
 
 
-def prepare_environment(fetch_draft_release=True):  # noqa
+def prepare_environment(fetch_draft_release=True):
     """Prepare the environment variables, for use when running one of the
     action scripts."""
     # Set up env variables
@@ -602,21 +602,6 @@ def prepare_environment(fetch_draft_release=True):  # noqa
     owner, repo_name = os.environ["RH_REPOSITORY"].split("/")
     auth = os.environ.get("GITHUB_ACCESS_TOKEN", "")
     gh = get_gh_object(dry_run=dry_run, owner=owner, repo=repo_name, token=auth)
-
-    # Ensure the user is an admin.
-    if not dry_run:
-        user = os.environ["GITHUB_ACTOR"]
-        log(f"Getting permission level for {user}")
-        try:
-            collab_level = gh.repos.get_collaborator_permission_level(user)
-            if collab_level["permission"] != "admin":
-                msg = f"User {user} does not have admin permission"
-                raise RuntimeError(msg)
-            log("User was admin!")
-        except Exception as e:
-            log(str(e))
-            msg = "Could not get user permission level, assuming user was not admin!"
-            raise RuntimeError(msg) from None
 
     # Get the latest draft release if none is given.
     release_url = os.environ.get("RH_RELEASE_URL")
