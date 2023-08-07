@@ -256,7 +256,6 @@ def populate_release(
 
     # Create the release commit.
     util.create_release_commit(version, release_message, dist_dir)
-    release_commit = util.run('git rev-parse HEAD')
 
     # Bump to post version if given.
     if post_version_spec:
@@ -277,25 +276,8 @@ def populate_release(
     # Clean up after ourselves.
     util.run(f"git checkout {branch}")
 
-    # Update the metadata to include the release commit.
-    metadata = util.extract_metadata_from_release_url(gh, release.html_url, auth)
-    metadata['release_commit'] = release_commit
-
-    # Delete the old metadata file
-    for item in gh.repos.list_release_assets(release.id):
-        if item.name == 'metadata.json':
-            gh.repos.delete_release_asset(item.id)
-            break
-
-    with tempfile.TemporaryDirectory() as d:
-        metadata_path = Path(d) / util.METADATA_JSON
-        with open(metadata_path, "w") as fid:
-            json.dump(metadata, fid)
-
-        assets.append(metadata_path)
-
-        # Upload the assets to the draft release.
-        release = util.upload_assets(gh, assets, release, auth)
+    # Upload the assets to the draft release.
+    release = util.upload_assets(gh, assets, release, auth)
 
     # Set the GitHub action output
     util.actions_output("release_url", release.html_url)

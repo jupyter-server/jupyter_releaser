@@ -507,9 +507,6 @@ def check_npm(dist_dir, npm_install_options):
 @add_options(branch_options)
 @add_options(dist_dir_options)
 @click.option(
-    "--release-commit", envvar="RH_RELEASE_COMMIT", default="", help="The release commit sha"
-)
-@click.option(
     "--tag-format",
     envvar="RH_TAG_FORMAT",
     default="v{version}",
@@ -533,16 +530,13 @@ def tag_release(
     branch,
     repo,
     dist_dir,
-    release_commit,
     tag_format,
     tag_message,
     no_git_tag_workspace,
     dry_run,
 ):
     """Create release commit and tag"""
-    lib.tag_release(
-        branch, dist_dir, release_commit, tag_format, tag_message, no_git_tag_workspace, dry_run
-    )
+    lib.tag_release(branch, dist_dir, tag_format, tag_message, no_git_tag_workspace, dry_run)
 
 
 @main.command()
