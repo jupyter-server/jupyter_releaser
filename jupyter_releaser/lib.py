@@ -195,7 +195,8 @@ def tag_release(branch, dist_dir, tag_format, tag_message, no_git_tag_workspace,
     """Create release tag and push it"""
     # Get the branch commits.
     remote_name = util.get_remote_name(dry_run)
-    util.run(f"git fetch {remote_name} {branch}")
+    if not dry_run:
+        util.run(f"git fetch {remote_name} {branch}")
 
     # Find the release commit.
     commit_message = util.run("git log --format=%B -n 1 HEAD")
@@ -531,7 +532,7 @@ def prep_git(ref, branch, repo, auth, username, url):  # noqa
         util.run(f"git switch -c {branch}")
 
     try:
-        has_git_config = util.run("git config user.email").strip()
+        has_git_config = bool(util.run("git config user.email").strip())
     except Exception:
         has_git_config = False
 
