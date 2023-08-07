@@ -19,6 +19,7 @@ from glob import glob
 from io import BytesIO
 from pathlib import Path
 from subprocess import PIPE, CalledProcessError, check_output
+from typing import Any
 from urllib.parse import urlparse
 
 import requests
@@ -61,7 +62,7 @@ GH_ID_TOKEN_URL_VAR = "ACTIONS_ID_TOKEN_REQUEST_URL"  # noqa
 GH_ID_TOKEN_TOKEN_VAR = "ACTIONS_ID_TOKEN_REQUEST_TOKEN"  # noqa
 
 
-def run(cmd, **kwargs):
+def run(cmd: str, **kwargs: Any) -> str:
     """Run a command as a subprocess and get the output as a string"""
     quiet_error = kwargs.pop("quiet_error", False)
     show_cwd = kwargs.pop("show_cwd", False)
@@ -94,7 +95,7 @@ def run(cmd, **kwargs):
         raise e
 
 
-def _run_win(cmd, **kwargs):
+def _run_win(cmd: str, **kwargs: Any) -> str:
     """Run a command as a subprocess and get the output as a string"""
     quiet = kwargs.pop("quiet", False)
 
@@ -124,6 +125,7 @@ def _run_win(cmd, **kwargs):
         log("stdout:\n", e.output.strip(), "\n\n")
         if check:
             raise e
+        return ''
 
 
 def log(*outputs, **kwargs):

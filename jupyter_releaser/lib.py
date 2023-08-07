@@ -191,14 +191,20 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
     util.actions_output("pr_url", pull.html_url)
 
 
-def tag_release(
-    branch, dist_dir, release_commit, tag_format, tag_message, no_git_tag_workspace, dry_run
-):
+def tag_release(branch, dist_dir, tag_format, tag_message, no_git_tag_workspace, dry_run):
     """Create release tag and push it"""
+    # Get the branch commits.
+    remote_name = util.get_remote_name(dry_run)
+    util.run(f"git fetch {remote_name} {branch}")
 
-    # Check out the release commit.
-    if release_commit:
-        util.run(f'git checkout {release_commit}')
+    # Find the release commit.
+    commit_message = util.run("git log --format=%B -n 1 HEAD")
+    if "SHA256 hashes:" not in commit_message:
+        util.run('git checkout HEAD~1')
+    commit_message = util.run("git log --format=%B -n 1 HEAD")
+    if "SHA256 hashes:" not in commit_message:
+        msg = "Could not find release commit"
+        raise ValueError(msg)
 
     version = util.get_version()
 
@@ -212,13 +218,11 @@ def tag_release(
         npm.tag_workspace_packages()
 
     # Push the tag(s) to the remote.
-    remote_name = util.get_remote_name(dry_run)
     remote_url = util.run(f"git config --get remote.{remote_name}.url")
     if not os.path.exists(remote_url):
         util.run(f"git push {remote_name} --tags")
 
     # Merge the tag into the source branch.
-    util.run(f"git fetch {remote_name} {branch}")
     util.run(f'git checkout {branch}')
     util.run(f'git merge {tag_name}')
 
