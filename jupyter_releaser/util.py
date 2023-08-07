@@ -684,7 +684,7 @@ def get_remote_name(dry_run):
     tfile = tempfile.NamedTemporaryFile(suffix=".git")
     tfile.close()
     _local_remote = tfile.name.replace(os.sep, "/")
-    run(f"git init --bare {_local_remote}")
+    run(f"git init -b main --bare {_local_remote}")
     run(f"git remote add test {_local_remote}")
     return "test"
 

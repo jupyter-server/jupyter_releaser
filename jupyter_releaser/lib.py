@@ -476,7 +476,7 @@ def prep_git(ref, branch, repo, auth, username, url):  # noqa
         checkout_exists = True
 
     if not checkout_exists:
-        util.run(f"git init {checkout_dir}")
+        util.run(f"git init -b main {checkout_dir}")
 
     orig_dir = os.getcwd()
     os.chdir(checkout_dir)
