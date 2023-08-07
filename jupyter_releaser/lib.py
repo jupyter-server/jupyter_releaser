@@ -217,6 +217,10 @@ def tag_release(
     if not os.path.exists(remote_url):
         util.run(f"git push {remote_name} --tags")
 
+    # Merge the tag into the source branch.
+    util.run(f'git checkout {remote_name} {branch}')
+    util.run('git merge {tag_name}')
+
 
 def populate_release(
     ref,
@@ -267,19 +271,6 @@ def populate_release(
 
     # Clean up after ourselves.
     util.run(f"git checkout {branch}")
-
-    # Set the body of the release with the changelog contents.
-    # Get the new release since the draft release might change urls.
-    util.log("Updating release")
-    release = gh.repos.update_release(
-        release.id,
-        release.tag_name,
-        release.target_commitish,
-        release.name,
-        body,
-        True,
-        release.prerelease,
-    )
 
     # Update the metadata to include the release commit.
     metadata = util.extract_metadata_from_release_url(gh, release.html_url, auth)
