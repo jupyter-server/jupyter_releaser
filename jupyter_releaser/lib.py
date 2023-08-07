@@ -218,8 +218,9 @@ def tag_release(
         util.run(f"git push {remote_name} --tags")
 
     # Merge the tag into the source branch.
-    util.run(f'git checkout {remote_name} {branch}')
-    util.run('git merge {tag_name}')
+    util.run(f"git fetch {remote_name} {branch}")
+    util.run(f'git checkout {branch}')
+    util.run(f'git merge {tag_name}')
 
 
 def populate_release(
