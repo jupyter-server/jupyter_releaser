@@ -242,6 +242,12 @@ def create_a_pull_request(owner: str, repo: str) -> PullRequest:
     return pull
 
 
+@app.put("/repos/{owner}/{repo}/pulls/{pull_number}/merge")
+def merge_pull_request(owner: str, repo: str, pull_number: int) -> None:
+    del pulls[str(pull_number)]
+    write_to_file("pulls", pulls)
+
+
 @app.post("/repos/{owner}/{repo}/issues/{issue_number}/labels")
 def add_labels_to_an_issue(owner: str, repo: str, issue_number: int) -> BaseModel:
     """https://docs.github.com/en/rest/issues/labels#add-labels-to-an-issue"""
