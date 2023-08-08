@@ -686,6 +686,7 @@ def get_remote_name(dry_run):
     _local_remote = tfile.name.replace(os.sep, "/")
     run(f"git init -b main --bare {_local_remote}")
     run(f"git remote add test {_local_remote}")
+    run(f"git push {_local_remote} main")
     return "test"
 
 
