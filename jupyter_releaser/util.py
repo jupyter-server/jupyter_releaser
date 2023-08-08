@@ -671,7 +671,7 @@ _local_remote = None
 def get_remote_name(dry_run):
     """Get the appropriate remote git name."""
     global _local_remote  # noqa
-    remotes = run('git remote')
+    remotes = run('git remote').splitlines()
 
     if not dry_run:
         return remotes[0]
