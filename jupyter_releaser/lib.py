@@ -82,12 +82,12 @@ def draft_changelog(
 
     # Check out all changed files.
     try:
-        util.run("git checkout .", echo=True)
+        util.run("git checkout .")
     except CalledProcessError as e:
         util.log(str(e))
         return
 
-    util.run("git status", echo=True)
+    util.run("git status")
     util.log(f"\n\nCreating draft GitHub release for {version}")
     owner, repo_name = repo.split("/")
     gh = util.get_gh_object(dry_run=dry_run, owner=owner, repo=repo_name, token=auth)
@@ -158,7 +158,7 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
     maintainer_can_modify = True
 
     if not dry_run:
-        util.run(f"git push origin {pr_branch}", echo=True)
+        util.run(f"git push origin {pr_branch}")
 
     # title, head, base, body, maintainer_can_modify, draft, issue
     util.log('Creating a PR"')
@@ -186,7 +186,7 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
 
         # Delete the remote branch
         if not dry_run:
-            util.run(f"git push origin --delete {pr_branch}", echo=True)
+            util.run(f"git push origin --delete {pr_branch}")
 
     util.actions_output("pr_url", pull.html_url)
 
@@ -195,7 +195,8 @@ def tag_release(branch, dist_dir, tag_format, tag_message, no_git_tag_workspace,
     """Create release tag and push it"""
     # Get the branch commits.
     remote_name = util.get_remote_name(dry_run)
-    util.run(f"git fetch {remote_name} {branch}")
+    if not dry_run:
+        util.run(f"git fetch {remote_name} {branch}")
 
     # Find the release commit.
     commit_message = util.run("git log --format=%B -n 1 HEAD")
@@ -421,12 +422,12 @@ def publish_assets(  # noqa
                 env["TWINE_PASSWORD"] = twine_token
                 # NOTE: Do not print the env since a twine token extracted from
                 # a PYPI_TOKEN_MAP will not be sanitized in output
-                util.retry(f"{twine_cmd} {name}", cwd=dist_dir, env=env, echo=True)
+                util.retry(f"{twine_cmd} {name}", cwd=dist_dir, env=env)
                 found = True
         elif suffix == ".tgz":
             # Ignore already published versions
             try:
-                util.run(f"{npm_cmd} {name}", cwd=dist_dir, quiet=True, quiet_error=True, echo=True)
+                util.run(f"{npm_cmd} {name}", cwd=dist_dir, quiet=True, quiet_error=True)
             except CalledProcessError as e:
                 stderr = e.stderr
                 if "EPUBLISHCONFLICT" in stderr or "previously published versions" in stderr:
@@ -537,8 +538,8 @@ def prep_git(ref, branch, repo, auth, username, url):  # noqa
         # Default to the GitHub Actions bot
         # https://github.community/t/github-actions-bot-email-address/17204/6
         git_user_name = username or "41898282+github-actions[bot]"
-        util.run(f'git config user.email "{git_user_name}@users.noreply.github.com"', echo=True)
-        util.run(f'git config user.name "{git_user_name}"', echo=True)
+        util.run(f'git config user.email "{git_user_name}@users.noreply.github.com"')
+        util.run(f'git config user.name "{git_user_name}"')
 
     os.chdir(orig_dir)
 

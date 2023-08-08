@@ -126,6 +126,32 @@ jobs:
       - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
       - run: hatch run docs:build
 
+  check_local_actions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
+
+      - name: prep-release
+        uses: ./.github/actions/prep-release
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          dry_run: true
+
+      - name: populate-release
+        uses: ./.github/actions/populate-release
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          release_url: ${{ steps.prep-release.outputs.release_url }}
+          dry_run: true
+
+      - name: publish-release
+        uses: ./.github/actions/finalize-release
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          release_url: ${{ steps.populate-release.outputs.release_url }}
+          dry_run: true
+
   check: # This job does nothing and is only used for the branch protection
     if: always()
     needs:
@@ -133,6 +159,7 @@ jobs:
       - coverage
       - docs
       - lint
+      - check_local_actions
       - test_minimum_versions
       - test_prereleases
       - generate_changelog
