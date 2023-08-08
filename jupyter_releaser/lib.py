@@ -516,8 +516,8 @@ def prep_git(ref, branch, repo, auth, username, url):  # noqa
         util.run(f"{util.GIT_FETCH_CMD} {branch}")
         checkout_cmd = f"git checkout {branch}"
 
-    util.run('git log -n 5')
     if checkout_exists:
+        util.run('git log -n 5')
         try:
             util.run(f"git checkout {branch}")
         except Exception:
@@ -525,7 +525,8 @@ def prep_git(ref, branch, repo, auth, username, url):  # noqa
     else:
         util.run(checkout_cmd)
 
-    util.run('git log -n 5')
+    if checkout_exists:
+        util.run('git log -n 5')
 
     # Check for detached head state, create branch if needed
     try:
