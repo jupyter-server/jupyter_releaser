@@ -12,11 +12,16 @@ already uses Jupyter Releaser.
 
 - Fork `jupyter_releaser`
 
-- Generate a [GitHub Access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with access to target GitHub repo to run GitHub Actions
-
-- Add the token as `ADMIN_GITHUB_TOKEN` in the [repository secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository) of your fork. The token must have `repo` and `workflow` scopes.
-
 - Set up PyPI:
+
+<details><summary>Using PyPI trusted publisher (modern way)</summary>
+
+- Set up your PyPI project by [adding a trusted publisher](https://docs.pypi.org/trusted-publishers/adding-a-publisher/)
+  - if you use the example workflows, the _workflow name_ is `publish-release.yml` (or `full-release.yml`) and the
+    _environment_ should be left blank.
+- Ensure the publish release job as `permissions`: `id-token : write` (see the [documentation](https://docs.pypi.org/trusted-publishers/using-a-publisher/))
+
+</details>
 
 <details><summary>Using PyPI token (legacy way)</summary>
 
@@ -37,15 +42,6 @@ already uses Jupyter Releaser.
     owner1/repo1/path/to/package1,token1
     owner1/repo1/path/to/package2,token2
     ```
-
-</details>
-
-<details><summary>Using PyPI trusted publisher (modern way)</summary>
-
-- Set up your PyPI project by [adding a trusted publisher](https://docs.pypi.org/trusted-publishers/adding-a-publisher/)
-  - if you use the example workflows, the _workflow name_ is `publish-release.yml` (or `full-release.yml`) and the
-    _environment_ should be left blank.
-- Ensure the publish release job as `permissions`: `id-token : write` (see the [documentation](https://docs.pypi.org/trusted-publishers/using-a-publisher/))
 
 </details>
 

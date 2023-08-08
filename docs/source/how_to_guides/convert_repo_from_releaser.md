@@ -8,7 +8,6 @@ See checklist below for details:
 
 - Markdown changelog
 - Bump version configuration (if using Python), for example [tbump](https://github.com/dmerejkowsky/tbump)
-- [Access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with access to target GitHub repo to run GitHub Actions.
 - Access token for the [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github)
 - If needed, access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens).
 
@@ -47,7 +46,7 @@ A. Prep the `jupyter_releaser` fork:
 
 <details><summary>Using PyPI trusted publisher (modern way)</summary>
 
-- Set up your PyPI project by [adding a trusted publisher](https://docs.pypi.org/trusted-publishers/adding-a-publisher/)
+- Set up your PyPI project by [adding a trusted publisher](https://docs.pypi.org/trusted-publishers/adding-a-publisher/) pointing to your releaser fork repository and release workflow file.
   - if you use the example workflows, the _workflow name_ is `publish-release.yml` (or `full-release.yml`) and the
     _environment_ should be left blank.
 - Ensure the publish release job as `permissions`: `id-token : write` (see the [documentation](https://docs.pypi.org/trusted-publishers/using-a-publisher/))

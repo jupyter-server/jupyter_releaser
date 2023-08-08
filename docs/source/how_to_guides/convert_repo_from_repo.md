@@ -8,22 +8,12 @@ See checklist below for details:
 
 - Markdown changelog
 - Bump version configuration (if using Python), for example [hatch](https://hatch.pypa.io/latest/)
-- [Access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with access to target GitHub repo to run GitHub Actions.
 - Set up:
   - \[_modern way_\] [Add a trusted publisher](https://docs.pypi.org/trusted-publishers/adding-a-publisher/) to your PyPI project
   - \[_legacy way_\] Access token for the [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github)
 - If needed, access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens).
 
 ## Checklist for Adoption
-
-- [ ] Add a GitHub [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token), preferably from a "machine user" GitHub
-  account that has admin access to the repository. The token itself will
-  need "public_repo", and "repo:status" permissions. Save the token as
-  `ADMIN_GITHUB_TOKEN`
-  in the [repository secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository). We need this
-  access token to allow for branch protection rules, which block the pushing
-  of commits when using the `GITHUB_TOKEN`, even when run from an admin user
-  account.
 
 - [ ] Set up PyPI:
 
