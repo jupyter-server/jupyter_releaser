@@ -133,7 +133,6 @@ jobs:
       - coverage
       - docs
       - lint
-      - check_local_actions
       - test_minimum_versions
       - test_prereleases
       - generate_changelog
