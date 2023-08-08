@@ -670,24 +670,8 @@ _local_remote = None
 
 def get_remote_name(dry_run):
     """Get the appropriate remote git name."""
-    global _local_remote  # noqa
-    if not dry_run:
-        return "origin"
-
-    if _local_remote:
-        try:
-            run(f"git remote add test {_local_remote}")
-        except Exception:  # noqa
-            pass
-        return "test"
-
-    tfile = tempfile.NamedTemporaryFile(suffix=".git")
-    tfile.close()
-    _local_remote = tfile.name.replace(os.sep, "/")
-    run(f"git init -b main --bare {_local_remote}")
-    run(f"git remote add test {_local_remote}")
-    run(f"git push {_local_remote} main")
-    return "test"
+    remotes = run('git remote')
+    return remotes[0]
 
 
 def get_mock_github_url():
