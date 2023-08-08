@@ -467,7 +467,7 @@ def test_populate_release_dry_run(py_dist, mocker, runner, git_prep, draft_relea
     )
 
     log = get_log()
-    assert "before-populate-release" not in log
+    assert "before-populate-release" in log
     assert "after-populate-release" in log
 
 
