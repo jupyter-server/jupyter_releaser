@@ -645,7 +645,7 @@ def handle_since() -> str:
 def ensure_sha(dry_run, expected_sha, branch):
     """Ensure the sha of the remote branch matches the expected sha"""
     log("Ensuring sha...")
-    remote_name = get_remote_name()
+    remote_name = get_remote_name(False)
     run("git remote -v", echo=True)
     run(f"git fetch {remote_name} {branch}", echo=True)
     sha = run(f"git rev-parse {remote_name}/{branch}", echo=True)
@@ -665,10 +665,34 @@ def get_gh_object(dry_run=False, **kwargs):
     return core.GhApi(**kwargs)
 
 
-def get_remote_name():
+_local_remote = None
+
+
+def get_remote_name(dry_run):
     """Get the appropriate remote git name."""
+    global _local_remote  # noqa
     remotes = run('git remote')
-    return remotes.splitlines()[0]
+
+    if not dry_run:
+        return remotes[0]
+
+    if "test" in remotes:
+        return 'test'
+
+    if _local_remote:
+        try:
+            run(f"git remote add test {_local_remote}")
+        except Exception:  # noqa
+            pass
+        return "test"
+
+    tfile = tempfile.NamedTemporaryFile(suffix=".git")
+    tfile.close()
+    _local_remote = tfile.name.replace(os.sep, "/")
+    run(f"git init -b main --bare {_local_remote}")
+    run(f"git remote add test {_local_remote}")
+    run(f"git push {_local_remote} main")
+    return "test"
 
 
 def get_mock_github_url():

@@ -157,7 +157,7 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
     head = pr_branch
     maintainer_can_modify = True
 
-    remote = util.get_remote_name()
+    remote = util.get_remote_name(dry_run)
 
     util.run(f"git push {remote} {pr_branch}")
 
@@ -198,7 +198,7 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
 def tag_release(branch, dist_dir, tag_format, tag_message, no_git_tag_workspace, dry_run):
     """Create release tag and push it"""
     # Get the branch commits.
-    remote_name = util.get_remote_name()
+    remote_name = util.get_remote_name(dry_run)
     util.run(f"git fetch {remote_name} {branch}")
 
     # Find the release commit.
