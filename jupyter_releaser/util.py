@@ -671,7 +671,7 @@ _local_remote = None
 def get_remote_name(dry_run):
     """Get the appropriate remote git name."""
     remotes = run('git remote')
-    return remotes[0]
+    return remotes.splitlines()[0]
 
 
 def get_mock_github_url():
