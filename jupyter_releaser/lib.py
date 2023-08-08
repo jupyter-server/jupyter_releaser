@@ -131,7 +131,7 @@ def draft_changelog(
 
 
 def make_pr_branch(branch, prefix, dry_run=False):
-    # Make a new branch with a uuid suffix
+    """Make a new branch with a uuid suffix."""
     pr_branch = f"{prefix}-{uuid.uuid1().hex}"
     dirty = util.run("git --no-pager diff --stat") != ""
     if dirty:
@@ -195,12 +195,12 @@ def tag_release(branch, dist_dir, tag_format, tag_message, no_git_tag_workspace,
     """Create release tag and push it"""
     # Get the branch commits.
     remote_name = util.get_remote_name(dry_run)
-    if not dry_run:
-        util.run(f"git fetch {remote_name} {branch}")
+    util.run(f"git fetch {remote_name} {branch}")
 
     # Find the release commit.
     commit_message = util.run("git log --format=%B -n 1 HEAD")
     if "SHA256 hashes:" not in commit_message:
+        util.run('git stash')
         util.run('git checkout HEAD~1')
     commit_message = util.run("git log --format=%B -n 1 HEAD")
     if "SHA256 hashes:" not in commit_message:
@@ -219,14 +219,11 @@ def tag_release(branch, dist_dir, tag_format, tag_message, no_git_tag_workspace,
         npm.tag_workspace_packages()
 
     # Push the tag(s) to the remote.
-    remote_url = util.run(f"git config --get remote.{remote_name}.url")
-    if not os.path.exists(remote_url):
-        util.run(f"git push {remote_name} --tags")
+    util.run(f"git push {remote_name} --tags")
 
     # Merge the tag into the source branch.
-    if not dry_run:
-        util.run(f'git checkout {branch}')
-        util.run(f'git merge {tag_name}')
+    util.run(f'git checkout {branch}')
+    util.run(f'git merge {tag_name}')
 
 
 def populate_release(

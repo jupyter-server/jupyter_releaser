@@ -244,6 +244,7 @@ def create_a_pull_request(owner: str, repo: str) -> PullRequest:
 
 @app.put("/repos/{owner}/{repo}/pulls/{pull_number}/merge")
 def merge_pull_request(owner: str, repo: str, pull_number: int) -> None:
+    """https://docs.github.com/en/rest/pulls/pulls#merge-a-pull-request"""
     del pulls[str(pull_number)]
     write_to_file("pulls", pulls)
 

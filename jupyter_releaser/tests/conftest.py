@@ -45,11 +45,9 @@ def mock_env(mocker):
 def git_repo(tmp_path):
     prev_dir = os.getcwd()
     os.chdir(tmp_path)
-
     run("git init -b main")
     run("git config user.name snuffy")
     run("git config user.email snuffy@sesame.com")
-
     run("git checkout -b foo")
     gitignore = tmp_path / ".gitignore"
     gitignore.write_text(f"dist/*\nbuild/*\n{util.CHECKOUT_NAME}\n", encoding="utf-8")

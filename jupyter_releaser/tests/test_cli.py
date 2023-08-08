@@ -161,7 +161,6 @@ pydist-extra-check-cmds: RH_EXTRA_PYDIST_CHECK_CMDS
 pydist-resource-paths: RH_PYDIST_RESOURCE_PATHS
 python-packages: RH_PYTHON_PACKAGES
 ref: RH_REF
-release-commit: RH_RELEASE_COMMIT
 release-message: RH_RELEASE_MESSAGE
 release-url: RH_RELEASE_URL
 repo: RH_REPOSITORY
@@ -427,8 +426,14 @@ def test_handle_npm_lerna(workspace_package, runner, git_prep):
 def test_tag_release(py_package, runner, build_mock, git_prep):
     # Bump the version
     runner(["bump-version", "--version-spec", VERSION_SPEC])
+    util.run("git add .")
     # Create the dist files
-    util.run("pipx run build .", cwd=util.CHECKOUT_NAME)
+    prev = os.getcwd()
+    os.chdir(util.CHECKOUT_NAME)
+    util.run("pipx run build .")
+    version = util.get_version()
+    util.create_release_commit(version, "this thing")
+    os.chdir(prev)
 
     # Tag the release
     runner(
@@ -436,6 +441,8 @@ def test_tag_release(py_package, runner, build_mock, git_prep):
             "tag-release",
             "--tag-message",
             "no thanks",
+            "--branch",
+            "bar",
         ]
     )
 
@@ -460,7 +467,7 @@ def test_populate_release_dry_run(py_dist, mocker, runner, git_prep, draft_relea
     )
 
     log = get_log()
-    assert "before-populate-release" in log
+    assert "before-populate-release" not in log
     assert "after-populate-release" in log
 
 
@@ -469,6 +476,9 @@ def test_populate_release_final(npm_dist, runner, mock_github, git_prep, draft_r
     os.environ["GITHUB_ACTIONS"] = "true"
     os.environ["RH_RELEASE_URL"] = draft_release
     runner(["populate-release"])
+    log = get_log()
+    assert "before-populate-release" not in log
+    assert "after-populate-release" in log
 
 
 def test_delete_release(npm_dist, runner, mock_github, git_prep, draft_release):
