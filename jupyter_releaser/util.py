@@ -645,7 +645,7 @@ def handle_since() -> str:
 def ensure_sha(dry_run, expected_sha, branch):
     """Ensure the sha of the remote branch matches the expected sha"""
     log("Ensuring sha...")
-    remote_name = get_remote_name(False)
+    remote_name = get_remote_name()
     run("git remote -v", echo=True)
     run(f"git fetch {remote_name} {branch}", echo=True)
     sha = run(f"git rev-parse {remote_name}/{branch}", echo=True)
@@ -665,10 +665,7 @@ def get_gh_object(dry_run=False, **kwargs):
     return core.GhApi(**kwargs)
 
 
-_local_remote = None
-
-
-def get_remote_name(dry_run):
+def get_remote_name():
     """Get the appropriate remote git name."""
     remotes = run('git remote')
     return remotes.splitlines()[0]

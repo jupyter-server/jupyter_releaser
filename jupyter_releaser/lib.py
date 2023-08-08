@@ -157,8 +157,9 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
     head = pr_branch
     maintainer_can_modify = True
 
-    if not dry_run:
-        util.run(f"git push origin {pr_branch}")
+    remote = util.get_remote_name()
+
+    util.run(f"git push {remote} {pr_branch}")
 
     # title, head, base, body, maintainer_can_modify, draft, issue
     util.log('Creating a PR"')
@@ -184,9 +185,12 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
         util.log(f"Merging the PR {number}")
         gh.pulls.merge(number, title, commit_message, sha, "rebase")
 
-        # Delete the remote branch
-        if not dry_run:
-            util.run(f"git push origin --delete {pr_branch}")
+        if dry_run:
+            util.run(f"git checkout {branch}")
+            util.run(f"git merge {pr_branch}")
+
+        # Delete the remote branch if not dry run.
+        util.run(f"git push {remote} --delete {pr_branch}")
 
     util.actions_output("pr_url", pull.html_url)
 
@@ -194,9 +198,8 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
 def tag_release(branch, dist_dir, tag_format, tag_message, no_git_tag_workspace, dry_run):
     """Create release tag and push it"""
     # Get the branch commits.
-    remote_name = util.get_remote_name(dry_run)
-    if not dry_run:
-        util.run(f"git fetch {remote_name} {branch}")
+    remote_name = util.get_remote_name()
+    util.run(f"git fetch {remote_name} {branch}")
 
     # Find the release commit.
     commit_message = util.run("git log --format=%B -n 1 HEAD")

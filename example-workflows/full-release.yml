@@ -25,6 +25,9 @@ on:
 jobs:
   full_release:
     runs-on: ubuntu-latest
+    # The use of an environment is important for security, and required if you
+    # use PyPI trusted publisher.
+    environment: release
     permissions:
       # This is useful if you want to use PyPI trusted publisher
       # and NPM provenance
@@ -36,7 +39,7 @@ jobs:
         id: prep-release
         uses: jupyter-server/jupyter_releaser/.github/actions/prep-release@v2
         with:
-          token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           version_spec: ${{ github.event.inputs.version_spec }}
           post_version_spec: ${{ github.event.inputs.post_version_spec }}
           branch: ${{ github.event.inputs.branch }}
@@ -47,7 +50,7 @@ jobs:
         id: populate-release
         uses: jupyter-server/jupyter_releaser/.github/actions/populate-release@v2
         with:
-          token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.event.inputs.branch }}
           release_url: ${{ steps.prep-release.outputs.release_url }}
           steps_to_skip: ${{ github.event.inputs.steps_to_skip }}
@@ -62,7 +65,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         uses: jupyter-server/jupyter-releaser/.github/actions/finalize-release@v2
         with:
-          token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           release_url: ${{ steps.populate-release.outputs.release_url }}
 
       - name: "** Next Step **"
