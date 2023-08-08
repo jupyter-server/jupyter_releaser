@@ -15,7 +15,8 @@ if release_url:
 run_action("jupyter-releaser publish-assets")
 
 if release_url:
-    run_action("jupyter-releaser prep-git")
+    if not bool(os.environ.get('RH_DRY_RUN', False)):
+        run_action("jupyter-releaser prep-git")
     run_action("jupyter-releaser tag-release")
     run_action("jupyter-releaser forwardport-changelog")
     run_action("jupyter-releaser publish-release")

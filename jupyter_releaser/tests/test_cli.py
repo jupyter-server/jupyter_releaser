@@ -105,8 +105,8 @@ def test_prep_git_full(py_package, tmp_path, mocker, runner):
             call("git checkout -B foo refs/pull/42"),
             call("git symbolic-ref -q HEAD"),
             call("git config user.email"),
-            call('git config user.email "snuffy@users.noreply.github.com"', echo=True),
-            call('git config user.name "snuffy"', echo=True),
+            call('git config user.email "snuffy@users.noreply.github.com"'),
+            call('git config user.name "snuffy"'),
         ]
     )
 

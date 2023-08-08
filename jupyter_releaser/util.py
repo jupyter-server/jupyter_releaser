@@ -348,7 +348,7 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):  # noqa
                 version_spec = f"{v.major}.{v.minor + 1}.0"
 
     # Bump the version
-    run(f"{version_cmd} {version_spec}", echo=True)
+    run(f"{version_cmd} {version_spec}")
 
     return get_version()
 
@@ -646,9 +646,9 @@ def ensure_sha(dry_run, expected_sha, branch):
     """Ensure the sha of the remote branch matches the expected sha"""
     log("Ensuring sha...")
     remote_name = get_remote_name(False)
-    run("git remote -v", echo=True)
-    run(f"git fetch {remote_name} {branch}", echo=True)
-    sha = run(f"git rev-parse {remote_name}/{branch}", echo=True)
+    run("git remote -v")
+    run(f"git fetch {remote_name} {branch}")
+    sha = run(f"git rev-parse {remote_name}/{branch}")
     if sha != expected_sha:
         msg = f"{branch} current sha {sha} is not equal to expected sha {expected_sha}"
         if dry_run:
