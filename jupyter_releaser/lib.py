@@ -134,11 +134,12 @@ def make_pr_branch(branch, prefix, dry_run=False):
     """Make a new branch with a uuid suffix."""
     pr_branch = f"{prefix}-{uuid.uuid1().hex}"
     dirty = util.run("git --no-pager diff --stat") != ""
+    remote = util.get_remote_name(dry_run)
     if dirty:
         util.run("git stash")
     if not dry_run:
         util.run(f"{util.GIT_FETCH_CMD} {branch}")
-    util.run(f"git checkout -b {pr_branch} origin/{branch}")
+    util.run(f"git checkout -b {pr_branch} {remote}/{branch}")
     if dirty:
         util.run("git stash apply")
 
@@ -605,7 +606,8 @@ def forwardport_changelog(auth, ref, branch, repo, username, changelog_path, dry
         raise ValueError(msg)
 
     # Check out the branch again
-    util.run(f"git checkout -B {branch} origin/{branch}")
+    remote = util.get_remote_name(dry_run)
+    util.run(f"git checkout -B {branch} {remote}/{branch}")
 
     default_entry = changelog.extract_current(changelog_path)
 
