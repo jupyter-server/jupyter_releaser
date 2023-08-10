@@ -187,6 +187,7 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
         gh.pulls.merge(number, title, commit_message, sha, "rebase")
 
         if dry_run:
+            util.run(f"git fetch origin {branch}")
             util.run(f"git checkout {branch}")
             util.run(f"git merge --ff-only {pr_branch}")
 
