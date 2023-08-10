@@ -134,12 +134,11 @@ def make_pr_branch(branch, prefix, dry_run=False):
     """Make a new branch with a uuid suffix."""
     pr_branch = f"{prefix}-{uuid.uuid1().hex}"
     dirty = util.run("git --no-pager diff --stat") != ""
-    remote = util.get_remote_name(dry_run)
     if dirty:
         util.run("git stash")
     if not dry_run:
         util.run(f"{util.GIT_FETCH_CMD} {branch}")
-    util.run(f"git checkout -b {pr_branch} {remote}/{branch}")
+    util.run(f"git checkout -b {pr_branch} origin/{branch}")
     if dirty:
         util.run("git stash apply")
 
@@ -199,8 +198,7 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
 def tag_release(branch, dist_dir, tag_format, tag_message, no_git_tag_workspace, dry_run):
     """Create release tag and push it"""
     # Get the branch commits.
-    remote_name = util.get_remote_name(dry_run)
-    util.run(f"git fetch {remote_name} {branch}")
+    util.run(f"git fetch origin {branch}")
 
     # Find the release commit.
     commit_message = util.run("git log --format=%B -n 1 HEAD")
@@ -224,7 +222,7 @@ def tag_release(branch, dist_dir, tag_format, tag_message, no_git_tag_workspace,
         npm.tag_workspace_packages()
 
     # Push the tag(s) to the remote.
-    util.run(f"git push {remote_name} --tags")
+    util.run("git push origin --tags")
 
     # Merge the tag into the source branch.
     util.run(f'git checkout {branch}')
@@ -588,6 +586,7 @@ def forwardport_changelog(auth, ref, branch, repo, username, changelog_path, dry
         return
 
     # Get the entry for the tag
+    util.run(f"git fetch origin {tag}")
     util.run(f"git checkout {tag}")
     entry = changelog.extract_current(changelog_path)
 

@@ -832,3 +832,46 @@ def test_ensure_sha(npm_package, runner, git_prep):
 
     with pytest.raises(RuntimeError):
         runner(["ensure-sha", "--branch", current, "--expected-sha", "abc"])
+
+
+def test_end_to_end(npm_package, runner, mocker, mock_github, git_repo):
+    os.environ["GITHUB_ACTIONS"] = "true"
+    os.environ["RH_DRY_RUN"] = "true"
+
+    # prep release
+    runner(["prep-git", "--git-url", git_repo])
+    current = util.run("git branch --show-current", cwd=util.CHECKOUT_NAME)
+    os.environ['RH_BRANCH'] = current
+    # includes bump_version
+    mock_changelog_entry(npm_package, runner, mocker)
+    runner(["build-changelog"])
+    result = runner(["draft-changelog"])
+    release_url = None
+    for line in result.stdout.splitlines():
+        if line.startswith('Setting output release_url'):
+            _, _, release_url = line.partition('=')
+
+    if not release_url:
+        msg = "Did not get a release url"
+        raise ValueError(msg)
+    os.environ["RH_RELEASE_URL"] = release_url
+
+    # populate release
+    runner(["prep-git", "--git-url", git_repo])
+    runner(["ensure-sha"])
+    runner(["bump-version"])
+    runner(["extract-changelog"])
+
+    runner(["build-npm"])
+    runner(["check-npm"])
+    runner(["build-python"])
+    runner(["check-python"])
+    runner(["ensure-sha"])
+    runner(["populate-release"])
+
+    # finalize release
+    runner(["extract-release"])
+    runner(["publish-assets"])
+    runner(["tag-release"])
+    runner(["forwardport-changelog"])
+    runner(["publish-release"])
