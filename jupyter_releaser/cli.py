@@ -232,7 +232,9 @@ dry_run_options: t.Any = [
 ]
 
 
-git_url_options: t.Any = [click.option("--git-url", help="A custom url for the git repository")]
+git_url_options: t.Any = [
+    click.option("--git-url", envvar="RH_GIT_URL", help="A custom url for the git repository")
+]
 
 
 release_url_options: t.Any = [

@@ -562,7 +562,7 @@ def extract_metadata_from_release_url(gh, release_url, auth):
     return data
 
 
-def prepare_environment(fetch_draft_release=True):
+def prepare_environment(fetch_draft_release=True):  # noqa: PLR0912,C901
     """Prepare the environment variables, for use when running one of the
     action scripts."""
     # Set up env variables
@@ -590,6 +590,15 @@ def prepare_environment(fetch_draft_release=True):
             ref = os.environ["GITHUB_REF"]
             log(f"Using GITHUB_REF: {ref}")
             os.environ["RH_BRANCH"] = "/".join(ref.split("/")[2:])
+
+    # For a dry run, clone the repo locally to use as the origin
+    local_git_url = os.environ.get('RH_GIT_URL')
+    if local_git_url:
+        url = normalize_path(local_git_url)
+        if not os.path.exists(url):
+            run(f"git init -b main --bare {url}")
+            run(f"git remote add test {url}")
+            run("git push test")
 
     # Start the mock GitHub server if in a dry run.
     if dry_run:
@@ -645,10 +654,9 @@ def handle_since() -> str:
 def ensure_sha(dry_run, expected_sha, branch):
     """Ensure the sha of the remote branch matches the expected sha"""
     log("Ensuring sha...")
-    remote_name = get_remote_name(False)
     run("git remote -v")
-    run(f"git fetch {remote_name} {branch}")
-    sha = run(f"git rev-parse {remote_name}/{branch}")
+    run(f"git fetch origin {branch}")
+    sha = run(f"git rev-parse origin/{branch}")
     if sha != expected_sha:
         msg = f"{branch} current sha {sha} is not equal to expected sha {expected_sha}"
         if dry_run:

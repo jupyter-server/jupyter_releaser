@@ -159,8 +159,7 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
     head = pr_branch
     maintainer_can_modify = True
 
-    if not dry_run:
-        util.run(f"git push origin {pr_branch}")
+    util.run(f"git push origin {pr_branch}")
 
     # title, head, base, body, maintainer_can_modify, draft, issue
     util.log('Creating a PR"')
@@ -187,13 +186,11 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
         gh.pulls.merge(number, title, commit_message, sha, "rebase")
 
         if dry_run:
-            util.run(f"git fetch origin {branch}")
             util.run(f"git checkout {branch}")
             util.run(f"git merge --ff-only {pr_branch}")
 
-        # Delete the remote branch if not dry run.
-        if not dry_run:
-            util.run(f"git push origin --delete {pr_branch}")
+        # Delete the remote branch.
+        util.run(f"git push origin --delete {pr_branch}")
 
     util.actions_output("pr_url", pull.html_url)
 
