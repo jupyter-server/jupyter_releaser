@@ -159,7 +159,8 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
     head = pr_branch
     maintainer_can_modify = True
 
-    util.run(f"git push origin {pr_branch}")
+    if not dry_run:
+        util.run(f"git push origin {pr_branch}")
 
     # title, head, base, body, maintainer_can_modify, draft, issue
     util.log('Creating a PR"')
@@ -190,7 +191,8 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
             util.run(f"git merge --ff-only {pr_branch}")
 
         # Delete the remote branch if not dry run.
-        util.run(f"git push origin --delete {pr_branch}")
+        if not dry_run:
+            util.run(f"git push origin --delete {pr_branch}")
 
     util.actions_output("pr_url", pull.html_url)
 
@@ -222,7 +224,8 @@ def tag_release(branch, dist_dir, tag_format, tag_message, no_git_tag_workspace,
         npm.tag_workspace_packages()
 
     # Push the tag(s) to the remote.
-    util.run("git push origin --tags")
+    if not dry_run:
+        util.run("git push origin --tags")
 
     # Merge the tag into the source branch.
     util.run(f'git checkout {branch}')
