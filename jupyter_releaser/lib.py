@@ -187,7 +187,7 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
 
         if dry_run:
             util.run(f"git checkout {branch}")
-            util.run(f"git merge --ff-only {pr_branch}")
+            util.run(f"git merge -X theirs {pr_branch}")
 
         # Delete the remote branch if not dry run.
         util.run(f"git push {remote} --delete {pr_branch}")
