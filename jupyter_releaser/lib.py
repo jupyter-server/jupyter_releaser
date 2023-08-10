@@ -159,9 +159,7 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
     head = pr_branch
     maintainer_can_modify = True
 
-    remote = util.get_remote_name(dry_run)
-
-    util.run(f"git push {remote} {pr_branch}")
+    util.run(f"git push origin {pr_branch}")
 
     # title, head, base, body, maintainer_can_modify, draft, issue
     util.log('Creating a PR"')
@@ -192,7 +190,7 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
             util.run(f"git merge --ff-only {pr_branch}")
 
         # Delete the remote branch if not dry run.
-        util.run(f"git push {remote} --delete {pr_branch}")
+        util.run(f"git push origin --delete {pr_branch}")
 
     util.actions_output("pr_url", pull.html_url)
 
@@ -607,8 +605,7 @@ def forwardport_changelog(auth, ref, branch, repo, username, changelog_path, dry
         raise ValueError(msg)
 
     # Check out the branch again
-    remote = util.get_remote_name(dry_run)
-    util.run(f"git checkout -B {branch} {remote}/{branch}")
+    util.run(f"git checkout -B {branch} origin/{branch}")
 
     default_entry = changelog.extract_current(changelog_path)
 
