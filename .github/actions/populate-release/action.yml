@@ -29,7 +29,10 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - uses: ../install-releaser
+    - name: install-releaser
+      run: |
+        bash "${{ github.action_path }}"/../scripts/install-releaser.sh
+
     - id: populate-release
       shell: bash -eux {0}
       run: |

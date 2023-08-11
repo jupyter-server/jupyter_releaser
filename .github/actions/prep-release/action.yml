@@ -34,7 +34,9 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - uses: ../install-releaser
+    - name: install-releaser
+      run: |
+        bash "${{ github.action_path }}"/../scripts/install-releaser.sh
 
     - id: prep-release
       shell: bash -eux {0}

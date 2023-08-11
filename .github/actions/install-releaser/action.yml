@@ -6,11 +6,4 @@ runs:
     - shell: bash
       id: install-releaser
       run: |
-        set -eux
-        # Install Jupyter Releaser if it is not already installed
-        if ! command -v jupyter-releaser &> /dev/null
-        then
-            cd "${{ github.action_path }}"
-            cd ../../..
-            pip install -e .
-        fi
+        bash "${{ github.action_path }}"/../scripts/install-releaser.sh
