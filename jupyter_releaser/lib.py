@@ -162,7 +162,7 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
     util.run(f"git push origin {pr_branch}")
 
     # title, head, base, body, maintainer_can_modify, draft, issue
-    util.log('Creating a PR"')
+    util.log('Creating a PR')
     pull = gh.pulls.create(title, head, base, body, maintainer_can_modify, False, None)
     util.log(f'Created a PR: {pull.number}')
 
