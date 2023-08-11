@@ -6,4 +6,5 @@ runs:
     - shell: bash
       id: install-releaser
       run: |
-        bash "${{ github.action_path }}"/../scripts/install-releaser.sh
+        cd "${{ github.action_path }}/../../scripts"
+        bash install-releaser.sh

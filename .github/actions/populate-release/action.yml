@@ -32,7 +32,8 @@ runs:
     - name: install-releaser
       shell: bash
       run: |
-        bash "${{ github.action_path }}"/../scripts/install-releaser.sh
+        cd "${{ github.action_path }}/../../scripts"
+        bash install-releaser.sh
 
     - id: populate-release
       shell: bash -eux {0}

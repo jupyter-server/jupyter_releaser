@@ -17,7 +17,8 @@ runs:
     - id: install-releaser
       shell: bash
       run: |
-        bash "${{ github.action_path }}"/../scripts/install-releaser.sh
+        cd "${{ github.action_path }}/../../scripts"
+        bash install-releaser.sh
 
     - id: prep-release
       shell: bash -eux {0}
