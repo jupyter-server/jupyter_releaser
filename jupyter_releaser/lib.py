@@ -483,7 +483,9 @@ def prep_git(ref, branch, repo, auth, username, url):  # noqa
     orig_dir = os.getcwd()
     os.chdir(checkout_dir)
 
-    if not url:
+    local_git = url is not None
+
+    if not local_git:
         if auth:
             url = f"https://{username}:{auth}@github.com/{repo}.git"
         else:
@@ -509,7 +511,7 @@ def prep_git(ref, branch, repo, auth, username, url):  # noqa
         ref = None
 
     # Reuse existing branch if possible
-    if ref:
+    if ref and not local_git:
         util.run(f"{util.GIT_FETCH_CMD} +{ref}:{ref_alias}")
         util.run(f"{util.GIT_FETCH_CMD} {ref}")
         checkout_cmd = f"git checkout -B {branch} {ref_alias}"
