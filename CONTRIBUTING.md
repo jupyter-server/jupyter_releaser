@@ -52,3 +52,12 @@ To run the Python tests, use:
 ```bash
 pytest
 ```
+
+## End to End Verification Testing
+
+If you're making substantial changes, you may want to test the release workflow
+on a test repo that uses `TWINE_REPOSITORY_URL: https://test.pypi.org/legacy/`.
+
+Update the actions on that repo to point to your releaser fork and branch, e.g.
+
+`uses: blink1073/jupyter_releaser/.github/actions/populate-release@use-pr-for-changes`
