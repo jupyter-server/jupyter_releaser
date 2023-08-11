@@ -580,7 +580,8 @@ def prepare_environment(fetch_draft_release=True):  # noqa
     dry_run = os.environ.get("RH_DRY_RUN", "").lower() == "true"
 
     # Set the branch when using check release.
-    if not os.environ.get("RH_BRANCH") and dry_run:
+    branch = os.environ.get("RH_BRANCH", "")
+    if not branch and dry_run:
         if os.environ.get("GITHUB_BASE_REF"):
             base_ref = os.environ.get("GITHUB_BASE_REF", "")
             log(f"Using GITHUB_BASE_REF: ${base_ref}")
@@ -590,7 +591,7 @@ def prepare_environment(fetch_draft_release=True):  # noqa
             ref = os.environ["GITHUB_REF"]
             log(f"Using GITHUB_REF: {ref}")
             os.environ["RH_BRANCH"] = "/".join(ref.split("/")[2:])
-    branch = os.environ["RH_BRANCH"]
+        branch = os.environ["RH_BRANCH"]
 
     # For a dry run, set up a bare repo to use as the origin.
     if dry_run:
