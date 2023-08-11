@@ -14,16 +14,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - shell: bash -eux {0}
-      id: install-releaser
-      run: |
-        # Install Jupyter Releaser if it is not already installed
-        if ! command -v jupyter-releaser &> /dev/null
-        then
-            cd "${{ github.action_path }}"
-            cd ../../..
-            pip install -e .
-        fi
+    - uses: ../install-releaser
 
     - id: prep-release
       shell: bash -eux {0}

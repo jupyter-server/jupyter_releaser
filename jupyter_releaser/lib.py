@@ -476,7 +476,6 @@ def prep_git(ref, branch, repo, auth, username, url):  # noqa
     checkout_exists = False
     if osp.exists(osp.join(checkout_dir, ".git")):
         util.log("Git checkout already exists")
-        util.run('git log -n 5')
         checkout_exists = True
 
     if not checkout_exists:
@@ -520,16 +519,12 @@ def prep_git(ref, branch, repo, auth, username, url):  # noqa
         checkout_cmd = f"git checkout {branch}"
 
     if checkout_exists:
-        util.run('git log -n 5')
         try:
             util.run(f"git checkout {branch}")
         except Exception:
             util.run(checkout_cmd)
     else:
         util.run(checkout_cmd)
-
-    if checkout_exists:
-        util.run('git log -n 5')
 
     # Check for detached head state, create branch if needed
     try:

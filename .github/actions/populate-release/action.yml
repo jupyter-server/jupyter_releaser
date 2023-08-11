@@ -29,18 +29,7 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: install-releaser
-      shell: bash -eux {0}
-      run: |
-        # Install Jupyter Releaser from git unless we are testing Releaser itself
-        echo "environment? ${{job.environment}}"
-        if ! command -v jupyter-releaser &> /dev/null
-        then
-            cd "${{ github.action_path }}"
-            cd ../../..
-            pip install -e .
-        fi
-
+    - uses: ../install-releaser
     - id: populate-release
       shell: bash -eux {0}
       run: |
