@@ -46,6 +46,7 @@ BUF_SIZE = 65536
 TBUMP_CMD = "pipx run tbump --non-interactive --only-patch"
 
 CHECKOUT_NAME = ".jupyter_releaser_checkout"
+BARE_REPO_NAME = ".jupyter_release_bare_repo"
 RELEASE_HTML_PATTERN = (
     "(?:https://github.com|%s)/(?P<owner>[^/]+)/(?P<repo>[^/]+)/releases/tag/(?P<tag>.*)"
 )
@@ -562,7 +563,7 @@ def extract_metadata_from_release_url(gh, release_url, auth):
     return data
 
 
-def prepare_environment(fetch_draft_release=True):  # noqa: PLR0912,C901
+def prepare_environment(fetch_draft_release=True):  # noqa
     """Prepare the environment variables, for use when running one of the
     action scripts."""
     # Set up env variables
@@ -584,25 +585,32 @@ def prepare_environment(fetch_draft_release=True):  # noqa: PLR0912,C901
             base_ref = os.environ.get("GITHUB_BASE_REF", "")
             log(f"Using GITHUB_BASE_REF: ${base_ref}")
             os.environ["RH_BRANCH"] = base_ref
-
         else:
             # e.g refs/head/foo or refs/tag/bar
             ref = os.environ["GITHUB_REF"]
             log(f"Using GITHUB_REF: {ref}")
             os.environ["RH_BRANCH"] = "/".join(ref.split("/")[2:])
 
-    # For a dry run, clone the repo locally to use as the origin
-    local_git_url = os.environ.get('RH_GIT_URL')
-    if local_git_url:
-        url = normalize_path(local_git_url)
-        if not os.path.exists(url):
+    # For a dry run, set up a bare repo to use as the origin.
+    if dry_run:
+        bare_repo = os.path.join(os.getcwd(), BARE_REPO_NAME)
+        if not fetch_draft_release and os.path.exists(bare_repo):
+            shutil.rmtree(bare_repo, ignore_errors=True)
+        url = normalize_path(bare_repo)
+        if not os.path.exists(bare_repo):
             run(f"git init -b main --bare {url}")
             run(f"git remote add test {url}")
-            run("git push test")
+            branch = os.environ['RH_BRANCH']
+            run(f"git fetch origin {branch}")
+            run(f"git checkout {branch}")
+            run(f"git push test {branch}")
+        os.environ["RH_GIT_URL"] = url
 
     # Start the mock GitHub server if in a dry run.
     if dry_run:
         static_dir = os.path.join(tempfile.gettempdir(), "gh_static")
+        if not fetch_draft_release and os.path.exists(static_dir):
+            shutil.rmtree(static_dir, ignore_errors=True)
         os.makedirs(static_dir, exist_ok=True)
         os.environ["RH_GITHUB_STATIC_DIR"] = static_dir
         ensure_mock_github()

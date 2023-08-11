@@ -29,7 +29,6 @@ runs:
       shell: bash -eux {0}
       run: |
         export RH_DRY_RUN="true"
-        export RH_GIT_URL=$(pwd)/.local_bare_repo
         export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
         export RH_VERSION_SPEC=${{ inputs.version_spec }}
         export RH_STEPS_TO_SKIP=${{ inputs.steps_to_skip }}
@@ -39,7 +38,6 @@ runs:
       shell: bash -eux {0}
       run: |
         export RH_DRY_RUN="true"
-        export RH_GIT_URL=$(pwd)/.local_bare_repo
         export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
         export RH_RELEASE_URL=${{ steps.prep-release.outputs.release_url }}
         export RH_STEPS_TO_SKIP=${{ inputs.steps_to_skip }}
@@ -50,7 +48,6 @@ runs:
       shell: bash -eux {0}
       run: |
         export RH_DRY_RUN="true"
-        export RH_GIT_URL=$(pwd)/.local_bare_repo
         export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
         export RH_RELEASE_URL=${{ steps.populate-release.outputs.release_url }}
         export RH_STEPS_TO_SKIP=${{ inputs.steps_to_skip }}

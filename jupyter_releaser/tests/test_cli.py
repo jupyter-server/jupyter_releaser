@@ -834,14 +834,16 @@ def test_ensure_sha(npm_package, runner, git_prep):
         runner(["ensure-sha", "--branch", current, "--expected-sha", "abc"])
 
 
-def test_end_to_end(npm_package, runner, mocker, mock_github, git_repo):
-    os.environ["GITHUB_ACTIONS"] = "true"
+def test_end_to_end(npm_package, runner, mocker):
     os.environ["RH_DRY_RUN"] = "true"
+    os.environ["GITHUB_REPOSITORY"] = "test/test"
+    current = util.run("git branch --show-current", cwd=npm_package)
+    os.environ["RH_BRANCH"] = os.environ["RH_REF"] = current
+
+    util.prepare_environment(False)
 
     # prep release
-    runner(["prep-git", "--git-url", git_repo])
-    current = util.run("git branch --show-current", cwd=util.CHECKOUT_NAME)
-    os.environ['RH_BRANCH'] = current
+    runner(["prep-git"])
     # includes bump_version
     mock_changelog_entry(npm_package, runner, mocker)
     runner(["build-changelog"])
@@ -857,7 +859,7 @@ def test_end_to_end(npm_package, runner, mocker, mock_github, git_repo):
     os.environ["RH_RELEASE_URL"] = release_url
 
     # populate release
-    runner(["prep-git", "--git-url", git_repo])
+    runner(["prep-git"])
     runner(["ensure-sha"])
     runner(["bump-version"])
     runner(["extract-changelog"])
