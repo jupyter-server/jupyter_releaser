@@ -17,21 +17,21 @@ See checklist below for details:
 
 - [ ] Set up PyPI:
 
+<details><summary>Using PyPI trusted publisher (modern way)</summary>
+
+- Set up your PyPI project by [adding a trusted publisher](https://docs.pypi.org/trusted-publishers/adding-a-publisher/)
+  - if you use the example workflows, the _workflow name_ is `publish-release.yml` (or `full-release.yml`) and the
+    _environment_ should match the GitHub environment used in the PyPI trusted publisher setup.
+- Ensure the publish release job as `permissions`: `id-token : write` (see the [documentation](https://docs.pypi.org/trusted-publishers/using-a-publisher/))
+
+</details>
+
 <details><summary>Using PyPI token (legacy way)</summary>
 
 - Add access token for the [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github) stored as `PYPI_TOKEN`.
   _Note_ For security reasons, it is recommended that you scope the access
   to a single repository. Additionally, this token should belong to a
   machine account and not a user account.
-
-</details>
-
-<details><summary>Using PyPI trusted publisher (modern way)</summary>
-
-- Set up your PyPI project by [adding a trusted publisher](https://docs.pypi.org/trusted-publishers/adding-a-publisher/)
-  - if you use the example workflows, the _workflow name_ is `publish-release.yml` (or `full-release.yml`) and the
-    _environment_ should be left blank.
-- Ensure the publish release job as `permissions`: `id-token : write` (see the [documentation](https://docs.pypi.org/trusted-publishers/using-a-publisher/))
 
 </details>
 

@@ -46,12 +46,12 @@ Detailed workflows are available to draft a changelog, draft a release, publish 
   - Builds tarball(s) using `npm pack`
   - Make sure tarball(s) can be installed and imported in a new npm package
 - Adds a commit that includes the hashes of the dist files
-- Creates an annotated version tag in standard format
 - If given, bumps the version using the post version spec. he post version
   spec can also be given as a setting, [Write Releaser Config Guide](../how_to_guides/write_config.md).
 - Verifies that the SHA of the most recent commit has not changed on the target
   branch, preventing a mismatch of release commit.
-- Pushes the commits and tag to the target `branch`
+- Creates a Pull Request with the release and optional post version commit and
+  automatically merges the PR.
 - Pusehes the created assets to the draft release, along with an `asset_shas.json` file capturing the checksums of the files.
 
 ### Finalize Release Action
@@ -61,6 +61,7 @@ Detailed workflows are available to draft a changelog, draft a release, publish 
 - Downloads the dist assets from the release
 - Verifies shas of release assets against the `asset_shas.json` file.
 - Publishes assets to appropriate registries.
+- Creates an annotated version tag in standard format and pushes to the remote.
 - Publishes the final GitHub release
 - If the tag is on a backport branch, makes a forwardport PR for the changelog entry
 

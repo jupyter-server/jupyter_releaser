@@ -195,7 +195,7 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
     util.actions_output("pr_url", pull.html_url)
 
 
-def tag_release(branch, dist_dir, tag_format, tag_message, no_git_tag_workspace, dry_run):
+def tag_release(branch, dist_dir, tag_format, tag_message, no_git_tag_workspace):
     """Create release tag and push it"""
     # Get the branch commits.
     util.run(f"git fetch origin {branch}")
@@ -222,8 +222,7 @@ def tag_release(branch, dist_dir, tag_format, tag_message, no_git_tag_workspace,
         npm.tag_workspace_packages()
 
     # Push the tag(s) to the remote.
-    if not dry_run:
-        util.run("git push origin --tags")
+    util.run("git push origin --tags")
 
     # Merge the tag into the source branch.
     util.run(f'git checkout {branch}')

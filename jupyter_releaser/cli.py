@@ -525,7 +525,6 @@ def check_npm(dist_dir, npm_install_options):
     is_flag=True,
     help="Whether to skip tagging npm workspace packages",
 )
-@add_options(dry_run_options)
 @use_checkout_dir()
 def tag_release(
     ref,
@@ -538,7 +537,7 @@ def tag_release(
     dry_run,
 ):
     """Create release commit and tag"""
-    lib.tag_release(branch, dist_dir, tag_format, tag_message, no_git_tag_workspace, dry_run)
+    lib.tag_release(branch, dist_dir, tag_format, tag_message, no_git_tag_workspace)
 
 
 @main.command()
