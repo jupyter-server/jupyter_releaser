@@ -590,6 +590,7 @@ def prepare_environment(fetch_draft_release=True):  # noqa
             ref = os.environ["GITHUB_REF"]
             log(f"Using GITHUB_REF: {ref}")
             os.environ["RH_BRANCH"] = "/".join(ref.split("/")[2:])
+    branch = os.environ["RH_BRANCH"]
 
     # For a dry run, set up a bare repo to use as the origin.
     if dry_run:
@@ -600,7 +601,6 @@ def prepare_environment(fetch_draft_release=True):  # noqa
         if not os.path.exists(bare_repo):
             run(f"git init -b main --bare {url}")
             run(f"git remote add test {url}")
-            branch = os.environ['RH_BRANCH']
             run(f"git fetch origin {branch}")
             run(f"git checkout {branch}")
             run(f"git push test {branch}")
@@ -616,7 +616,6 @@ def prepare_environment(fetch_draft_release=True):  # noqa
         ensure_mock_github()
 
     # Set up GitHub object.
-    branch = os.environ.get("RH_BRANCH")
     log(f"Getting GitHub connection for {os.environ['RH_REPOSITORY']}")
     owner, repo_name = os.environ["RH_REPOSITORY"].split("/")
     auth = os.environ.get("GITHUB_ACCESS_TOKEN", "")

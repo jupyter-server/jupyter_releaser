@@ -149,6 +149,7 @@ check-imports: RH_CHECK_IMPORTS
 dist-dir: RH_DIST_DIR
 dry-run: RH_DRY_RUN
 expected-sha: RH_EXPECTED_SHA
+git-url: RH_GIT_URL
 npm-cmd: RH_NPM_COMMAND
 npm-install-options: RH_NPM_INSTALL_OPTIONS
 npm-registry: NPM_REGISTRY
