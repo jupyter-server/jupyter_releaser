@@ -33,6 +33,7 @@ runs:
   using: "composite"
   steps:
     - name: install-releaser
+      shell: bash
       run: |
         bash "${{ github.action_path }}"/../scripts/install-releaser.sh
 
