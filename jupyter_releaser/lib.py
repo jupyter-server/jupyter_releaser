@@ -213,7 +213,7 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
             }
             """
             variables = {"pullRequestId": pull.id, "mergeMethod": "rebase"}
-            headers = {"Authorization": auth}
+            headers = {"Authorization": f"Bearer {auth}", 'X-Github-Next-Global-ID': '1'}
             request = requests.post(
                 'https://api.github.com/graphql',
                 json={'query': query, 'variables': variables},
