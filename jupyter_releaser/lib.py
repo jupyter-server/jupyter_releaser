@@ -15,6 +15,7 @@ from glob import glob
 from pathlib import Path
 from subprocess import CalledProcessError
 from typing import Type, Union
+from urllib.error import HTTPError
 
 import mdformat
 import requests
@@ -227,9 +228,11 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
             # Wait for the PR to be merged
             delay = 1
             for _ in range(10):
-                status = gh.pulls.check_if_merged(number)
-                if status == 204:  # noqa: PLR2004
-                    break
+                try:
+                    gh.pulls.check_if_merged(number)
+                except HTTPError as e:
+                    if e.code != 404:  # noqa: PLR2004
+                        raise
                 time.sleep(delay)
                 delay *= 2
 
