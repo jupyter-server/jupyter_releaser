@@ -7,6 +7,7 @@ import os.path as osp
 import re
 import shutil
 import tempfile
+import time
 import uuid
 import warnings
 from datetime import datetime, timezone
@@ -16,6 +17,7 @@ from subprocess import CalledProcessError
 from typing import Type, Union
 
 import mdformat
+import requests
 from packaging.version import parse as parse_version
 from pkginfo import SDist, Wheel
 
@@ -180,14 +182,56 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
 
     if pr_type == "release":
         # Merge the release PR
-        sha = util.run("git rev-parse HEAD")
-        commit_message = util.run(f"git log --format=%B -n 1 {sha}")
         util.log(f"Merging the PR {number}")
-        gh.pulls.merge(number, title, commit_message, sha, "rebase")
 
         if dry_run:
             util.run(f"git checkout {branch}")
             util.run(f"git merge --ff-only {pr_branch}")
+
+        else:
+            query = """
+                mutation(
+              $pullRequestId: ID!,
+              $mergeMethod: PullRequestMergeMethod!
+            ) {
+                enablePullRequestAutoMerge(input: {
+                  pullRequestId: $pullRequestId,
+                  mergeMethod: $mergeMethod
+                }) {
+                clientMutationId
+                pullRequest {
+                  id
+                  state
+                  autoMergeRequest {
+                    enabledAt
+                    enabledBy {
+                      login
+                    }
+                  }
+                }
+              }
+            }
+            """
+            variables = {"pullRequestId": pull.id, "mergeMethod": "rebase"}
+            headers = {"Authorization": auth}
+            request = requests.post(
+                'https://api.github.com/graphql',
+                json={'query': query, 'variables': variables},
+                headers=headers,
+                timeout=10,
+            )
+
+            if request.status_code != 200:  # noqa: PLR2004
+                request.raise_for_status()
+
+            # Wait for the PR to be merged
+            delay = 1
+            for _ in range(10):
+                status = gh.pulls.check_if_merged(number)
+                if status == 204:  # noqa: PLR2004
+                    break
+                time.sleep(delay)
+                delay *= 2
 
         # Delete the remote branch.
         util.run(f"git push origin --delete {pr_branch}")
