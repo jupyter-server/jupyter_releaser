@@ -271,7 +271,7 @@ def populate_release(
     release = util.release_for_url(gh, release_url)
 
     # Create a release PR.
-    title = f"Release {version}"
+    title = f"[ci skip] Release {version}"
     body = title
     handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="release", dry_run=dry_run)
 
