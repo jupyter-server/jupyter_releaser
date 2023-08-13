@@ -618,8 +618,9 @@ def prepare_environment(fetch_draft_release=True):  # noqa
 
             # Reuse existing branch if possible
             if ref:
-                run(f"{GIT_FETCH_CMD} +{ref}:{ref_alias}", cwd=url)
-                run(f"{GIT_FETCH_CMD} {ref}", cwd=url)
+                run(f"{GIT_FETCH_CMD} +{ref}:{ref_alias}")
+                run(f"{GIT_FETCH_CMD} {ref}")
+                run(f"git push test {ref}")
 
             run(f"git checkout {branch}")
             run(f"git push test {branch}")
