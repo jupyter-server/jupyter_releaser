@@ -128,8 +128,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Local git checkout
+# Local git checkouts
 .jupyter_releaser_checkout
+.jupyter_release_bare_repo
 
 # macOS
 .DS_Store

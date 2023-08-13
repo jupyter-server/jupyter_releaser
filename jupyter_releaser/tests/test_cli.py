@@ -837,7 +837,7 @@ def test_ensure_sha(npm_package, runner, git_prep):
 
 def test_end_to_end(npm_package, runner, mocker):
     os.environ["RH_DRY_RUN"] = "true"
-    os.environ["GITHUB_REPOSITORY"] = "test/test"
+    os.environ["RH_REPOSITORY"] = "test/test"
     current = util.run("git branch --show-current", cwd=npm_package)
     os.environ["RH_BRANCH"] = os.environ["RH_REF"] = current
 

@@ -602,7 +602,8 @@ def prepare_environment(fetch_draft_release=True):  # noqa
         if not os.path.exists(bare_repo):
             run(f"git init -b main --bare {url}")
             run(f"git remote add test {url}")
-            run(f"git fetch origin --unshallow {branch}")
+            if 'GITHUB_REPOSITORY' in os.environ:
+                run(f"git fetch origin --unshallow {branch}")
             run(f"git checkout {branch}")
             run(f"git push test {branch}")
         os.environ["RH_GIT_URL"] = url
