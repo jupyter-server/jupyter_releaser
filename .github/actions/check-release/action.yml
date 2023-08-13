@@ -35,6 +35,7 @@ runs:
       run: |
         export RH_DRY_RUN="true"
         export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
+        export GITHUB_REF=""
         export RH_RELEASE_URL=${{ steps.prep-release.outputs.release_url }}
         export RH_STEPS_TO_SKIP=${{ inputs.steps_to_skip }}
         export YARN_UNSAFE_HTTP_WHITELIST=0.0.0.0
@@ -44,6 +45,7 @@ runs:
       shell: bash -eux {0}
       run: |
         export RH_DRY_RUN="true"
+        export GITHUB_REF=""
         export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
         export RH_RELEASE_URL=${{ steps.populate-release.outputs.release_url }}
         export RH_STEPS_TO_SKIP=${{ inputs.steps_to_skip }}
