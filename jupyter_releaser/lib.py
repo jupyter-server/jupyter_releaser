@@ -200,6 +200,7 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
                 try:
                     util.log(f"Merge attempt {i} of 10")
                     gh.pulls.merge(number, title, commit_message, sha, "rebase")
+                    break
                 except HTTPError as e:
                     # This code will be raised when required checks have not
                     # passed.
