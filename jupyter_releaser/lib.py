@@ -201,7 +201,9 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
                     util.log(f"Merge attempt {i} of 10")
                     gh.pulls.merge(number, title, commit_message, sha, "rebase")
                 except HTTPError as e:
-                    if e.code != 404:  # noqa: PLR2004
+                    # This code will be raised when required checks have not
+                    # passed.
+                    if e.code != 405:  # noqa: PLR2004
                         raise
                 time.sleep(delay)
                 delay *= 2
