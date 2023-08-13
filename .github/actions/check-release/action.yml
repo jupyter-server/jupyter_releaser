@@ -25,6 +25,7 @@ runs:
       run: |
         export RH_DRY_RUN="true"
         export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
+        export GITHUB_REF=""
         export RH_VERSION_SPEC=${{ inputs.version_spec }}
         export RH_STEPS_TO_SKIP=${{ inputs.steps_to_skip }}
         python -m jupyter_releaser.actions.prep_release
