@@ -166,7 +166,9 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
 
     # title, head, base, body, maintainer_can_modify, draft, issue
     util.log('Creating a PR')
-    pull = gh.pulls.create(title, head, base, body, maintainer_can_modify, False, None)
+    pat = os.environ.get('PERSONAL_ACCESS_TOKEN', auth)
+    gh_pull = util.get_gh_object(dry_run=dry_run, owner=owner, repo=repo_name, token=pat)
+    pull = gh_pull.pulls.create(title, head, base, body, maintainer_can_modify, False, None)
     util.log(f'Created a PR: {pull.number}')
 
     # Try to add the documentation label to the PR.

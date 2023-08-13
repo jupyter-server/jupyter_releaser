@@ -4,6 +4,9 @@ inputs:
   token:
     description: "GitHub access token"
     required: true
+  personal_access_token:
+    description: "GitHub PAT used to create pull requests"
+    required: false
   target:
     description: "The owner/repo GitHub target"
     required: false
@@ -39,6 +42,7 @@ runs:
       shell: bash -eux {0}
       run: |
         export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
+        export PERSONAL_ACCESS_TOKEN=${{ inputs.personal_access_token }}
         export GITHUB_ACTOR=${{ github.triggering_actor }}
         export RH_REPOSITORY=${{ inputs.target }}
         export RH_DRY_RUN=${{ inputs.dry_run }}
