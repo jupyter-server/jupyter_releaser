@@ -602,10 +602,25 @@ def prepare_environment(fetch_draft_release=True):  # noqa
         if not os.path.exists(bare_repo):
             run(f"git init -b main --bare {url}")
             run(f"git remote add test {url}")
+            ref = os.environ.get("RH_REF", "")
+            ref_alias = ref
             try:
                 run(f"git fetch origin --unshallow {branch}")
             except Exception as e:
                 log(e)
+
+            # Handle the ref
+            if ref.startswith("refs/pull/"):
+                pull = ref[len("refs/pull/") :]
+                ref_alias = f"refs/pull/{pull}"
+            else:
+                ref = None
+
+            # Reuse existing branch if possible
+            if ref:
+                run(f"{GIT_FETCH_CMD} +{ref}:{ref_alias}", cwd=url)
+                run(f"{GIT_FETCH_CMD} {ref}", cwd=url)
+
             run(f"git checkout {branch}")
             run(f"git push test {branch}")
         os.environ["RH_GIT_URL"] = url
