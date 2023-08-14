@@ -214,24 +214,33 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
     util.actions_output("pr_url", pull.html_url)
 
 
-def tag_release(branch, dist_dir, tag_format, tag_message, no_git_tag_workspace):
+def tag_release(branch, version, tag_format, tag_message, release_message, no_git_tag_workspace):
     """Create release tag and push it"""
     # Get the branch commits.
-    util.run(f"git fetch origin {branch}")
-    util.run("git rev-parse HEAD")
+    # Wait for the release to be in the git log.
+    release_message = release_message or "Publish {version}"
+    release_message = release_message.format(version=version)
+    sha = None
+    for _ in range(10):
+        util.run(f"git fetch origin {branch}")
+        util.run(f"git checkout {branch}")
+        log = util.run("git log --format=%B -n 1")
+        if release_message in log:
+            sha = util.run("git rev-parse HEAD")
+            break
+        log = util.run("git log --format=%B -n 2")
+        if release_message in log:
+            sha = util.run("git rev-parse HEAD~1")
+            break
+        if sha:
+            break
+        time.sleep(1)
 
-    # Find the release commit.
-    commit_message = util.run("git log --format=%B -n 1 HEAD")
-    if "SHA256 hashes:" not in commit_message:
-        util.run('git stash')
-        util.run('git checkout HEAD~1')
-        util.run("git rev-parse HEAD")
-    commit_message = util.run("git log --format=%B -n 1 HEAD")
-    if "SHA256 hashes:" not in commit_message:
-        msg = "Could not find release commit"
+    if not sha:
+        msg = "Gould not find release commit"
         raise ValueError(msg)
 
-    version = util.get_version()
+    util.run(f"git checkout {sha}")
 
     # Create the annotated release tag
     tag_name = tag_format.format(version=version)
