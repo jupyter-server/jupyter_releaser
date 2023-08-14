@@ -220,21 +220,18 @@ def tag_release(branch, version, tag_format, tag_message, release_message, no_gi
     # Wait for the release to be in the git log.
     release_message = release_message or "Publish {version}"
     release_message = release_message.format(version=version)
+
+    util.run(f"git checkout {branch}")
+    util.run(f"git pull origin {branch}")
+
     sha = None
-    for _ in range(10):
-        util.run(f"git fetch origin {branch}")
-        util.run(f"git checkout {branch}")
-        log = util.run("git log --format=%B -n 1")
-        if release_message in log:
-            sha = util.run("git rev-parse HEAD")
-            break
+    log = util.run("git log --format=%B -n 1")
+    if release_message in log:
+        sha = util.run("git rev-parse HEAD")
+    else:
         log = util.run("git log --format=%B -n 2")
         if release_message in log:
             sha = util.run("git rev-parse HEAD~1")
-            break
-        if sha:
-            break
-        time.sleep(1)
 
     if not sha:
         msg = "Gould not find release commit"
