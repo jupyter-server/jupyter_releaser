@@ -218,12 +218,14 @@ def tag_release(branch, dist_dir, tag_format, tag_message, no_git_tag_workspace)
     """Create release tag and push it"""
     # Get the branch commits.
     util.run(f"git fetch origin {branch}")
+    util.run("git rev-parse HEAD")
 
     # Find the release commit.
     commit_message = util.run("git log --format=%B -n 1 HEAD")
     if "SHA256 hashes:" not in commit_message:
         util.run('git stash')
         util.run('git checkout HEAD~1')
+        util.run("git rev-parse HEAD")
     commit_message = util.run("git log --format=%B -n 1 HEAD")
     if "SHA256 hashes:" not in commit_message:
         msg = "Could not find release commit"

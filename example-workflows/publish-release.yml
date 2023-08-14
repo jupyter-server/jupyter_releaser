@@ -22,6 +22,7 @@ jobs:
       # This is useful if you want to use PyPI trusted publisher
       # and NPM provenance
       id-token: write
+      contents: write
     steps:
       - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
 
@@ -30,6 +31,7 @@ jobs:
         uses: jupyter-server/jupyter_releaser/.github/actions/populate-release@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          personal_access_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           branch: ${{ github.event.inputs.branch }}
           release_url: ${{ github.event.inputs.release_url }}
           steps_to_skip: ${{ github.event.inputs.steps_to_skip }}
@@ -45,6 +47,7 @@ jobs:
         uses: jupyter-server/jupyter-releaser/.github/actions/finalize-release@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          personal_access_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           release_url: ${{ steps.populate-release.outputs.release_url }}
 
       - name: "** Next Step **"
