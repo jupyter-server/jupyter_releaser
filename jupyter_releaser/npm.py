@@ -47,8 +47,8 @@ def build_dist(package, dist_dir):
             if data.get("private", False):
                 continue
             paths.append(str(osp.abspath(path)).replace(os.sep, "/"))
-
-        util.run(f"npm pack {' '.join(paths)}", cwd=dest, quiet=True)
+        if paths:
+            util.run(f"npm pack {' '.join(paths)}", cwd=dest, quiet=True)
 
 
 def extract_dist(dist_dir, target):
