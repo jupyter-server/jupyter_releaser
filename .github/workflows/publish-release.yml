@@ -19,7 +19,7 @@ jobs:
   publish_release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
       - name: Install Dependencies
         shell: bash
