@@ -320,9 +320,9 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):  # noqa
                 assert v.dev is not None
                 version_spec = f"{v.major}.{v.minor}.{v.micro}.dev{v.dev + 1}"
 
-        else:
+        else:  # noqa: PLR5501
             # Handle dev version spec.
-            if version_spec == "dev":  # noqa
+            if version_spec == "dev":
                 if v.pre:
                     version_spec = f"{v.major}.{v.minor}.{v.micro}.dev0"
                 # Bump to next minor dev.
@@ -363,7 +363,7 @@ def release_for_url(gh, url):
     """Get release response data given a release url"""
     release = None
     for rel in gh.repos.list_releases():
-        if rel.html_url == url or rel.url == url:
+        if url in (rel.html_url, rel.url):
             release = rel
     if not release:
         msg = f"No release found for url {url}"
