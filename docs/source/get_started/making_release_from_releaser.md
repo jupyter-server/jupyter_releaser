@@ -12,6 +12,11 @@ already uses Jupyter Releaser.
 
 - Fork `jupyter_releaser`
 
+- Generate a [GitHub Access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with access to target GitHub repo to run GitHub Actions.  You must use a classic
+  token since it will need writes to multiple repositories.
+
+- Add the token as `PERSONAL_ACCESS_TOKEN` in the [repository secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository) of your fork. The token must have `repo` and `workflow` scopes.
+
 - Set up PyPI:
 
 <details><summary>Using PyPI trusted publisher (modern way)</summary>

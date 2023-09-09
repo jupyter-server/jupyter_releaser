@@ -8,12 +8,24 @@ See checklist below for details:
 
 - Markdown changelog
 - Bump version configuration (if using Python), for example [hatch](https://hatch.pypa.io/latest/)
+- [Access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with access to target GitHub repo to run GitHub Actions.
 - Set up:
   - \[_modern way_\] [Add a trusted publisher](https://docs.pypi.org/trusted-publishers/adding-a-publisher/) to your PyPI project
   - \[_legacy way_\] Access token for the [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github)
 - If needed, access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens).
 
 ## Checklist for Adoption
+
+- [ ] Add a GitHub [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token), preferably a fine-grained personal access token. For fine-grained personal tokens, the org must be configured to allow them.  The org should "Require administrator approval" for fine-grained tokens.  We need this
+  access token to allow the workflows to run when a pull request is
+  created by the action.
+  The fine-grained token should have the org as its
+  "Resource owner" and have "Pull Request: Read and Write" permissions
+  on the target repository. The token will have to have an expiration, but can be regenerated in the UI.  Save the token as
+  `PERSONAL_ACCESS_TOKEN`
+  in the [Environment secrets](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment#environment-secrets) for the environment used in the release workflow, which is "release" in the default template.  There is no need to store the token anywhere
+  else, since it is only used for this purpose and can be re-generated
+  when expired.
 
 - [ ] Set up PyPI:
 
