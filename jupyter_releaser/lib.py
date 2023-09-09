@@ -214,22 +214,30 @@ def handle_pr(auth, branch, pr_branch, repo, title, body, pr_type="forwardport",
     util.actions_output("pr_url", pull.html_url)
 
 
-def tag_release(branch, dist_dir, tag_format, tag_message, no_git_tag_workspace):
+def tag_release(branch, version, tag_format, tag_message, release_message, no_git_tag_workspace):
     """Create release tag and push it"""
     # Get the branch commits.
-    util.run(f"git fetch origin {branch}")
+    # Wait for the release to be in the git log.
+    release_message = release_message or "Publish {version}"
+    release_message = release_message.format(version=version)
 
-    # Find the release commit.
-    commit_message = util.run("git log --format=%B -n 1 HEAD")
-    if "SHA256 hashes:" not in commit_message:
-        util.run('git stash')
-        util.run('git checkout HEAD~1')
-    commit_message = util.run("git log --format=%B -n 1 HEAD")
-    if "SHA256 hashes:" not in commit_message:
-        msg = "Could not find release commit"
+    util.run(f"git checkout {branch}")
+    util.run(f"git pull origin {branch}")
+
+    sha = None
+    log = util.run("git log --format=%B -n 1")
+    if release_message in log:
+        sha = util.run("git rev-parse HEAD")
+    else:
+        log = util.run("git log --format=%B -n 2")
+        if release_message in log:
+            sha = util.run("git rev-parse HEAD~1")
+
+    if not sha:
+        msg = "Gould not find release commit"
         raise ValueError(msg)
 
-    version = util.get_version()
+    util.run(f"git checkout {sha}")
 
     # Create the annotated release tag
     tag_name = tag_format.format(version=version)
@@ -530,7 +538,7 @@ def prep_git(ref, branch, repo, auth, username, url):  # noqa
         ref = None
 
     # Reuse existing branch if possible
-    if ref and not local_git:
+    if ref:
         util.run(f"{util.GIT_FETCH_CMD} +{ref}:{ref_alias}")
         util.run(f"{util.GIT_FETCH_CMD} {ref}")
         checkout_cmd = f"git checkout -B {branch} {ref_alias}"

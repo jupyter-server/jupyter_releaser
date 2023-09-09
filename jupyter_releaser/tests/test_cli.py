@@ -173,6 +173,7 @@ tag-message: RH_TAG_MESSAGE
 twine-cmd: TWINE_COMMAND
 twine-repository-url: TWINE_REPOSITORY_URL
 username: GITHUB_ACTOR
+version: RH_VERSION
 version-cmd: RH_VERSION_COMMAND
 version-spec: RH_VERSION_SPEC
 """.strip()
@@ -444,6 +445,8 @@ def test_tag_release(py_package, runner, build_mock, git_prep):
             "no thanks",
             "--branch",
             "bar",
+            "--release-message",
+            "this thing",
         ]
     )
 
@@ -873,6 +876,7 @@ def test_end_to_end(npm_package, runner, mocker):
     runner(["populate-release"])
 
     # finalize release
+    os.environ["RH_VERSION"] = "1.0.1"
     runner(["extract-release"])
     runner(["publish-assets"])
     runner(["tag-release"])

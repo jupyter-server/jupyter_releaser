@@ -22,6 +22,7 @@ jobs:
       # This is useful if you want to use PyPI trusted publisher
       # and NPM provenance
       id-token: write
+      contents: write
     steps:
       - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
 

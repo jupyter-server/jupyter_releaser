@@ -507,7 +507,7 @@ def check_npm(dist_dir, npm_install_options):
 
 @main.command()
 @add_options(branch_options)
-@add_options(dist_dir_options)
+@click.option("--version", envvar="RH_VERSION", help="The version to tag")
 @click.option(
     "--tag-format",
     envvar="RH_TAG_FORMAT",
@@ -521,14 +521,22 @@ def check_npm(dist_dir, npm_install_options):
     help="The message to use for the release tag",
 )
 @click.option(
+    "--release-message",
+    envvar="RH_RELEASE_MESSAGE",
+    default="Publish {version}",
+    help="The message to use for the release commit",
+)
+@click.option(
     "--no-git-tag-workspace",
     is_flag=True,
     help="Whether to skip tagging npm workspace packages",
 )
 @use_checkout_dir()
-def tag_release(ref, branch, repo, dist_dir, tag_format, tag_message, no_git_tag_workspace):
+def tag_release(
+    ref, branch, repo, version, tag_format, tag_message, release_message, no_git_tag_workspace
+):
     """Create release commit and tag"""
-    lib.tag_release(branch, dist_dir, tag_format, tag_message, no_git_tag_workspace)
+    lib.tag_release(branch, version, tag_format, tag_message, release_message, no_git_tag_workspace)
 
 
 @main.command()
