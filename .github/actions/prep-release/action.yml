@@ -21,6 +21,10 @@ inputs:
     description: "If set, do not make a PR"
     default: "false"
     required: false
+  silent:
+    description: "Set a placeholder in the changelog and don't publish the release."
+    required: false
+    type: boolean
   since:
     description: "Use PRs with activity since this date or git reference"
     required: false
@@ -55,6 +59,7 @@ runs:
         export RH_VERSION_SPEC=${{ inputs.version_spec }}
         export RH_POST_VERSION_SPEC=${{ inputs.post_version_spec }}
         export RH_DRY_RUN=${{ inputs.dry_run }}
+        export RH_SILENT=${{ inputs.silent }}
         export RH_SINCE=${{ inputs.since }}
         export RH_SINCE_LAST_STABLE=${{ inputs.since_last_stable }}
 

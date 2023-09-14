@@ -57,6 +57,7 @@ def draft_changelog(
     dry_run,
     post_version_spec,
     post_version_message,
+    silent
 ):
     """Create a changelog entry PR"""
     repo = repo or util.get_repo()
@@ -103,6 +104,7 @@ def draft_changelog(
         "post_version_spec": post_version_spec,
         "post_version_message": post_version_message,
         "expected_sha": current_sha,
+        "silent": silent
     }
     with tempfile.TemporaryDirectory() as d:
         metadata_path = Path(d) / util.METADATA_JSON
@@ -410,7 +412,7 @@ def publish_assets(  # noqa
         util.log("No files to upload")
 
 
-def publish_release(auth, dry_run, release_url):
+def publish_release(auth, dry_run, release_url, silent):
     """Publish GitHub release"""
     util.log(f"Publishing {release_url}")
 
@@ -426,7 +428,7 @@ def publish_release(auth, dry_run, release_url):
         release.target_commitish,
         release.name,
         release.body,
-        False,
+        silent,  # In silent mode the release will stay in draft mode
         release.prerelease,
     )
 

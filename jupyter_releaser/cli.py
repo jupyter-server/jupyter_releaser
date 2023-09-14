@@ -249,6 +249,15 @@ changelog_path_options: t.Any = [
     ),
 ]
 
+silent_option: t.Any = [
+    click.option(
+        "--silent",
+        envvar="RH_SILENT",
+        default=False,
+        help="Set a placeholder in the changelog."
+    )
+]
+
 since_options: t.Any = [
     click.option(
         "--since",
@@ -268,6 +277,7 @@ changelog_options: t.Any = (
     branch_options
     + auth_options
     + changelog_path_options
+    + silent_option
     + since_options
     + [
         click.option(
@@ -383,7 +393,7 @@ def extract_changelog(dry_run, auth, changelog_path, release_url):
 @add_options(changelog_options)
 @use_checkout_dir()
 def build_changelog(
-    ref, branch, repo, auth, changelog_path, since, since_last_stable, resolve_backports
+    ref, branch, repo, auth, changelog_path, since, since_last_stable, resolve_backports, silent
 ):
     """Build changelog entry"""
     changelog.build_entry(
@@ -395,6 +405,7 @@ def build_changelog(
         since,
         since_last_stable,
         resolve_backports,
+        silent
     )
 
 
@@ -406,6 +417,7 @@ def build_changelog(
 @add_options(changelog_path_options)
 @add_options(dry_run_options)
 @add_options(post_version_spec_options)
+@add_options(silent_option)
 @use_checkout_dir()
 def draft_changelog(
     version_spec,
@@ -419,6 +431,7 @@ def draft_changelog(
     dry_run,
     post_version_spec,
     post_version_message,
+    silent
 ):
     """Create a changelog entry PR"""
     lib.draft_changelog(
@@ -433,6 +446,7 @@ def draft_changelog(
         dry_run,
         post_version_spec,
         post_version_message,
+        silent
     )
 
 
@@ -673,10 +687,11 @@ def publish_assets(
 @add_options(auth_options)
 @add_options(dry_run_options)
 @add_options(release_url_options)
+@add_options(silent_option)
 @use_checkout_dir()
-def publish_release(auth, dry_run, release_url):
+def publish_release(auth, dry_run, release_url, silent):
     """Publish GitHub release"""
-    lib.publish_release(auth, dry_run, release_url)
+    lib.publish_release(auth, dry_run, release_url, silent)
 
 
 @main.command()

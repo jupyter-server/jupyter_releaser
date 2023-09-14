@@ -10,6 +10,8 @@ from jupyter_releaser import util
 
 START_MARKER = "<!-- <START NEW CHANGELOG ENTRY> -->"
 END_MARKER = "<!-- <END NEW CHANGELOG ENTRY> -->"
+START_SILENT_MARKER = "<!-- START SILENT CHANGELOG ENTRY -->"
+END_SILENT_MARKER = "<!-- END SILENT CHANGELOG ENTRY -->"
 PR_PREFIX = "Automated Changelog Entry"
 PRECOMMIT_PREFIX = "[pre-commit.ci] pre-commit autoupdate"
 
@@ -148,7 +150,7 @@ def get_version_entry(
 
 
 def build_entry(
-    ref, branch, repo, auth, changelog_path, since, since_last_stable, resolve_backports
+    ref, branch, repo, auth, changelog_path, since, since_last_stable, resolve_backports, silent=False
 ):
     """Build a python version entry"""
     branch = branch or util.get_branch()
@@ -168,10 +170,10 @@ def build_entry(
         auth=auth,
         resolve_backports=resolve_backports,
     )
-    update_changelog(changelog_path, entry)
+    update_changelog(changelog_path, entry, silent=silent)
 
 
-def update_changelog(changelog_path, entry):
+def update_changelog(changelog_path, entry, silent=False):
     """Update a changelog with a new entry."""
     # Get the new version
     version = util.get_version()
@@ -187,14 +189,17 @@ def update_changelog(changelog_path, entry):
         msg = "Insert marker appears more than once in changelog"
         raise ValueError(msg)
 
-    changelog = insert_entry(changelog, entry, version=version)
+    changelog = insert_entry(changelog, entry, version=version, silent=silent)
     Path(changelog_path).write_text(changelog, encoding="utf-8")
 
 
-def insert_entry(changelog, entry, version=None):
+def insert_entry(changelog, entry, version=None, silent=False):
     """Insert the entry into the existing changelog."""
     # Test if we are augmenting an existing changelog entry (for new PRs)
     # Preserve existing PR entries since we may have formatted them
+    if silent:
+        entry = f"{START_SILENT_MARKER}\n\n## {version}\n\n{END_SILENT_MARKER}"
+
     new_entry = f"{START_MARKER}\n\n{entry}\n\n{END_MARKER}"
     prev_entry = changelog[
         changelog.index(START_MARKER) : changelog.index(END_MARKER) + len(END_MARKER)
