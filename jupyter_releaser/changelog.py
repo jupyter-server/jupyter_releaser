@@ -150,7 +150,15 @@ def get_version_entry(
 
 
 def build_entry(
-    ref, branch, repo, auth, changelog_path, since, since_last_stable, resolve_backports, silent=False
+    ref,
+    branch,
+    repo,
+    auth,
+    changelog_path,
+    since,
+    since_last_stable,
+    resolve_backports,
+    silent=False,
 ):
     """Build a python version entry"""
     branch = branch or util.get_branch()

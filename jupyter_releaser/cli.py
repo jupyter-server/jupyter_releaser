@@ -251,10 +251,7 @@ changelog_path_options: t.Any = [
 
 silent_option: t.Any = [
     click.option(
-        "--silent",
-        envvar="RH_SILENT",
-        default=False,
-        help="Set a placeholder in the changelog."
+        "--silent", envvar="RH_SILENT", default=False, help="Set a placeholder in the changelog."
     )
 ]
 
@@ -397,15 +394,7 @@ def build_changelog(
 ):
     """Build changelog entry"""
     changelog.build_entry(
-        ref,
-        branch,
-        repo,
-        auth,
-        changelog_path,
-        since,
-        since_last_stable,
-        resolve_backports,
-        silent
+        ref, branch, repo, auth, changelog_path, since, since_last_stable, resolve_backports, silent
     )
 
 
@@ -431,7 +420,7 @@ def draft_changelog(
     dry_run,
     post_version_spec,
     post_version_message,
-    silent
+    silent,
 ):
     """Create a changelog entry PR"""
     lib.draft_changelog(
@@ -446,7 +435,7 @@ def draft_changelog(
         dry_run,
         post_version_spec,
         post_version_message,
-        silent
+        silent,
     )
 
 

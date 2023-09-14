@@ -57,7 +57,7 @@ def draft_changelog(
     dry_run,
     post_version_spec,
     post_version_message,
-    silent
+    silent,
 ):
     """Create a changelog entry PR"""
     repo = repo or util.get_repo()
@@ -104,7 +104,7 @@ def draft_changelog(
         "post_version_spec": post_version_spec,
         "post_version_message": post_version_message,
         "expected_sha": current_sha,
-        "silent": silent
+        "silent": silent,
     }
     with tempfile.TemporaryDirectory() as d:
         metadata_path = Path(d) / util.METADATA_JSON
