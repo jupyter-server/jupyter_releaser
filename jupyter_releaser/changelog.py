@@ -249,7 +249,7 @@ def remove_placeholder_entries(
         release = gh.repos.get_release_by_tag(owner, repo, f"v{version}")
         if not release.prerelease:
             changelog_text = mdformat.text(release.body)
-            changelog = changelog[:start] + f"\n\n{changelog_text}\n\n" + changelog[end+1:]
+            changelog = changelog[:start] + f"\n\n{changelog_text}\n\n" + changelog[end + 1 :]
             changes_count += 1
 
         previous_index = end
