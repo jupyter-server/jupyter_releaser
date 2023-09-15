@@ -165,6 +165,7 @@ release-message: RH_RELEASE_MESSAGE
 release-url: RH_RELEASE_URL
 repo: RH_REPOSITORY
 resolve-backports: RH_RESOLVE_BACKPORTS
+silent: RH_SILENT
 since: RH_SINCE
 since-last-stable: RH_SINCE_LAST_STABLE
 tag-format: RH_TAG_FORMAT

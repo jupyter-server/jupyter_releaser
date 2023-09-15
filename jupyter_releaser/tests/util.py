@@ -67,6 +67,18 @@ GITHUB_CHANGELOG_ENTRY = """
 """
 
 
+BASE_RELEASE_METADATA = dict(
+    version_spec="foo",
+    branch="bar",
+    repo="fizz",
+    since="buzz",
+    since_last_stable=False,
+    post_version_spec="dev",
+    post_version_message="hi",
+    silent=False,
+)
+
+
 def setup_cfg_template(package_name="foo", module_name=None):
     return f"""
 [metadata]
