@@ -115,7 +115,7 @@ def draft_changelog(
             f"v{version}", branch, f"v{version}", current, True, prerelease, files=[metadata_path]
         )
 
-    # Remove draft releases over a day old
+    # Remove non-silent draft releases over a day old
     if bool(os.environ.get("GITHUB_ACTIONS")):
         for rel in gh.repos.list_releases():
             if str(rel.draft).lower() == "false":
@@ -126,6 +126,10 @@ def draft_changelog(
             )
             delta = datetime.now(tz=timezone.utc) - d_created
             if delta.days > 0:
+                # Check for silent status here to avoid request to often the GitHub API
+                metadata = util.extract_metadata_from_release_url(gh, rel.html_url, auth)
+                if metadata.get("silent"):
+                    continue
                 gh.repos.delete_release(rel.id)
 
     # Set the GitHub action output for the release url.
@@ -178,6 +182,22 @@ def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=F
         print(e)
 
     util.actions_output("pr_url", pull.html_url)
+
+
+def publish_changelog(branch, repo, auth, changelog_path, dry_run):
+    """Remove changelog placeholder entries."""
+    count = changelog.remove_placeholder_entries(repo, auth, changelog_path, dry_run)
+
+    if count == 0:
+        util.log("Changelog did not changed.")
+        return
+
+    # Create a forward port PR
+    title = f"{changelog.PR_PREFIX} Remove {count} placeholder entries."
+    commit_message = f'git commit -a -m "{title}"'
+    body = title
+
+    make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run)
 
 
 def tag_release(dist_dir, release_message, tag_format, tag_message, no_git_tag_workspace):

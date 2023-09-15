@@ -4,6 +4,7 @@
 import re
 from pathlib import Path
 
+import mdformat
 from github_activity import generate_activity_md
 
 from jupyter_releaser import util
@@ -201,6 +202,63 @@ def update_changelog(changelog_path, entry, silent=False):
     Path(changelog_path).write_text(changelog, encoding="utf-8")
 
 
+def remove_placeholder_entries(
+    repo,
+    auth,
+    changelog_path,
+    dry_run,
+) -> str:
+    """Replace any silent marker with the GitHub release body
+    if the release has been published.
+
+    Parameters
+    ----------
+    repo : str
+        The GitHub owner/repo
+    auth : str
+        The GitHub authorization token
+    changelog_path : str
+        The changelog file path
+    dry_run: bool
+
+    Returns
+    -------
+    int
+        Number of placeholders removed
+    """
+
+    changelog = Path(changelog_path).read_text(encoding="utf-8")
+    start_count = changelog.count(START_SILENT_MARKER)
+    end_count = changelog.count(END_SILENT_MARKER)
+    if start_count != end_count:
+        msg = ""
+        raise ValueError(msg)
+
+    repo = repo or util.get_repo()
+    owner, repo_name = repo.split("/")
+    gh = util.get_gh_object(dry_run=dry_run, owner=owner, repo=repo_name, token=auth)
+
+    # Replace silent placeholder by release body if it has been published
+    previous_index = None
+    changes_count = 0
+    for _ in range(start_count):
+        start = changelog.index(START_SILENT_MARKER, previous_index)
+        end = changelog.index(END_SILENT_MARKER, start)
+
+        version = _extract_version(changelog[start + len(START_SILENT_MARKER) : end])
+        release = gh.repos.get_release_by_tag(owner, repo, f"v{version}")
+        if not release.prerelease:
+            changelog_text = mdformat.text(release.body)
+            changelog = changelog[:start] + f"\n\n{changelog_text}\n\n" + changelog[end+1:]
+            changes_count += 1
+
+        previous_index = end
+
+    # Write back the new changelog
+    Path(changelog_path).write_text(format(changelog), encoding="utf-8")
+    return changes_count
+
+
 def insert_entry(changelog, entry, version=None, silent=False):
     """Insert the entry into the existing changelog."""
     # Test if we are augmenting an existing changelog entry (for new PRs)
@@ -362,7 +420,12 @@ def extract_current(changelog_path):
 def extract_current_version(changelog_path):
     """Extract the current released version from the changelog"""
     body = extract_current(changelog_path)
-    match = re.match(r"#+ (\d\S+)", body.strip())
+    return _extract_version(body)
+
+
+def _extract_version(entry) -> str:
+    """Extract version from entry"""
+    match = re.match(r"#+ (\d\S+)", entry.strip())
     if not match:
         msg = "Could not find previous version"
         raise ValueError(msg)

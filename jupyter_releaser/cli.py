@@ -710,5 +710,16 @@ def forwardport_changelog(auth, ref, branch, repo, username, changelog_path, dry
     )
 
 
+@main.command()
+@add_options(auth_options)
+@add_options(branch_options)
+@add_options(changelog_path_options)
+@add_options(dry_run_options)
+@use_checkout_dir()
+def publish_changelog(auth, ref, branch, repo, changelog_path, dry_run):
+    """Remove changelog placeholder entries."""
+    lib.publish_changelog(branch, repo, auth, changelog_path, dry_run)
+
+
 if __name__ == "__main__":  # pragma: no cover
     main()
