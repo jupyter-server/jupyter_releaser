@@ -261,9 +261,6 @@ def populate_release(
 
     # if the release is silent, the changelog source of truth is the GitHub release
     body = release.body if silent else changelog.extract_current(changelog_path)
-    util.log(f"release is silent: {silent}")
-    util.log(f"populate-release release.body: {release.body[100:]}")
-    util.log(f"populate-release body: {body[100:]}")
 
     remote_name = util.get_remote_name(dry_run)
     remote_url = util.run(f"git config --get remote.{remote_name}.url")
