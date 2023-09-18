@@ -244,11 +244,17 @@ def remove_placeholder_entries(
             util.log(f"Getting release for tag '{version}'...")
             release = gh.repos.get_release_by_tag(owner=owner, repo=repo_name, tag=f"v{version}")
         except HTTP404NotFoundError:
-            continue
-        if not release.draft:
-            changelog_text = mdformat.text(release.body)
-            changelog = changelog[:start] + f"\n\n{changelog_text}\n\n" + changelog[end + 1 :]
-            changes_count += 1
+            # Skip this version
+            pass
+        else:
+            if not release.draft:
+                changelog_text = mdformat.text(release.body)
+                changelog = (
+                    changelog[:start]
+                    + f"\n\n{changelog_text}\n\n"
+                    + changelog[end + len(END_SILENT_MARKER) :]
+                )
+                changes_count += 1
 
         previous_index = end
 

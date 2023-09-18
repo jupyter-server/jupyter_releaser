@@ -172,7 +172,15 @@ def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=F
         util.run(f"git push origin {pr_branch}", echo=True)
 
     #  title, head, base, body, maintainer_can_modify, draft, issue
-    pull = gh.pulls.create(title, head, base, body, maintainer_can_modify, False, None)
+    pull = gh.pulls.create(
+        title=title,
+        head=head,
+        base=base,
+        body=body,
+        maintainer_can_modify=maintainer_can_modify,
+        draf=False,
+        issue=None,
+    )
 
     # Try to add the documentation label to the PR.
     number = pull.number
@@ -193,7 +201,7 @@ def publish_changelog(branch, repo, auth, changelog_path, dry_run):
         return
 
     # Create a forward port PR
-    title = f"{changelog.PR_PREFIX} Remove {count} placeholder entries."
+    title = f"{changelog.PR_PREFIX} - Remove {count} placeholder entries."
     commit_message = f'git commit -a -m "{title}"'
     body = title
 
