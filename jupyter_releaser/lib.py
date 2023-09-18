@@ -235,7 +235,6 @@ def populate_release(
     """Populate release assets and push tags and commits"""
     branch = branch or util.get_branch()
     assets = assets or glob(f"{dist_dir}/*")
-    body = changelog.extract_current(changelog_path)
 
     match = util.parse_release_url(release_url)
     owner, repo_name = match["owner"], match["repo"]
@@ -250,6 +249,15 @@ def populate_release(
 
     gh = util.get_gh_object(dry_run=dry_run, owner=owner, repo=repo_name, token=auth)
     release = util.release_for_url(gh, release_url)
+
+    # if the release is silent, the changelog source of truth is the GitHub release
+    silent = False
+    for asset in assets:
+        asset_path = Path(asset)
+        if asset_path.name == util.METADATA_JSON.name:
+            metadata = json.loads(asset_path.read_text(encoding="utf-8"))
+            silent = metadata.get("silent", False)
+    body = release.body if silent else changelog.extract_current(changelog_path)
 
     remote_name = util.get_remote_name(dry_run)
     remote_url = util.run(f"git config --get remote.{remote_name}.url")
