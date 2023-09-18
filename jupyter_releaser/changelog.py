@@ -3,6 +3,7 @@
 # Distributed under the terms of the Modified BSD License.
 import re
 from pathlib import Path
+from typing import Optional
 
 import mdformat
 from github_activity import generate_activity_md
@@ -203,10 +204,10 @@ def update_changelog(changelog_path, entry, silent=False):
 
 
 def remove_placeholder_entries(
-    repo,
-    auth,
-    changelog_path,
-    dry_run,
+    repo: str,
+    auth: Optional[str],
+    changelog_path: str,
+    dry_run: bool,
 ) -> int:
     """Replace any silent marker with the GitHub release body
     if the release has been published.
@@ -260,7 +261,9 @@ def remove_placeholder_entries(
     return changes_count
 
 
-def insert_entry(changelog, entry, version=None, silent=False) -> str:
+def insert_entry(
+    changelog: str, entry: str, version: Optional[str] = None, silent: bool = False
+) -> str:
     """Insert the entry into the existing changelog."""
     # Test if we are augmenting an existing changelog entry (for new PRs)
     # Preserve existing PR entries since we may have formatted them
@@ -424,7 +427,7 @@ def extract_current_version(changelog_path):
     return _extract_version(body)
 
 
-def _extract_version(entry) -> str:
+def _extract_version(entry: str) -> str:
     """Extract version from entry"""
     match = re.match(r"#+ (\d\S+)", entry.strip())
     if not match:
