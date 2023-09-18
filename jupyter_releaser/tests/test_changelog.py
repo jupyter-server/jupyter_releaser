@@ -4,6 +4,8 @@
 import os
 import subprocess
 
+import pytest
+from ghapi.core import GhApi
 from pytest import fixture
 
 from jupyter_releaser.changelog import (
@@ -11,9 +13,11 @@ from jupyter_releaser.changelog import (
     END_SILENT_MARKER,
     START_MARKER,
     START_SILENT_MARKER,
+    remove_placeholder_entries,
     update_changelog,
 )
 from jupyter_releaser.tests import util as testutil
+from jupyter_releaser.util import release_for_url
 
 
 @fixture
@@ -72,31 +76,69 @@ def test_update_changelog_with_silent_entry(tmp_path, mock_py_package):
     )
 
 
-# @pytest.mark.parametrize('release_metadata', [testutil.BASE_RELEASE_METADATA | {"version": "0.0.0"}])
-# def test_remove_placeholder_entries(tmp_path, release_metadata, draft_release):
+@pytest.mark.parametrize(
+    'release_metadata',
+    [
+        dict(
+            [(k, v) for k, v in testutil.BASE_RELEASE_METADATA.items() if k != "version"]
+            + [("version", "0.0.0")]
+        )
+    ],
+)
+def test_remove_placeholder_entries(tmp_path, release_metadata, draft_release):
+    # Create changelog with silent placeholder
+    changelog = tmp_path / "CHANGELOG.md"
+    placeholder = (
+        f"\n{START_SILENT_MARKER}\n\n## {release_metadata['version']}\n\n{END_SILENT_MARKER}\n"
+    )
+    changelog.write_text(testutil.CHANGELOG_TEMPLATE + placeholder, encoding="utf-8")
+    os.chdir(tmp_path)
 
-#     changelog = tmp_path / "CHANGELOG.md"
-#     placeholder = f"\n{START_SILENT_MARKER}\n\n## {release_metadata['version']}\n\n{END_SILENT_MARKER}\n"
-#     changelog.write_text(testutil.CHANGELOG_TEMPLATE + placeholder, encoding="utf-8")
-#     os.chdir(tmp_path)
+    # Publish the release (as it is a draft from `draft_release`)
+    gh = GhApi(owner="foo", repo="bar")
+    release = release_for_url(gh, draft_release)
+    published_changelog = "Published body"
+    gh.repos.update_release(
+        release["id"],
+        release["tag_name"],
+        release["target_commitish"],
+        release["name"],
+        published_changelog,
+        False,
+        release["prerelease"],
+    )
 
-#     remove_placeholder_entries("foo/bar", None, changelog, False)
+    remove_placeholder_entries("foo/bar", None, changelog, False)
 
-#     new_changelog = changelog.read_text(encoding="utf-8")
-#     assert placeholder not in new_changelog
-#     assert "hi" in new_changelog
+    new_changelog = changelog.read_text(encoding="utf-8")
+    assert placeholder not in new_changelog
+    assert published_changelog in new_changelog
 
 
-# @pytest.mark.parametrize('release_metadata', [testutil.BASE_RELEASE_METADATA | {"version": "0.0.0", "silent": True}])
-# def test_dont_remove_placeholder_entries(tmp_path, release_metadata, draft_release):
+@pytest.mark.parametrize(
+    'release_metadata',
+    [
+        dict(
+            [
+                (k, v)
+                for k, v in testutil.BASE_RELEASE_METADATA.items()
+                if k not in ("version", "silent")
+            ]
+            + [("version", "0.0.0"), ("silent", True)]
+        )
+    ],
+)
+def test_dont_remove_placeholder_entries(tmp_path, release_metadata, draft_release):
+    changelog = tmp_path / "CHANGELOG.md"
+    placeholder = (
+        f"\n{START_SILENT_MARKER}\n\n## {release_metadata['version']}\n\n{END_SILENT_MARKER}\n"
+    )
+    changelog.write_text(testutil.CHANGELOG_TEMPLATE + placeholder, encoding="utf-8")
+    os.chdir(tmp_path)
 
-#     changelog = tmp_path / "CHANGELOG.md"
-#     placeholder = f"\n{START_SILENT_MARKER}\n\n## {release_metadata['version']}\n\n{END_SILENT_MARKER}\n"
-#     changelog.write_text(testutil.CHANGELOG_TEMPLATE + placeholder, encoding="utf-8")
-#     os.chdir(tmp_path)
+    # Release is not published, so this is a no-op
+    remove_placeholder_entries("foo/bar", None, changelog, False)
 
-#     remove_placeholder_entries("foo/bar", None, changelog, False)
-
-#     new_changelog = changelog.read_text(encoding="utf-8")
-#     assert placeholder in new_changelog
-#     assert "hi" not in new_changelog
+    new_changelog = changelog.read_text(encoding="utf-8")
+    assert placeholder in new_changelog
+    assert "hi" not in new_changelog

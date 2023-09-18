@@ -207,7 +207,7 @@ def remove_placeholder_entries(
     auth,
     changelog_path,
     dry_run,
-) -> str:
+) -> int:
     """Replace any silent marker with the GitHub release body
     if the release has been published.
 
@@ -246,8 +246,9 @@ def remove_placeholder_entries(
         end = changelog.index(END_SILENT_MARKER, start)
 
         version = _extract_version(changelog[start + len(START_SILENT_MARKER) : end])
-        release = gh.repos.get_release_by_tag(owner, repo, f"v{version}")
-        if not release.prerelease:
+        release = gh.repos.get_release_by_tag(owner=owner, repo=repo_name, tag=f"v{version}")
+        print(release)
+        if not release.draft:
             changelog_text = mdformat.text(release.body)
             changelog = changelog[:start] + f"\n\n{changelog_text}\n\n" + changelog[end + 1 :]
             changes_count += 1
@@ -259,7 +260,7 @@ def remove_placeholder_entries(
     return changes_count
 
 
-def insert_entry(changelog, entry, version=None, silent=False):
+def insert_entry(changelog, entry, version=None, silent=False) -> str:
     """Insert the entry into the existing changelog."""
     # Test if we are augmenting an existing changelog entry (for new PRs)
     # Preserve existing PR entries since we may have formatted them

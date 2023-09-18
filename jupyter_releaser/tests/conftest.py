@@ -205,15 +205,17 @@ def mock_github():
 
 @fixture
 def release_metadata():
-    return testutil.BASE_RELEASE_METADATA | {"version": uuid.uuid4().hex}
+    return dict(
+        [(k, v) for k, v in testutil.BASE_RELEASE_METADATA.items() if k != "version"]
+        + [("version", uuid.uuid4().hex)]
+    )
 
 
 @fixture
 def draft_release(mock_github, release_metadata):
     gh = GhApi(owner="foo", repo="bar")
     data = release_metadata
-    print(data)
-    tag = data["version"]
+    tag = "v" + data["version"]
 
     with tempfile.TemporaryDirectory() as d:
         metadata_path = Path(d) / "metadata.json"
