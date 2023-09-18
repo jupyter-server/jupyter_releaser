@@ -251,6 +251,7 @@ def populate_release(
     release = util.release_for_url(gh, release_url)
 
     # if the release is silent, the changelog source of truth is the GitHub release
+    util.log(f"Assets {assets}")
     silent = False
     for asset in assets:
         asset_path = Path(asset)
@@ -258,6 +259,9 @@ def populate_release(
             metadata = json.loads(asset_path.read_text(encoding="utf-8"))
             silent = metadata.get("silent", False)
     body = release.body if silent else changelog.extract_current(changelog_path)
+    util.log(f"release is silent: {silent}")
+    util.log(f"populate-release release.body: {release.body[100:]}")
+    util.log(f"populate-release body: {body[100:]}")
 
     remote_name = util.get_remote_name(dry_run)
     remote_url = util.run(f"git config --get remote.{remote_name}.url")
