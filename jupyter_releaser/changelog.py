@@ -240,7 +240,6 @@ def remove_placeholder_entries(
 
         version = _extract_version(changelog[start + len(START_SILENT_MARKER) : end])
         release = gh.repos.get_release_by_tag(owner=owner, repo=repo_name, tag=f"v{version}")
-        print(release)
         if not release.draft:
             changelog_text = mdformat.text(release.body)
             changelog = changelog[:start] + f"\n\n{changelog_text}\n\n" + changelog[end + 1 :]

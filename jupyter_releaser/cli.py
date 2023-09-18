@@ -379,10 +379,11 @@ def bump_version(version_spec, version_cmd, changelog_path, python_packages):
 @add_options(auth_options)
 @add_options(changelog_path_options)
 @add_options(release_url_options)
+@add_options(silent_option)
 @use_checkout_dir()
-def extract_changelog(dry_run, auth, changelog_path, release_url):
+def extract_changelog(dry_run, auth, changelog_path, release_url, silent):
     """Extract the changelog entry."""
-    lib.extract_changelog(dry_run, auth, changelog_path, release_url)
+    lib.extract_changelog(dry_run, auth, changelog_path, release_url, silent)
 
 
 @main.command()
@@ -546,6 +547,7 @@ def tag_release(dist_dir, release_message, tag_format, tag_message, no_git_tag_w
 @add_options(dist_dir_options)
 @add_options(dry_run_options)
 @add_options(release_url_options)
+@add_options(silent_option)
 @add_options(post_version_spec_options)
 @click.argument("assets", nargs=-1)
 @use_checkout_dir()
@@ -561,6 +563,7 @@ def populate_release(
     release_url,
     post_version_spec,
     post_version_message,
+    silent,
     assets,
 ):
     """Populate a release."""
@@ -577,6 +580,7 @@ def populate_release(
         post_version_spec,
         post_version_message,
         assets,
+        silent,
     )
 
 

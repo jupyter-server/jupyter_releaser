@@ -148,9 +148,7 @@ def list_releases(owner: str, repo: str) -> List[Release]:
 @app.get("/repos/{owner}/{repo}/releases/tags/{tag}")
 def get_release_by_tag(owner: str, repo: str, tag: str) -> Release:
     """https://docs.github.com/en/rest/releases/releases#get-a-release-by-tag-name"""
-    r = next(filter(lambda r: r.tag_name == tag, releases.values()))
-    print(r)
-    return r
+    return next(filter(lambda r: r.tag_name == tag, releases.values()))
 
 
 @app.post("/repos/{owner}/{repo}/releases")

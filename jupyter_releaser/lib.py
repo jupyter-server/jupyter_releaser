@@ -231,6 +231,7 @@ def populate_release(
     post_version_spec,
     post_version_message,
     assets,
+    silent=False,
 ):
     """Populate release assets and push tags and commits"""
     branch = branch or util.get_branch()
@@ -251,13 +252,6 @@ def populate_release(
     release = util.release_for_url(gh, release_url)
 
     # if the release is silent, the changelog source of truth is the GitHub release
-    util.log(f"Assets {assets}")
-    silent = False
-    for asset in assets:
-        asset_path = Path(asset)
-        if asset_path.name == util.METADATA_JSON.name:
-            metadata = json.loads(asset_path.read_text(encoding="utf-8"))
-            silent = metadata.get("silent", False)
     body = release.body if silent else changelog.extract_current(changelog_path)
     util.log(f"release is silent: {silent}")
     util.log(f"populate-release release.body: {release.body[100:]}")
@@ -550,7 +544,7 @@ def prep_git(ref, branch, repo, auth, username, url):  # noqa
     return branch
 
 
-def extract_changelog(dry_run, auth, changelog_path, release_url):
+def extract_changelog(dry_run, auth, changelog_path, release_url, silent=False):
     """Extract the changelog from the draft GH release body and update it.
 
     > If the release must is silent, the changelog entry will be replaced by
@@ -559,10 +553,6 @@ def extract_changelog(dry_run, auth, changelog_path, release_url):
     match = util.parse_release_url(release_url)
     gh = util.get_gh_object(dry_run=dry_run, owner=match["owner"], repo=match["repo"], token=auth)
     release = util.release_for_url(gh, release_url)
-
-    # Check for silent status here to avoid request to often the GitHub API
-    metadata = util.extract_metadata_from_release_url(gh, release.html_url, auth)
-    silent = metadata.get("silent", False)
 
     changelog_text = mdformat.text(release.body)
     changelog.update_changelog(changelog_path, changelog_text, silent=silent)
