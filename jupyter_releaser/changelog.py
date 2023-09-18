@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Optional
 
 import mdformat
+from fastcore.net import HTTP404NotFoundError
 from github_activity import generate_activity_md
 
 from jupyter_releaser import util
@@ -239,7 +240,11 @@ def remove_placeholder_entries(
         end = changelog.index(END_SILENT_MARKER, start)
 
         version = _extract_version(changelog[start + len(START_SILENT_MARKER) : end])
-        release = gh.repos.get_release_by_tag(owner=owner, repo=repo_name, tag=f"v{version}")
+        try:
+            util.log(f"Getting release for tag '{version}'...")
+            release = gh.repos.get_release_by_tag(owner=owner, repo=repo_name, tag=f"v{version}")
+        except HTTP404NotFoundError:
+            continue
         if not release.draft:
             changelog_text = mdformat.text(release.body)
             changelog = changelog[:start] + f"\n\n{changelog_text}\n\n" + changelog[end + 1 :]
