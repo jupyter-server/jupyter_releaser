@@ -21,12 +21,17 @@ from jupyter_releaser.util import release_for_url
 
 
 @fixture
-def mock_py_package(tmp_path):
+def module_template():
+    return testutil.PY_MODULE_TEMPLATE
+
+
+@fixture
+def mock_py_package(tmp_path, module_template):
     pyproject = tmp_path / "pyproject.toml"
     pyproject.write_text(testutil.pyproject_template(), encoding="utf-8")
 
     foopy = tmp_path / "foo.py"
-    foopy.write_text(testutil.PY_MODULE_TEMPLATE, encoding="utf-8")
+    foopy.write_text(module_template, encoding="utf-8")
 
 
 def test_update_changelog(tmp_path, mock_py_package):
@@ -55,7 +60,7 @@ def test_silent_update_changelog(tmp_path, mock_py_package):
     )
 
 
-def test_update_changelog_with_silent_entry(tmp_path, mock_py_package):
+def test_update_changelog_with_old_silent_entry(tmp_path, mock_py_package):
     changelog = tmp_path / "CHANGELOG.md"
     changelog.write_text(testutil.CHANGELOG_TEMPLATE, encoding="utf-8")
     os.chdir(tmp_path)
@@ -74,6 +79,27 @@ def test_update_changelog_with_silent_entry(tmp_path, mock_py_package):
         f"{START_MARKER}\n\n{START_SILENT_MARKER}\n\n## 0.0.1\n\n{END_SILENT_MARKER}\n\n{END_MARKER}"
         not in new_changelog
     )
+
+
+@pytest.mark.parametrize('module_template', ['__version__ = "0.0.3"\n'])
+def test_silence_existing_changelog_entry(tmp_path, mock_py_package):
+    changelog = tmp_path / "CHANGELOG.md"
+    changelog.write_text(testutil.CHANGELOG_TEMPLATE, encoding="utf-8")
+    os.chdir(tmp_path)
+    update_changelog(str(changelog), testutil.CHANGELOG_ENTRY)
+
+    new_changelog = changelog.read_text(encoding="utf-8")
+    assert f"{START_MARKER}\n{testutil.CHANGELOG_ENTRY}\n{END_MARKER}" in new_changelog
+
+    # Should silent the current entry
+    update_changelog(str(changelog), testutil.CHANGELOG_ENTRY, True)
+
+    new_changelog = changelog.read_text(encoding="utf-8")
+    assert (
+        f"{START_MARKER}\n\n{START_SILENT_MARKER}\n\n## 0.0.3\n\n{END_SILENT_MARKER}\n\n{END_MARKER}"
+        in new_changelog
+    )
+    assert f"{START_MARKER}\n{testutil.CHANGELOG_ENTRY}\n{END_MARKER}" not in new_changelog
 
 
 @pytest.mark.parametrize(

@@ -152,15 +152,7 @@ def get_version_entry(
 
 
 def build_entry(
-    ref,
-    branch,
-    repo,
-    auth,
-    changelog_path,
-    since,
-    since_last_stable,
-    resolve_backports,
-    silent=False,
+    ref, branch, repo, auth, changelog_path, since, since_last_stable, resolve_backports
 ):
     """Build a python version entry"""
     branch = branch or util.get_branch()
@@ -180,7 +172,7 @@ def build_entry(
         auth=auth,
         resolve_backports=resolve_backports,
     )
-    update_changelog(changelog_path, entry, silent=silent)
+    update_changelog(changelog_path, entry)
 
 
 def update_changelog(changelog_path, entry, silent=False):

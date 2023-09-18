@@ -274,7 +274,6 @@ changelog_options: t.Any = (
     branch_options
     + auth_options
     + changelog_path_options
-    + silent_option
     + since_options
     + [
         click.option(
@@ -390,11 +389,13 @@ def extract_changelog(dry_run, auth, changelog_path, release_url):
 @add_options(changelog_options)
 @use_checkout_dir()
 def build_changelog(
-    ref, branch, repo, auth, changelog_path, since, since_last_stable, resolve_backports, silent
+    ref, branch, repo, auth, changelog_path, since, since_last_stable, resolve_backports
 ):
     """Build changelog entry"""
+    # We don't silence building the entry as it will be extracted to
+    # populate the release body
     changelog.build_entry(
-        ref, branch, repo, auth, changelog_path, since, since_last_stable, resolve_backports, silent
+        ref, branch, repo, auth, changelog_path, since, since_last_stable, resolve_backports
     )
 
 

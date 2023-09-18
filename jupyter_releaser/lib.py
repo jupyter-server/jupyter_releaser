@@ -539,12 +539,21 @@ def prep_git(ref, branch, repo, auth, username, url):  # noqa
 
 
 def extract_changelog(dry_run, auth, changelog_path, release_url):
-    """Extract the changelog from the draft GH release body and update it."""
+    """Extract the changelog from the draft GH release body and update it.
+
+    > If the release must is silent, the changelog entry will be replaced by
+    > a placeholder
+    """
     match = util.parse_release_url(release_url)
     gh = util.get_gh_object(dry_run=dry_run, owner=match["owner"], repo=match["repo"], token=auth)
     release = util.release_for_url(gh, release_url)
+
+    # Check for silent status here to avoid request to often the GitHub API
+    metadata = util.extract_metadata_from_release_url(gh, release.html_url, auth)
+    silent = metadata.get("silent", False)
+
     changelog_text = mdformat.text(release.body)
-    changelog.update_changelog(changelog_path, changelog_text)
+    changelog.update_changelog(changelog_path, changelog_text, silent=silent)
 
 
 def forwardport_changelog(auth, ref, branch, repo, username, changelog_path, dry_run, release_url):
