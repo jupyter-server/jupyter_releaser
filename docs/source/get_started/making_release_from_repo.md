@@ -36,8 +36,8 @@ already uses Jupyter Releaser using workflows on its own repository.
 
 - Check "Set a placeholder in the changelog and don't publish the release" if
   you want to carry a silent release (e.g. in case of a security release).
-  That option will change the default behavior by keeping the version 
-  changelog only in the GitHub release and keeping it private (aka in _Draft_ 
+  That option will change the default behavior by keeping the version
+  changelog only in the GitHub release and keeping it private (aka in _Draft_
   state). The changelog file will only contains a placeholder to be replaced
   by the release body once the maintainers have chosen to publish the release.
 
