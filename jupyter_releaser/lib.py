@@ -79,7 +79,8 @@ def draft_changelog(
         raise ValueError(msg)
 
     current = changelog.extract_current(changelog_path)
-    util.log(f"\n\nCurrent Changelog Entry:\n{current}")
+    if not silent:
+        util.log(f"\n\nCurrent Changelog Entry:\n{current}")
 
     # Check out all changed files.
     try:
