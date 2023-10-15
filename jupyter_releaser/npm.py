@@ -178,6 +178,9 @@ def tag_workspace_packages():
     for path in _get_workspace_packages(data):
         sub_package_json = path / "package.json"
         sub_data = json.loads(sub_package_json.read_text(encoding="utf-8"))
+        # Don't tag package without version or private
+        if not sub_data.get("version", "") or sub_data.get("private", False):
+            continue
         tag_name = f"{sub_data['name']}@{sub_data['version']}"
         if tag_name in tags:
             skipped.append(tag_name)
