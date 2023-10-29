@@ -171,9 +171,7 @@ async def create_a_release(owner: str, repo: str, request: Request) -> Release:
 
 
 @app.patch("/repos/{owner}/{repo}/releases/{release_id}")
-async def update_a_release(
-    owner: str, repo: str, release_id: int, request: Request
-) -> Release:
+async def update_a_release(owner: str, repo: str, release_id: int, request: Request) -> Release:
     """https://docs.github.com/en/rest/releases/releases#update-a-release"""
     data = await request.json()
     model = releases[str(release_id)]
@@ -184,9 +182,7 @@ async def update_a_release(
 
 
 @app.post("/repos/{owner}/{repo}/releases/{release_id}/assets")
-async def upload_a_release_asset(
-    owner: str, repo: str, release_id: int, request: Request
-) -> None:
+async def upload_a_release_asset(owner: str, repo: str, release_id: int, request: Request) -> None:
     """https://docs.github.com/en/rest/releases/assets#upload-a-release-asset"""
     base_url = get_mock_github_url()
     model = releases[str(release_id)]

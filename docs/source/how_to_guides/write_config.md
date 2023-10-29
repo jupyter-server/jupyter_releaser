@@ -10,7 +10,7 @@ by running `jupyter-releaser list-envvars`.
 
 ## Default Values, Options, Skip, and Hooks
 
-The default values can also be overriden using a config file.
+The default values can also be overridden using a config file.
 
 Options can be overridden using the `options` section.
 
