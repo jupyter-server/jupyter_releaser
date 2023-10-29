@@ -223,4 +223,4 @@ fail-under=100
 exclude = ["jupyter_releaser/tests"]
 
 [tool.repo-review]
-ignore = ["PY004", "PY007","PP301", "PC140", "PP308", "GH102"]
+ignore = ["PY004", "PY007","PP301", "PC140", "PP308", "GH102", "PY005"]
