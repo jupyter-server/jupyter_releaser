@@ -127,7 +127,9 @@ def test_bump_version(npm_package, runner):
 def test_bump_version_bad_version(py_package, runner):
     runner(["prep-git", "--git-url", py_package])
     with pytest.raises(CalledProcessError):
-        runner(["bump-version", "--version-spec", "a1.0.1"], env=dict(GITHUB_ACTIONS=""))
+        runner(
+            ["bump-version", "--version-spec", "a1.0.1"], env=dict(GITHUB_ACTIONS="")
+        )
 
 
 def test_bump_version_tag_exists(py_package, runner):
@@ -341,7 +343,9 @@ def test_draft_changelog_dry_run(npm_package, mocker, runner, git_prep):
     del os.environ["RH_SINCE_LAST_STABLE"]
 
 
-def test_draft_changelog_lerna(workspace_package, mocker, runner, mock_github, git_prep):
+def test_draft_changelog_lerna(
+    workspace_package, mocker, runner, mock_github, git_prep
+):
     mock_changelog_entry(workspace_package, runner, mocker)
     runner(["draft-changelog", "--version-spec", VERSION_SPEC])
 
@@ -378,7 +382,9 @@ def test_check_python_different_names(
     monkeypatch.setenv("RH_CHECK_IMPORTS", "foobar")
 
 
-def test_check_python_resource_path(monkeypatch, py_package, runner, build_mock, git_prep):
+def test_check_python_resource_path(
+    monkeypatch, py_package, runner, build_mock, git_prep
+):
     monkeypatch.setenv("RH_PYDIST_RESOURCE_PATHS", "foo/bar/baz.txt")
 
     # Convert the package to use a package dir.
@@ -392,7 +398,7 @@ def test_check_python_resource_path(monkeypatch, py_package, runner, build_mock,
     path.write_text("hello", encoding="utf-8")
 
     pyproject = Path(util.CHECKOUT_NAME / util.PYPROJECT)
-    pyproject_text = pyproject.read_text('utf-8')
+    pyproject_text = pyproject.read_text("utf-8")
     pyproject_text = pyproject_text.replace("foo.py", "foo/__init__.py")
     pyproject.write_text(pyproject_text, "utf-8")
 
@@ -516,7 +522,9 @@ def test_extract_dist_py(py_package, runner, mocker, mock_github, tmp_path, git_
     os.name == "nt" and sys.version_info < (3, 8),
     reason="See https://bugs.python.org/issue26660",
 )
-def test_extract_dist_multipy(py_multipackage, runner, mocker, mock_github, tmp_path, git_prep):
+def test_extract_dist_multipy(
+    py_multipackage, runner, mocker, mock_github, tmp_path, git_prep
+):
     git_repo = py_multipackage[0]["abs_path"]
     changelog_entry = mock_changelog_entry(git_repo, runner, mocker)
 
@@ -564,7 +572,9 @@ def test_extract_dist_npm(npm_dist, runner, mocker, mock_github, tmp_path):
     assert "after-extract-release" in log
 
 
-@pytest.mark.skipif(os.name == "nt", reason="pypiserver does not start properly on Windows")
+@pytest.mark.skipif(
+    os.name == "nt", reason="pypiserver does not start properly on Windows"
+)
 def test_publish_assets_py(py_package, runner, mocker, git_prep, mock_github):
     # Create the dist files
     changelog_entry = mock_changelog_entry(py_package, runner, mocker)
@@ -612,11 +622,15 @@ def test_publish_assets_npm(npm_dist, runner, mocker, mock_github):
 
     mock_run = mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
 
-    runner(["publish-assets", "--npm-cmd", "npm publish --dry-run", "--dist-dir", dist_dir])
+    runner(
+        ["publish-assets", "--npm-cmd", "npm publish --dry-run", "--dist-dir", dist_dir]
+    )
     assert called == 3, called
 
 
-def test_publish_assets_npm_exists(npm_dist, runner, mocker, mock_github, draft_release):
+def test_publish_assets_npm_exists(
+    npm_dist, runner, mocker, mock_github, draft_release
+):
     os.environ["RH_RELEASE_URL"] = draft_release
     dist_dir = npm_dist / util.CHECKOUT_NAME / "dist"
     called = 0
@@ -646,7 +660,9 @@ def test_publish_assets_npm_exists(npm_dist, runner, mocker, mock_github, draft_
     assert called == 3, called
 
 
-def test_publish_assets_npm_all_exists(npm_dist, runner, mocker, mock_github, draft_release):
+def test_publish_assets_npm_all_exists(
+    npm_dist, runner, mocker, mock_github, draft_release
+):
     os.environ["RH_RELEASE_URL"] = draft_release
     dist_dir = npm_dist / util.CHECKOUT_NAME / "dist"
     called = 0
@@ -753,7 +769,9 @@ def test_config_file_cli_override(py_package, runner, mocker, git_prep):
     assert "after-build-python" in log
 
 
-def test_forwardport_changelog_no_new(npm_package, runner, mocker, mock_github, git_prep):
+def test_forwardport_changelog_no_new(
+    npm_package, runner, mocker, mock_github, git_prep
+):
     release = create_draft_release("bar")
     os.environ["RH_RELEASE_URL"] = release.html_url
 
@@ -772,7 +790,9 @@ def test_forwardport_changelog_no_new(npm_package, runner, mocker, mock_github, 
     assert "after-forwardport-changelog" in log
 
 
-def test_forwardport_changelog_has_new(npm_package, runner, mocker, mock_github, git_prep):
+def test_forwardport_changelog_has_new(
+    npm_package, runner, mocker, mock_github, git_prep
+):
     release = create_draft_release("bar")
     os.environ["RH_RELEASE_URL"] = release.html_url
 
@@ -783,7 +803,9 @@ def test_forwardport_changelog_has_new(npm_package, runner, mocker, mock_github,
     util.run("git push origin backport_branch", cwd=util.CHECKOUT_NAME)
     util.run(f"git checkout {current}")
     mock_changelog_entry(npm_package, runner, mocker)
-    util.run(f'git commit -a -m "Add changelog entry {VERSION_SPEC}"', cwd=util.CHECKOUT_NAME)
+    util.run(
+        f'git commit -a -m "Add changelog entry {VERSION_SPEC}"', cwd=util.CHECKOUT_NAME
+    )
     util.run(f"git tag v{VERSION_SPEC}", cwd=util.CHECKOUT_NAME)
     util.run(f"git checkout {current}", cwd=util.CHECKOUT_NAME)
     util.run("git push origin backport_branch --tags", cwd=util.CHECKOUT_NAME)
