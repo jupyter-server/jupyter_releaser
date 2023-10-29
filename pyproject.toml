@@ -89,9 +89,9 @@ nowarn = "test -W default {args}"
 
 [tool.hatch.envs.typing]
 features = ["test"]
-dependencies = ["mypy>=0.990"]
+dependencies = ["mypy~=1.6"]
 [tool.hatch.envs.typing.scripts]
-test = "mypy --install-types --non-interactive {args:jupyter_releaser}"
+test = "mypy --install-types --non-interactive {args}"
 
 [tool.hatch.envs.lint]
 dependencies = [
@@ -119,7 +119,14 @@ after-populate-release = "bash ./.github/scripts/bump_tag.sh"
 post-version-spec = "dev"
 
 [tool.pytest.ini_options]
-addopts = "-raXs --durations 10 --color=yes --doctest-modules -p no:pastebin -p no:nose"
+minversion = "6.0"
+xfail_strict = true
+log_cli_level = "info"
+addopts = [
+  "-raXs", "--durations=10", "--color=yes", "--doctest-modules",
+   "--showlocals", "--strict-markers", "--strict-config",
+  "-p=no:pastebin", "-p=no:nose"
+]
 testpaths = [
     "jupyter_releaser/tests/"
 ]
@@ -149,32 +156,12 @@ relative_files = true
 source = ["jupyter_releaser"]
 
 [tool.mypy]
-check_untyped_defs = true
-disallow_any_generics = false
-disallow_incomplete_defs = true
-disallow_untyped_decorators = true
-no_implicit_optional = true
-no_implicit_reexport = false
-pretty = true
-show_error_context = true
+files = "jupyter_releaser"
+python_version = "3.8"
+strict = true
 show_error_codes = true
-strict_equality = true
-strict_optional = true
-warn_unused_configs = true
-warn_redundant_casts = true
-warn_return_any = false
-warn_unused_ignores = true
-
-[[tool.mypy.overrides]]
-module = [
-  "toml.*",
-  "jsonschema",
-  "ghapi.*",
-  "github_activity",
-  "pkginfo",
-  "pypandoc",
-]
-ignore_missing_imports = true
+enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+warn_unreachable = true
 
 [tool.ruff]
 target-version = "py38"
@@ -232,3 +219,6 @@ ignore-nested-functions=true
 ignore-nested-classes=true
 fail-under=100
 exclude = ["jupyter_releaser/tests"]
+
+[tool.repo-review]
+ignore = ["PY004", "PY007","PP301", "PC140", "PP308", "GH102"]
