@@ -28,7 +28,7 @@ os.chdir(CHECKOUT_NAME)
 output = get_version_entry(ref, branch, target, "current", since=since, until=until)
 
 if convert_to_rst.lower() == "true":
-    from pypandoc import convert_text
+    from pypandoc import convert_text  # type:ignore[import-not-found]
 
     output = convert_text(output, "rst", "markdown")
 log("\n\n------------------------------")

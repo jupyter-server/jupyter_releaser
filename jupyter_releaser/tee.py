@@ -37,7 +37,7 @@ else:
 try:
     from shlex import join
 except ImportError:
-    from subprocess import list2cmdline as join  # type:ignore
+    from subprocess import list2cmdline as join  # type:ignore[assignment]
 
 
 STREAM_LIMIT = 2**23  # 8MB instead of default 64kb, override it if you need
@@ -70,7 +70,7 @@ async def _stream_subprocess(args: str, **kwargs: Any) -> CompletedProcess:  # n
     # commands.
     # * SHELL is not always defined
     # * /bin/bash does not exit on alpine, /bin/sh seems bit more portable
-    if "executable" not in kwargs and isinstance(args, str) and " " in args:
+    if "executable" not in kwargs and isinstance(args, str) and " " in args:  # type:ignore[redundant-expr]
         platform_settings["executable"] = os.environ.get("SHELL", "/bin/sh")
 
     # pass kwargs we know to be supported
