@@ -4,7 +4,7 @@
 import re
 from pathlib import Path
 
-from github_activity import generate_activity_md
+from github_activity import generate_activity_md  # type:ignore[import-untyped]
 
 from jupyter_releaser import util
 

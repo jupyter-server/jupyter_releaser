@@ -12,6 +12,7 @@ from io import BytesIO
 from pathlib import Path
 from subprocess import PIPE, CalledProcessError, Popen
 from tempfile import TemporaryDirectory
+from typing import cast
 
 import requests
 
@@ -142,7 +143,7 @@ def fetch_pypi_api_token() -> "str":
     sink.seek(0)
     api_token = json.loads(sink.read().decode("utf-8")).get("token", "")
 
-    return api_token
+    return cast(str, api_token)
 
 
 def get_pypi_token(release_url, python_package):

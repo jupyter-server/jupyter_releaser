@@ -6,6 +6,7 @@ import tempfile
 from pathlib import Path
 
 from ghapi.core import GhApi
+from ruamel.yaml import YAML
 
 from jupyter_releaser import changelog, cli, util
 from jupyter_releaser.util import run
@@ -201,11 +202,19 @@ def create_python_package(git_repo, multi=False, not_matching_name=False):
         here = Path(__file__).parent
         text = here.parent.parent.joinpath(".pre-commit-config.yaml").read_text(encoding="utf-8")
 
-        readme = git_repo / "README.md"
-        readme.write_text(README_TEMPLATE, encoding="utf-8")
+        # Remove sp-repo-review and don't check yaml files.
+        yaml = YAML(typ="safe")
+        table = yaml.load(text)
+        for item in list(table["repos"]):
+            if item["repo"] == "https://github.com/scientific-python/cookie":
+                table["repos"].remove(item)
 
         pre_commit = git_repo / ".pre-commit-config.yaml"
-        pre_commit.write_text(text, encoding="utf-8")
+        with open(str(pre_commit), "w") as fid:
+            yaml.dump(table, fid)
+
+        readme = git_repo / "README.md"
+        readme.write_text(README_TEMPLATE, encoding="utf-8")
 
     sub_packages = []
     if multi:
