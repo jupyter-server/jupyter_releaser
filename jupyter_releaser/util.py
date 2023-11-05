@@ -24,7 +24,7 @@ from urllib.parse import urlparse
 import requests
 import toml
 from ghapi import core  # type:ignore[import-untyped]
-from importlib_resources import files
+from importlib_resources import files  # type:ignore[import-not-found]
 from jsonschema import Draft4Validator as Validator
 from packaging.version import Version
 from packaging.version import parse as parse_version
