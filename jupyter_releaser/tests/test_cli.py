@@ -219,7 +219,7 @@ def test_build_changelog_existing(py_package, mocker, runner):
     runner(["build-changelog", "--changelog-path", changelog_file])
 
     text = changelog_path.read_text(encoding="utf-8")
-    text = text.replace("defining contributions", "Definining contributions")
+    text = text.replace("defining contributions", "Defining contributions")
     changelog_path.write_text(text, encoding="utf-8")
 
     # Commit the change
@@ -229,7 +229,7 @@ def test_build_changelog_existing(py_package, mocker, runner):
     runner(["build-changelog", "--changelog-path", changelog_file])
 
     text = changelog_path.read_text(encoding="utf-8")
-    assert "Definining contributions" in text, text
+    assert "Defining contributions" in text, text
     assert "defining contributions" not in text, text
 
     assert len(re.findall(changelog.START_MARKER, text)) == 1
@@ -393,7 +393,7 @@ def test_check_python_resource_path(monkeypatch, py_package, runner, build_mock,
     path.write_text("hello", encoding="utf-8")
 
     pyproject = Path(util.CHECKOUT_NAME / util.PYPROJECT)
-    pyproject_text = pyproject.read_text('utf-8')
+    pyproject_text = pyproject.read_text("utf-8")
     pyproject_text = pyproject_text.replace("foo.py", "foo/__init__.py")
     pyproject.write_text(pyproject_text, "utf-8")
 

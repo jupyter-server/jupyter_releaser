@@ -20,10 +20,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
-      -  name: Run Linters
-         run: |
+      - name: Run Linters
+        run: |
           hatch run typing:test
-          hatch run lint:style
+          hatch run lint:build
           pipx run interrogate -v jupyter_releaser
           pipx run doc8 --max-line-length=200
 

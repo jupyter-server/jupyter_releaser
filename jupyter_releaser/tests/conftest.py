@@ -160,7 +160,7 @@ def runner():
         if result.exit_code != 0:
             if result.stderr_bytes:
                 print("Captured stderr\n", result.stderr, "\n\n")
-            print("Catpured stdout\n", result.stdout, "\n\n")
+            print("Captured stdout\n", result.stdout, "\n\n")
             assert result.exception is not None
             raise result.exception
 

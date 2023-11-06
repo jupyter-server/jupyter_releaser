@@ -18,7 +18,7 @@ Use the following steps:
 
 ```bash
 python -m pip install --upgrade setuptools pip
-git clone https://github.com/jupyter-server/jupyter-releaser
+git clone https://github.com/jupyter-server/jupyter_releaser
 cd jupyter-releaser
 pip install -e .[test]
 ```

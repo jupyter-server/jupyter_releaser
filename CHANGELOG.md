@@ -2,6 +2,29 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.3.0
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...be0c23e4d89944d8f48135ae536f3ede3378286a))
+
+### Bugs fixed
+
+- Don't tag private package or pkg without version [#531](https://github.com/jupyter-server/jupyter_releaser/pull/531) ([@fcollonval](https://github.com/fcollonval))
+- Fix action url [#527](https://github.com/jupyter-server/jupyter_releaser/pull/527) ([@fcollonval](https://github.com/fcollonval))
+- Only run npm pack if there are public packages in workspace [#522](https://github.com/jupyter-server/jupyter_releaser/pull/522) ([@fcollonval](https://github.com/fcollonval))
+
+### Maintenance and upkeep improvements
+
+- Bump actions/checkout from 3 to 4 [#524](https://github.com/jupyter-server/jupyter_releaser/pull/524) ([@dependabot](https://github.com/dependabot))
+- Fix click typing [#519](https://github.com/jupyter-server/jupyter_releaser/pull/519) ([@blink1073](https://github.com/blink1073))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2023-07-10&to=2023-10-17&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2023-07-10..2023-10-17&type=Issues) | [@Carreau](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3ACarreau+updated%3A2023-07-10..2023-10-17&type=Issues) | [@dependabot](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Adependabot+updated%3A2023-07-10..2023-10-17&type=Issues) | [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2023-07-10..2023-10-17&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2023-07-10..2023-10-17&type=Issues) | [@krassowski](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2023-07-10..2023-10-17&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2023-07-10..2023-10-17&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.2.1
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...0469672a12bfdcd2d1c7834e05a82aaeec59f103))
@@ -15,8 +38,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2023-06-20&to=2023-07-10&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2023-06-20..2023-07-10&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2023-06-20..2023-07-10&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.2.0
 

@@ -23,8 +23,8 @@ from urllib.parse import urlparse
 
 import requests
 import toml
-from ghapi import core
-from importlib_resources import files
+from ghapi import core  # type:ignore[import-untyped]
+from importlib_resources import files  # type:ignore[import-not-found]
 from jsonschema import Draft4Validator as Validator
 from packaging.version import Version
 from packaging.version import parse as parse_version
@@ -386,7 +386,7 @@ def latest_draft_release(gh, branch=None):
             continue
         created = release.created_at
         d_created = datetime.strptime(created, r"%Y-%m-%dT%H:%M:%SZ")  # noqa
-        if newest_time is None or d_created > newest_time:
+        if newest_time is None or d_created > newest_time:  # type:ignore[unreachable]
             newest_time = d_created
             newest_release = release
     if not newest_release:
@@ -688,7 +688,7 @@ def get_remote_name(dry_run):
         return "origin"
 
     if _local_remote:
-        try:
+        try:  # type:ignore[unreachable]
             run(f"git remote add test {_local_remote}")
         except Exception:  # noqa
             pass
@@ -725,7 +725,7 @@ def ensure_mock_github():
     python = sys.executable.replace(os.sep, "/")
     try:
         import fastapi  # noqa
-        import univcorn  # type: ignore  # noqa
+        import univcorn  # type:ignore[import-not-found]  # noqa
     except ImportError:
         run(f"'{python}' -m pip install fastapi uvicorn")
 
