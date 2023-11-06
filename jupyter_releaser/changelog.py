@@ -295,7 +295,7 @@ def insert_entry(
     return format(changelog)
 
 
-def format(changelog: str) -> str:
+def format(changelog: str) -> str:  # noqa A001
     """Clean up changelog formatting"""
     changelog = re.sub(r"\n\n+", r"\n\n", changelog)
     return re.sub(r"\n\n+$", r"\n", changelog)
