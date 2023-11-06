@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Optional
 
 import mdformat
-from fastcore.net import HTTP404NotFoundError
+from fastcore.net import HTTP404NotFoundError  # type:ignore[import-untyped]
 from github_activity import generate_activity_md  # type:ignore[import-untyped]
 
 from jupyter_releaser import util
@@ -295,7 +295,7 @@ def insert_entry(
     return format(changelog)
 
 
-def format(changelog):  # noqa
+def format(changelog: str) -> str:
     """Clean up changelog formatting"""
     changelog = re.sub(r"\n\n+", r"\n\n", changelog)
     return re.sub(r"\n\n+$", r"\n", changelog)
