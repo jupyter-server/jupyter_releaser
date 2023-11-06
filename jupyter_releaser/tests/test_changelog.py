@@ -81,7 +81,7 @@ def test_update_changelog_with_old_silent_entry(tmp_path, mock_py_package):
     )
 
 
-@pytest.mark.parametrize('module_template', ['__version__ = "0.0.3"\n'])
+@pytest.mark.parametrize("module_template", ['__version__ = "0.0.3"\n'])
 def test_silence_existing_changelog_entry(tmp_path, mock_py_package):
     changelog = tmp_path / "CHANGELOG.md"
     changelog.write_text(testutil.CHANGELOG_TEMPLATE, encoding="utf-8")
@@ -103,7 +103,7 @@ def test_silence_existing_changelog_entry(tmp_path, mock_py_package):
 
 
 @pytest.mark.parametrize(
-    'release_metadata',
+    "release_metadata",
     [
         dict(
             [(k, v) for k, v in testutil.BASE_RELEASE_METADATA.items() if k != "version"]
@@ -142,7 +142,7 @@ def test_remove_placeholder_entries(tmp_path, release_metadata, draft_release):
 
 
 @pytest.mark.parametrize(
-    'release_metadata',
+    "release_metadata",
     [
         dict(
             [
