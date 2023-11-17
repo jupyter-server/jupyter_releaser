@@ -137,6 +137,13 @@ def test_bump_version_tag_exists(py_package, runner):
         runner(["bump-version", "--version-spec", "1.0.1"], env=dict(GITHUB_ACTIONS=""))
 
 
+def test_bump_version_custom_tag_exists(py_package, runner):
+    runner(["prep-git", "--git-url", py_package])
+    run("git tag rev1.0.1", cwd=util.CHECKOUT_NAME)
+    with pytest.raises(ValueError):
+        runner(["bump-version", "--version-spec", "1.0.1"], env=dict(GITHUB_ACTIONS="", RH_TAG_FORMAT=r"rev{version}"))
+
+
 def test_list_envvars(runner):
     result = runner(["list-envvars"])
     assert (
