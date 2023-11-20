@@ -22,7 +22,7 @@ from pkginfo import SDist, Wheel
 from jupyter_releaser import changelog, npm, python, util
 
 
-def bump_version(version_spec, version_cmd, changelog_path):
+def bump_version(version_spec, version_cmd, changelog_path, tag_format):
     """Bump the version and verify new version"""
     util.bump_version(version_spec, version_cmd=version_cmd, changelog_path=changelog_path)
 
@@ -36,7 +36,7 @@ def bump_version(version_spec, version_cmd, changelog_path):
         raise ValueError(msg)
 
     # Bail if tag already exists
-    tag_name = f"v{version}"
+    tag_name = tag_format.format(version=version)
     if tag_name in util.run("git --no-pager tag", quiet=True).splitlines():
         msg = f"Tag {tag_name} already exists!"
         msg += " To delete run: `git push --delete origin {tag_name}`"
@@ -58,12 +58,14 @@ def draft_changelog(
     post_version_spec,
     post_version_message,
     silent,
+    tag_format,
 ):
     """Create a changelog entry PR"""
     repo = repo or util.get_repo()
     branch = branch or util.get_branch()
     version = util.get_version()
     prerelease = util.is_prerelease(version)
+    tag_name = tag_format.format(version=version)
 
     current_sha = util.run("git rev-parse HEAD")
 
@@ -74,8 +76,8 @@ def draft_changelog(
         util.log(npm_versions)
 
     tags = util.run("git --no-pager tag", quiet=True)
-    if f"v{version}" in tags.splitlines():
-        msg = f"Tag v{version} already exists"
+    if tag_name in tags.splitlines():
+        msg = f"Tag {tag_name} already exists"
         raise ValueError(msg)
 
     current = changelog.extract_current(changelog_path)
@@ -113,7 +115,7 @@ def draft_changelog(
             json.dump(data, fid)
 
         release = gh.create_release(
-            f"v{version}", branch, f"v{version}", current, True, prerelease, files=[metadata_path]
+            tag_name, branch, tag_name, current, True, prerelease, files=[metadata_path]
         )
 
     # Remove non-silent draft releases over a day old
@@ -240,6 +242,7 @@ def populate_release(
     post_version_spec,
     post_version_message,
     assets,
+    tag_format,
     silent=False,
 ):
     """Populate release assets and push tags and commits"""
@@ -252,7 +255,10 @@ def populate_release(
     # Bump to post version if given.
     if post_version_spec:
         post_version = bump_version(
-            post_version_spec, version_cmd=version_cmd, changelog_path=changelog_path
+            post_version_spec,
+            version_cmd=version_cmd,
+            changelog_path=changelog_path,
+            tag_format=tag_format,
         )
         util.log(post_version_message.format(post_version=post_version))
         util.run(f'git commit -a -m "Bump to {post_version}"')

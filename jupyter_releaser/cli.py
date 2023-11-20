@@ -319,6 +319,15 @@ pydist_check_options: t.Any = [
     ),
 ]
 
+tag_format_options: t.Any = [
+    click.option(
+        "--tag-format",
+        envvar="RH_TAG_FORMAT",
+        default="v{version}",
+        help="The format to use for the release tag",
+    )
+]
+
 
 def add_options(options):
     """Add extracted common options to a click command"""
@@ -364,13 +373,14 @@ def prep_git(ref, branch, repo, auth, username, git_url):
 @add_options(version_cmd_options)
 @add_options(changelog_path_options)
 @add_options(python_packages_options)
+@add_options(tag_format_options)
 @use_checkout_dir()
-def bump_version(version_spec, version_cmd, changelog_path, python_packages):
+def bump_version(version_spec, version_cmd, changelog_path, python_packages, tag_format):
     """Prep git and env variables and bump version"""
     prev_dir = os.getcwd()
     for python_package in [p.split(":")[0] for p in python_packages]:
         os.chdir(python_package)
-        lib.bump_version(version_spec, version_cmd, changelog_path)
+        lib.bump_version(version_spec, version_cmd, changelog_path, tag_format)
         os.chdir(prev_dir)
 
 
@@ -409,6 +419,7 @@ def build_changelog(
 @add_options(dry_run_options)
 @add_options(post_version_spec_options)
 @add_options(silent_option)
+@add_options(tag_format_options)
 @use_checkout_dir()
 def draft_changelog(
     version_spec,
@@ -423,6 +434,7 @@ def draft_changelog(
     post_version_spec,
     post_version_message,
     silent,
+    tag_format,
 ):
     """Create a changelog entry PR"""
     lib.draft_changelog(
@@ -438,6 +450,7 @@ def draft_changelog(
         post_version_spec,
         post_version_message,
         silent,
+        tag_format,
     )
 
 
@@ -516,12 +529,7 @@ def check_npm(dist_dir, npm_install_options):
     default="Publish {version}",
     help="The message to use for the release commit",
 )
-@click.option(
-    "--tag-format",
-    envvar="RH_TAG_FORMAT",
-    default="v{version}",
-    help="The format to use for the release tag",
-)
+@add_options(tag_format_options)
 @click.option(
     "--tag-message",
     envvar="RH_TAG_MESSAGE",
@@ -547,8 +555,9 @@ def tag_release(dist_dir, release_message, tag_format, tag_message, no_git_tag_w
 @add_options(dist_dir_options)
 @add_options(dry_run_options)
 @add_options(release_url_options)
-@add_options(silent_option)
 @add_options(post_version_spec_options)
+@add_options(silent_option)
+@add_options(tag_format_options)
 @click.argument("assets", nargs=-1)
 @use_checkout_dir()
 def populate_release(
@@ -564,6 +573,7 @@ def populate_release(
     post_version_spec,
     post_version_message,
     silent,
+    tag_format,
     assets,
 ):
     """Populate a release."""
@@ -580,6 +590,7 @@ def populate_release(
         post_version_spec,
         post_version_message,
         assets,
+        tag_format,
         silent,
     )
 
