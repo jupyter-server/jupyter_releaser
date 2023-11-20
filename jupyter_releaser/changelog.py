@@ -3,13 +3,18 @@
 # Distributed under the terms of the Modified BSD License.
 import re
 from pathlib import Path
+from typing import Optional
 
+import mdformat
+from fastcore.net import HTTP404NotFoundError  # type:ignore[import-untyped]
 from github_activity import generate_activity_md  # type:ignore[import-untyped]
 
 from jupyter_releaser import util
 
 START_MARKER = "<!-- <START NEW CHANGELOG ENTRY> -->"
 END_MARKER = "<!-- <END NEW CHANGELOG ENTRY> -->"
+START_SILENT_MARKER = "<!-- START SILENT CHANGELOG ENTRY -->"
+END_SILENT_MARKER = "<!-- END SILENT CHANGELOG ENTRY -->"
 PR_PREFIX = "Automated Changelog Entry"
 PRECOMMIT_PREFIX = "[pre-commit.ci] pre-commit autoupdate"
 
@@ -171,7 +176,7 @@ def build_entry(
     update_changelog(changelog_path, entry)
 
 
-def update_changelog(changelog_path, entry):
+def update_changelog(changelog_path, entry, silent=False):
     """Update a changelog with a new entry."""
     # Get the new version
     version = util.get_version()
@@ -187,14 +192,86 @@ def update_changelog(changelog_path, entry):
         msg = "Insert marker appears more than once in changelog"
         raise ValueError(msg)
 
-    changelog = insert_entry(changelog, entry, version=version)
+    changelog = insert_entry(changelog, entry, version=version, silent=silent)
     Path(changelog_path).write_text(changelog, encoding="utf-8")
 
 
-def insert_entry(changelog, entry, version=None):
+def remove_placeholder_entries(
+    repo: str,
+    auth: Optional[str],
+    changelog_path: str,
+    dry_run: bool,
+) -> int:
+    """Replace any silent marker with the GitHub release body
+    if the release has been published.
+
+    Parameters
+    ----------
+    repo : str
+        The GitHub owner/repo
+    auth : str
+        The GitHub authorization token
+    changelog_path : str
+        The changelog file path
+    dry_run: bool
+
+    Returns
+    -------
+    int
+        Number of placeholders removed
+    """
+
+    changelog = Path(changelog_path).read_text(encoding="utf-8")
+    start_count = changelog.count(START_SILENT_MARKER)
+    end_count = changelog.count(END_SILENT_MARKER)
+    if start_count != end_count:
+        msg = ""
+        raise ValueError(msg)
+
+    repo = repo or util.get_repo()
+    owner, repo_name = repo.split("/")
+    gh = util.get_gh_object(dry_run=dry_run, owner=owner, repo=repo_name, token=auth)
+
+    # Replace silent placeholder by release body if it has been published
+    previous_index = None
+    changes_count = 0
+    for _ in range(start_count):
+        start = changelog.index(START_SILENT_MARKER, previous_index)
+        end = changelog.index(END_SILENT_MARKER, start)
+
+        version = _extract_version(changelog[start + len(START_SILENT_MARKER) : end])
+        try:
+            util.log(f"Getting release for tag '{version}'...")
+            release = gh.repos.get_release_by_tag(owner=owner, repo=repo_name, tag=f"v{version}")
+        except HTTP404NotFoundError:
+            # Skip this version
+            pass
+        else:
+            if not release.draft:
+                changelog_text = mdformat.text(release.body)
+                changelog = (
+                    changelog[:start]
+                    + f"\n\n{changelog_text}\n\n"
+                    + changelog[end + len(END_SILENT_MARKER) :]
+                )
+                changes_count += 1
+
+        previous_index = end
+
+    # Write back the new changelog
+    Path(changelog_path).write_text(format(changelog), encoding="utf-8")
+    return changes_count
+
+
+def insert_entry(
+    changelog: str, entry: str, version: Optional[str] = None, silent: bool = False
+) -> str:
     """Insert the entry into the existing changelog."""
     # Test if we are augmenting an existing changelog entry (for new PRs)
     # Preserve existing PR entries since we may have formatted them
+    if silent:
+        entry = f"{START_SILENT_MARKER}\n\n## {version}\n\n{END_SILENT_MARKER}"
+
     new_entry = f"{START_MARKER}\n\n{entry}\n\n{END_MARKER}"
     prev_entry = changelog[
         changelog.index(START_MARKER) : changelog.index(END_MARKER) + len(END_MARKER)
@@ -218,7 +295,7 @@ def insert_entry(changelog, entry, version=None):
     return format(changelog)
 
 
-def format(changelog):  # noqa
+def format(changelog: str) -> str:  # noqa A001
     """Clean up changelog formatting"""
     changelog = re.sub(r"\n\n+", r"\n\n", changelog)
     return re.sub(r"\n\n+$", r"\n", changelog)
@@ -349,7 +426,12 @@ def extract_current(changelog_path):
 def extract_current_version(changelog_path):
     """Extract the current released version from the changelog"""
     body = extract_current(changelog_path)
-    match = re.match(r"#+ (\d\S+)", body.strip())
+    return _extract_version(body)
+
+
+def _extract_version(entry: str) -> str:
+    """Extract version from entry"""
+    match = re.match(r"#+ (\d\S+)", entry.strip())
     if not match:
         msg = "Could not find previous version"
         raise ValueError(msg)

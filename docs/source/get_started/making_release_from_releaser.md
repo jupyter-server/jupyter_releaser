@@ -70,10 +70,22 @@ already uses Jupyter Releaser.
     to the next minor version directly. Note: The "next" and "patch" options
     are not available when using dev versions, you must use explicit versions
     instead.
+
   - Use the "since" field to select PRs prior to the latest tag to include in the release
-  - Type "true" in the "since the last stable git tag" if you would like to include PRs since the last non-prerelease version tagged on the target repository and branch.
+
+  - Check "Use PRs with activity since the last stable git tag" if you would like to include PRs since the last non-prerelease version tagged on the target repository and branch.
+
+  - Check "Set a placeholder in the changelog and don't publish the release" if
+    you want to carry a silent release (e.g. in case of a security release).
+    That option will change the default behavior by keeping the version
+    changelog only in the GitHub release and keeping it private (aka in _Draft_
+    state). The changelog file will only contains a placeholder to be replaced
+    by the release body once the maintainers have chosen to publish the release.
+
   - The additional "Post Version Spec" field should be used if your repo uses a dev version (e.g. 0.7.0.dev0)
+
   - The workflow will use the GitHub API to find the relevant pull requests and make an appropriate changelog entry.
+
   - The workflow will create a draft GitHub release to the target
     repository and branch, with the draft changelog contents.
 

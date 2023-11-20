@@ -249,6 +249,12 @@ changelog_path_options: t.Any = [
     ),
 ]
 
+silent_option: t.Any = [
+    click.option(
+        "--silent", envvar="RH_SILENT", default=False, help="Set a placeholder in the changelog."
+    )
+]
+
 since_options: t.Any = [
     click.option(
         "--since",
@@ -383,10 +389,11 @@ def bump_version(version_spec, version_cmd, changelog_path, python_packages, tag
 @add_options(auth_options)
 @add_options(changelog_path_options)
 @add_options(release_url_options)
+@add_options(silent_option)
 @use_checkout_dir()
-def extract_changelog(dry_run, auth, changelog_path, release_url):
+def extract_changelog(dry_run, auth, changelog_path, release_url, silent):
     """Extract the changelog entry."""
-    lib.extract_changelog(dry_run, auth, changelog_path, release_url)
+    lib.extract_changelog(dry_run, auth, changelog_path, release_url, silent)
 
 
 @main.command()
@@ -396,15 +403,10 @@ def build_changelog(
     ref, branch, repo, auth, changelog_path, since, since_last_stable, resolve_backports
 ):
     """Build changelog entry"""
+    # We don't silence building the entry as it will be extracted to
+    # populate the release body
     changelog.build_entry(
-        ref,
-        branch,
-        repo,
-        auth,
-        changelog_path,
-        since,
-        since_last_stable,
-        resolve_backports,
+        ref, branch, repo, auth, changelog_path, since, since_last_stable, resolve_backports
     )
 
 
@@ -416,6 +418,7 @@ def build_changelog(
 @add_options(changelog_path_options)
 @add_options(dry_run_options)
 @add_options(post_version_spec_options)
+@add_options(silent_option)
 @add_options(tag_format_options)
 @use_checkout_dir()
 def draft_changelog(
@@ -430,6 +433,7 @@ def draft_changelog(
     dry_run,
     post_version_spec,
     post_version_message,
+    silent,
     tag_format,
 ):
     """Create a changelog entry PR"""
@@ -445,6 +449,7 @@ def draft_changelog(
         dry_run,
         post_version_spec,
         post_version_message,
+        silent,
         tag_format,
     )
 
@@ -551,8 +556,9 @@ def tag_release(dist_dir, release_message, tag_format, tag_message, no_git_tag_w
 @add_options(dry_run_options)
 @add_options(release_url_options)
 @add_options(post_version_spec_options)
-@click.argument("assets", nargs=-1)
+@add_options(silent_option)
 @add_options(tag_format_options)
+@click.argument("assets", nargs=-1)
 @use_checkout_dir()
 def populate_release(
     ref,
@@ -566,8 +572,9 @@ def populate_release(
     release_url,
     post_version_spec,
     post_version_message,
-    assets,
+    silent,
     tag_format,
+    assets,
 ):
     """Populate a release."""
     lib.populate_release(
@@ -584,6 +591,7 @@ def populate_release(
         post_version_message,
         assets,
         tag_format,
+        silent,
     )
 
 
@@ -684,10 +692,11 @@ def publish_assets(
 @add_options(auth_options)
 @add_options(dry_run_options)
 @add_options(release_url_options)
+@add_options(silent_option)
 @use_checkout_dir()
-def publish_release(auth, dry_run, release_url):
+def publish_release(auth, dry_run, release_url, silent):
     """Publish GitHub release"""
-    lib.publish_release(auth, dry_run, release_url)
+    lib.publish_release(auth, dry_run, release_url, silent)
 
 
 @main.command()
@@ -715,6 +724,17 @@ def forwardport_changelog(auth, ref, branch, repo, username, changelog_path, dry
     lib.forwardport_changelog(
         auth, ref, branch, repo, username, changelog_path, dry_run, release_url
     )
+
+
+@main.command()
+@add_options(auth_options)
+@add_options(branch_options)
+@add_options(changelog_path_options)
+@add_options(dry_run_options)
+@use_checkout_dir()
+def publish_changelog(auth, ref, branch, repo, changelog_path, dry_run):
+    """Remove changelog placeholder entries."""
+    lib.publish_changelog(branch, repo, auth, changelog_path, dry_run)
 
 
 if __name__ == "__main__":  # pragma: no cover

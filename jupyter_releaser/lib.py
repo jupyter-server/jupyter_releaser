@@ -57,6 +57,7 @@ def draft_changelog(
     dry_run,
     post_version_spec,
     post_version_message,
+    silent,
     tag_format,
 ):
     """Create a changelog entry PR"""
@@ -80,7 +81,8 @@ def draft_changelog(
         raise ValueError(msg)
 
     current = changelog.extract_current(changelog_path)
-    util.log(f"\n\nCurrent Changelog Entry:\n{current}")
+    if not silent:
+        util.log(f"\n\nCurrent Changelog Entry:\n{current}")
 
     # Check out all changed files.
     try:
@@ -105,6 +107,7 @@ def draft_changelog(
         "post_version_spec": post_version_spec,
         "post_version_message": post_version_message,
         "expected_sha": current_sha,
+        "silent": silent,
     }
     with tempfile.TemporaryDirectory() as d:
         metadata_path = Path(d) / util.METADATA_JSON
@@ -115,7 +118,7 @@ def draft_changelog(
             tag_name, branch, tag_name, current, True, prerelease, files=[metadata_path]
         )
 
-    # Remove draft releases over a day old
+    # Remove non-silent draft releases over a day old
     if bool(os.environ.get("GITHUB_ACTIONS")):
         for rel in gh.repos.list_releases():
             if str(rel.draft).lower() == "false":
@@ -126,6 +129,10 @@ def draft_changelog(
             )
             delta = datetime.now(tz=timezone.utc) - d_created
             if delta.days > 0:
+                # Check for silent status here to avoid request to often the GitHub API
+                metadata = util.extract_metadata_from_release_url(gh, rel.html_url, auth)
+                if metadata.get("silent"):
+                    continue
                 gh.repos.delete_release(rel.id)
 
     # Set the GitHub action output for the release url.
@@ -168,7 +175,15 @@ def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=F
         util.run(f"git push origin {pr_branch}", echo=True)
 
     #  title, head, base, body, maintainer_can_modify, draft, issue
-    pull = gh.pulls.create(title, head, base, body, maintainer_can_modify, False, None)
+    pull = gh.pulls.create(
+        title=title,
+        head=head,
+        base=base,
+        body=body,
+        maintainer_can_modify=maintainer_can_modify,
+        draf=False,
+        issue=None,
+    )
 
     # Try to add the documentation label to the PR.
     number = pull.number
@@ -178,6 +193,22 @@ def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=F
         print(e)
 
     util.actions_output("pr_url", pull.html_url)
+
+
+def publish_changelog(branch, repo, auth, changelog_path, dry_run):
+    """Remove changelog placeholder entries."""
+    count = changelog.remove_placeholder_entries(repo, auth, changelog_path, dry_run)
+
+    if count == 0:
+        util.log("Changelog did not changed.")
+        return
+
+    # Create a forward port PR
+    title = f"{changelog.PR_PREFIX} - Remove {count} placeholder entries."
+    commit_message = f'git commit -a -m "{title}"'
+    body = title
+
+    make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run)
 
 
 def tag_release(dist_dir, release_message, tag_format, tag_message, no_git_tag_workspace):
@@ -212,11 +243,11 @@ def populate_release(
     post_version_message,
     assets,
     tag_format,
+    silent=False,
 ):
     """Populate release assets and push tags and commits"""
     branch = branch or util.get_branch()
     assets = assets or glob(f"{dist_dir}/*")
-    body = changelog.extract_current(changelog_path)
 
     match = util.parse_release_url(release_url)
     owner, repo_name = match["owner"], match["repo"]
@@ -234,6 +265,9 @@ def populate_release(
 
     gh = util.get_gh_object(dry_run=dry_run, owner=owner, repo=repo_name, token=auth)
     release = util.release_for_url(gh, release_url)
+
+    # if the release is silent, the changelog source of truth is the GitHub release
+    body = release.body if silent else changelog.extract_current(changelog_path)
 
     remote_name = util.get_remote_name(dry_run)
     remote_url = util.run(f"git config --get remote.{remote_name}.url")
@@ -416,7 +450,7 @@ def publish_assets(  # noqa
         util.log("No files to upload")
 
 
-def publish_release(auth, dry_run, release_url):
+def publish_release(auth, dry_run, release_url, silent):
     """Publish GitHub release"""
     util.log(f"Publishing {release_url}")
 
@@ -432,7 +466,7 @@ def publish_release(auth, dry_run, release_url):
         release.target_commitish,
         release.name,
         release.body,
-        False,
+        silent,  # In silent mode the release will stay in draft mode
         release.prerelease,
     )
 
@@ -522,13 +556,18 @@ def prep_git(ref, branch, repo, auth, username, url):  # noqa
     return branch
 
 
-def extract_changelog(dry_run, auth, changelog_path, release_url):
-    """Extract the changelog from the draft GH release body and update it."""
+def extract_changelog(dry_run, auth, changelog_path, release_url, silent=False):
+    """Extract the changelog from the draft GH release body and update it.
+
+    > If the release must is silent, the changelog entry will be replaced by
+    > a placeholder
+    """
     match = util.parse_release_url(release_url)
     gh = util.get_gh_object(dry_run=dry_run, owner=match["owner"], repo=match["repo"], token=auth)
     release = util.release_for_url(gh, release_url)
+
     changelog_text = mdformat.text(release.body)
-    changelog.update_changelog(changelog_path, changelog_text)
+    changelog.update_changelog(changelog_path, changelog_text, silent=silent)
 
 
 def forwardport_changelog(auth, ref, branch, repo, username, changelog_path, dry_run, release_url):
