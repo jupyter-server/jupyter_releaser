@@ -58,7 +58,7 @@ See checklist below for details:
   build system and for version handling.
   - If previously providing `version_info` like `version_info = (1, 7, 0, '.dev', '0')`, use a pattern like the one below in your version file:
 
-```toml
+```python
 import re
 from typing import List
 
