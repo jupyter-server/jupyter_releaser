@@ -2,6 +2,29 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.4.0
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...d77acfd4f8437095a766776e565d200db9f2a135))
+
+### Enhancements made
+
+- Allow the tag format customization [#536](https://github.com/jupyter-server/jupyter_releaser/pull/536) ([@fcollonval](https://github.com/fcollonval))
+- Add silent option [#526](https://github.com/jupyter-server/jupyter_releaser/pull/526) ([@fcollonval](https://github.com/fcollonval))
+
+### Maintenance and upkeep improvements
+
+- chore: update pre-commit hooks [#534](https://github.com/jupyter-server/jupyter_releaser/pull/534) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+- Clean up lint handling [#533](https://github.com/jupyter-server/jupyter_releaser/pull/533) ([@blink1073](https://github.com/blink1073))
+- Adopt ruff format and sp-repo-review [#532](https://github.com/jupyter-server/jupyter_releaser/pull/532) ([@blink1073](https://github.com/blink1073))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2023-10-17&to=2023-11-27&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2023-10-17..2023-11-27&type=Issues) | [@Carreau](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3ACarreau+updated%3A2023-10-17..2023-11-27&type=Issues) | [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2023-10-17..2023-11-27&type=Issues) | [@krassowski](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2023-10-17..2023-11-27&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2023-10-17..2023-11-27&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.3.0
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...be0c23e4d89944d8f48135ae536f3ede3378286a))
@@ -22,8 +45,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2023-07-10&to=2023-10-17&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2023-07-10..2023-10-17&type=Issues) | [@Carreau](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3ACarreau+updated%3A2023-07-10..2023-10-17&type=Issues) | [@dependabot](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Adependabot+updated%3A2023-07-10..2023-10-17&type=Issues) | [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2023-07-10..2023-10-17&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2023-07-10..2023-10-17&type=Issues) | [@krassowski](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2023-07-10..2023-10-17&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2023-07-10..2023-10-17&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.2.1
 
