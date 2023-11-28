@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         description: "The owner/repo GitHub target"
-        required: true
+        required: false
       version_spec:
         description: "New Version Specifier"
         default: "next"
