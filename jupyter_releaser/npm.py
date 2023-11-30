@@ -57,8 +57,8 @@ def build_dist(package, dist_dir):
 
 def extract_dist(dist_dir, target, repo=""):
     """Extract dist files from a dist_dir into a target dir
-    
-    
+
+
     If `repo` is provided, check that the repository URL is ending by it.
     """
     names = []

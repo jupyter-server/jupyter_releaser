@@ -183,7 +183,7 @@ version_cmd_options: t.Any = [
     click.option("--version-cmd", envvar="RH_VERSION_COMMAND", help="The version command")
 ]
 
-repo_options: t.Any  = [
+repo_options: t.Any = [
     click.option("--repo", envvar="RH_REPOSITORY", help="The git repo"),
 ]
 
