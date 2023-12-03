@@ -187,7 +187,7 @@ repo_options: t.Any = [
     click.option("--repo", envvar="RH_REPOSITORY", help="The git repo"),
 ]
 
-branch_options: t.Any = [
+branch_options: t.Any = [  # noqa: RUF005
     click.option("--ref", envvar="RH_REF", help="The source reference"),
     click.option("--branch", envvar="RH_BRANCH", help="The target branch"),
 ] + repo_options

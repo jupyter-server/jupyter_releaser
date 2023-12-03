@@ -76,9 +76,8 @@ def extract_dist(dist_dir, target, repo=""):
             if url.endswith(".git"):
                 url = url[:-4]
             if not url.endswith(repo):
-                raise ValueError(
-                    f"package.json for '{name}' does not define a 'repository.url' matching the cloned repository '{repo}'."
-                )
+                msg = f"package.json for '{name}' does not define a 'repository.url' matching the cloned repository '{repo}'."
+                raise ValueError(msg)
 
         # Skip if it is a private package
         if data.get("private", False):  # pragma: no cover
