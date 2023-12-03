@@ -183,12 +183,14 @@ version_cmd_options: t.Any = [
     click.option("--version-cmd", envvar="RH_VERSION_COMMAND", help="The version command")
 ]
 
-
-branch_options: t.Any = [
-    click.option("--ref", envvar="RH_REF", help="The source reference"),
-    click.option("--branch", envvar="RH_BRANCH", help="The target branch"),
+repo_options: t.Any = [
     click.option("--repo", envvar="RH_REPOSITORY", help="The git repo"),
 ]
+
+branch_options: t.Any = [  # noqa: RUF005
+    click.option("--ref", envvar="RH_REF", help="The source reference"),
+    click.option("--branch", envvar="RH_BRANCH", help="The target branch"),
+] + repo_options
 
 auth_options: t.Any = [
     click.option("--auth", envvar="GITHUB_ACCESS_TOKEN", help="The GitHub auth token"),
@@ -512,13 +514,14 @@ def build_npm(package, dist_dir):
 @main.command()
 @add_options(dist_dir_options)
 @add_options(npm_install_options)
+@add_options(repo_options)
 @use_checkout_dir()
-def check_npm(dist_dir, npm_install_options):
+def check_npm(dist_dir, npm_install_options, repo):
     """Check npm package"""
     if not osp.exists("./package.json"):
         util.log("Skipping check-npm since there is no package.json file")
         return
-    npm.check_dist(dist_dir, npm_install_options)
+    npm.check_dist(dist_dir, npm_install_options, repo)
 
 
 @main.command()

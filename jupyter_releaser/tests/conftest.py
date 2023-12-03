@@ -112,12 +112,19 @@ def workspace_package(npm_package):
             sub_data = json.loads(pkg_json.read_text(encoding="utf-8"))
             sub_data["dependencies"] = dict(bar="*")
             sub_data["main"] = "index.js"
+            sub_data["repository"] = dict(url=str(npm_package))
             pkg_json.write_text(json.dumps(sub_data), encoding="utf-8")
         elif name == "baz":
             pkg_json = new_dir / "package.json"
             sub_data = json.loads(pkg_json.read_text(encoding="utf-8"))
             sub_data["dependencies"] = dict(foo="*")
             sub_data["main"] = "index.js"
+            sub_data["repository"] = dict(url=str(npm_package))
+            pkg_json.write_text(json.dumps(sub_data), encoding="utf-8")
+        elif name == "bar":
+            pkg_json = new_dir / "package.json"
+            sub_data = json.loads(pkg_json.read_text(encoding="utf-8"))
+            sub_data["repository"] = dict(url=str(npm_package))
             pkg_json.write_text(json.dumps(sub_data), encoding="utf-8")
     os.chdir(prev_dir)
     util.run("git add .")

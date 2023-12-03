@@ -1,5 +1,6 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
+import json
 import os
 import shutil
 import tempfile
@@ -177,6 +178,14 @@ def mock_changelog_entry(package_path, runner, mocker, version_spec=VERSION_SPEC
 def create_npm_package(git_repo):
     npm = util.normalize_path(shutil.which("npm"))
     run(f"{npm} init -y")
+
+    # Add the npm provenance info.
+    pack_json = Path(git_repo / "package.json")
+    with pack_json.open() as fid:
+        data = json.load(fid)
+    data["repository"] = dict(url=str(git_repo))
+    with pack_json.open("w") as fid:
+        json.dump(data, fid)
 
     git_repo.joinpath("index.js").write_text('console.log("hello");\n', encoding="utf-8")
 

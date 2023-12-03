@@ -55,8 +55,12 @@ def build_dist(package, dist_dir):
             )
 
 
-def extract_dist(dist_dir, target):
-    """Extract dist files from a dist_dir into a target dir"""
+def extract_dist(dist_dir, target, repo=""):
+    """Extract dist files from a dist_dir into a target dir
+
+
+    If `repo` is provided, check that the repository URL is ending by it.
+    """
     names = []
     paths = sorted(glob(f"{dist_dir}/*.tgz"))
     util.log(f"Extracting {len(paths)} packages...")
@@ -66,6 +70,14 @@ def extract_dist(dist_dir, target):
 
         data = extract_package(path)
         name = data["name"]
+
+        if repo and os.name != "nt":
+            url = data.get("repository", {}).get("url", "")
+            if url.endswith(".git"):
+                url = url[:-4]
+            if not url.endswith(repo):
+                msg = f"package.json for '{name}' does not define a 'repository.url' matching the cloned repository '{repo}'."
+                raise ValueError(msg)
 
         # Skip if it is a private package
         if data.get("private", False):  # pragma: no cover
@@ -93,14 +105,16 @@ def extract_dist(dist_dir, target):
     return names
 
 
-def check_dist(dist_dir, install_options):
+def check_dist(dist_dir, install_options, repo):
     """Check npm dist file(s) in a dist dir"""
+    repo = repo or util.get_repo()
+
     with TemporaryDirectory() as td:
         util.run("npm init -y", cwd=td, quiet=True)
         names = []
         staging = Path(td) / "staging"
 
-        names = extract_dist(dist_dir, staging)
+        names = extract_dist(dist_dir, staging, repo)
 
         install_str = " ".join(f"./staging/{name}" for name in names)
 
