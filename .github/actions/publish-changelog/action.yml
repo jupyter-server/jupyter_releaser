@@ -6,7 +6,7 @@ inputs:
     required: true
   target:
     description: "The owner/repo GitHub target"
-    required: true
+    required: false
   branch:
     description: "The branch to target"
     required: false
