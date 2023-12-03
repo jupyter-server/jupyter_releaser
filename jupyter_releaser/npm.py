@@ -71,7 +71,7 @@ def extract_dist(dist_dir, target, repo=""):
         data = extract_package(path)
         name = data["name"]
 
-        if repo:
+        if repo and os.name != "nt":
             url = data.get("repository", {}).get("url", "")
             if url.endswith(".git"):
                 url = url[:-4]
