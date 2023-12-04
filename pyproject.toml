@@ -147,7 +147,6 @@ source = ["jupyter_releaser"]
 files = "jupyter_releaser"
 python_version = "3.8"
 strict = true
-show_error_codes = true
 disable_error_code  = [ "no-untyped-call", "no-untyped-def"]
 enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
 warn_unreachable = true
