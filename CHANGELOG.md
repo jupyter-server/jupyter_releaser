@@ -2,6 +2,24 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.5.0
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...fb156bc1761e929e1571a4a85487eb06dce0e982))
+
+### Bugs fixed
+
+- Add test for repository.url [#539](https://github.com/jupyter-server/jupyter_releaser/pull/539) ([@fcollonval](https://github.com/fcollonval))
+- Remove unneeded token from workflow inputs [#538](https://github.com/jupyter-server/jupyter_releaser/pull/538) ([@fcollonval](https://github.com/fcollonval))
+- Fix required for target [#537](https://github.com/jupyter-server/jupyter_releaser/pull/537) ([@fcollonval](https://github.com/fcollonval))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2023-11-27&to=2023-12-04&type=c))
+
+[@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2023-11-27..2023-12-04&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.4.0
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...d77acfd4f8437095a766776e565d200db9f2a135))
@@ -22,8 +40,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2023-10-17&to=2023-11-27&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2023-10-17..2023-11-27&type=Issues) | [@Carreau](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3ACarreau+updated%3A2023-10-17..2023-11-27&type=Issues) | [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2023-10-17..2023-11-27&type=Issues) | [@krassowski](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2023-10-17..2023-11-27&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2023-10-17..2023-11-27&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.3.0
 
