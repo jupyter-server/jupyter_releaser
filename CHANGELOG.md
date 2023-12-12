@@ -2,6 +2,26 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.5.1
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...f575e618a0d0fbfbf1da9b407ee201886a1982fa))
+
+### Bugs fixed
+
+- Fix string repository [#541](https://github.com/jupyter-server/jupyter_releaser/pull/541) ([@fcollonval](https://github.com/fcollonval))
+
+### Maintenance and upkeep improvements
+
+- chore: update pre-commit hooks [#540](https://github.com/jupyter-server/jupyter_releaser/pull/540) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2023-12-04&to=2023-12-12&type=c))
+
+[@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2023-12-04..2023-12-12&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2023-12-04..2023-12-12&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.5.0
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...fb156bc1761e929e1571a4a85487eb06dce0e982))
@@ -17,8 +37,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2023-11-27&to=2023-12-04&type=c))
 
 [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2023-11-27..2023-12-04&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.4.0
 
