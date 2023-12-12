@@ -72,7 +72,11 @@ def extract_dist(dist_dir, target, repo=""):
         name = data["name"]
 
         if repo and os.name != "nt":
-            url = data.get("repository", {}).get("url", "")
+            data_repository = data.get("repository", {})
+            if isinstance(data_repository, str):
+                url = data_repository
+            else:
+                url = data_repository.get("url", "")
             if url.endswith(".git"):
                 url = url[:-4]
             if not url.endswith(repo):
