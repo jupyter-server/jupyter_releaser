@@ -44,7 +44,7 @@ repos:
     hooks:
       - id: mypy
         files: "^jupyter_releaser"
-        exclude: "jupyter_releaser/tests"
+        exclude: "tests"
         stages: [manual]
         args: ["--install-types", "--non-interactive"]
         additional_dependencies:

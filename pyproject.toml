@@ -116,7 +116,7 @@ addopts = [
   "-p", "no:pastebin", "-p", "no:nose"
 ]
 testpaths = [
-    "jupyter_releaser/tests/"
+    "tests/"
 ]
 filterwarnings= [
   # Fail on warnings
@@ -150,7 +150,7 @@ strict = true
 disable_error_code  = [ "no-untyped-call", "no-untyped-def"]
 enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
 warn_unreachable = true
-exclude = ["jupyter_releaser/tests"]
+exclude = ["tests"]
 
 [tool.ruff]
 target-version = "py38"
@@ -213,7 +213,7 @@ ignore-property-decorators=true
 ignore-nested-functions=true
 ignore-nested-classes=true
 fail-under=100
-exclude = ["jupyter_releaser/tests"]
+exclude = ["tests"]
 
 [tool.repo-review]
 ignore = ["GH102"]

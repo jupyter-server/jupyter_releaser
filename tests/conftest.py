@@ -13,8 +13,8 @@ from click.testing import CliRunner
 from ghapi.core import GhApi
 
 from jupyter_releaser import cli, util
-from jupyter_releaser.tests import util as testutil
 from jupyter_releaser.util import ensure_mock_github, run
+from tests import util as testutil
 
 
 @pytest.fixture(autouse=True)

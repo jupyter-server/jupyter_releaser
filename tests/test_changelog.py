@@ -15,8 +15,8 @@ from jupyter_releaser.changelog import (
     remove_placeholder_entries,
     update_changelog,
 )
-from jupyter_releaser.tests import util as testutil
 from jupyter_releaser.util import release_for_url
+from tests import util as testutil
 
 
 @pytest.fixture()
