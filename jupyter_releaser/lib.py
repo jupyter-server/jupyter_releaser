@@ -230,9 +230,9 @@ def tag_release(dist_dir, release_message, tag_format, tag_message, no_git_tag_w
 
 
 def populate_release(
-    ref,
+    ref,  # noqa: ARG001
     branch,
-    repo,
+    repo,  # noqa: ARG001
     version_cmd,
     auth,
     changelog_path,
@@ -355,7 +355,7 @@ def extract_release(auth, dist_dir, dry_run, release_url):
     os.chdir(orig_dir)
 
 
-def publish_assets(  # noqa
+def publish_assets(
     auth,
     dist_dir,
     npm_token,
@@ -396,7 +396,7 @@ def publish_assets(  # noqa
 
     res = python_package.split(":")
     python_package_path = res[0]
-    python_package_name = res[1].replace("-", "_") if len(res) == 2 else ""  # noqa
+    python_package_name = res[1].replace("-", "_") if len(res) == 2 else ""
 
     if release_url and len(glob(f"{dist_dir}/*.whl")):
         twine_token = python.get_pypi_token(release_url, python_package_path)
@@ -474,7 +474,7 @@ def publish_release(auth, dry_run, release_url, silent):
     util.actions_output("release_url", release.html_url)
 
 
-def prep_git(ref, branch, repo, auth, username, url):  # noqa
+def prep_git(ref, branch, repo, auth, username, url):
     """Set up git"""
     repo = repo or util.get_repo()
 
@@ -570,7 +570,7 @@ def extract_changelog(dry_run, auth, changelog_path, release_url, silent=False):
     changelog.update_changelog(changelog_path, changelog_text, silent=silent)
 
 
-def forwardport_changelog(auth, ref, branch, repo, username, changelog_path, dry_run, release_url):
+def forwardport_changelog(auth, ref, branch, repo, username, changelog_path, dry_run, release_url):  # noqa: ARG001
     """Forwardport Changelog Entries to the Default Branch"""
     # Set up the git repo with the branch
     match = util.parse_release_url(release_url)

@@ -52,7 +52,7 @@ async def _read_stream(stream: StreamReader, callback: Callable[..., Any]) -> No
             break
 
 
-async def _stream_subprocess(args: str, **kwargs: Any) -> CompletedProcess:  # noqa
+async def _stream_subprocess(args: str, **kwargs: Any) -> CompletedProcess:
     platform_settings: Dict[str, Any] = {}
     if platform.system() == "Windows":
         platform_settings["env"] = os.environ
@@ -61,10 +61,10 @@ async def _stream_subprocess(args: str, **kwargs: Any) -> CompletedProcess:  # n
     tee = kwargs.get("tee", True)
     stdout = kwargs.get("stdout", sys.stdout)
     if stdout == subprocess.DEVNULL or not tee:
-        stdout = open(os.devnull, "w")  # noqa
+        stdout = open(os.devnull, "w")  # noqa: SIM115
     stderr = kwargs.get("stderr", sys.stderr)
     if stderr == subprocess.DEVNULL or not tee:
-        stderr = open(os.devnull, "w")  # noqa
+        stderr = open(os.devnull, "w")  # noqa: SIM115
 
     # We need to tell subprocess which shell to use when running shell-like
     # commands.
@@ -91,7 +91,7 @@ async def _stream_subprocess(args: str, **kwargs: Any) -> CompletedProcess:  # n
     out: List[str] = []
     err: List[str] = []
 
-    def tee_func(line: bytes, sink: List[str], pipe: Optional[Any]) -> None:
+    def tee_func(line: bytes, sink: List[str], pipe: Optional[Any]) -> None:  # noqa: ARG001
         line_str = line.decode("utf-8").rstrip()
         sink.append(line_str)
         if not kwargs.get("quiet", False):
@@ -137,7 +137,7 @@ def run(args: Union[str, List[str]], **kwargs: Any) -> CompletedProcess:
     quiet: False - Avoid printing output
     show_cwd: False - Prints the current working directory.
     """
-    if isinstance(args, str):  # noqa
+    if isinstance(args, str):  # noqa: SIM108
         cmd = args
     else:
         # run was called with a list instead of a single item but asyncio

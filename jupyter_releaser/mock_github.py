@@ -60,7 +60,7 @@ def write_to_file(name, data):
 class Asset(BaseModel):
     """An asset model."""
 
-    id: int  # noqa
+    id: int
     name: str
     content_type: str
     size: int
@@ -86,7 +86,7 @@ class Release(BaseModel):
     published_at: str = ""
     draft: bool
     body: str = ""
-    id: int  # noqa
+    id: int
     node_id: str = ""
     author: str = ""
     html_url: str
@@ -124,7 +124,7 @@ class Tag(BaseModel):
     """A tag model."""
 
     ref: str
-    object: TagObject  # noqa
+    object: TagObject
 
 
 releases: Dict[str, "Release"] = load_from_file("releases", Release)

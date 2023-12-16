@@ -8,16 +8,16 @@ import time
 import uuid
 from pathlib import Path
 
+import pytest
 from click.testing import CliRunner
 from ghapi.core import GhApi
-from pytest import fixture
 
 from jupyter_releaser import cli, util
 from jupyter_releaser.tests import util as testutil
 from jupyter_releaser.util import ensure_mock_github, run
 
 
-@fixture(autouse=True)
+@pytest.fixture(autouse=True)
 def github_port(worker_id):
     # The worker id will be of the form "gw123" unless xdist is disabled,
     # in which case it will be "master".
@@ -26,7 +26,7 @@ def github_port(worker_id):
     os.environ["MOCK_GITHUB_PORT"] = str(8000 + int(worker_id[2:]))
 
 
-@fixture(autouse=True)
+@pytest.fixture(autouse=True)
 def mock_env(mocker):
     """Clear unwanted environment variables"""
     # Anything that starts with RH_ or GITHUB_ or PIP
@@ -38,10 +38,10 @@ def mock_env(mocker):
                 del env[key]
 
     mocker.patch.dict(os.environ, env, clear=True)
-    yield
+    return
 
 
-@fixture
+@pytest.fixture()
 def git_repo(tmp_path):
     prev_dir = os.getcwd()
     os.chdir(tmp_path)
@@ -71,27 +71,27 @@ def git_repo(tmp_path):
     os.chdir(prev_dir)
 
 
-@fixture
+@pytest.fixture()
 def py_package(git_repo):
     return testutil.create_python_package(git_repo)
 
 
-@fixture
+@pytest.fixture()
 def py_multipackage(git_repo):
     return testutil.create_python_package(git_repo, multi=True)
 
 
-@fixture
+@pytest.fixture()
 def py_package_different_names(git_repo):
     return testutil.create_python_package(git_repo, not_matching_name=True)
 
 
-@fixture
+@pytest.fixture()
 def npm_package(git_repo):
     return testutil.create_npm_package(git_repo)
 
 
-@fixture
+@pytest.fixture()
 def workspace_package(npm_package):
     pkg_file = npm_package / "package.json"
     data = json.loads(pkg_file.read_text(encoding="utf-8"))
@@ -132,7 +132,7 @@ def workspace_package(npm_package):
     return npm_package
 
 
-@fixture
+@pytest.fixture()
 def py_dist(py_package, runner, mocker, build_mock, git_prep):
     changelog_entry = testutil.mock_changelog_entry(py_package, runner, mocker)
 
@@ -145,7 +145,7 @@ def py_dist(py_package, runner, mocker, build_mock, git_prep):
     return py_package
 
 
-@fixture
+@pytest.fixture()
 def npm_dist(workspace_package, runner, mocker, git_prep):
     changelog_entry = testutil.mock_changelog_entry(workspace_package, runner, mocker)
 
@@ -158,7 +158,7 @@ def npm_dist(workspace_package, runner, mocker, git_prep):
     return workspace_package
 
 
-@fixture()
+@pytest.fixture()
 def runner():
     cli_runner = CliRunner()
 
@@ -176,12 +176,12 @@ def runner():
     return run
 
 
-@fixture()
+@pytest.fixture()
 def git_prep(runner, git_repo):
     runner(["prep-git", "--git-url", git_repo])
 
 
-@fixture
+@pytest.fixture()
 def build_mock(mocker):
     orig_run = util.run
 
@@ -200,7 +200,7 @@ def build_mock(mocker):
     mock_run = mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
 
 
-@fixture
+@pytest.fixture()
 def mock_github():
     proc = ensure_mock_github()
     yield proc
@@ -210,7 +210,7 @@ def mock_github():
         proc.wait()
 
 
-@fixture
+@pytest.fixture()
 def release_metadata():
     return dict(
         [(k, v) for k, v in testutil.BASE_RELEASE_METADATA.items() if k != "version"]
@@ -218,7 +218,7 @@ def release_metadata():
     )
 
 
-@fixture
+@pytest.fixture()
 def draft_release(mock_github, release_metadata):
     gh = GhApi(owner="foo", repo="bar")
     data = release_metadata

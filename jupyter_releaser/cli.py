@@ -15,9 +15,9 @@ from jupyter_releaser import changelog, lib, npm, python, util
 class ReleaseHelperGroup(click.Group):
     """Click group tailored to jupyter-releaser"""
 
-    _needs_checkout_dir: t.Dict[str, bool] = {}  # noqa
+    _needs_checkout_dir: t.Dict[str, bool] = {}  # noqa: RUF012
 
-    def invoke(self, ctx):  # noqa
+    def invoke(self, ctx):
         """Handle jupyter-releaser config while invoking a command"""
         # Get the command name and make sure it is valid
         cmd_name = ctx.protected_args[0]
@@ -96,12 +96,11 @@ class ReleaseHelperGroup(click.Group):
                         ctx.args.append(arg)
                         ctx.args.append(val)
                     continue
-                else:
-                    val = ctx.args[ctx.args.index(arg) + 1]
-                    if "token" in name.lower():
-                        val = "***"
-                    util.log(f"Using cli arg for {name}: '{val}'")
-                    continue
+                val = ctx.args[ctx.args.index(arg) + 1]
+                if "token" in name.lower():
+                    val = "***"
+                util.log(f"Using cli arg for {name}: '{val}'")
+                continue
 
             util.log(f"Using default value for {name}: '{param.default}'")
 
@@ -141,16 +140,15 @@ class ReleaseHelperGroup(click.Group):
 
         os.chdir(orig_dir)
 
-    def list_commands(self, ctx):
+    def list_commands(self, ctx):  # noqa: ARG002
         """List commands in insertion order"""
         return self.commands.keys()
 
 
 @click.group(cls=ReleaseHelperGroup)
 @click.option("--force", default=False, help="Force a command to run even when skipped by config")
-def main(force):
+def main(force):  # noqa: ARG001
     """Jupyter Releaser scripts"""
-    pass
 
 
 # Extracted common options
@@ -357,7 +355,6 @@ def use_checkout_dir():
 def list_envvars():
     """List the environment variables"""
     # This is implemented in ReleaseHelperGroup.invoke
-    pass
 
 
 @main.command()
@@ -709,7 +706,7 @@ def publish_release(auth, dry_run, release_url, silent):
     "--expected-sha", help="The expected sha of the branch HEAD", envvar="RH_EXPECTED_SHA"
 )
 @use_checkout_dir()
-def ensure_sha(ref, branch, repo, dry_run, expected_sha):
+def ensure_sha(ref, branch, repo, dry_run, expected_sha):  # noqa: ARG001
     """Ensure that a sha has not changed."""
     util.ensure_sha(dry_run, expected_sha, branch)
 
@@ -735,7 +732,7 @@ def forwardport_changelog(auth, ref, branch, repo, username, changelog_path, dry
 @add_options(changelog_path_options)
 @add_options(dry_run_options)
 @use_checkout_dir()
-def publish_changelog(auth, ref, branch, repo, changelog_path, dry_run):
+def publish_changelog(auth, ref, branch, repo, changelog_path, dry_run):  # noqa: ARG001
     """Remove changelog placeholder entries."""
     lib.publish_changelog(branch, repo, auth, changelog_path, dry_run)
 

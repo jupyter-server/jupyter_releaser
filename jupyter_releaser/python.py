@@ -21,7 +21,7 @@ from jupyter_releaser import util
 PYPROJECT = util.PYPROJECT
 SETUP_PY = util.SETUP_PY
 
-PYPI_GH_API_TOKEN_URL = "https://pypi.org/_/oidc/github/mint-token"  # noqa
+PYPI_GH_API_TOKEN_URL = "https://pypi.org/_/oidc/github/mint-token"  # noqa: S105
 
 
 def build_dist(dist_dir, clean=True):
@@ -70,7 +70,7 @@ def check_dist(
     # run the test command in the venv
     with TemporaryDirectory() as td:
         env_path = util.normalize_path(osp.abspath(td))
-        if os.name == "nt":  # noqa  # pragma: no cover
+        if os.name == "nt":  # pragma: no cover  # noqa: SIM108
             bin_path = f"{env_path}/Scripts/"
         else:
             bin_path = f"{env_path}/bin"
@@ -185,7 +185,7 @@ def start_local_pypi():
     """Start a local PyPI server"""
     temp_dir = TemporaryDirectory()
     cmd = f"pypi-server run -p 8081  -P . -a . -o  -v {temp_dir.name}"
-    proc = Popen(shlex.split(cmd), stdout=PIPE)  # noqa
+    proc = Popen(shlex.split(cmd), stdout=PIPE)  # noqa: S603
     # Wait for the server to start
     while True:
         assert proc.stdout is not None
