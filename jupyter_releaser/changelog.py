@@ -58,7 +58,7 @@ def get_version_entry(
     since_last_stable=None,
     until=None,
     auth=None,
-    resolve_backports=False,
+    resolve_backports=False,  # noqa: ARG001
     dry_run=False,
 ):
     """Get a changelog for the changes since the last tag on the given branch.
@@ -143,13 +143,11 @@ def get_version_entry(
     if "# Documentation improvements" in entry and "# Documentation improvements\n\n-" not in entry:
         entry = re.sub(r"#+ Documentation improvements\n\n", "", entry)
 
-    output = f"""
+    return f"""
 ## {version}
 
 {entry}
 """.strip()
-
-    return output
 
 
 def build_entry(
@@ -295,13 +293,13 @@ def insert_entry(
     return format(changelog)
 
 
-def format(changelog: str) -> str:  # noqa A001
+def format(changelog: str) -> str:
     """Clean up changelog formatting"""
     changelog = re.sub(r"\n\n+", r"\n\n", changelog)
     return re.sub(r"\n\n+$", r"\n", changelog)
 
 
-def check_entry(  # noqa
+def check_entry(
     ref,
     branch,
     repo,

@@ -6,7 +6,6 @@ import subprocess
 
 import pytest
 from ghapi.core import GhApi
-from pytest import fixture
 
 from jupyter_releaser.changelog import (
     END_MARKER,
@@ -16,16 +15,16 @@ from jupyter_releaser.changelog import (
     remove_placeholder_entries,
     update_changelog,
 )
-from jupyter_releaser.tests import util as testutil
 from jupyter_releaser.util import release_for_url
+from tests import util as testutil
 
 
-@fixture
+@pytest.fixture()
 def module_template():
     return testutil.PY_MODULE_TEMPLATE
 
 
-@fixture
+@pytest.fixture()
 def mock_py_package(tmp_path, module_template):
     pyproject = tmp_path / "pyproject.toml"
     pyproject.write_text(testutil.pyproject_template(), encoding="utf-8")
@@ -68,7 +67,7 @@ def test_update_changelog_with_old_silent_entry(tmp_path, mock_py_package):
     # Update changelog for current version
     update_changelog(str(changelog), testutil.CHANGELOG_ENTRY, True)
     # Bump version
-    subprocess.check_call(["pipx", "run", "hatch", "version", "patch"], cwd=tmp_path)  # noqa S603
+    subprocess.check_call(["pipx", "run", "hatch", "version", "patch"], cwd=tmp_path)  # noqa: S603, S607
     # Update changelog for the new version
     update_changelog(str(changelog), testutil.CHANGELOG_ENTRY)
 

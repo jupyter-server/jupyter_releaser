@@ -20,7 +20,7 @@ HERE = osp.abspath(osp.dirname(__file__))
 # -- Project information -----------------------------------------------------
 
 project = "Jupyter Releaser"
-copyright = "2021, Project Jupyter"  # noqa
+copyright = "2021, Project Jupyter"
 author = "Project Jupyter"
 
 # The full version, including alpha/beta/rc tags.
@@ -42,7 +42,7 @@ extensions = [
 ]
 
 try:
-    import enchant  # type:ignore  # noqa
+    import enchant  # noqa: F401
 
     extensions += ["sphinxcontrib.spelling"]
 except ImportError:

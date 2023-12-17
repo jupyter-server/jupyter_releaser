@@ -13,7 +13,8 @@ from unittest.mock import call
 import pytest
 
 from jupyter_releaser import changelog, util
-from jupyter_releaser.tests.util import (
+from jupyter_releaser.util import GIT_FETCH_CMD, normalize_path, run
+from tests.util import (
     CHANGELOG_ENTRY,
     PR_ENTRY,
     VERSION_SPEC,
@@ -21,7 +22,6 @@ from jupyter_releaser.tests.util import (
     get_log,
     mock_changelog_entry,
 )
-from jupyter_releaser.util import GIT_FETCH_CMD, normalize_path, run
 
 
 def test_prep_git_simple(py_package, runner):

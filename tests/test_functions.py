@@ -10,8 +10,8 @@ import toml
 from ghapi.core import GhApi
 
 from jupyter_releaser import changelog, npm, util
-from jupyter_releaser.tests import util as testutil
 from jupyter_releaser.util import run
+from tests import util as testutil
 
 
 def test_get_branch(git_repo):

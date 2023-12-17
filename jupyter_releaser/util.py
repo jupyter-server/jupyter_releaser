@@ -57,8 +57,8 @@ SCHEMA = json.loads(SCHEMA)
 
 GIT_FETCH_CMD = "git fetch origin --filter=blob:none --quiet"
 
-GH_ID_TOKEN_URL_VAR = "ACTIONS_ID_TOKEN_REQUEST_URL"  # noqa
-GH_ID_TOKEN_TOKEN_VAR = "ACTIONS_ID_TOKEN_REQUEST_TOKEN"  # noqa
+GH_ID_TOKEN_URL_VAR = "ACTIONS_ID_TOKEN_REQUEST_URL"  # noqa: S105
+GH_ID_TOKEN_TOKEN_VAR = "ACTIONS_ID_TOKEN_REQUEST_TOKEN"  # noqa: S105
 
 
 def run(cmd, **kwargs):
@@ -113,7 +113,7 @@ def _run_win(cmd, **kwargs):
     check = kwargs.pop("check", True)
 
     try:
-        output = check_output(parts, **kwargs).decode("utf-8").strip()  # noqa
+        output = check_output(parts, **kwargs).decode("utf-8").strip()  # noqa: S603
         log(output)
         return output
     except CalledProcessError as e:
@@ -143,6 +143,7 @@ def get_default_branch():
     for line in info.splitlines():
         if line.strip().startswith("HEAD branch:"):
             return line.strip().split()[-1]
+    return None
 
 
 def get_repo():
@@ -186,8 +187,7 @@ def get_version():
             run(f"pipx run build --wheel --outdir {tempdir}")
             wheel_path = glob(f"{tempdir}/*.whl")[0]
             wheel = Wheel(wheel_path)
-            version = wheel.version
-            return version
+            return wheel.version
 
     if PACKAGE_JSON.exists():
         return json.loads(PACKAGE_JSON.read_text(encoding="utf-8")).get("version", "")
@@ -229,7 +229,7 @@ def create_release_commit(version, release_message=None, dist_dir="dist"):
         cmd += ' -m "SHA256 hashes:"'
 
     for path in sorted(files):
-        path = normalize_path(path)  # noqa
+        path = normalize_path(path)  # noqa: PLW2901
         sha256 = compute_sha256(path)
         shas[path] = sha256
         name = osp.basename(path)
@@ -246,7 +246,7 @@ def _get_hatch_version_cmd():
     return "pipx run hatch version"
 
 
-def bump_version(version_spec, *, changelog_path="", version_cmd=""):  # noqa
+def bump_version(version_spec, *, changelog_path="", version_cmd=""):
     """Bump the version"""
     # Look for config files to determine version command if not given
     if not version_cmd:
@@ -320,7 +320,7 @@ def bump_version(version_spec, *, changelog_path="", version_cmd=""):  # noqa
                 assert v.dev is not None
                 version_spec = f"{v.major}.{v.minor}.{v.micro}.dev{v.dev + 1}"
 
-        else:  # noqa: PLR5501
+        else:
             # Handle dev version spec.
             if version_spec == "dev":
                 if v.pre:
@@ -385,7 +385,7 @@ def latest_draft_release(gh, branch=None):
         if branch and release.target_commitish != branch:
             continue
         created = release.created_at
-        d_created = datetime.strptime(created, r"%Y-%m-%dT%H:%M:%SZ")  # noqa
+        d_created = datetime.strptime(created, r"%Y-%m-%dT%H:%M:%SZ")
         if newest_time is None or d_created > newest_time:  # type:ignore[unreachable]
             newest_time = d_created
             newest_release = release
@@ -426,8 +426,7 @@ def get_latest_tag(source, since_last_stable=False):
 def get_first_commit(source):
     """Get the default 'since' value for a branch"""
     source = source or get_branch()
-    commit = run("git rev-list --max-parents=0 HEAD", quiet=True)
-    return commit
+    return run("git rev-list --max-parents=0 HEAD", quiet=True)
 
 
 def retry(cmd, **kwargs):
@@ -440,7 +439,7 @@ def retry(cmd, **kwargs):
             return
         except Exception as e:
             attempt += 1
-            if attempt == 3:  # noqa
+            if attempt == 3:
                 raise e
 
 
@@ -517,7 +516,7 @@ def fetch_release_asset_data(asset, auth):
     return json.loads(sink.read().decode("utf-8"))
 
 
-def upload_assets(gh, assets, release, auth):
+def upload_assets(gh, assets, release, auth):  # noqa: ARG001
     """Upload assets to a release."""
     log(f"Uploading assets: {assets}")
     asset_shas = {}
@@ -560,7 +559,7 @@ def extract_metadata_from_release_url(gh, release_url, auth):
     return data
 
 
-def prepare_environment(fetch_draft_release=True):  # noqa
+def prepare_environment(fetch_draft_release=True):
     """Prepare the environment variables, for use when running one of the
     action scripts."""
     # Set up env variables
@@ -683,14 +682,14 @@ _local_remote = None
 
 def get_remote_name(dry_run):
     """Get the appropriate remote git name."""
-    global _local_remote  # noqa
+    global _local_remote  # noqa: PLW0603
     if not dry_run:
         return "origin"
 
     if _local_remote:
         try:  # type:ignore[unreachable]
             run(f"git remote add test {_local_remote}")
-        except Exception:  # noqa
+        except Exception:  # noqa: S110
             pass
         return "test"
 
@@ -717,20 +716,20 @@ def ensure_mock_github():
     # First see if it is already running.
     try:
         requests.get(host, timeout=60)
-        return
+        return None
     except requests.ConnectionError:
         pass
 
     # Next make sure we have the required libraries.
     python = sys.executable.replace(os.sep, "/")
     try:
-        import fastapi  # noqa
-        import univcorn  # type:ignore[import-not-found]  # noqa
+        import fastapi  #  noqa: F401
+        import univcorn  # type:ignore[import-not-found]  # noqa: F401
     except ImportError:
         run(f"'{python}' -m pip install fastapi uvicorn")
 
     proc = subprocess.Popen(
-        [python, "-m", "uvicorn", "jupyter_releaser.mock_github:app", "--port", str(port)]  # noqa
+        [python, "-m", "uvicorn", "jupyter_releaser.mock_github:app", "--port", str(port)]  # noqa: S603
     )
 
     try:

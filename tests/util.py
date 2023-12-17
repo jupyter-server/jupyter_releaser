@@ -217,11 +217,11 @@ def create_python_package(git_repo, multi=False, not_matching_name=False):
         foopy = git_repo / f"{module_name}.py"
         foopy.write_text(PY_MODULE_TEMPLATE, encoding="utf-8")
 
-        license = git_repo / "LICENSE"  # noqa
+        license = git_repo / "LICENSE"
         license.write_text(LICENSE_TEMPLATE, encoding="utf-8")
 
         here = Path(__file__).parent
-        text = here.parent.parent.joinpath(".pre-commit-config.yaml").read_text(encoding="utf-8")
+        text = here.parent.joinpath(".pre-commit-config.yaml").read_text(encoding="utf-8")
 
         # Remove sp-repo-review and don't check yaml files.
         yaml = YAML(typ="safe")
@@ -277,8 +277,7 @@ def create_python_package(git_repo, multi=False, not_matching_name=False):
 
     if multi:
         return packages
-    else:
-        return git_repo
+    return git_repo
 
 
 def create_draft_release(ref="bar", files=None):
