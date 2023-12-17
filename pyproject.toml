@@ -123,6 +123,7 @@ filterwarnings= [
   "error",
   "ignore:Using deprecated setup.py invocation:UserWarning",
   "module:Neither GITHUB_TOKEN nor GITHUB_JWT_TOKEN found:UserWarning",
+  "module:datetime.datetime.utc:DeprecationWarning",
 ]
 
 [tool.coverage.report]
