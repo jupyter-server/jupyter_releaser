@@ -53,7 +53,7 @@ jobs:
           python -m jupyter_releaser.actions.generate_changelog
           cat CHANGELOG_ENTRY.md
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: changelog
           path: CHANGELOG_ENTRY.md
