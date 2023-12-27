@@ -16,25 +16,7 @@ See checklist below for details:
 
 ## Checklist for Adoption
 
-- [ ] Add a GitHub [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token), preferably from a "machine user" GitHub
-  account that has admin access to the repository. The token itself will
-  need "public_repo", and "repo:status" permissions. Save the token as
-  `ADMIN_GITHUB_TOKEN`
-  in the [repository secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository). We need this
-  access token to allow for branch protection rules, which block the pushing
-  of commits when using the `GITHUB_TOKEN`, even when run from an admin user
-  account.
-
 - [ ] Set up PyPI:
-
-<details><summary>Using PyPI token (legacy way)</summary>
-
-- Add access token for the [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github) stored as `PYPI_TOKEN`.
-  _Note_ For security reasons, it is recommended that you scope the access
-  to a single repository. Additionally, this token should belong to a
-  machine account and not a user account.
-
-</details>
 
 <details><summary>Using PyPI trusted publisher (modern way)</summary>
 
@@ -42,6 +24,15 @@ See checklist below for details:
   - if you use the example workflows, the _workflow name_ is `publish-release.yml` (or `full-release.yml`) and the
     _environment_ should be left blank.
 - Ensure the publish release job as `permissions`: `id-token : write` (see the [documentation](https://docs.pypi.org/trusted-publishers/using-a-publisher/))
+
+</details>
+
+<details><summary>Using PyPI token (legacy way)</summary>
+
+- Add access token for the [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github) stored as `PYPI_TOKEN`.
+  _Note_ For security reasons, it is recommended that you scope the access
+  to a single repository. Additionally, this token should belong to a
+  machine account and not a user account.
 
 </details>
 

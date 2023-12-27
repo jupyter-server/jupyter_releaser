@@ -33,6 +33,7 @@ dependencies = [
     "pkginfo",
     "pypiserver",
     "pipx",
+    "ruamel.yaml",
     "requests",
     "requests_cache",
     "toml~=0.10",
@@ -59,8 +60,7 @@ test = [
   "pytest>=7.0",
   "pytest-mock",
   "pytest-xdist[psutil]",
-  "uvicorn",
-  "ruamel.yaml"
+  "uvicorn"
 ]
 
 [project.scripts]

@@ -29,10 +29,14 @@ on:
 jobs:
   full_release:
     runs-on: ubuntu-latest
+    environment: release
     permissions:
       # This is useful if you want to use PyPI trusted publisher
       # and NPM provenance
       id-token: write
+      pull-requests: write
+      contents: write
+      issues: write
     steps:
       - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
 
@@ -40,7 +44,7 @@ jobs:
         id: prep-release
         uses: jupyter-server/jupyter_releaser/.github/actions/prep-release@v2
         with:
-          token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           version_spec: ${{ github.event.inputs.version_spec }}
           post_version_spec: ${{ github.event.inputs.post_version_spec }}
           branch: ${{ github.event.inputs.branch }}
@@ -52,7 +56,7 @@ jobs:
         id: populate-release
         uses: jupyter-server/jupyter_releaser/.github/actions/populate-release@v2
         with:
-          token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.event.inputs.branch }}
           release_url: ${{ steps.prep-release.outputs.release_url }}
           steps_to_skip: ${{ github.event.inputs.steps_to_skip }}
@@ -67,7 +71,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         uses: jupyter-server/jupyter_releaser/.github/actions/finalize-release@v2
         with:
-          token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           release_url: ${{ steps.populate-release.outputs.release_url }}
 
       - name: "** Next Step **"

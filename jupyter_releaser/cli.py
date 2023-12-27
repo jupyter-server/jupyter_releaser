@@ -217,6 +217,16 @@ python_packages_options: t.Any = [
     )
 ]
 
+pr_ci_trigger_options: t.Any = [
+    click.option(
+        "--pr-ci-trigger",
+        envvar="RH_PR_CI_TRIGGER",
+        default="",
+        multiple=True,
+        help="The comment used to restart CI on a trigger that is opened using a GitHub workflow token.",
+    )
+]
+
 check_imports_options: t.Any = [
     click.option(
         "--check-imports",
@@ -718,11 +728,22 @@ def ensure_sha(ref, branch, repo, dry_run, expected_sha):  # noqa: ARG001
 @add_options(changelog_path_options)
 @add_options(dry_run_options)
 @add_options(release_url_options)
+@add_options(pr_ci_trigger_options)
 @use_checkout_dir()
-def forwardport_changelog(auth, ref, branch, repo, username, changelog_path, dry_run, release_url):
+def forwardport_changelog(
+    auth,
+    ref,  # noqa: ARG001
+    branch,
+    repo,
+    username,  # noqa: ARG001
+    changelog_path,
+    dry_run,
+    release_url,
+    pr_ci_trigger,
+):
     """Forwardport Changelog Entries to the Default Branch"""
     lib.forwardport_changelog(
-        auth, ref, branch, repo, username, changelog_path, dry_run, release_url
+        auth, branch, repo, changelog_path, dry_run, release_url, pr_ci_trigger
     )
 
 
@@ -730,11 +751,12 @@ def forwardport_changelog(auth, ref, branch, repo, username, changelog_path, dry
 @add_options(auth_options)
 @add_options(branch_options)
 @add_options(changelog_path_options)
+@add_options(pr_ci_trigger_options)
 @add_options(dry_run_options)
 @use_checkout_dir()
-def publish_changelog(auth, ref, branch, repo, changelog_path, dry_run):  # noqa: ARG001
+def publish_changelog(auth, ref, branch, repo, changelog_path, pr_ci_trigger, dry_run):  # noqa: ARG001
     """Remove changelog placeholder entries."""
-    lib.publish_changelog(branch, repo, auth, changelog_path, dry_run)
+    lib.publish_changelog(branch, repo, auth, changelog_path, pr_ci_trigger, dry_run)
 
 
 if __name__ == "__main__":  # pragma: no cover

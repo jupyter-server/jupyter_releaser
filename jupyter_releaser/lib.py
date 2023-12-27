@@ -18,6 +18,7 @@ from typing import Type, Union
 import mdformat
 from packaging.version import parse as parse_version
 from pkginfo import SDist, Wheel
+from ruamel.yaml import YAML
 
 from jupyter_releaser import changelog, npm, python, util
 
@@ -139,7 +140,9 @@ def draft_changelog(
     util.actions_output("release_url", release.html_url)
 
 
-def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=False):
+def make_changelog_pr(
+    auth, branch, repo, title, commit_message, body, pr_ci_trigger, dry_run=False
+):
     """Make a changelog PR."""
     repo = repo or util.get_repo()
     branch = branch or util.get_branch()
@@ -192,10 +195,22 @@ def make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=F
     except Exception as e:
         print(e)
 
+    # Find the appropriate ci trigger, if given.
+    if not pr_ci_trigger:
+        probot_config = Path("./.github/jupyterlab-probot.yml")
+        if probot_config.exists():
+            text = probot_config.read_text("utf-8")
+            yaml = YAML(typ="safe")
+            data = yaml.load(text)
+            name = data.get("botUser", "jupyterlab-bot")
+            pr_ci_trigger = f"@{name}, please restart ci"
+    if pr_ci_trigger:
+        gh.issues.create_comment(number, pr_ci_trigger)
+
     util.actions_output("pr_url", pull.html_url)
 
 
-def publish_changelog(branch, repo, auth, changelog_path, dry_run):
+def publish_changelog(branch, repo, auth, changelog_path, pr_ci_trigger, dry_run):
     """Remove changelog placeholder entries."""
     count = changelog.remove_placeholder_entries(repo, auth, changelog_path, dry_run)
 
@@ -208,7 +223,7 @@ def publish_changelog(branch, repo, auth, changelog_path, dry_run):
     commit_message = f'git commit -a -m "{title}"'
     body = title
 
-    make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run)
+    make_changelog_pr(auth, branch, repo, title, commit_message, body, pr_ci_trigger, dry_run)
 
 
 def tag_release(dist_dir, release_message, tag_format, tag_message, no_git_tag_workspace):
@@ -570,7 +585,15 @@ def extract_changelog(dry_run, auth, changelog_path, release_url, silent=False):
     changelog.update_changelog(changelog_path, changelog_text, silent=silent)
 
 
-def forwardport_changelog(auth, ref, branch, repo, username, changelog_path, dry_run, release_url):  # noqa: ARG001
+def forwardport_changelog(
+    auth,
+    branch,
+    repo,
+    changelog_path,
+    dry_run,
+    release_url,
+    pr_ci_trigger,
+):
     """Forwardport Changelog Entries to the Default Branch"""
     # Set up the git repo with the branch
     match = util.parse_release_url(release_url)
@@ -642,7 +665,9 @@ def forwardport_changelog(auth, ref, branch, repo, username, changelog_path, dry
     commit_message = f'git commit -a -m "{title}"'
     body = title
 
-    make_changelog_pr(auth, branch, repo, title, commit_message, body, dry_run=dry_run)
+    make_changelog_pr(
+        auth, branch, repo, title, commit_message, body, pr_ci_trigger, dry_run=dry_run
+    )
 
     # Clean up after ourselves
     util.run(f"git checkout {source_branch}")
