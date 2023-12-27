@@ -223,7 +223,7 @@ pr_ci_trigger_options: t.Any = [
         envvar="RH_PR_CI_TRIGGER",
         default="",
         multiple=True,
-        help="The comment used to restart CI on a trigger that is opened using a GitHub workflow token.",
+        help="The comment used to restart CI on a PR that is opened using a GitHub workflow token.",
     )
 ]
 
