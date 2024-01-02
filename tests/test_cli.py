@@ -166,6 +166,7 @@ npm-tag: NPM_TAG
 npm-token: NPM_TOKEN
 post-version-message: RH_POST_VERSION_MESSAGE
 post-version-spec: RH_POST_VERSION_SPEC
+pr-ci-trigger: RH_PR_CI_TRIGGER
 pydist-check-cmd: RH_PYDIST_CHECK_CMD
 pydist-extra-check-cmds: RH_EXTRA_PYDIST_CHECK_CMDS
 pydist-resource-paths: RH_PYDIST_RESOURCE_PATHS

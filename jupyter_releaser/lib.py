@@ -16,9 +16,9 @@ from subprocess import CalledProcessError
 from typing import Type, Union
 
 import mdformat
+import yaml
 from packaging.version import parse as parse_version
 from pkginfo import SDist, Wheel
-from ruamel.yaml import YAML
 
 from jupyter_releaser import changelog, npm, python, util
 
@@ -199,9 +199,8 @@ def make_changelog_pr(
     if not pr_ci_trigger:
         probot_config = Path("./.github/jupyterlab-probot.yml")
         if probot_config.exists():
-            text = probot_config.read_text("utf-8")
-            yaml = YAML(typ="safe")
-            data = yaml.load(text)
+            with probot_config.open() as fid:
+                data = yaml.safe_load(fid)
             name = data.get("botUser", "jupyterlab-bot")
             pr_ci_trigger = f"@{name}, please restart ci"
     if pr_ci_trigger:

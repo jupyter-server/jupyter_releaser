@@ -33,7 +33,7 @@ dependencies = [
     "pkginfo",
     "pypiserver",
     "pipx",
-    "ruamel.yaml",
+    "pyyaml",
     "requests",
     "requests_cache",
     "toml~=0.10",
