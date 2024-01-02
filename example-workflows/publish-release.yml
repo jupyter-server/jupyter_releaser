@@ -22,6 +22,7 @@ jobs:
       id-token: write
       pull-requests: write
       contents: write
+      issues: write
     steps:
       - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
 

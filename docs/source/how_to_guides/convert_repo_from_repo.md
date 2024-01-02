@@ -22,7 +22,7 @@ See checklist below for details:
 
 - Set up your PyPI project by [adding a trusted publisher](https://docs.pypi.org/trusted-publishers/adding-a-publisher/)
   - if you use the example workflows, the _workflow name_ is `publish-release.yml` (or `full-release.yml`) and the
-    _environment_ should be left blank.
+    _environment_ should be kept as `release` (unless you choose a different name).
 - Ensure the publish release job as `permissions`: `id-token : write` (see the [documentation](https://docs.pypi.org/trusted-publishers/using-a-publisher/))
 
 </details>
@@ -33,6 +33,8 @@ See checklist below for details:
   _Note_ For security reasons, it is recommended that you scope the access
   to a single repository. Additionally, this token should belong to a
   machine account and not a user account.
+- Additionally, you should still use a GitHub [environment](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment) to ensure write permissions
+  for the repo do not automatically grant release permissions.
 
 </details>
 
@@ -96,6 +98,10 @@ version_info = tuple(parts)
 - [ ] Update or add `RELEASE.md` that describes the onboarding and release process, e.g. [jupyter_server](https://github.com/jupyter-server/jupyter_server/blob/main/RELEASE.md).
 
 - [ ] Copy `prep-release.yml` and `publish-release.yml` from the `example-workflows` folder in this repository.
+
+- [ ] If you repo has required PR checks, you must either have a `.github/jupyterlab-probot.yml` file or add a `pr-ci-trigger` option to your `releaser`
+  configuration.  If using `jupyterlab-probot`, the config should be `@jupyterlab-probot, please restart ci`.  This config will cause releaser to
+  make the comment on the forwardport changelog PR or post-silent changelog PRs.
 
 - [ ] Optionally add configuration to the repository if non-standard options or hooks are needed.
 
