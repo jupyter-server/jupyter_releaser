@@ -249,6 +249,8 @@ def populate_release(
     repo,  # noqa: ARG001
     version_cmd,
     auth,
+    personal_access_token,
+    username,
     changelog_path,
     dist_dir,
     dry_run,
@@ -286,6 +288,13 @@ def populate_release(
     remote_name = util.get_remote_name(dry_run)
     remote_url = util.run(f"git config --get remote.{remote_name}.url")
     if not os.path.exists(remote_url):
+        if personal_access_token:
+            remote_name = "admin_origin"
+            admin_url = (
+                f"https://{username}:{personal_access_token}@github.com/{owner}/{repo_name}.git"
+            )
+            util.run(f"git remote add {remote_name} {admin_url}")
+
         util.run(f"git push {remote_name} HEAD:{branch} --follow-tags --tags")
 
     # Set the body of the release with the changelog contents.

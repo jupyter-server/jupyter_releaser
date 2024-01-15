@@ -194,6 +194,14 @@ auth_options: t.Any = [
     click.option("--auth", envvar="GITHUB_ACCESS_TOKEN", help="The GitHub auth token"),
 ]
 
+admin_auth_options: t.Any = [
+    click.option(
+        "--personal-access-token",
+        envvar="RH_PERSONAL_ACCESS_TOKEN",
+        help="The admin GitHub personal access token",
+    ),
+]
+
 username_options: t.Any = [
     click.option("--username", envvar="GITHUB_ACTOR", help="The git username")
 ]
@@ -560,6 +568,8 @@ def tag_release(dist_dir, release_message, tag_format, tag_message, no_git_tag_w
 @add_options(branch_options)
 @add_options(version_cmd_options)
 @add_options(auth_options)
+@add_options(admin_auth_options)
+@add_options(username_options)
 @add_options(changelog_path_options)
 @add_options(dist_dir_options)
 @add_options(dry_run_options)
@@ -575,6 +585,8 @@ def populate_release(
     repo,
     version_cmd,
     auth,
+    personal_access_token,
+    username,
     changelog_path,
     dist_dir,
     dry_run,
@@ -592,6 +604,8 @@ def populate_release(
         repo,
         version_cmd,
         auth,
+        personal_access_token,
+        username,
         changelog_path,
         dist_dir,
         dry_run,

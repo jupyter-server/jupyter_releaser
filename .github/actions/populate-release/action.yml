@@ -4,6 +4,8 @@ inputs:
   token:
     description: "GitHub access token"
     required: true
+  personal_access_token:
+    description: "An admin Github access token used to push the changes"
   target:
     description: "The owner/repo GitHub target"
     required: false
@@ -48,6 +50,7 @@ runs:
         export RH_STEPS_TO_SKIP=${{ inputs.steps_to_skip }}
         export RH_RELEASE_URL=${{ inputs.release_url }}
         export RH_BRANCH=${{ inputs.branch }}
+        export RH_PERSONAL_ACCESS_TOKEN=${{ inputs.personal_access_token }}
         python -m jupyter_releaser.actions.populate_release
 
     - if: ${{ failure() }}
