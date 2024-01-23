@@ -124,6 +124,7 @@ filterwarnings= [
   "ignore:Using deprecated setup.py invocation:UserWarning",
   "module:Neither GITHUB_TOKEN nor GITHUB_JWT_TOKEN found:UserWarning",
   "module:datetime.datetime.utc:DeprecationWarning",
+  "ignore:(?s).*Pyarrow will become a required dependency of pandas:DeprecationWarning",  # pandas pyarrow (pandas<3.0),
 ]
 
 [tool.coverage.report]
