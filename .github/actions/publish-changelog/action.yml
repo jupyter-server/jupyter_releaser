@@ -14,6 +14,10 @@ inputs:
     description: "If set, do not make a PR"
     default: "false"
     required: false
+  shell:
+    description: "The shell being used for the action steps"
+    required: false
+    default: bash -eux {0}
 outputs:
   pr_url:
     description: "The html URL of the draft GitHub release"
@@ -22,7 +26,7 @@ runs:
   using: "composite"
   steps:
     - name: install-releaser
-      shell: bash -eux {0}
+      shell: ${{ inputs.shell }}
       run: |
         # Install Jupyter Releaser from git unless we are testing Releaser itself
         if ! command -v jupyter-releaser &> /dev/null
@@ -31,7 +35,7 @@ runs:
         fi
 
     - id: publish-changelog
-      shell: bash -eux {0}
+      shell: ${{ inputs.shell }}
       run: |
         export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
         export GITHUB_ACTOR=${{ github.triggering_actor }}
@@ -43,7 +47,7 @@ runs:
 
         python -m jupyter_releaser.actions.publish_changelog
 
-    - shell: bash -eux {0}
+    - shell: ${{ inputs.shell }}
       run: |
         echo "## Next Step" >> $GITHUB_STEP_SUMMARY
         echo "Merge the changelog update PR: ${{ steps.publish-changelog.outputs.pr_url }}" >> $GITHUB_STEP_SUMMARY

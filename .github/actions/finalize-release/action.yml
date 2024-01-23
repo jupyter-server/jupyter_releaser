@@ -20,6 +20,10 @@ inputs:
   steps_to_skip:
     description: "Comma separated list of steps to skip"
     required: false
+  shell:
+    description: "The shell being used for the action steps"
+    required: false
+    default: bash -eux {0}
 
 outputs:
   release_url:
@@ -33,7 +37,7 @@ runs:
   using: "composite"
   steps:
     - name: install-releaser
-      shell: bash -eux {0}
+      shell: ${{ inputs.shell }}
       run: |
         # Install Jupyter Releaser from git unless we are testing Releaser itself
         if ! command -v jupyter-releaser &> /dev/null
@@ -42,7 +46,7 @@ runs:
         fi
 
     - id: finalize-release
-      shell: bash -eux {0}
+      shell: ${{ inputs.shell }}
       run: |
         export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
         export GITHUB_ACTOR=${{ github.triggering_actor }}
@@ -54,7 +58,7 @@ runs:
         python -m jupyter_releaser.actions.finalize_release
 
     - if: ${{ success() }}
-      shell: bash -eux {0}
+      shell: ${{ inputs.shell }}
       run: |
         echo "## Next Step" >> $GITHUB_STEP_SUMMARY
         echo "Verify the final release" >> $GITHUB_STEP_SUMMARY
@@ -67,7 +71,7 @@ runs:
         fi
 
     - if: ${{ failure() }}
-      shell: bash -eux {0}
+      shell: ${{ inputs.shell }}
       run: |
         echo "## Failure Message" >> $GITHUB_STEP_SUMMARY
         echo ":x: Failed to Publish the Draft Release Url:" >> $GITHUB_STEP_SUMMARY
