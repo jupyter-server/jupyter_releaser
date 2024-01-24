@@ -11,10 +11,14 @@ inputs:
   steps_to_skip:
     description: "Comma separated list of steps to skip"
     required: false
+  shell:
+    description: "The shell being used for the action steps"
+    required: false
+    default: bash -eux {0}
 runs:
   using: "composite"
   steps:
-    - shell: bash -eux {0}
+    - shell: ${{ inputs.shell }}
       id: install-releaser
       run: |
         # Install Jupyter Releaser from git unless we are testing Releaser itself
@@ -24,7 +28,7 @@ runs:
         fi
 
     - id: prep-release
-      shell: bash -eux {0}
+      shell: ${{ inputs.shell }}
       run: |
         export RH_DRY_RUN="true"
         export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
@@ -33,7 +37,7 @@ runs:
         python -m jupyter_releaser.actions.prep_release
 
     - id: populate-release
-      shell: bash -eux {0}
+      shell: ${{ inputs.shell }}
       run: |
         export RH_DRY_RUN="true"
         export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
@@ -43,7 +47,7 @@ runs:
         python -m jupyter_releaser.actions.populate_release
 
     - id: finalize-release
-      shell: bash -eux {0}
+      shell: ${{ inputs.shell }}
       run: |
         export RH_DRY_RUN="true"
         export GITHUB_ACCESS_TOKEN=${{ inputs.token }}

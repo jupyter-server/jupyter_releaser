@@ -31,6 +31,10 @@ inputs:
   since_last_stable:
     description: "Use PRs with activity since the last stable git tag"
     required: false
+  shell:
+    description: "The shell being used for the action steps"
+    required: false
+    default: bash -eux {0}
 outputs:
   release_url:
     description: "The html URL of the draft GitHub release"
@@ -39,7 +43,7 @@ runs:
   using: "composite"
   steps:
     - name: install-releaser
-      shell: bash -eux {0}
+      shell: ${{ inputs.shell }}
       run: |
         # Install Jupyter Releaser from git unless we are testing Releaser itself
         if ! command -v jupyter-releaser &> /dev/null
@@ -48,7 +52,7 @@ runs:
         fi
 
     - id: prep-release
-      shell: bash -eux {0}
+      shell: ${{ inputs.shell }}
       run: |
         export GITHUB_ACCESS_TOKEN=${{ inputs.token }}
         export GITHUB_ACTOR=${{ github.triggering_actor }}
@@ -65,7 +69,7 @@ runs:
 
         python -m jupyter_releaser.actions.prep_release
 
-    - shell: bash -eux {0}
+    - shell: ${{ inputs.shell }}
       run: |
         echo "## Next Step" >> $GITHUB_STEP_SUMMARY
         echo "(Optional): Review Draft Release: ${{ steps.prep-release.outputs.release_url }}" >> $GITHUB_STEP_SUMMARY
