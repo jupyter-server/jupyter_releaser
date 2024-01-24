@@ -2,6 +2,30 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.6.0
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...c7d48e961451524fdcf4dd1208c337d67ed2fbad))
+
+### Enhancements made
+
+- Allow customizing the shell for the action [#549](https://github.com/jupyter-server/jupyter_releaser/pull/549) ([@martinRenou](https://github.com/martinRenou))
+- Add trusted publishing and self release [#544](https://github.com/jupyter-server/jupyter_releaser/pull/544) ([@blink1073](https://github.com/blink1073))
+
+### Maintenance and upkeep improvements
+
+- Handle pandas deprecation warning [#548](https://github.com/jupyter-server/jupyter_releaser/pull/548) ([@blink1073](https://github.com/blink1073))
+- Bump the actions group with 1 update [#547](https://github.com/jupyter-server/jupyter_releaser/pull/547) ([@dependabot](https://github.com/dependabot))
+- chore: update pre-commit hooks [#546](https://github.com/jupyter-server/jupyter_releaser/pull/546) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+- Update ruff config [#542](https://github.com/jupyter-server/jupyter_releaser/pull/542) ([@blink1073](https://github.com/blink1073))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2023-12-12&to=2024-01-24&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2023-12-12..2024-01-24&type=Issues) | [@dependabot](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Adependabot+updated%3A2023-12-12..2024-01-24&type=Issues) | [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2023-12-12..2024-01-24&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2023-12-12..2024-01-24&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3AmartinRenou+updated%3A2023-12-12..2024-01-24&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2023-12-12..2024-01-24&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.5.1
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...f575e618a0d0fbfbf1da9b407ee201886a1982fa))
@@ -19,8 +43,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2023-12-04&to=2023-12-12&type=c))
 
 [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2023-12-04..2023-12-12&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2023-12-04..2023-12-12&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.5.0
 
