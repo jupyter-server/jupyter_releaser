@@ -101,7 +101,7 @@ def extract_dist(dist_dir, target, repo=""):
             os.makedirs(pkg_dir.parent)
 
         tar = tarfile.open(path)
-        tar.extractall(target)
+        tar.extractall(target)  # noqa: S202
         tar.close()
 
         if "main" in data:
