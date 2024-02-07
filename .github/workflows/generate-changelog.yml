@@ -55,5 +55,5 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: changelog
+          name: changelog-${{ github.job }}-${{ strategy.job-index }}
           path: CHANGELOG_ENTRY.md
