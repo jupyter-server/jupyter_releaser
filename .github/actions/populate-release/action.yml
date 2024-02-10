@@ -36,11 +36,8 @@ runs:
     - name: install-releaser
       shell: ${{ inputs.shell }}
       run: |
-        # Install Jupyter Releaser from git unless we are testing Releaser itself
-        if ! command -v jupyter-releaser &> /dev/null
-        then
-            pip install -q git+https://github.com/jupyter-server/jupyter_releaser.git@v2
-        fi
+        cd "${{ github.action_path }}/../../scripts"
+        bash install-releaser.sh
 
     - id: populate-release
       shell: ${{ inputs.shell }}
