@@ -32,7 +32,6 @@ jobs:
         uses: jupyter-server/jupyter_releaser/.github/actions/populate-release@v2
         with:
           token: ${{ steps.app-token.outputs.token }}
-          target: ${{ github.event.inputs.target }}
           branch: ${{ github.event.inputs.branch }}
           release_url: ${{ github.event.inputs.release_url }}
           steps_to_skip: ${{ github.event.inputs.steps_to_skip }}
@@ -44,7 +43,6 @@ jobs:
         uses: jupyter-server/jupyter_releaser/.github/actions/finalize-release@v2
         with:
           token: ${{ steps.app-token.outputs.token }}
-          target: ${{ github.event.inputs.target }}
           release_url: ${{ steps.populate-release.outputs.release_url }}
 
       - name: "** Next Step **"
