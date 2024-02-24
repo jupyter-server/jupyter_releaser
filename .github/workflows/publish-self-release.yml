@@ -17,8 +17,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: release
     permissions:
-      # This is useful if you want to use PyPI trusted publisher
-      # and NPM provenance
       id-token: write
     steps:
       - uses: actions/checkout@v4
@@ -27,11 +25,16 @@ jobs:
         shell: bash
         run: |
           pip install -e .
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
       - name: Populate Release
         id: populate-release
         uses: jupyter-server/jupyter_releaser/.github/actions/populate-release@v2
         with:
-          token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
           target: jupyter-server/jupyter_releaser
           branch: ${{ github.event.inputs.branch }}
           release_url: ${{ github.event.inputs.release_url }}
@@ -43,7 +46,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         uses: jupyter-server/jupyter_releaser/.github/actions/finalize-release@v2
         with:
-          token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
           target: ${{ github.event.inputs.target }}
           release_url: ${{ steps.populate-release.outputs.release_url }}
 
