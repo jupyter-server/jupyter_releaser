@@ -16,7 +16,7 @@ See checklist below for details:
 
 ## Checklist for Adoption
 
-- [ ] Set up a GitHub App on your organization (or personal account for a personal project).
+- [ ] Set up a [GitHub App](https://docs.github.com/en/apps/creating-github-apps/about-creating-github-apps/about-creating-github-apps#github-apps-that-act-on-their-own-behalf) on your organization (or personal account for a personal project).
 
   - Disable the web hook
   - Enable Repository permissions > Contents > Read and write
@@ -27,9 +27,9 @@ See checklist below for details:
   - Under "General" click "Generate a private key"
   - Store the `APP_ID` and the private key in a secure location (Jupyter Vault if using a Jupyter Org)
 
-- [ ] Create a "release" environment on your repository and add an `APP_ID` Environment Variable and `APP_PRIVATE_KEY` secret.
+- [ ] Create a "release" [environment](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment) on your repository and add an `APP_ID` Environment Variable and `APP_PRIVATE_KEY` secret.
 
-- [ ] Configure Rulesets for the repository
+- [ ] Configure [Rulesets](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets) for the repository
 
   - Set up branch protection but only disable force pushes.
   - Remove global tag protection.
