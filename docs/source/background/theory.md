@@ -13,6 +13,13 @@ This project should help maintainers reduce toil and save time in the release pr
 - Dry run publish on CI
 - Revert to Dev version after release (optional)
 
+## Security
+
+We strive to use the most secure release practices possible, reflected in the `Checklist for Adoption`
+and the example workflows.
+This includes using PyPI Trusted Publishing, using GitHub Environments, encouraging the use of Rulesets and GitHub Apps with limited bypass capability, and provenance data for npm.
+In addition, there is an automatic check for whether the user who triggered the action is an admin.
+
 ## Action Details
 
 Detailed workflows are available to draft a changelog, draft a release, publish a release, and check a release.
