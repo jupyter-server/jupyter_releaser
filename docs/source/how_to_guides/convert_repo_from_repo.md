@@ -28,7 +28,7 @@ See checklist below for details:
   - Store the `APP_ID` and the private key in a secure location (Jupyter Vault if using a Jupyter Org)
 
 - [ ] Create a "release" [environment](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment) on your repository and add an `APP_ID` Environment Variable and `APP_PRIVATE_KEY` secret.
-The environment should be enabled for ["Protected branches only"](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment#deployment-branches-and-tags). 
+  The environment should be enabled for ["Protected branches only"](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment#deployment-branches-and-tags).
 
 - [ ] Configure [Rulesets](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets) for the repository
 
