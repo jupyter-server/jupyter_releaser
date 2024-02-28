@@ -31,7 +31,7 @@ See checklist below for details:
 
 - [ ] Configure [Rulesets](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets) for the repository
 
-  - Set up branch protection but only disable force pushes.
+   - Set up branch protection (with default rules) on publication branches
   - Remove global tag protection.
   - Add a branch Ruleset for all branches
     - Allow the GitHub App to bypass protections
