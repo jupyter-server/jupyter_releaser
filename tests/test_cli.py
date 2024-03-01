@@ -152,6 +152,7 @@ def test_list_envvars(runner):
     assert (
         result.output.strip()
         == """
+admin-check: RH_ADMIN_CHECK
 auth: GITHUB_ACCESS_TOKEN
 branch: RH_BRANCH
 changelog-path: RH_CHANGELOG
