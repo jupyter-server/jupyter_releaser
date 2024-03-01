@@ -192,12 +192,6 @@ branch_options: t.Any = [  # noqa: RUF005
 
 auth_options: t.Any = [
     click.option("--auth", envvar="GITHUB_ACCESS_TOKEN", help="The GitHub auth token"),
-    click.option(
-        "--admin-check",
-        envvar="RH_ADMIN_CHECK",
-        default=True,
-        help="Check if the triggering user is a repo admin",
-    ),
 ]
 
 username_options: t.Any = [
