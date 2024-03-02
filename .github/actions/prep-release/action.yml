@@ -24,13 +24,16 @@ inputs:
   silent:
     description: "Set a placeholder in the changelog and don't publish the release."
     required: false
-    type: boolean
   since:
     description: "Use PRs with activity since this date or git reference"
     required: false
   since_last_stable:
     description: "Use PRs with activity since the last stable git tag"
     required: false
+  admin_check:
+    description: "Check if the user is a repo admin"
+    required: false
+    default: "true"
   shell:
     description: "The shell being used for the action steps"
     required: false
@@ -63,6 +66,7 @@ runs:
         export RH_SILENT=${{ inputs.silent }}
         export RH_SINCE=${{ inputs.since }}
         export RH_SINCE_LAST_STABLE=${{ inputs.since_last_stable }}
+        export RH_ADMIN_CHECK=${{ inputs.admin_check }}
 
         python -m jupyter_releaser.actions.prep_release
 
