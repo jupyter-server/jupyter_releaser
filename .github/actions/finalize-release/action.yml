@@ -20,6 +20,10 @@ inputs:
   steps_to_skip:
     description: "Comma separated list of steps to skip"
     required: false
+  admin_check:
+    description: "Check if the user is a repo admin"
+    required: false
+    default: "true"
   shell:
     description: "The shell being used for the action steps"
     required: false
@@ -52,6 +56,7 @@ runs:
         export RH_RELEASE_URL=${{ inputs.release_url }}
         export RH_STEPS_TO_SKIP=${{ inputs.steps_to_skip }}
         export RH_BRANCH=${{ inputs.branch }}
+        export RH_ADMIN_CHECK=${{ inputs.admin_check }}
         python -m jupyter_releaser.actions.finalize_release
 
     - if: ${{ success() }}

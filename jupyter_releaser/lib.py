@@ -434,6 +434,12 @@ def publish_assets(
                 # a PYPI_TOKEN_MAP will not be sanitized in output
                 util.retry(f"{twine_cmd} {name}", cwd=dist_dir, env=env, echo=True)
                 found = True
+            else:
+                warnings.warn(
+                    f"Python package name {pkg.name} does not match with name in "
+                    f"jupyter releaser config: {python_package_name}. Skipping uploading dist file {path}",
+                    stacklevel=2,
+                )
         elif suffix == ".tgz":
             # Ignore already published versions
             try:

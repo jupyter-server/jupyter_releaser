@@ -603,7 +603,7 @@ def prepare_environment(fetch_draft_release=True):
     gh = get_gh_object(dry_run=dry_run, owner=owner, repo=repo_name, token=auth)
 
     # Ensure the user is an admin.
-    if not dry_run:
+    if os.environ.get("RH_ADMIN_CHECK", "true").lower() == "true" and not dry_run:
         user = os.environ["GITHUB_ACTOR"]
         log(f"Getting permission level for {user}")
         try:

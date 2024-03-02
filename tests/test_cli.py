@@ -605,6 +605,36 @@ def test_publish_assets_py(py_package, runner, mocker, git_prep, mock_github):
     assert "after-publish-assets" in log
 
 
+@pytest.mark.skipif(os.name == "nt", reason="pypiserver does not start properly on Windows")
+def test_publish_assets_py_skip(py_package, runner, mocker, git_prep, mock_github):
+    # Create the dist files
+    changelog_entry = mock_changelog_entry(py_package, runner, mocker)
+    run("pipx run build .", cwd=util.CHECKOUT_NAME)
+
+    orig_run = util.run
+    called = 0
+
+    # Set a different package name in config
+    os.environ["RH_PYTHON_PACKAGES"] = "foo_path:foo1"
+
+    def wrapped(cmd, **kwargs):
+        nonlocal called
+        if "twine upload" in cmd:
+            called += 1
+        return orig_run(cmd, **kwargs)
+
+    mock_run = mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
+
+    dist_dir = py_package / util.CHECKOUT_NAME / "dist"
+    release = create_draft_release(files=glob(f"{dist_dir}/*.*"))
+    os.environ["RH_RELEASE_URL"] = release.html_url
+    # Expect a user warning
+    with pytest.warns(UserWarning):
+        runner(["publish-assets", "--dist-dir", dist_dir, "--dry-run"])
+    # Upload should be skipped and command shouldn't be called at all
+    assert called == 0
+
+
 def test_publish_assets_npm(npm_dist, runner, mocker, mock_github):
     # Create the release.
     dist_dir = npm_dist / util.CHECKOUT_NAME / "dist"
