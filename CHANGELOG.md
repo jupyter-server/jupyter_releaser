@@ -2,6 +2,28 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.6.1
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...58a343c6081767217c3eb8f8310347578d179d60))
+
+### Enhancements made
+
+- Add ability to disable admin user check via flag [#559](https://github.com/jupyter-server/jupyter_releaser/pull/559) ([@ElioDiNino](https://github.com/ElioDiNino))
+- Emit a warning when uploading is skipped [#558](https://github.com/jupyter-server/jupyter_releaser/pull/558) ([@mahendrapaipuri](https://github.com/mahendrapaipuri))
+
+### Maintenance and upkeep improvements
+
+- Fix install releaser step [#553](https://github.com/jupyter-server/jupyter_releaser/pull/553) ([@blink1073](https://github.com/blink1073))
+- chore: update pre-commit hooks [#551](https://github.com/jupyter-server/jupyter_releaser/pull/551) ([@pre-commit-ci](https://github.com/pre-commit-ci))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2024-01-24&to=2024-03-04&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2024-01-24..2024-03-04&type=Issues) | [@ElioDiNino](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3AElioDiNino+updated%3A2024-01-24..2024-03-04&type=Issues) | [@mahendrapaipuri](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Amahendrapaipuri+updated%3A2024-01-24..2024-03-04&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2024-01-24..2024-03-04&type=Issues) | [@welcome](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Awelcome+updated%3A2024-01-24..2024-03-04&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.6.0
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...c7d48e961451524fdcf4dd1208c337d67ed2fbad))
@@ -23,8 +45,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2023-12-12&to=2024-01-24&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2023-12-12..2024-01-24&type=Issues) | [@dependabot](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Adependabot+updated%3A2023-12-12..2024-01-24&type=Issues) | [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2023-12-12..2024-01-24&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2023-12-12..2024-01-24&type=Issues) | [@martinRenou](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3AmartinRenou+updated%3A2023-12-12..2024-01-24&type=Issues) | [@pre-commit-ci](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci+updated%3A2023-12-12..2024-01-24&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.5.1
 
