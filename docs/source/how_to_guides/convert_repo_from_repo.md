@@ -16,25 +16,31 @@ See checklist below for details:
 
 ## Checklist for Adoption
 
-- [ ] Add a GitHub [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token), preferably from a "machine user" GitHub
-  account that has admin access to the repository. The token itself will
-  need "public_repo", and "repo:status" permissions. Save the token as
-  `ADMIN_GITHUB_TOKEN`
-  in the [repository secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository). We need this
-  access token to allow for branch protection rules, which block the pushing
-  of commits when using the `GITHUB_TOKEN`, even when run from an admin user
-  account.
+- [ ] Set up a [GitHub App](https://docs.github.com/en/apps/creating-github-apps/about-creating-github-apps/about-creating-github-apps#github-apps-that-act-on-their-own-behalf) on your organization (or personal account for a personal project).
+
+  - Disable the web hook
+  - Enable Repository permissions > Contents > Read and write
+  - Select "Only on this account"
+  - Click "Create GitHub App"
+  - Browse to the App Settings
+  - Select "Install App" and install on all repositories
+  - Under "General" click "Generate a private key"
+  - Store the `APP_ID` and the private key in a secure location (Jupyter Vault if using a Jupyter Org)
+
+- [ ] Create a "release" [environment](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment) on your repository and add an `APP_ID` Environment Variable and `APP_PRIVATE_KEY` secret.
+  The environment should be enabled for ["Protected branches only"](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment#deployment-branches-and-tags).
+
+- [ ] Configure [Rulesets](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets) for the repository
+
+  - Set up branch protection (with default rules) on publication branches
+  - Remove global tag protection.
+  - Add a branch Ruleset for all branches
+    - Allow the GitHub App to bypass protections
+    - Set up Pull Request and Required Checks
+  - Add a tags Ruleset for all tags
+    - Allow the GitHub App to bypass protections
 
 - [ ] Set up PyPI:
-
-<details><summary>Using PyPI token (legacy way)</summary>
-
-- Add access token for the [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github) stored as `PYPI_TOKEN`.
-  _Note_ For security reasons, it is recommended that you scope the access
-  to a single repository. Additionally, this token should belong to a
-  machine account and not a user account.
-
-</details>
 
 <details><summary>Using PyPI trusted publisher (modern way)</summary>
 
@@ -45,10 +51,18 @@ See checklist below for details:
 
 </details>
 
+<details><summary>Using PyPI token (legacy way)</summary>
+
+- Add access token for the [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github) stored as `PYPI_TOKEN`.
+  _Note_ For security reasons, it is recommended that you scope the access
+  to a single repository. Additionally, this token should belong to a
+  machine account and not a user account.
+
+</details>
+
 - [ ] If needed, add access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens), saved as `NPM_TOKEN`. Again this should
   be created using a machine account that only has publish access.
-- [ ] Ensure that only trusted users with 2FA have admin access to the
-  repository, since they will be able to trigger releases.
+- [ ] Ensure that only trusted users with 2FA have admin access to the repository, since they will be able to trigger releases.
 - [ ] Switch to Markdown Changelog
   - We recommend [MyST](https://myst-parser.readthedocs.io/en/latest/?badge=latest), especially if some of your docs are in reStructuredText.
   - Can use `pandoc -s changelog.rst -o changelog.md` and some hand edits as needed.
