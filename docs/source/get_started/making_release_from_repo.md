@@ -6,7 +6,7 @@ already uses Jupyter Releaser using workflows on its own repository.
 ## Prerequisites
 
 - Admin write access to the target repository
-- Previously set up GitHub Actions secrets for PyPI and/or NPM
+- Completed the [Checklist for Adoption](../how_to_guides/convert_repo_from_repo.md#checklist-for-adoption)
 
 ## Prep Release
 
