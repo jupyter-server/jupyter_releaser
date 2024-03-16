@@ -6,7 +6,7 @@ already uses Jupyter Releaser using workflows on its own repository.
 ## Prerequisites
 
 - Admin write access to the target repository
-- Completed the [Checklist for Adoption](../how_to_guides/convert_repo_from_repo.md#checklist-for-adoption)
+- Completed the [Checklist for Adoption](../how_to_guides/convert_repo_from_repo.md)
 
 ## Prep Release
 
