@@ -14,10 +14,6 @@ inputs:
     description: "If set, do not make a PR"
     default: "false"
     required: false
-  admin_check:
-    description: "Check if the user is a repo admin"
-    required: false
-    default: "true"
   shell:
     description: "The shell being used for the action steps"
     required: false
@@ -45,7 +41,7 @@ runs:
           export RH_BRANCH=${{ inputs.branch }}
         fi
         export RH_DRY_RUN=${{ inputs.dry_run }}
-        export RH_ADMIN_CHECK=${{ inputs.admin_check }}
+        export RH_ADMIN_CHECK=false
 
         python -m jupyter_releaser.actions.publish_changelog
 
