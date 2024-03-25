@@ -448,6 +448,7 @@ def publish_assets(
                 stderr = e.stderr
                 if "EPUBLISHCONFLICT" in stderr or "previously published versions" in stderr:
                     continue
+                util.log(stderr)
                 raise e
             found = True
         else:
