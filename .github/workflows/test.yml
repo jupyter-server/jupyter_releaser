@@ -100,7 +100,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
         with:
-          dependency_type: minimum
+          dependency_type: pre
       - name: Run the unit tests
         run: |
           hatch run test:nowarn || hatch run test:nowarn --lf
