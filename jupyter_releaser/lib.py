@@ -427,7 +427,8 @@ def publish_assets(
             dist: Union[Type[SDist], Type[Wheel]]
             dist = SDist if suffix == ".gz" else Wheel
             pkg = dist(path)
-            if not python_package_name or python_package_name == pkg.name:
+            pkg_name = pkg.name.replace("-", "_")
+            if not python_package_name or python_package_name == pkg_name:
                 env = os.environ.copy()
                 env["TWINE_PASSWORD"] = twine_token
                 # NOTE: Do not print the env since a twine token extracted from
@@ -436,7 +437,7 @@ def publish_assets(
                 found = True
             else:
                 warnings.warn(
-                    f"Python package name {pkg.name} does not match with name in "
+                    f"Python package name {pkg_name} does not match with name in "
                     f"jupyter releaser config: {python_package_name}. Skipping uploading dist file {path}",
                     stacklevel=2,
                 )
