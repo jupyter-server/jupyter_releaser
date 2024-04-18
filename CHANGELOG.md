@@ -2,6 +2,27 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.8.1
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...ba6e1a5170e41cc76e14d9ab77bb16b0d8fe6cda))
+
+### Bugs fixed
+
+- Normalise package name before comparison [#568](https://github.com/jupyter-server/jupyter_releaser/pull/568) ([@krassowski](https://github.com/krassowski))
+
+### Maintenance and upkeep improvements
+
+- Revert "Set all min deps" [#566](https://github.com/jupyter-server/jupyter_releaser/pull/566) ([@blink1073](https://github.com/blink1073))
+- Set all min deps [#565](https://github.com/jupyter-server/jupyter_releaser/pull/565) ([@blink1073](https://github.com/blink1073))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2024-03-25&to=2024-04-18&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2024-03-25..2024-04-18&type=Issues) | [@krassowski](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2024-03-25..2024-04-18&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.8.0
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...fcf07a4695f124af2d61817a9cfb3b38bcdef3f6))
@@ -24,8 +45,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2024-03-04&to=2024-03-25&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2024-03-04..2024-03-25&type=Issues) | [@krassowski](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2024-03-04..2024-03-25&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.7.0
 
