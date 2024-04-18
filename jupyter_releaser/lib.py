@@ -16,6 +16,7 @@ from subprocess import CalledProcessError
 from typing import Type, Union
 
 import mdformat
+from packaging.utils import canonicalize_name
 from packaging.version import parse as parse_version
 from pkginfo import SDist, Wheel
 
@@ -396,7 +397,7 @@ def publish_assets(
 
     res = python_package.split(":")
     python_package_path = res[0]
-    python_package_name = res[1].replace("-", "_") if len(res) == 2 else ""
+    python_package_name = canonicalize_name(res[1]) if len(res) == 2 else ""
 
     if release_url and len(glob(f"{dist_dir}/*.whl")):
         twine_token = python.get_pypi_token(release_url, python_package_path)
@@ -427,7 +428,7 @@ def publish_assets(
             dist: Union[Type[SDist], Type[Wheel]]
             dist = SDist if suffix == ".gz" else Wheel
             pkg = dist(path)
-            pkg_name = pkg.name.replace("-", "_")
+            pkg_name = canonicalize_name(pkg.name)
             if not python_package_name or python_package_name == pkg_name:
                 env = os.environ.copy()
                 env["TWINE_PASSWORD"] = twine_token
