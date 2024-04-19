@@ -9,9 +9,7 @@ See checklist below for details:
 - Markdown changelog
 - Bump version configuration (if using Python), for example [hatch](https://hatch.pypa.io/latest/)
 - [Access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with access to target GitHub repo to run GitHub Actions.
-- Set up:
-  - \[_modern way_\] [Add a trusted publisher](https://docs.pypi.org/trusted-publishers/adding-a-publisher/) to your PyPI project
-  - \[_legacy way_\] Access token for the [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github)
+- [Add a trusted publisher](https://docs.pypi.org/trusted-publishers/adding-a-publisher/) to your PyPI project
 - If needed, access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens).
 
 ## Checklist for Adoption
@@ -40,25 +38,14 @@ See checklist below for details:
   - Add a tags Ruleset for all tags
     - Allow the GitHub App to bypass protections
 
+- [ ] Copy `prep-release.yml` and `publish-release.yml` (or only `full-release.yml`) from the
+  [example-workflows](https://github.com/jupyter-server/jupyter_releaser/tree/main/example-workflows) folder in this repository.
+
 - [ ] Set up PyPI:
-
-<details><summary>Using PyPI trusted publisher (modern way)</summary>
-
-- Set up your PyPI project by [adding a trusted publisher](https://docs.pypi.org/trusted-publishers/adding-a-publisher/)
-  - if you use the example workflows, the _workflow name_ is `publish-release.yml` (or `full-release.yml`) and the
-    _environment_ should be left blank.
-- Ensure the publish release job as `permissions`: `id-token : write` (see the [documentation](https://docs.pypi.org/trusted-publishers/using-a-publisher/))
-
-</details>
-
-<details><summary>Using PyPI token (legacy way)</summary>
-
-- Add access token for the [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github) stored as `PYPI_TOKEN`.
-  _Note_ For security reasons, it is recommended that you scope the access
-  to a single repository. Additionally, this token should belong to a
-  machine account and not a user account.
-
-</details>
+  - Set up your PyPI project by [adding a trusted publisher](https://docs.pypi.org/trusted-publishers/adding-a-publisher/)
+    - if you use the example workflows, the _workflow name_ is `publish-release.yml` (or `full-release.yml`) and the
+      _environment_ should be `release` (the name of the GitHub environment).
+  - Ensure the publish release job as `permissions`: `id-token : write` (see the [documentation](https://docs.pypi.org/trusted-publishers/using-a-publisher/))
 
 - [ ] If needed, add access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens), saved as `NPM_TOKEN`. Again this should
   be created using a machine account that only has publish access.
@@ -67,10 +54,21 @@ See checklist below for details:
   - We recommend [MyST](https://myst-parser.readthedocs.io/en/latest/?badge=latest), especially if some of your docs are in reStructuredText.
   - Can use `pandoc -s changelog.rst -o changelog.md` and some hand edits as needed.
   - Note that [directives](https://myst-parser.readthedocs.io/en/latest/using/syntax.html#syntax-directives) can still be used
-- [ ] Add HTML start and end comment markers to Changelog file - see example in [CHANGELOG.md](https://github.com/jupyter-server/jupyter_releaser/blob/main/CHANGELOG.md) (view in raw mode)
+- [ ] Add HTML start and end comment markers to Changelog file
+  - see example in [CHANGELOG.md](https://github.com/jupyter-server/jupyter_releaser/blob/main/CHANGELOG.md) (view in raw mode)
+
+```md
+# Changelog
+
+<!-- <START NEW CHANGELOG ENTRY> -->
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+```
+
 - [ ] We recommend using [hatch](https://hatch.pypa.io/latest/) for your
   build system and for version handling.
-  - If previously providing `version_info` like `version_info = (1, 7, 0, '.dev', '0')`, use a pattern like the one below in your version file:
+  - If previously providing `version_info` like `version_info = (1, 7, 0, '.dev', '0')`,
+    use a pattern like the one below in your version file:
 
 ```python
 import re
@@ -89,9 +87,12 @@ if match["rest"]:
 version_info = tuple(parts)
 ```
 
-- If you need to keep node and python versions in sync, use [hatch-nodejs-version](https://github.com/agoose77/hatch-nodejs-version). See [nbformat](https://github.com/jupyter/nbformat/blob/main/pyproject.toml) for example.
+- If you need to keep node and python versions in sync, use [hatch-nodejs-version](https://github.com/agoose77/hatch-nodejs-version).
+  - See [nbformat](https://github.com/jupyter/nbformat/blob/main/pyproject.toml) for example.
 
 - [ ] Add a GitHub Actions CI step to run the `check_release` action. For example:
+  - This should be run on `push` and `pull` request events. You can copy
+    the `check-release.yml` from this repo as an example.
 
 ```yaml
 - name: Check Release
@@ -100,25 +101,37 @@ version_info = tuple(parts)
     token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-- This should be run on `push` and `pull` request events. You can copy
-  the `check-release.yml` from this repo as an example.
-
 - [ ] If you would like the release assets to be uploaded as artifacts, add the following step after the `check_release` action:
 
 ```yaml
 - name: Upload Distributions
-  uses: actions/upload-artifact@v2
+  uses: actions/upload-artifact@v4
   with:
     name: dist-${{ github.run_number }}
     path: .jupyter_releaser_checkout/dist
 ```
 
-- [ ] Add a workflow that uses the [`enforce-label`](https://github.com/jupyterlab/maintainer-tools#enforce-labels) action from `jupyterlab/maintainer-tools` to ensure that all PRs have on of the triage labels used to
-  categorize the changelog.
+- [ ] Add a workflow that uses the [`enforce-label`](https://github.com/jupyterlab/maintainer-tools#enforce-labels) action
+  from `jupyterlab/maintainer-tools` to ensure that all PRs have on of the triage labels used to categorize the changelog.
+
+```yaml
+name: Enforce PR label
+
+on:
+  pull_request:
+    types: [labeled, unlabeled, opened, edited, synchronize]
+
+jobs:
+  enforce-label:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: enforce-triage-label
+        uses: jupyterlab/maintainer-tools/.github/actions/enforce-label@v1
+```
 
 - [ ] Update or add `RELEASE.md` that describes the onboarding and release process, e.g. [jupyter_server](https://github.com/jupyter-server/jupyter_server/blob/main/RELEASE.md).
-
-- [ ] Copy `prep-release.yml` and `publish-release.yml` from the `example-workflows` folder in this repository.
 
 - [ ] Optionally add configuration to the repository if non-standard options or hooks are needed.
 
