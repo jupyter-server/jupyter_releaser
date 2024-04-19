@@ -377,9 +377,18 @@ def prep_git(ref, branch, repo, auth, username, git_url):
 def bump_version(version_spec, version_cmd, changelog_path, python_packages, tag_format):
     """Prep git and env variables and bump version"""
     prev_dir = os.getcwd()
-    for python_package in [p.split(":")[0] for p in python_packages]:
-        os.chdir(python_package)
-        lib.bump_version(version_spec, version_cmd, changelog_path, tag_format)
+    for package in python_packages:
+        package_path, package_name = (
+            package.split(":", maxsplit=2) if ":" in package else [package, None]
+        )
+        os.chdir(package_path)
+        lib.bump_version(
+            version_spec,
+            version_cmd,
+            changelog_path,
+            tag_format,
+            package_name=package_name if len(python_packages) > 1 else None,
+        )
         os.chdir(prev_dir)
 
 
