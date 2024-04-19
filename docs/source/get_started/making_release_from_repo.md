@@ -20,13 +20,8 @@ already uses Jupyter Releaser using workflows on its own repository.
 
   ![Prep Release Workflow Dialog](../images/prep_release_repo.png)
 
-- The "New Version Spec" will usually be the full version (e.g. 0.7.1). Repos using `tbump` can also use:
-
-  - "next" or "patch" option, which will bump the micro version (or the build version in the case of a prerelease).
-    Note: The "next" and "patch" options are not available when using dev versions, you must use explicit versions
-    instead.
-  - "minor" option, which will bump to the next minor version directly.
-  - "release" option, which will start making prereleases (a0, a1...)
+- The "New Version Spec" will usually be the full version (e.g. 0.7.1). 
+  Repos using `hatch` can also use [segments](https://hatch.pypa.io/latest/version/#supported-segments) such as _patch_, _minor_, _alpha_,... .
 
 - Use the "since" field to select PRs prior to the latest tag to include in the release
 
