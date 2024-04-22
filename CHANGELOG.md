@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.8.2
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...24ecdc098199ebbb59667fe009551ed425de08df))
+
+### Bugs fixed
+
+- Prepend tag with Python package name if multiple packages are defined [#570](https://github.com/jupyter-server/jupyter_releaser/pull/570) ([@krassowski](https://github.com/krassowski))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2024-04-18&to=2024-04-22&type=c))
+
+[@krassowski](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2024-04-18..2024-04-22&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.8.1
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...ba6e1a5170e41cc76e14d9ab77bb16b0d8fe6cda))
@@ -20,8 +36,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2024-03-25&to=2024-04-18&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2024-03-25..2024-04-18&type=Issues) | [@krassowski](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2024-03-25..2024-04-18&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.8.0
 
