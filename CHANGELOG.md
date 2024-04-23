@@ -2,6 +2,26 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.8.3
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...f709700203f8b3f1398fd16189ee26cc48c53ea0))
+
+### Bugs fixed
+
+- Fix `maxsplit` usage [#572](https://github.com/jupyter-server/jupyter_releaser/pull/572) ([@krassowski](https://github.com/krassowski))
+
+### Documentation improvements
+
+- Improve documentation [#569](https://github.com/jupyter-server/jupyter_releaser/pull/569) ([@fcollonval](https://github.com/fcollonval))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2024-04-22&to=2024-04-23&type=c))
+
+[@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2024-04-22..2024-04-23&type=Issues) | [@krassowski](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2024-04-22..2024-04-23&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.8.2
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...24ecdc098199ebbb59667fe009551ed425de08df))
@@ -15,8 +35,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2024-04-18&to=2024-04-22&type=c))
 
 [@krassowski](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2024-04-18..2024-04-22&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.8.1
 
