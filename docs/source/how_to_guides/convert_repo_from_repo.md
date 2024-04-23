@@ -42,6 +42,7 @@ See checklist below for details:
   [example-workflows](https://github.com/jupyter-server/jupyter_releaser/tree/main/example-workflows) folder in this repository.
 
 - [ ] Set up PyPI:
+
   - Set up your PyPI project by [adding a trusted publisher](https://docs.pypi.org/trusted-publishers/adding-a-publisher/)
     - if you use the example workflows, the _workflow name_ is `publish-release.yml` (or `full-release.yml`) and the
       _environment_ should be `release` (the name of the GitHub environment).
@@ -49,12 +50,17 @@ See checklist below for details:
 
 - [ ] If needed, add access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens), saved as `NPM_TOKEN`. Again this should
   be created using a machine account that only has publish access.
+
 - [ ] Ensure that only trusted users with 2FA have admin access to the repository, since they will be able to trigger releases.
+
 - [ ] Switch to Markdown Changelog
+
   - We recommend [MyST](https://myst-parser.readthedocs.io/en/latest/?badge=latest), especially if some of your docs are in reStructuredText.
   - Can use `pandoc -s changelog.rst -o changelog.md` and some hand edits as needed.
   - Note that [directives](https://myst-parser.readthedocs.io/en/latest/using/syntax.html#syntax-directives) can still be used
+
 - [ ] Add HTML start and end comment markers to Changelog file
+
   - see example in [CHANGELOG.md](https://github.com/jupyter-server/jupyter_releaser/blob/main/CHANGELOG.md) (view in raw mode)
 
 ```md
@@ -88,9 +94,11 @@ version_info = tuple(parts)
 ```
 
 - If you need to keep node and python versions in sync, use [hatch-nodejs-version](https://github.com/agoose77/hatch-nodejs-version).
+
   - See [nbformat](https://github.com/jupyter/nbformat/blob/main/pyproject.toml) for example.
 
 - [ ] Add a GitHub Actions CI step to run the `check_release` action. For example:
+
   - This should be run on `push` and `pull` request events. You can copy
     the `check-release.yml` from this repo as an example.
 

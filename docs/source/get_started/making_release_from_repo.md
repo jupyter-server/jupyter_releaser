@@ -20,7 +20,7 @@ already uses Jupyter Releaser using workflows on its own repository.
 
   ![Prep Release Workflow Dialog](../images/prep_release_repo.png)
 
-- The "New Version Spec" will usually be the full version (e.g. 0.7.1). 
+- The "New Version Spec" will usually be the full version (e.g. 0.7.1).
   Repos using `hatch` can also use [segments](https://hatch.pypa.io/latest/version/#supported-segments) such as _patch_, _minor_, _alpha_,... .
 
 - Use the "since" field to select PRs prior to the latest tag to include in the release
