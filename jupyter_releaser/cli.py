@@ -379,7 +379,7 @@ def bump_version(version_spec, version_cmd, changelog_path, python_packages, tag
     prev_dir = os.getcwd()
     for package in python_packages:
         package_path, package_name = (
-            package.split(":", maxsplit=2) if ":" in package else [package, None]
+            package.split(":", maxsplit=1) if ":" in package else [package, None]
         )
         os.chdir(package_path)
         lib.bump_version(
