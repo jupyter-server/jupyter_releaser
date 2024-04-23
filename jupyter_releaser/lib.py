@@ -23,7 +23,7 @@ from pkginfo import SDist, Wheel
 from jupyter_releaser import changelog, npm, python, util
 
 
-def bump_version(version_spec, version_cmd, changelog_path, tag_format):
+def bump_version(version_spec, version_cmd, changelog_path, tag_format, package_name=None):
     """Bump the version and verify new version"""
     util.bump_version(version_spec, version_cmd=version_cmd, changelog_path=changelog_path)
 
@@ -38,6 +38,8 @@ def bump_version(version_spec, version_cmd, changelog_path, tag_format):
 
     # Bail if tag already exists
     tag_name = tag_format.format(version=version)
+    if package_name:
+        tag_name = package_name + "-" + tag_name
     if tag_name in util.run("git --no-pager tag", quiet=True).splitlines():
         msg = f"Tag {tag_name} already exists!"
         msg += " To delete run: `git push --delete origin {tag_name}`"
