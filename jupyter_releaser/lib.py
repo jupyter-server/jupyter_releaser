@@ -430,7 +430,7 @@ def publish_assets(
             dist: Union[Type[SDist], Type[Wheel]]
             dist = SDist if suffix == ".gz" else Wheel
             pkg = dist(path)
-            pkg_name = canonicalize_name(pkg.name)
+            pkg_name = canonicalize_name(pkg.name or "")
             if not python_package_name or python_package_name == pkg_name:
                 env = os.environ.copy()
                 env["TWINE_PASSWORD"] = twine_token
