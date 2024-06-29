@@ -60,6 +60,22 @@ def test_prep_git_tag(py_package, runner):
     assert util.get_branch() == tag, util.get_branch()
 
 
+def test_prep_git_ref_branch(py_package, runner):
+    branch = "ref-branch"
+    util.run(f"git checkout -b {branch} origin/foo")
+    result = runner(
+        ["prep-git", "--git-url", py_package],
+        env=dict(GITHUB_ACTIONS="", RH_REF=f"refs/heads/{branch}"),
+    )
+
+    log = get_log()
+    assert "before-prep-git" not in log
+    assert "after-prep-git" in log
+
+    os.chdir(util.CHECKOUT_NAME)
+    assert util.get_branch() == branch, util.get_branch()
+
+
 def test_prep_git_slashes(py_package, runner):
     branch = "a/b/c"
     util.run(f"git checkout -b {branch} foo")
