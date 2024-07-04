@@ -514,18 +514,23 @@ def prep_git(ref, branch, repo, auth, username, url):
     if not checkout_exists:
         util.run(f"git remote add origin {url}")
 
-    branch = branch or util.get_default_branch()
-    ref = ref or ""
-
     # Make sure we have *all* tags
     util.run(f"{util.GIT_FETCH_CMD} --tags --force")
 
     # Handle the ref
+    ref = ref or ""
     if ref.startswith("refs/pull/"):
         pull = ref[len("refs/pull/") :]
         ref_alias = f"refs/pull/{pull}"
+    elif ref.startswith("refs/heads/") and not branch:
+        branch = ref[len("refs/heads/") :]
+        util.run(f"git fetch origin {branch}")
+        ref = None
     else:
         ref = None
+
+    # Handle the branch.
+    branch = branch or util.get_default_branch()
 
     # Reuse existing branch if possible
     if ref:
