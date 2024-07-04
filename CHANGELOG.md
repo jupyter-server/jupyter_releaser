@@ -2,6 +2,30 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.8.4
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...76ce4aa66e668f50b2f8eb4fe0a02a14659504fa))
+
+### Bugs fixed
+
+- Fix handling of workflow branch [#581](https://github.com/jupyter-server/jupyter_releaser/pull/581) ([@blink1073](https://github.com/blink1073))
+
+### Maintenance and upkeep improvements
+
+- Fix docs and lint [#577](https://github.com/jupyter-server/jupyter_releaser/pull/577) ([@blink1073](https://github.com/blink1073))
+
+### Documentation improvements
+
+- Remove the GitHub access token prerequisite [#573](https://github.com/jupyter-server/jupyter_releaser/pull/573) ([@fcollonval](https://github.com/fcollonval))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2024-04-23&to=2024-07-04&type=c))
+
+[@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2024-04-23..2024-07-04&type=Issues) | [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2024-04-23..2024-07-04&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.8.3
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...f709700203f8b3f1398fd16189ee26cc48c53ea0))
@@ -19,8 +43,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2024-04-22&to=2024-04-23&type=c))
 
 [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2024-04-22..2024-04-23&type=Issues) | [@krassowski](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2024-04-22..2024-04-23&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.8.2
 
