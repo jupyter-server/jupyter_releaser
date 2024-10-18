@@ -9,6 +9,7 @@ Technical reference. Covers tools, components, commands, and resources.
 releaser_cli
 api_docs
 configuration
+theory
 changelog
 faq
 ```

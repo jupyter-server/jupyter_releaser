@@ -7,7 +7,8 @@
 get_started/index
 how_to_guides/index
 reference/index
-background/index
+reference/changelog
+reference/faq
 ```
 
 # Indices and tables

@@ -19,7 +19,7 @@ HERE = osp.abspath(osp.dirname(__file__))
 # -- Project information -----------------------------------------------------
 
 project = "Jupyter Releaser"
-copyright = "2021, Project Jupyter"
+copyright = "2024, Project Jupyter"
 author = "Project Jupyter"
 
 # The full version, including alpha/beta/rc tags.
