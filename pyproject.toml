@@ -45,6 +45,7 @@ content-type = "text/markdown"
 [project.optional-dependencies]
 docs = [
   "sphinx",
+  "sphinx-autobuild",
   "sphinx-copybutton",
   "pip",
   "myst-parser",
@@ -73,7 +74,9 @@ validate-bump = false
 [tool.hatch.envs.docs]
 features = ["docs"]
 [tool.hatch.envs.docs.scripts]
-build = "make -C docs html SPHINXOPTS='-W'"
+build = "sphinx-build -W -b html docs docs/build/html"
+serve = "python -m http.server --directory docs/build/html"
+watch = "sphinx-autobuild -W -b html docs docs/build/html --host 0.0.0.0"
 
 [tool.hatch.envs.test]
 features = ["test"]

@@ -91,5 +91,5 @@ html_context = {
 
 def setup(app):
     dest = osp.join(HERE, "reference", "changelog.md")
-    shutil.copy(osp.join(HERE, "..", "..", "CHANGELOG.md"), dest)
+    shutil.copy(osp.join(HERE, "..", "CHANGELOG.md"), dest)
     app.add_css_file("custom.css")

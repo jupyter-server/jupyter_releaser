@@ -52,3 +52,27 @@ To run the Python tests, use:
 ```bash
 pytest
 ```
+
+## Documentation
+
+Contributions can also take the form of fixes and improvements to the documentation.
+
+To build the docs, run:
+
+```bash
+hatch run docs:build
+```
+
+To serve the docs:
+
+```bash
+hatch run docs:serve
+```
+
+It is also possible to automatically watch the docs with the following command:
+
+```bash
+hatch run docs:watch
+```
+
+Then open http://localhost:8000 in your browser to view the documentation.
