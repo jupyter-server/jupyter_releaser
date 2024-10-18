@@ -13,7 +13,6 @@
 # sys.path.insert(0, os.path.abspath('.'))
 import importlib.metadata
 import os.path as osp
-import shutil
 
 HERE = osp.abspath(osp.dirname(__file__))
 
@@ -90,6 +89,4 @@ html_context = {
 
 
 def setup(app):
-    dest = osp.join(HERE, "reference", "changelog.md")
-    shutil.copy(osp.join(HERE, "..", "CHANGELOG.md"), dest)
     app.add_css_file("custom.css")

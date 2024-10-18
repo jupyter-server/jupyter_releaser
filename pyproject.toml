@@ -74,9 +74,9 @@ validate-bump = false
 [tool.hatch.envs.docs]
 features = ["docs"]
 [tool.hatch.envs.docs.scripts]
-build = "sphinx-build -W -b html docs docs/build/html"
+build = "sphinx-build -W -b html docs/source docs/build/html"
 serve = "python -m http.server --directory docs/build/html"
-watch = "sphinx-autobuild -W -b html docs docs/build/html --host 0.0.0.0"
+watch = "sphinx-autobuild -W -b html docs/source docs/build/html --host 0.0.0.0"
 
 [tool.hatch.envs.test]
 features = ["test"]
