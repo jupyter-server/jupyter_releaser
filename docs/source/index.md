@@ -13,6 +13,6 @@ reference/faq
 
 # Indices and tables
 
-* [genindex](genindex)
-* [modindex](modindex)
-* [search](search)
+- [genindex](genindex)
+- [modindex](modindex)
+- [search](search)
