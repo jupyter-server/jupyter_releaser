@@ -19,6 +19,6 @@ reference/changelog
 
 # Indices and tables
 
-- [](genindex)
-- [](modindex)
-- [](search)
+- {ref}`genindex`
+- {ref}`modindex`
+- {ref}`search`
