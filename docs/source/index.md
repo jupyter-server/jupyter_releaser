@@ -8,12 +8,17 @@
 get_started/index
 how_to_guides/index
 reference/index
-reference/changelog
 reference/faq
+```
+
+```{toctree}
+:maxdepth: 1
+
+reference/changelog
 ```
 
 # Indices and tables
 
-- [genindex](genindex)
-- [modindex](modindex)
-- [search](search)
+- [](genindex)
+- [](modindex)
+- [](search)
