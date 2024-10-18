@@ -135,4 +135,4 @@ dmypy.json
 .DS_Store
 
 # Copied changelog
-docs/source/**/changelog.md
+docs/**/changelog.md
