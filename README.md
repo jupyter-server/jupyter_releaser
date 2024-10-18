@@ -11,15 +11,15 @@ To install the latest release locally, make sure you have
 [pip installed](https://pip.readthedocs.io/en/stable/installing/) and run:
 
 ```bash
-    pip install git+https://github.com/jupyter-server/jupyter_releaser
+pip install git+https://github.com/jupyter-server/jupyter_releaser
 ```
 
 ## Library Usage
 
 ```bash
-    jupyter-releaser --help
-    jupyter-releaser build-python --help
-    jupyter-releaser check-npm --help
+jupyter-releaser --help
+jupyter-releaser build-python --help
+jupyter-releaser check-npm --help
 ```
 
 ## Checklist for Adoption
