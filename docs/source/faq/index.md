@@ -1,6 +1,6 @@
 # FAQ
 
-## How to resume a failed Finalize Release?
+## How to resume a failed release?
 
 If the workflow failed to publish the release, for example because PyPI or npm was down during the release process, we can try to re-run the failed "Publish Release" workflow.
 
