@@ -36,7 +36,7 @@ ERROR: Could not find a version that satisfies the requirement foo>=1.0.0 (from 
 ERROR: No matching distribution found for foo>=1.0.0
 ```
 
-This issue is not fixed yet and is being tracked in https://github.com/jupyter-server/jupyter_releaser/issues/499.
+This issue is not fixed yet and is being tracked in [this issue](https://github.com/jupyter-server/jupyter_releaser/issues/499).
 
 As a workaround, you can skip the `check-python` step with the following releaser config:
 
