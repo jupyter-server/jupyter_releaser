@@ -11,6 +11,7 @@ If the draft GitHub release was correctly created, re-run the workflow this time
 The releaser may fail to publish a package to the `npm` in the following cases:
 
 - `npmjs.com` is down, or `npm` is encountering issues publishing new packages
+- the account publishing the package to npm is not part of the list of collaborators
 - the package you are trying to publish does not contain the correct publish config. If the package is meant to be public, add the following to `package.json`:
 
 ```json
