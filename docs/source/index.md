@@ -8,7 +8,7 @@
 get_started/index
 how_to_guides/index
 reference/index
-reference/faq
+faq/index
 ```
 
 ```{toctree}

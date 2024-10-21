@@ -10,6 +10,4 @@ releaser_cli
 api_docs
 configuration
 theory
-changelog
-faq
 ```
