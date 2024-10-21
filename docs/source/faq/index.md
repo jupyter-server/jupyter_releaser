@@ -46,6 +46,15 @@ As a workaround, you can skip the `check-python` step with the following release
 skip = ["check-python"]
 ```
 
+## How to only publish to `npm`?
+
+If you would like to use the Jupyter Releaser to publish to `npm` only, you can configure the releaser to skip the `build-python` step:
+
+```toml
+[tool.jupyter-releaser]
+skip = ["build-python"]
+```
+
 ## My changelog is out of sync
 
 Create a new manual PR to fix the PR and re-orient the changelog entry markers.
