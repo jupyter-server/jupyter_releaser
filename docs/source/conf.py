@@ -13,14 +13,13 @@
 # sys.path.insert(0, os.path.abspath('.'))
 import importlib.metadata
 import os.path as osp
-import shutil
 
 HERE = osp.abspath(osp.dirname(__file__))
 
 # -- Project information -----------------------------------------------------
 
 project = "Jupyter Releaser"
-copyright = "2021, Project Jupyter"
+copyright = "2024, Project Jupyter"
 author = "Project Jupyter"
 
 # The full version, including alpha/beta/rc tags.
@@ -97,6 +96,4 @@ html_context = {
 
 
 def setup(app):
-    dest = osp.join(HERE, "reference", "changelog.md")
-    shutil.copy(osp.join(HERE, "..", "..", "CHANGELOG.md"), dest)
     app.add_css_file("custom.css")

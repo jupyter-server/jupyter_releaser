@@ -1,30 +1,39 @@
-API Docs
-========
+# API Docs
 
-Library Functions
------------------
+## Library Functions
+
+```{eval-rst}
 .. automodule:: jupyter_releaser.lib
     :members:
+```
 
-Python Utility Functions
-------------------------
+## Python Utility Functions
+
+```{eval-rst}
 .. automodule:: jupyter_releaser.python
     :members:
 
+```
 
-NPM Utility Functions
-------------------------
+## NPM Utility Functions
+
+```{eval-rst}
 .. automodule:: jupyter_releaser.npm
     :members:
 
+```
 
-Changelog Utility Functions
----------------------------
+## Changelog Utility Functions
+
+```{eval-rst}
 .. automodule:: jupyter_releaser.changelog
     :members:
 
+```
 
-Global Utility Functions
-------------------------
+## Global Utility Functions
+
+```{eval-rst}
 .. automodule:: jupyter_releaser.util
     :members:
+```

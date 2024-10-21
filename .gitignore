@@ -133,6 +133,3 @@ dmypy.json
 
 # macOS
 .DS_Store
-
-# Copied changelog
-docs/source/**/changelog.md
