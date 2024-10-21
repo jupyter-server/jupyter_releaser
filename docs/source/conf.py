@@ -76,6 +76,13 @@ html_static_path = ["_static"]
 
 # Add an Edit this Page button
 html_theme_options = {
+    "icon_links": [
+        {
+            "name": "GitHub",
+            "url": "https://github.com/jupyter-server/jupyter_releaser",
+            "icon": "fab fa-github-square",
+        }
+    ],
     "use_edit_page_button": True,
     "navigation_with_keys": False,
 }
