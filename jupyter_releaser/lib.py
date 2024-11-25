@@ -414,7 +414,7 @@ def publish_assets(
         # in a temporary directory
         if len(glob(f"{dist_dir}/*.whl")):
             python.start_local_pypi()
-            twine_cmd = "pipx run twine upload --repository-url=http://0.0.0.0:8081"
+            twine_cmd = "pipx run twine upload --verbose --repository-url=http://0.0.0.0:8081"
             os.environ["TWINE_USERNAME"] = "foo"
             twine_token = twine_token or "bar"
         npm_cmd = "npm publish --dry-run"
