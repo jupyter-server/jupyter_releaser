@@ -161,7 +161,10 @@ jobs:
       - lint
       - check_local_actions
       - test_minimum_versions
-      - test_prereleases
+      # disabled until we can use pypiserver 2.3.x
+      # which supports Python 3.13, see
+      # https://github.com/pypiserver/pypiserver/issues/630
+      # - test_prereleases
       - generate_changelog
     runs-on: ubuntu-latest
     steps:
