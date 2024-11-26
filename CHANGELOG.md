@@ -2,6 +2,32 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.8.5
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...44e858497e4364a7546b7bd3cd08228b5563d027))
+
+### Maintenance and upkeep improvements
+
+- Fix "test minimum versions" job [#597](https://github.com/jupyter-server/jupyter_releaser/pull/597) ([@krassowski](https://github.com/krassowski))
+- Pin `pypiserver` to v2.2.0 [#596](https://github.com/jupyter-server/jupyter_releaser/pull/596) ([@krassowski](https://github.com/krassowski))
+
+### Documentation improvements
+
+- Add link to the blog post to the documentation [#591](https://github.com/jupyter-server/jupyter_releaser/pull/591) ([@jtpio](https://github.com/jtpio))
+- Add FAQ section about publish to `npm` only [#590](https://github.com/jupyter-server/jupyter_releaser/pull/590) ([@jtpio](https://github.com/jtpio))
+- Add link to GitHub repo in docs navbar [#589](https://github.com/jupyter-server/jupyter_releaser/pull/589) ([@krassowski](https://github.com/krassowski))
+- Add more content to the FAQ [#588](https://github.com/jupyter-server/jupyter_releaser/pull/588) ([@jtpio](https://github.com/jtpio))
+- Add `hatch` scripts to build, serve and watch the docs + docs improvements [#587](https://github.com/jupyter-server/jupyter_releaser/pull/587) ([@jtpio](https://github.com/jtpio))
+- Fix code indentation in README.md [#586](https://github.com/jupyter-server/jupyter_releaser/pull/586) ([@jtpio](https://github.com/jtpio))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2024-07-04&to=2024-11-26&type=c))
+
+[@brichet](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Abrichet+updated%3A2024-07-04..2024-11-26&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2024-07-04..2024-11-26&type=Issues) | [@krassowski](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2024-07-04..2024-11-26&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.8.4
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...76ce4aa66e668f50b2f8eb4fe0a02a14659504fa))
@@ -23,8 +49,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2024-04-23&to=2024-07-04&type=c))
 
 [@blink1073](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ablink1073+updated%3A2024-04-23..2024-07-04&type=Issues) | [@fcollonval](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Afcollonval+updated%3A2024-04-23..2024-07-04&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.8.3
 
