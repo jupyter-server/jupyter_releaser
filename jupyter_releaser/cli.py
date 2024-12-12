@@ -21,7 +21,7 @@ class ReleaseHelperGroup(click.Group):
         """Handle jupyter-releaser config while invoking a command"""
         # Get the command name and make sure it is valid
         cmd_name = ctx.protected_args[0]
-        if cmd_name not in self.commands:
+        if cmd_name not in self.commands or "--help" in ctx.args:
             super().invoke(ctx)
 
         if cmd_name == "list-envvars":
@@ -343,7 +343,6 @@ def add_options(options):
 
 def use_checkout_dir():
     """Use the checkout dir created by prep-git"""
-
     def inner(func):
         ReleaseHelperGroup._needs_checkout_dir[func.__name__] = True
         return func
