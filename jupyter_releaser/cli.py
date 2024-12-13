@@ -343,6 +343,7 @@ def add_options(options):
 
 def use_checkout_dir():
     """Use the checkout dir created by prep-git"""
+
     def inner(func):
         ReleaseHelperGroup._needs_checkout_dir[func.__name__] = True
         return func
