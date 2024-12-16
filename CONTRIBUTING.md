@@ -50,7 +50,7 @@ jupyter-releaser --help
 To run the Python tests, use:
 
 ```bash
-pytest
+hatch run test:test
 ```
 
 ## Documentation
