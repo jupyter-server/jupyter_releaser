@@ -450,7 +450,7 @@ def publish_assets(
                 util.run(f"{npm_cmd} {name}", cwd=dist_dir, quiet=True, quiet_error=True, echo=True)
             except CalledProcessError as e:
                 stderr = e.stderr
-                if "EPUBLISHCONFLICT" in stderr or "previously published versions" in stderr:
+                if "E409" in stderr or "EPUBLISHCONFLICT" in stderr or "previously published versions" in stderr:
                     continue
                 util.log(stderr)
                 raise e
