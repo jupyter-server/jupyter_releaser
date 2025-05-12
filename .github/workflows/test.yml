@@ -28,7 +28,7 @@ jobs:
           pipx run doc8 --max-line-length=200
 
   check_links:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
@@ -65,7 +65,7 @@ jobs:
       - uses: jupyterlab/maintainer-tools/.github/actions/report-coverage@v1
 
   generate_changelog:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
