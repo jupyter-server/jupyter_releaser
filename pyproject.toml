@@ -24,7 +24,7 @@ urls = {Homepage = "https://jupyter.org"}
 requires-python = ">=3.9"
 dynamic = ["version"]
 dependencies = [
-    "click",
+    "click<8.2.0",
     "ghapi<=1.0.4",
     "github-activity~=0.2",
     "importlib_resources",
@@ -32,7 +32,8 @@ dependencies = [
     "mdformat",
     "packaging",
     "pkginfo",
-    "pypiserver==2.2.0",
+    "pypiserver==2.2.0; python_version < '3.13'",
+    "pypiserver; python_version >= '3.13'",
     "pipx",
     "requests",
     "requests_cache",
