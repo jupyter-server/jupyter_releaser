@@ -28,7 +28,7 @@ jobs:
           pipx run doc8 --max-line-length=200
 
   check_links:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
@@ -40,7 +40,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ["3.8", "3.12"]
+        python-version: ["3.9", "3.13"]
     steps:
       - uses: actions/checkout@v4
       - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
@@ -65,7 +65,7 @@ jobs:
       - uses: jupyterlab/maintainer-tools/.github/actions/report-coverage@v1
 
   generate_changelog:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
@@ -114,6 +114,7 @@ jobs:
       - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
         with:
           dependency_type: pre
+          python_version: "3.12"
       - name: Run the tests
         run: |
           hatch run test:nowarn || hatch run test:nowarn --lf
