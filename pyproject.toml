@@ -32,7 +32,7 @@ dependencies = [
     "mdformat",
     "packaging",
     "pkginfo",
-    "pypiserver==2.2.0",
+    "pypiserver",
     "pipx",
     "requests",
     "requests_cache",
