@@ -2,6 +2,32 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.8.6
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...b360d155434dca633b8c4ed2f13ee2b4d3011f32))
+
+### Enhancements made
+
+- Check for `npm` error code 409 to skip previously published packages in private registries [#605](https://github.com/jupyter-server/jupyter_releaser/pull/605) ([@martenrichter](https://github.com/martenrichter))
+
+### Bugs fixed
+
+- Fix for displaying help for the `build_python` command [#601](https://github.com/jupyter-server/jupyter_releaser/pull/601) ([@rakhmaevao](https://github.com/rakhmaevao))
+
+### Maintenance and upkeep improvements
+
+- Require Python 3.9+, test on Python 3.9 and 3.13 [#609](https://github.com/jupyter-server/jupyter_releaser/pull/609) ([@krassowski](https://github.com/krassowski))
+- Replace `ubuntu-20.04` runners with `ubuntu-latest` [#608](https://github.com/jupyter-server/jupyter_releaser/pull/608) ([@krassowski](https://github.com/krassowski))
+- Pin to `click<8.2.0`, pin `pypiserver` based on the Python version [#607](https://github.com/jupyter-server/jupyter_releaser/pull/607) ([@jtpio](https://github.com/jtpio))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2024-11-26&to=2025-05-12&type=c))
+
+[@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2024-11-26..2025-05-12&type=Issues) | [@krassowski](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2024-11-26..2025-05-12&type=Issues) | [@martenrichter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Amartenrichter+updated%3A2024-11-26..2025-05-12&type=Issues) | [@rakhmaevao](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Arakhmaevao+updated%3A2024-11-26..2025-05-12&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.8.5
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...44e858497e4364a7546b7bd3cd08228b5563d027))
@@ -25,8 +51,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2024-07-04&to=2024-11-26&type=c))
 
 [@brichet](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Abrichet+updated%3A2024-07-04..2024-11-26&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2024-07-04..2024-11-26&type=Issues) | [@krassowski](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2024-07-04..2024-11-26&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.8.4
 
