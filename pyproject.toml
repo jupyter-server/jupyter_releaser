@@ -23,7 +23,7 @@ urls = {Homepage = "https://jupyter.org"}
 requires-python = ">=3.8"
 dynamic = ["version"]
 dependencies = [
-    "click",
+    "click<8.2.0",
     "ghapi<=1.0.4",
     "github-activity~=0.2",
     "importlib_resources",
