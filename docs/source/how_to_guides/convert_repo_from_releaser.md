@@ -10,7 +10,7 @@ See checklist below for details:
 - Bump version configuration (if using Python), for example [tbump](https://github.com/dmerejkowsky/tbump)
 - [Access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with access to target GitHub repo to run GitHub Actions.
 - Access token for the [PyPI registry](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/#saving-credentials-on-github)
-- If needed, access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens).
+- If publishing to npm, we recommend using [npm Trusted Publishers](https://docs.npmjs.com/trusted-publishers) (requires npm >= 11.5.1, available via Node.js >= 24). Otherwise, create an access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens).
 
 ## Checklist for Adoption
 
@@ -19,9 +19,9 @@ A. Prep the `jupyter_releaser` fork:
 - [ ] Clone this repository onto your GitHub user account.
 
 - [ ] Add a GitHub [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) with access to target GitHub repo to run
-  GitHub Actions, saved as `ADMIN_GITHUB_TOKEN` in the
-  [repository secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository).
-  The token will need "public_repo", and "repo:status" permissions.
+      GitHub Actions, saved as `ADMIN_GITHUB_TOKEN` in the
+      [repository secrets](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository).
+      The token will need "public_repo", and "repo:status" permissions.
 
 - [ ] Set up PyPI:
 
@@ -54,9 +54,40 @@ A. Prep the `jupyter_releaser` fork:
 
 </details>
 
-- [ ] If needed, add access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens), saved as `NPM_TOKEN`.
+- [ ] Set up npm (if publishing to npm):
 
-> If you want to set _provenance_ on your package, you need to ensure the publish release job as `permissions`: `id-token : write` (see the [documentation](https://docs.npmjs.com/generating-provenance-statements#publishing-packages-with-provenance-via-github-actions)).
+<details><summary>Using npm Trusted Publishers (recommended)</summary>
+
+- npm Trusted Publishers is supported with npm >= 11.5.1
+- Ensure the publish release job has `permissions`: `id-token: write` (see the [documentation](https://docs.npmjs.com/generating-provenance-statements))
+- Set up the Node.js version in your workflow using one of these approaches:
+
+  Using the `base-setup` action from `jupyterlab/maintainer-tools`:
+
+  ```yaml
+  - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
+    with:
+      node_version: "24"
+  ```
+
+  Or using the standard `setup-node` action:
+
+  ```yaml
+  - uses: actions/setup-node@v4
+    with:
+      node-version: "24"
+  ```
+
+- With Trusted Publishers enabled, npm packages will be published with provenance automatically, without needing to store an `NPM_TOKEN` secret
+
+</details>
+
+<details><summary>Using NPM_TOKEN (legacy way)</summary>
+
+- Create an access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens), saved as `NPM_TOKEN`
+- If you want to set _provenance_ on your package, you need to ensure the publish release job has `permissions`: `id-token: write` (see the [documentation](https://docs.npmjs.com/generating-provenance-statements#publishing-packages-with-provenance-via-github-actions))
+
+</details>
 
 B. Prep target repository:
 
@@ -66,7 +97,7 @@ B. Prep target repository:
   - Note that [directives](https://myst-parser.readthedocs.io/en/latest/using/syntax.html#syntax-directives) can still be used
 - [ ] Add HTML start and end comment markers to Changelog file - see example in [CHANGELOG.md](https://github.com/jupyter-server/jupyter_releaser/blob/main/CHANGELOG.md) (view in raw mode)
 - [ ] We recommend using [hatch](https://hatch.pypa.io/latest/) for your
-  build system and for version handling.
+      build system and for version handling.
   - If previously providing `version_info` like `version_info = (1, 7, 0, '.dev', '0')`, use a pattern like the one below in your version file:
 
 ```python
@@ -111,7 +142,7 @@ version_info = tuple(parts)
 ```
 
 - [ ] Add a workflow that uses the [`enforce-label`](https://github.com/jupyterlab/maintainer-tools#enforce-labels) action from `jupyterlab/maintainer-tools` to ensure that all PRs have on of the triage labels used to
-  categorize the changelog.
+      categorize the changelog.
 
 - [ ] Update or add `RELEASE.md` that describes the onboarding and release process, e.g. [jupyter_server](https://github.com/jupyter-server/jupyter_server/blob/main/RELEASE.md).
 
