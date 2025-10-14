@@ -25,7 +25,7 @@ See checklist below for details:
   - Store the `APP_ID` and the private key in a secure location (Jupyter Vault if using a Jupyter Org)
 
 - [ ] Create a "release" [environment](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment) on your repository and add an `APP_ID` Environment Variable and `APP_PRIVATE_KEY` secret.
-      The environment should be enabled for ["Protected branches only"](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment#deployment-branches-and-tags).
+  The environment should be enabled for ["Protected branches only"](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment#deployment-branches-and-tags).
 
 - [ ] Configure [Rulesets](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets) for the repository
 
@@ -38,7 +38,7 @@ See checklist below for details:
     - Allow the GitHub App to bypass protections
 
 - [ ] Copy `prep-release.yml` and `publish-release.yml` (or only `full-release.yml`) from the
-      [example-workflows](https://github.com/jupyter-server/jupyter_releaser/tree/main/example-workflows) folder in this repository.
+  [example-workflows](https://github.com/jupyter-server/jupyter_releaser/tree/main/example-workflows) folder in this repository.
 
 - [ ] Set up PyPI:
 
@@ -52,7 +52,9 @@ See checklist below for details:
 <details><summary>Using npm Trusted Publishers (recommended)</summary>
 
 - npm Trusted Publishers is supported with npm >= 11.5.1
+
 - Ensure the publish release job has `permissions`: `id-token: write` (see the [documentation](https://docs.npmjs.com/generating-provenance-statements))
+
 - Set up the Node.js version in your workflow using one of these approaches:
 
   Using the `base-setup` action from `jupyterlab/maintainer-tools`:
@@ -104,7 +106,7 @@ See checklist below for details:
 ```
 
 - [ ] We recommend using [hatch](https://hatch.pypa.io/latest/) for your
-      build system and for version handling.
+  build system and for version handling.
   - If previously providing `version_info` like `version_info = (1, 7, 0, '.dev', '0')`,
     use a pattern like the one below in your version file:
 
@@ -152,7 +154,7 @@ version_info = tuple(parts)
 ```
 
 - [ ] Add a workflow that uses the [`enforce-label`](https://github.com/jupyterlab/maintainer-tools#enforce-labels) action
-      from `jupyterlab/maintainer-tools` to ensure that all PRs have on of the triage labels used to categorize the changelog.
+  from `jupyterlab/maintainer-tools` to ensure that all PRs have on of the triage labels used to categorize the changelog.
 
 ```yaml
 name: Enforce PR label
@@ -182,7 +184,7 @@ jobs:
 - [ ] Try out the `Prep Release` and `Publish Release` process against a fork of the target repo first so you don't accidentally push tags and GitHub releases to the source repository. Set the `TWINE_REPOSITORY_URL` environment variable to `https://test.pypi.org/legacy/` in the "Finalize Release" action part of the workflow
 
 - [ ] Try the `Publish Release` process using a prerelease version on the main
-      repository before publishing a final version.
+  repository before publishing a final version.
 
 ## Backport Branches
 

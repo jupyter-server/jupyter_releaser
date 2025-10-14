@@ -54,10 +54,13 @@ already uses Jupyter Releaser.
 <details><summary>Using npm Trusted Publishers (recommended)</summary>
 
 - npm Trusted Publishers is supported with npm >= 11.5.1
+
 - Ensure the publish release job has `permissions`: `id-token: write` (see the [documentation](https://docs.npmjs.com/generating-provenance-statements))
+
 - Set up the Node.js version in your workflow using one of these approaches:
 
   Using the `base-setup` action from `jupyterlab/maintainer-tools`:
+
   ```yaml
   - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
     with:
@@ -65,6 +68,7 @@ already uses Jupyter Releaser.
   ```
 
   Or using the standard `setup-node` action:
+
   ```yaml
   - uses: actions/setup-node@v6
     with:
