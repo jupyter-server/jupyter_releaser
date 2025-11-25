@@ -33,7 +33,7 @@ dependencies = [
     "packaging",
     "pkginfo",
     "pypiserver==2.2.0; python_version < '3.13'",
-    "pypiserver; python_version >= '3.13'",
+    "pypiserver==2.3.0; python_version >= '3.13'",
     "pipx",
     "requests",
     "requests_cache",
