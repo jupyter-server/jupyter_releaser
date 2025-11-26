@@ -98,8 +98,8 @@ def _run_win(cmd, **kwargs):
     """Run a command as a subprocess and get the output as a string"""
     quiet = kwargs.pop("quiet", False)
 
-    if not quiet:
-        kwargs.setdefault("stderr", PIPE)
+    # Always capture stderr so we can decode/log it on error
+    kwargs.setdefault("stderr", PIPE)
 
     kwargs.setdefault("shell", True)
 
@@ -117,11 +117,13 @@ def _run_win(cmd, **kwargs):
         log(output)
         return output
     except CalledProcessError as e:
-        e.output = e.output.decode("utf-8")
-        if quiet:
+        if e.output is not None:
+            e.output = e.output.decode("utf-8")
+        if quiet and e.stderr is not None:
             e.stderr = e.stderr.decode("utf-8")
             log("stderr:\n", e.stderr.strip(), "\n\n")
-        log("stdout:\n", e.output.strip(), "\n\n")
+        if e.output:
+            log("stdout:\n", e.output.strip(), "\n\n")
         if check:
             raise e
 
