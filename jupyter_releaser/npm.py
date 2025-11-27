@@ -1,4 +1,5 @@
 """npm-related utilities."""
+
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 import json
@@ -153,6 +154,8 @@ def handle_npm_config(npm_token):
         short_reg = registry.replace("https://", "//")
         short_reg = short_reg.replace("http://", "//")
         auth_entry = f"{short_reg}:_authToken={npm_token}"
+    else:
+        util.log("No NPM_TOKEN provided, will attempt to use npm Trusted Publishers if configured")
 
     # Handle existing config
     if npmrc.exists():
@@ -182,13 +185,13 @@ def get_package_versions(version):
     npm_version = data.get("version", "")
     if npm_version != version:
         message += f"\nPython version: {version}"
-        message += f'\nnpm version: {data["name"]}: {npm_version}'
+        message += f"\nnpm version: {data['name']}: {npm_version}"
     if "workspaces" in data:
         message += "\nnpm workspace versions:"
         for path in _get_workspace_packages(data):
             text = path.joinpath("package.json").read_text(encoding="utf-8")
             data = json.loads(text)
-            message += f'\n{data["name"]}: {data.get("version", "")}'
+            message += f"\n{data['name']}: {data.get('version', '')}"
     return message
 
 
