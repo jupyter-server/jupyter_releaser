@@ -34,6 +34,7 @@ class OptionDef:
         multiple: bool = False,
         nargs: t.Optional[str] = None,
     ):
+        """Initialize an OptionDef instance."""
         self.name = name
         self.envvar = envvar
         self.default = default
