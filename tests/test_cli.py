@@ -732,6 +732,26 @@ def test_publish_assets_npm_all_exists(npm_dist, runner, mocker, mock_github, dr
     assert called == 3, called
 
 
+def test_publish_assets_npm_prerelease_dry_run(npm_dist_prerelease, runner, mock_github):
+    """Test that prereleases work with --dry-run flag (npm 11+ compatibility)
+
+    npm 11+ requires --tag when publishing prerelease versions.
+    This test ensures the --tag flag is preserved in dry-run mode.
+    If the --tag is missing, npm 11 will fail with:
+    "You must specify a tag using --tag when publishing a prerelease version."
+    """
+    # Create the release.
+    dist_dir = npm_dist_prerelease / util.CHECKOUT_NAME / "dist"
+    release = create_draft_release("bar", glob(f"{dist_dir!s}/*.*"))
+
+    os.environ["RH_RELEASE_URL"] = release.html_url
+
+    # Use --dry-run flag to trigger the dry_run code path
+    # This will actually call npm 11 publish --dry-run
+    # If --tag is missing, npm 11 will reject it and the test will fail
+    runner(["publish-assets", "--dist-dir", dist_dir, "--dry-run"])
+
+
 def test_publish_release(npm_dist, runner, mocker, mock_github, draft_release):
     os.environ["RH_RELEASE_URL"] = draft_release
     runner(["publish-release"])

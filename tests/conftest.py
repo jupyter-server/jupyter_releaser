@@ -159,6 +159,37 @@ def npm_dist(workspace_package, runner, mocker, git_prep):
 
 
 @pytest.fixture()
+def npm_dist_prerelease(workspace_package, runner, mocker, git_prep):
+    """Fixture for npm packages with a prerelease version (e.g., 1.0.0-alpha.0).
+
+    To test npm 11+ behavior which requires --tag for prereleases.
+    """
+    prerelease_version = "1.0.0-alpha.0"
+
+    changelog_entry = testutil.mock_changelog_entry(
+        workspace_package, runner, mocker, version_spec=prerelease_version
+    )
+
+    # Manually update workspace package versions
+    checkout_dir = Path(util.CHECKOUT_NAME)
+    for pkg_dir in (checkout_dir / "packages").iterdir():
+        if pkg_dir.is_dir():
+            pkg_json = pkg_dir / "package.json"
+            if pkg_json.exists():
+                data = json.loads(pkg_json.read_text(encoding="utf-8"))
+                data["version"] = prerelease_version
+                pkg_json.write_text(json.dumps(data), encoding="utf-8")
+
+    # Create the dist files
+    runner(["build-npm"])
+
+    # Finalize the release
+    runner(["tag-release"])
+
+    return workspace_package
+
+
+@pytest.fixture()
 def runner():
     cli_runner = CliRunner()
 

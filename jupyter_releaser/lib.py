@@ -417,7 +417,16 @@ def publish_assets(
             twine_cmd = "pipx run twine upload --repository-url=http://0.0.0.0:8081"
             os.environ["TWINE_USERNAME"] = "foo"
             twine_token = twine_token or "bar"
-        npm_cmd = "npm publish --dry-run"
+        # Preserve --tag flag if it was added for prereleases
+        if " --tag " in npm_cmd:
+            # Extract the tag and add --dry-run while preserving it
+            tag_match = re.search(r"--tag\s+(\S+)", npm_cmd)
+            if tag_match:
+                npm_cmd = f"npm publish --dry-run --tag {tag_match.group(1)}"
+            else:
+                npm_cmd = "npm publish --dry-run"
+        else:
+            npm_cmd = "npm publish --dry-run"
     else:
         os.environ.setdefault("TWINE_USERNAME", "__token__")
 
