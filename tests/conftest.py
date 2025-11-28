@@ -30,7 +30,9 @@ def github_port(worker_id):
 def mock_env(mocker):
     """Clear unwanted environment variables"""
     # Anything that starts with RH_ or GITHUB_ or PIP
-    prefixes = ["GITHUB_", "RH_", "PIP_"]
+    # Also clear HATCH_ENV_ACTIVE to prevent hatch 1.16+ from inheriting
+    # the parent environment when running hatch version in subprocesses
+    prefixes = ["GITHUB_", "RH_", "PIP_", "HATCH_ENV"]
     env = os.environ.copy()
     for key in list(env):
         for prefix in prefixes:
