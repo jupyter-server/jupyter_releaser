@@ -63,8 +63,6 @@ already uses Jupyter Releaser.
 
   ```yaml
   - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
-    with:
-      node_version: "24"
   ```
 
   Or using the standard `setup-node` action:
