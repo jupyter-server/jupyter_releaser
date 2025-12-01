@@ -66,7 +66,9 @@ See checklist below for details:
   Or using the standard `setup-node` action:
 
   ```yaml
-  - uses: actions/setup-node@v4
+  - uses: actions/setup-node@v6
+    with:
+      node-version: "24.x"
   ```
 
 - With Trusted Publishers enabled, npm packages will be published with provenance automatically, without needing to store an `NPM_TOKEN` secret

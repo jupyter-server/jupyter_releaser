@@ -69,6 +69,8 @@ already uses Jupyter Releaser.
 
   ```yaml
   - uses: actions/setup-node@v6
+    with:
+      node-version: "24.x"
   ```
 
 - With Trusted Publishers enabled, npm packages will be published without needing to store an `NPM_TOKEN` secret
