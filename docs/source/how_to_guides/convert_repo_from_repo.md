@@ -69,8 +69,6 @@ See checklist below for details:
 
   ```yaml
   - uses: actions/setup-node@v4
-    with:
-      node-version: "24"
   ```
 
 - With Trusted Publishers enabled, npm packages will be published with provenance automatically, without needing to store an `NPM_TOKEN` secret
