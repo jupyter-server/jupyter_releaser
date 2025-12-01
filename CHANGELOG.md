@@ -2,6 +2,24 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.9.0
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...6d5afd62cca2512de516f05bf734645c0dc728e2))
+
+### Maintenance and upkeep improvements
+
+- Ignore `HATCH_ENV` env var when running the tests [#624](https://github.com/jupyter-server/jupyter_releaser/pull/624) ([@jtpio](https://github.com/jtpio))
+- Pin to `pypiserver==2.3.2` [#619](https://github.com/jupyter-server/jupyter_releaser/pull/619) ([@jtpio](https://github.com/jtpio))
+- Support npm 11 [#618](https://github.com/jupyter-server/jupyter_releaser/pull/618) ([@jtpio](https://github.com/jtpio))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2025-05-12&to=2025-12-01&type=c))
+
+[@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2025-05-12..2025-12-01&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.8.6
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...b360d155434dca633b8c4ed2f13ee2b4d3011f32))
@@ -25,8 +43,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2024-11-26&to=2025-05-12&type=c))
 
 [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2024-11-26..2025-05-12&type=Issues) | [@krassowski](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2024-11-26..2025-05-12&type=Issues) | [@martenrichter](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Amartenrichter+updated%3A2024-11-26..2025-05-12&type=Issues) | [@rakhmaevao](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Arakhmaevao+updated%3A2024-11-26..2025-05-12&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.8.5
 
