@@ -17,7 +17,7 @@ This project should help maintainers reduce toil and save time in the release pr
 
 We strive to use the most secure release practices possible, reflected in the `Checklist for Adoption`
 and the example workflows.
-This includes using PyPI Trusted Publishing, using GitHub Environments, encouraging the use of Rulesets and GitHub Apps with limited bypass capability, and provenance data for npm.
+This includes using PyPI Trusted Publishing, npm Trusted Publishers (with npm >= 11.5.1), using GitHub Environments, encouraging the use of Rulesets and GitHub Apps with limited bypass capability, and provenance data for npm.
 In addition, there is an automatic check for whether the user who triggered the action is an admin.
 
 ## Action Details
