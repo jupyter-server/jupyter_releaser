@@ -32,7 +32,6 @@ class OptionDef:
         help_text: str = "",
         is_flag: bool = False,
         multiple: bool = False,
-        nargs: t.Optional[str] = None,
     ):
         """Initialize an OptionDef instance."""
         self.name = name
@@ -41,7 +40,6 @@ class OptionDef:
         self.help_text = help_text
         self.is_flag = is_flag
         self.multiple = multiple
-        self.nargs = nargs
 
 
 # Define all the common options
@@ -261,7 +259,7 @@ def get_option_value(
         env_value = os.environ[opt.envvar]
         display_value = "***" if "token" in name.lower() else env_value
         util.log(f"Using env value for {name}: '{display_value}'")
-        if opt.is_flag:
+        if opt.is_flag or isinstance(opt.default, bool):
             return env_value.lower() in ("true", "1", "yes")
         if opt.multiple:
             return [env_value]  # Environment variable is a single value for multiple
@@ -280,6 +278,9 @@ def get_option_value(
         val = config_options.get(config_name, config_options.get(config_name_underscore))
         display_value = "***" if "token" in name.lower() else val
         util.log(f"Adding option override for --{opt.name}: '{display_value}'")
+        # Convert string values to boolean for boolean options
+        if isinstance(opt.default, bool) and isinstance(val, str):
+            return val.lower() in ("true", "1", "yes")
         return val
 
     # Use default
