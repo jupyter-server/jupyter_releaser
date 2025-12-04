@@ -37,7 +37,7 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.napoleon",
     "myst_parser",
-    "sphinx_click",
+    "sphinxarg.ext",
 ]
 
 try:
@@ -48,6 +48,9 @@ except ImportError:
     pass
 
 myst_enable_extensions = ["html_image", "tasklist"]
+
+# Allow argparse directive in MyST markdown
+myst_fence_as_directive = ["argparse"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
