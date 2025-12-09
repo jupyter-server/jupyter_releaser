@@ -26,7 +26,7 @@ dynamic = ["version"]
 dependencies = [
     "click<8.2.0",
     "ghapi<=1.0.4",
-    "github-activity>=1.0.3,<2",
+    "github-activity>=1.1.0,<2",
     "importlib_resources",
     "jsonschema>=3.0.1",
     "mdformat",
