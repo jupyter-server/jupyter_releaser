@@ -18,6 +18,16 @@ END_SILENT_MARKER = "<!-- END SILENT CHANGELOG ENTRY -->"
 PR_PREFIX = "Automated Changelog Entry"
 PRECOMMIT_PREFIX = "[pre-commit.ci] pre-commit autoupdate"
 
+# Bot accounts to ignore in changelog generation
+DEFAULT_IGNORED_CONTRIBUTORS = [
+    "dependabot",
+    "pre-commit-ci",
+    "github-actions",
+    "github-advanced-security",
+    # Wildcard patterns for common bot naming conventions
+    "*[bot]",
+]
+
 
 def format_pr_entry(target, number, auth=None, dry_run=False):
     """Format a PR entry in the style used by our changelogs.
@@ -60,6 +70,7 @@ def get_version_entry(
     auth=None,
     resolve_backports=False,  # noqa: ARG001
     dry_run=False,
+    ignored_contributors=None,
 ):
     """Get a changelog for the changes since the last tag on the given branch.
 
@@ -85,6 +96,9 @@ def get_version_entry(
         Whether to resolve backports to the original PR
     dry_run: bool, optional
         Whether this is a dry run.
+    ignored_contributors: list of str, optional
+        List of contributor usernames or patterns to exclude from the changelog.
+        Supports wildcard patterns (e.g., '*[bot]'). If None, uses DEFAULT_IGNORED_CONTRIBUTORS.
 
     Returns
     -------
@@ -101,6 +115,10 @@ def get_version_entry(
 
     until = until.replace("%", "") if until else None
 
+    # Use default ignored contributors if not specified
+    if ignored_contributors is None:
+        ignored_contributors = DEFAULT_IGNORED_CONTRIBUTORS
+
     md = generate_activity_md(
         repo,
         since=since,
@@ -109,6 +127,7 @@ def get_version_entry(
         heading_level=2,
         auth=auth,
         branch=branch,
+        ignored_contributors=ignored_contributors,
     )
 
     if not md:
@@ -127,14 +146,10 @@ def get_version_entry(
         if match:
             entry[ind] = format_pr_entry(repo, match.groups()[0], auth=auth, dry_run=dry_run)
 
-    # Remove github actions PRs
-    gh_actions = "[@github-actions](https://github.com/github-actions)"
-    entry = [e for e in entry if gh_actions not in e]
-
-    # Remove automated changelog PRs
+    # Remove automated changelog PRs (based on PR title)
     entry = [e for e in entry if PR_PREFIX not in e]
 
-    # Remove Pre-Commit PRs
+    # Remove Pre-Commit PRs (based on PR title)
     entry = [e for e in entry if PRECOMMIT_PREFIX not in e]
 
     entry = "\n".join(entry).strip()
