@@ -2,6 +2,29 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.10.0
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...003a48c40ce52d77a838cb5b2a3b7210c042d003))
+
+### Maintenance and upkeep improvements
+
+- Update to `github-activity>=1.1.1`, drop Python 3.9 [#627](https://github.com/jupyter-server/jupyter_releaser/pull/627) ([@jtpio](https://github.com/jtpio), [@brichet](https://github.com/brichet), [@krassowski](https://github.com/krassowski))
+
+### Documentation improvements
+
+- Document npm trusted publishers [#616](https://github.com/jupyter-server/jupyter_releaser/pull/616) ([@jtpio](https://github.com/jtpio), [@brichet](https://github.com/brichet), [@krassowski](https://github.com/krassowski), [@pre-commit-ci[bot]](https://github.com/pre-commit-ci%5Bbot%5D))
+
+### Contributors to this release
+
+The following people contributed discussions, new ideas, code and documentation contributions, and review.
+See [our definition of contributors](https://github-activity.readthedocs.io/en/latest/#how-does-this-tool-define-contributions-in-the-reports).
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2025-12-01&to=2025-12-11&type=c))
+
+@brichet ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Abrichet+updated%3A2025-12-01..2025-12-11&type=Issues)) | @jtpio ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2025-12-01..2025-12-11&type=Issues)) | @krassowski ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2025-12-01..2025-12-11&type=Issues)) | @pre-commit-ci[bot] ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci%5Bbot%5D+updated%3A2025-12-01..2025-12-11&type=Issues))
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.9.0
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...6d5afd62cca2512de516f05bf734645c0dc728e2))
@@ -17,8 +40,6 @@
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2025-05-12&to=2025-12-01&type=c))
 
 [@jtpio](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2025-05-12..2025-12-01&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.8.6
 
