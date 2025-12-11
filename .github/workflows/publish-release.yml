@@ -21,8 +21,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
-        with:
-          node_version: "24.x"
       - name: Install Dependencies
         shell: bash
         run: |

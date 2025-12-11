@@ -9,7 +9,7 @@ See checklist below for details:
 - Markdown changelog
 - Bump version configuration (if using Python), for example [hatch](https://hatch.pypa.io/latest/)
 - [Add a trusted publisher](https://docs.pypi.org/trusted-publishers/adding-a-publisher/) to your PyPI project
-- If needed, access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens).
+- If publishing to npm, we recommend using [npm Trusted Publishers](https://docs.npmjs.com/trusted-publishers) (requires npm >= 11.5.1, available via Node.js >= 24). Otherwise, create an access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens).
 
 ## Checklist for Adoption
 
@@ -47,8 +47,41 @@ See checklist below for details:
       _environment_ should be `release` (the name of the GitHub environment).
   - Ensure the publish release job as `permissions`: `id-token : write` (see the [documentation](https://docs.pypi.org/trusted-publishers/using-a-publisher/))
 
-- [ ] If needed, add access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens), saved as `NPM_TOKEN`. Again this should
-  be created using a machine account that only has publish access.
+- [ ] Set up npm (if publishing to npm):
+
+<details><summary>Using npm Trusted Publishers (recommended)</summary>
+
+- npm Trusted Publishers is supported with npm >= 11.5.1
+
+- Ensure the publish release job has `permissions`: `id-token: write` (see the [documentation](https://docs.npmjs.com/generating-provenance-statements))
+
+- Set up the Node.js version in your workflow using one of these approaches:
+
+  Using the `base-setup` action from `jupyterlab/maintainer-tools`:
+
+  ```yaml
+  - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
+  ```
+
+  Or using the standard `setup-node` action:
+
+  ```yaml
+  - uses: actions/setup-node@v6
+    with:
+      node-version: "24.x"
+  ```
+
+- With Trusted Publishers enabled, npm packages will be published with provenance automatically, without needing to store an `NPM_TOKEN` secret
+
+</details>
+
+<details><summary>Using NPM_TOKEN (legacy way)</summary>
+
+- Create an access token for [npm](https://docs.npmjs.com/creating-and-viewing-access-tokens), saved as `NPM_TOKEN`
+- This should be created using a machine account that only has publish access
+- If you want to set _provenance_ on your package, you need to ensure the publish release job has `permissions`: `id-token: write` (see the [documentation](https://docs.npmjs.com/generating-provenance-statements#publishing-packages-with-provenance-via-github-actions))
+
+</details>
 
 - [ ] Ensure that only trusted users with 2FA have admin access to the repository, since they will be able to trigger releases.
 
