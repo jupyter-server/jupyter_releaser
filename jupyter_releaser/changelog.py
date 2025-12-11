@@ -86,7 +86,7 @@ def get_version_entry(
         The new version
     since: str
         Use PRs with activity since this date or git reference
-    since_last_stable:
+    since_last_stable : bool
         Use PRs with activity since the last stable git tag
     until: str, optional
         Use PRs until this date or git reference
