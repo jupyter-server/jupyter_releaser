@@ -25,7 +25,7 @@ for name in cli.main.commands:
 PR_ENTRY = "Add link to the blog post to the documentation [#591](https://github.com/jupyter-server/jupyter_releaser/pull/591) ([@jtpio](https://github.com/jtpio), [@krassowski](https://github.com/krassowski))"
 
 CHANGELOG_ENTRY = f"""
-## master@{{2024-10-01}}...master@{{2024-12-01}}
+## main@{{2024-10-01}}...main@{{2024-12-01}}
 
 ([full changelog](https://github.com/jupyter-server/jupyter_releaser/compare/4fe67ed3f81c41131d231a19696d912bb0abfb14...44e858497e4364a7546b7bd3cd08228b5563d027))
 
@@ -54,7 +54,7 @@ See [our definition of contributors](https://github-activity.readthedocs.io/en/l
 """
 
 EMPTY_CHANGELOG_ENTRY = """
-## master@{2024-08-01}...master@{2024-08-15}
+## main@{2024-08-01}...main@{2024-08-15}
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/76ce4aa66e668f50b2f8eb4fe0a02a14659504fa...None))
 
