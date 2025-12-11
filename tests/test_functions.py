@@ -10,6 +10,7 @@ import toml
 from ghapi.core import GhApi
 
 from jupyter_releaser import changelog, npm, util
+from jupyter_releaser.changelog import DEFAULT_IGNORED_CONTRIBUTORS
 from jupyter_releaser.util import run
 from tests import util as testutil
 
@@ -70,9 +71,10 @@ def test_get_changelog_version_entry(py_package, mocker):
         since="v1.0",
         until=None,
         kind="pr",
-        branch=branch,
         heading_level=2,
         auth=None,
+        branch=branch,
+        ignored_contributors=DEFAULT_IGNORED_CONTRIBUTORS,
     )
 
     assert f"## {version}" in resp
@@ -87,9 +89,10 @@ def test_get_changelog_version_entry(py_package, mocker):
         since="v1.0",
         until=None,
         kind="pr",
-        branch=branch,
         heading_level=2,
         auth="bizz",
+        branch=branch,
+        ignored_contributors=DEFAULT_IGNORED_CONTRIBUTORS,
     )
 
     assert f"## {version}" in resp
@@ -111,9 +114,10 @@ def test_get_changelog_version_entry_no_tag(py_package, mocker):
         since=commit,
         until=None,
         kind="pr",
-        branch=branch,
         heading_level=2,
         auth=None,
+        branch=branch,
+        ignored_contributors=DEFAULT_IGNORED_CONTRIBUTORS,
     )
 
     assert f"## {version}" in resp
@@ -128,9 +132,10 @@ def test_get_changelog_version_entry_no_tag(py_package, mocker):
         since=commit,
         until=None,
         kind="pr",
-        branch=branch,
         heading_level=2,
         auth="bizz",
+        branch=branch,
+        ignored_contributors=DEFAULT_IGNORED_CONTRIBUTORS,
     )
 
     assert f"## {version}" in resp
@@ -153,9 +158,10 @@ def test_get_changelog_version_entry_since_last_stable(py_package, mocker):
         since="v1.0.0",
         until=None,
         kind="pr",
-        branch=branch,
         heading_level=2,
         auth=None,
+        branch=branch,
+        ignored_contributors=DEFAULT_IGNORED_CONTRIBUTORS,
     )
 
     assert f"## {version}" in resp
@@ -174,9 +180,10 @@ def test_get_empty_changelog(py_package, mocker):
         since="v0.2.4",
         until=None,
         kind="pr",
-        branch=branch,
         heading_level=2,
         auth=None,
+        branch=branch,
+        ignored_contributors=DEFAULT_IGNORED_CONTRIBUTORS,
     )
 
     assert "...None" not in resp
