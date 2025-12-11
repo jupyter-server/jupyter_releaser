@@ -98,7 +98,7 @@ def get_version_entry(
         Whether this is a dry run.
     ignored_contributors: list of str, optional
         List of contributor usernames or patterns to exclude from the changelog.
-        Supports wildcard patterns (e.g., '*[bot]'). If None, uses DEFAULT_IGNORED_CONTRIBUTORS.
+        Supports wildcard patterns (e.g., `*[bot]`). If None, uses DEFAULT_IGNORED_CONTRIBUTORS.
 
     Returns
     -------
