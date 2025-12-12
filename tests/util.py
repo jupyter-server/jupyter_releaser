@@ -40,7 +40,7 @@ CHANGELOG_ENTRY = f"""
 - Add FAQ section about publish to `npm` only [#590](https://github.com/jupyter-server/jupyter_releaser/pull/590) ([@jtpio](https://github.com/jtpio), [@krassowski](https://github.com/krassowski))
 - Add link to GitHub repo in docs navbar [#589](https://github.com/jupyter-server/jupyter_releaser/pull/589) ([@krassowski](https://github.com/krassowski), [@jtpio](https://github.com/jtpio))
 - Add more content to the FAQ [#588](https://github.com/jupyter-server/jupyter_releaser/pull/588) ([@jtpio](https://github.com/jtpio), [@krassowski](https://github.com/krassowski))
-- Add `hatch` scripts to build, serve and watch the docs + docs improvements [#587](https://github.com/jupyter-server/jupyter_releaser/pull/587) ([@jtpio](https://github.com/jtpio), [@krassowski](https://github.com/krassowski), [@pre-commit-ci[bot]](https://github.com/pre-commit-ci[bot]))
+- Add `hatch` scripts to build, serve and watch the docs + docs improvements [#587](https://github.com/jupyter-server/jupyter_releaser/pull/587) ([@jtpio](https://github.com/jtpio), [@krassowski](https://github.com/krassowski))
 - Fix code indentation in README.md [#586](https://github.com/jupyter-server/jupyter_releaser/pull/586) ([@jtpio](https://github.com/jtpio), [@krassowski](https://github.com/krassowski))
 
 ### Contributors to this release
@@ -50,7 +50,7 @@ See [our definition of contributors](https://github-activity.readthedocs.io/en/l
 
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2024-10-01&to=2024-12-01&type=c))
 
-@brichet ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Abrichet+updated%3A2024-10-01..2024-12-01&type=Issues)) | @jtpio ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2024-10-01..2024-12-01&type=Issues)) | @krassowski ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2024-10-01..2024-12-01&type=Issues)) | @pre-commit-ci[bot] ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci[bot]+updated%3A2024-10-01..2024-12-01&type=Issues))
+@brichet ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Abrichet+updated%3A2024-10-01..2024-12-01&type=Issues)) | @jtpio ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2024-10-01..2024-12-01&type=Issues)) | @krassowski ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2024-10-01..2024-12-01&type=Issues))
 """
 
 EMPTY_CHANGELOG_ENTRY = """
