@@ -203,12 +203,12 @@ def test_splice_github_entry(py_package, mocker):
 
     updated = changelog.splice_github_entry(resp, testutil.GITHUB_CHANGELOG_ENTRY)
 
-    assert "Defining contributions" in updated
+    assert "Add blog post link" in updated
 
     preamble = "# My title\nmy content\n"
     updated = changelog.splice_github_entry(resp, preamble + testutil.GITHUB_CHANGELOG_ENTRY)
 
-    assert "Defining contributions" in updated
+    assert "Add blog post link" in updated
     assert preamble in updated
 
 
