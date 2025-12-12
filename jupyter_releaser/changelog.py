@@ -20,9 +20,9 @@ PRECOMMIT_PREFIX = "[pre-commit.ci] pre-commit autoupdate"
 
 # Bot accounts to ignore in changelog generation
 DEFAULT_IGNORED_CONTRIBUTORS = [
-    "dependabot",
-    "pre-commit-ci",
-    "github-actions",
+    "dependabot*",
+    "pre-commit-ci*",
+    "github-actions*",
     "github-advanced-security",
     # Wildcard patterns for common bot naming conventions
     "*[bot]",
