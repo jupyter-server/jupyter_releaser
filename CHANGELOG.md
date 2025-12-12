@@ -12,7 +12,7 @@
 
 ### Documentation improvements
 
-- Document npm trusted publishers [#616](https://github.com/jupyter-server/jupyter_releaser/pull/616) ([@jtpio](https://github.com/jtpio), [@brichet](https://github.com/brichet), [@krassowski](https://github.com/krassowski), [@pre-commit-ci[bot]](https://github.com/pre-commit-ci%5Bbot%5D))
+- Document npm trusted publishers [#616](https://github.com/jupyter-server/jupyter_releaser/pull/616) ([@jtpio](https://github.com/jtpio), [@brichet](https://github.com/brichet), [@krassowski](https://github.com/krassowski), [@pre-commit-ci\[bot\]](https://github.com/pre-commit-ci%5Bbot%5D))
 
 ### Contributors to this release
 
@@ -21,7 +21,7 @@ See [our definition of contributors](https://github-activity.readthedocs.io/en/l
 
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2025-12-01&to=2025-12-11&type=c))
 
-@brichet ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Abrichet+updated%3A2025-12-01..2025-12-11&type=Issues)) | @jtpio ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2025-12-01..2025-12-11&type=Issues)) | @krassowski ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2025-12-01..2025-12-11&type=Issues)) | @pre-commit-ci[bot] ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci%5Bbot%5D+updated%3A2025-12-01..2025-12-11&type=Issues))
+@brichet ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Abrichet+updated%3A2025-12-01..2025-12-11&type=Issues)) | @jtpio ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2025-12-01..2025-12-11&type=Issues)) | @krassowski ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2025-12-01..2025-12-11&type=Issues)) | @pre-commit-ci\[bot\] ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Apre-commit-ci%5Bbot%5D+updated%3A2025-12-01..2025-12-11&type=Issues))
 
 <!-- <END NEW CHANGELOG ENTRY> -->
 
