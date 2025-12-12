@@ -19,13 +19,17 @@ PR_PREFIX = "Automated Changelog Entry"
 PRECOMMIT_PREFIX = "[pre-commit.ci] pre-commit autoupdate"
 
 # Bot accounts to ignore in changelog generation
+# Note: These patterns use fnmatch, where [] is a character class.
+# To match literal [bot], use [[] to escape the opening bracket.
 DEFAULT_IGNORED_CONTRIBUTORS = [
     "dependabot*",
     "pre-commit-ci*",
     "github-actions*",
     "github-advanced-security",
-    # Wildcard patterns for common bot naming conventions
-    "*[bot]",
+    # Wildcard pattern for common bot naming conventions (e.g., "pre-commit-ci[bot]")
+    # TODO: check if still needed after https://github.com/executablebooks/github-activity/issues/151
+    # [[] escapes the literal [ character in fnmatch
+    "*[[]bot]",
 ]
 
 
