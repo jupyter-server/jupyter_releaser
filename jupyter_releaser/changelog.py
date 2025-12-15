@@ -25,6 +25,7 @@ DEFAULT_IGNORED_CONTRIBUTORS = [
     "dependabot*",
     "pre-commit-ci*",
     "github-actions*",
+    "meeseeksmachine*",
     # Wildcard pattern for common bot naming conventions (e.g., "pre-commit-ci[bot]")
     # TODO: check if still needed after https://github.com/executablebooks/github-activity/issues/151
     # [[] escapes the literal [ character in fnmatch
