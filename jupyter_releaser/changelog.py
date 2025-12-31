@@ -123,16 +123,23 @@ def get_version_entry(
     if ignored_contributors is None:
         ignored_contributors = DEFAULT_IGNORED_CONTRIBUTORS
 
-    md = generate_activity_md(
-        repo,
-        since=since,
-        until=until,
-        kind="pr",
-        heading_level=2,
-        auth=auth,
-        branch=branch,
-        ignored_contributors=ignored_contributors,
-    )
+    try:
+        md = generate_activity_md(
+            repo,
+            since=since,
+            until=until,
+            kind="pr",
+            heading_level=2,
+            auth=auth,
+            branch=branch,
+            ignored_contributors=ignored_contributors,
+        )
+    except ValueError as e:
+        # github-activity >= 1.1.4 raises ValueError when no activity is found
+        if "No activity found" in str(e):
+            util.log("No PRs found")
+            return f"## {version}\n\nNo merged PRs"
+        raise
 
     if not md:
         util.log("No PRs found")
