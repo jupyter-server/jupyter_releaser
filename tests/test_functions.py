@@ -189,6 +189,29 @@ def test_get_empty_changelog(py_package, mocker):
     assert "...None" not in resp
 
 
+def test_get_changelog_no_activity_error(py_package, mocker):
+    """Test handling of ValueError raised by github-activity >= 1.1.4 when no activity is found."""
+    mocked_gen = mocker.patch("jupyter_releaser.changelog.generate_activity_md")
+    mocked_gen.side_effect = ValueError("No activity found for baz/bar between v0.2.4 and None.")
+    branch = "foo"
+    util.run("git branch baz/bar")
+    ref = "heads/baz/bar"
+    resp = changelog.get_version_entry(ref, branch, "baz/bar", "0.2.5", since="v0.2.4")
+    mocked_gen.assert_called_with(
+        "baz/bar",
+        since="v0.2.4",
+        until=None,
+        kind="pr",
+        heading_level=2,
+        auth=None,
+        branch=branch,
+        ignored_contributors=DEFAULT_IGNORED_CONTRIBUTORS,
+    )
+
+    assert "## 0.2.5" in resp
+    assert "No merged PRs" in resp
+
+
 def test_splice_github_entry(py_package, mocker):
     version = util.get_version()
 
