@@ -2,6 +2,30 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.10.2
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...a79e34830cc24c4051b058402e06284434f721ad))
+
+### Bugs fixed
+
+- Handle `github-activity>=1.1.4` [#637](https://github.com/jupyter-server/jupyter_releaser/pull/637) ([@jtpio](https://github.com/jtpio), [@krassowski](https://github.com/krassowski))
+- Add `meeseeksmachine*` to ignored contributors list [#635](https://github.com/jupyter-server/jupyter_releaser/pull/635) ([@jtpio](https://github.com/jtpio), [@krassowski](https://github.com/krassowski))
+
+### Maintenance and upkeep improvements
+
+- Pin `ruamel.yaml<0.19` in tests [#640](https://github.com/jupyter-server/jupyter_releaser/pull/640) ([@jtpio](https://github.com/jtpio))
+
+### Contributors to this release
+
+The following people contributed discussions, new ideas, code and documentation contributions, and review.
+See [our definition of contributors](https://github-activity.readthedocs.io/en/latest/#how-does-this-tool-define-contributions-in-the-reports).
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2025-12-12&to=2026-01-05&type=c))
+
+@jtpio ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2025-12-12..2026-01-05&type=Issues)) | @krassowski ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2025-12-12..2026-01-05&type=Issues))
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.10.1
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...12393a49f844eca7bc4d08f4db1ee398c2c85605))
@@ -22,8 +46,6 @@ See [our definition of contributors](https://github-activity.readthedocs.io/en/l
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2025-12-11&to=2025-12-12&type=c))
 
 @jtpio ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2025-12-11..2025-12-12&type=Issues)) | @krassowski ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2025-12-11..2025-12-12&type=Issues))
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.10.0
 
