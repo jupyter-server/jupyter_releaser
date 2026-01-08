@@ -5,41 +5,33 @@ import argparse
 import os
 import os.path as osp
 import sys
-import typing as t
+from dataclasses import dataclass
 from glob import glob
 from pathlib import Path
+from typing import Any, Callable
 
 from jupyter_releaser import changelog, lib, npm, python, util
 
 # Registry for commands that need to use checkout directory
-_needs_checkout_dir: t.Set[str] = set()
+_needs_checkout_dir: set[str] = set()
 
 
-def use_checkout_dir(func):
+def use_checkout_dir(func: Callable[..., Any]) -> Callable[..., Any]:
     """Decorator to mark a command as needing the checkout directory"""
     _needs_checkout_dir.add(func.__name__.replace("_", "-").replace("cmd-", ""))
     return func
 
 
+@dataclass
 class OptionDef:
-    """Definition of a CLI option"""
+    """Definition of a CLI option."""
 
-    def __init__(
-        self,
-        name: str,
-        envvar: t.Optional[str] = None,
-        default: t.Any = None,
-        help_text: str = "",
-        is_flag: bool = False,
-        multiple: bool = False,
-    ):
-        """Initialize an OptionDef instance."""
-        self.name = name
-        self.envvar = envvar
-        self.default = default
-        self.help_text = help_text
-        self.is_flag = is_flag
-        self.multiple = multiple
+    name: str
+    envvar: str | None = None
+    default: Any = None
+    help_text: str = ""
+    is_flag: bool = False
+    multiple: bool = False
 
 
 # Define all the common options
@@ -204,6 +196,7 @@ PYDIST_CHECK_OPTIONS = [
     OptionDef(
         "pydist-resource-paths",
         envvar="RH_PYDIST_RESOURCE_PATHS",
+        default=[],
         multiple=True,
         help_text="Resource paths that should be available when installed",
     ),
@@ -218,11 +211,120 @@ TAG_FORMAT_OPTIONS = [
     )
 ]
 
+# Command-specific options (extracted to avoid duplication)
+RELEASE_MESSAGE_OPTIONS = [
+    OptionDef(
+        "release-message",
+        envvar="RH_RELEASE_MESSAGE",
+        default="Publish {version}",
+        help_text="The message to use for the release commit",
+    ),
+]
 
-def add_option_to_parser(parser: argparse.ArgumentParser, opt: OptionDef):
-    """Add an option definition to an argparse parser"""
+TAG_MESSAGE_OPTIONS = [
+    OptionDef(
+        "tag-message",
+        envvar="RH_TAG_MESSAGE",
+        default="Release {tag_name}",
+        help_text="The message to use for the release tag",
+    ),
+]
+
+NO_GIT_TAG_WORKSPACE_OPTIONS = [
+    OptionDef(
+        "no-git-tag-workspace",
+        is_flag=True,
+        help_text="Whether to skip tagging npm workspace packages",
+    ),
+]
+
+NPM_TOKEN_OPTIONS = [
+    OptionDef(
+        "npm-token",
+        envvar="NPM_TOKEN",
+        help_text="A token for the npm release",
+    ),
+]
+
+NPM_CMD_OPTIONS = [
+    OptionDef(
+        "npm-cmd",
+        envvar="RH_NPM_COMMAND",
+        default="npm publish",
+        help_text="The command to run for npm release",
+    ),
+]
+
+TWINE_CMD_OPTIONS = [
+    OptionDef(
+        "twine-cmd",
+        envvar="TWINE_COMMAND",
+        default="pipx run twine upload",
+        help_text="The twine to run for Python release",
+    ),
+]
+
+NPM_REGISTRY_OPTIONS = [
+    OptionDef(
+        "npm-registry",
+        envvar="NPM_REGISTRY",
+        default="https://registry.npmjs.org/",
+        help_text="The npm registry to target for publishing",
+    ),
+]
+
+TWINE_REPOSITORY_URL_OPTIONS = [
+    OptionDef(
+        "twine-repository-url",
+        envvar="TWINE_REPOSITORY_URL",
+        default="https://upload.pypi.org/legacy/",
+        help_text="The pypi registry to target for publishing",
+    ),
+]
+
+NPM_TAG_OPTIONS = [
+    OptionDef(
+        "npm-tag",
+        envvar="NPM_TAG",
+        default="",
+        help_text="The npm tag. It defaults to 'next' if it is a prerelease otherwise to 'latest'.",
+    ),
+]
+
+EXPECTED_SHA_OPTIONS = [
+    OptionDef(
+        "expected-sha",
+        envvar="RH_EXPECTED_SHA",
+        help_text="The expected sha of the branch HEAD",
+    ),
+]
+
+# Combined publish options for convenience
+PUBLISH_OPTIONS = (
+    NPM_TOKEN_OPTIONS
+    + NPM_CMD_OPTIONS
+    + TWINE_CMD_OPTIONS
+    + NPM_REGISTRY_OPTIONS
+    + TWINE_REPOSITORY_URL_OPTIONS
+    + NPM_TAG_OPTIONS
+)
+
+# Combined tag release options
+TAG_RELEASE_OPTIONS = RELEASE_MESSAGE_OPTIONS + TAG_MESSAGE_OPTIONS + NO_GIT_TAG_WORKSPACE_OPTIONS
+
+
+def _convert_to_bool(value: str) -> bool:
+    """Convert a string value to boolean, matching Click's behavior.
+
+    Click accepts: true, 1, yes, on, t, y (case-insensitive) as truthy values.
+    """
+    return value.lower() in ("true", "1", "yes", "on", "t", "y")
+
+
+def add_option_to_parser(parser: argparse.ArgumentParser, opt: OptionDef) -> None:
+    """Add an option definition to an argparse parser."""
     arg_name = f"--{opt.name}"
-    kwargs: t.Dict[str, t.Any] = {}
+    kwargs: dict[str, Any] = {}
 
     if opt.help_text:
         kwargs["help"] = opt.help_text
@@ -239,8 +341,8 @@ def add_option_to_parser(parser: argparse.ArgumentParser, opt: OptionDef):
     parser.add_argument(arg_name, **kwargs)
 
 
-def add_options_to_parser(parser: argparse.ArgumentParser, options: t.List[OptionDef]):
-    """Add multiple option definitions to a parser"""
+def add_options_to_parser(parser: argparse.ArgumentParser, options: list[OptionDef]) -> None:
+    """Add multiple option definitions to a parser."""
     for opt in options:
         add_option_to_parser(parser, opt)
 
@@ -248,19 +350,27 @@ def add_options_to_parser(parser: argparse.ArgumentParser, options: t.List[Optio
 def get_option_value(
     args: argparse.Namespace,
     opt: OptionDef,
-    config_options: t.Dict[str, t.Any],
-) -> t.Any:
-    """Get the value for an option considering CLI, env vars, config, and defaults"""
+    config_options: dict[str, Any],
+) -> Any:
+    """Get the value for an option considering CLI, env vars, config, and defaults.
+
+    Priority order (highest to lowest):
+    1. Environment variables
+    2. CLI arguments
+    3. Config file options
+    4. Default values
+    """
     name = opt.name.replace("-", "_")
     cli_value = getattr(args, name, None)
 
-    # Check environment variable first
+    # Check environment variable first (highest priority)
     if opt.envvar and os.environ.get(opt.envvar):
         env_value = os.environ[opt.envvar]
         display_value = "***" if "token" in name.lower() else env_value
         util.log(f"Using env value for {name}: '{display_value}'")
+        # Convert string env values to boolean for flag/boolean options
         if opt.is_flag or isinstance(opt.default, bool):
-            return env_value.lower() in ("true", "1", "yes")
+            return _convert_to_bool(env_value)
         if opt.multiple:
             return [env_value]  # Environment variable is a single value for multiple
         return env_value
@@ -269,6 +379,10 @@ def get_option_value(
     if cli_value is not None:
         display_value = "***" if "token" in name.lower() else cli_value
         util.log(f"Using cli arg for {name}: '{display_value}'")
+        # Convert string CLI values to boolean for non-flag boolean options
+        # (flags are already handled by argparse's store_true action)
+        if not opt.is_flag and isinstance(opt.default, bool) and isinstance(cli_value, str):
+            return _convert_to_bool(cli_value)
         return cli_value
 
     # Check config options
@@ -278,9 +392,9 @@ def get_option_value(
         val = config_options.get(config_name, config_options.get(config_name_underscore))
         display_value = "***" if "token" in name.lower() else val
         util.log(f"Adding option override for --{opt.name}: '{display_value}'")
-        # Convert string values to boolean for boolean options
-        if isinstance(opt.default, bool) and isinstance(val, str):
-            return val.lower() in ("true", "1", "yes")
+        # Convert string config values to boolean for flag/boolean options
+        if (opt.is_flag or isinstance(opt.default, bool)) and isinstance(val, str):
+            return _convert_to_bool(val)
         return val
 
     # Use default
@@ -288,11 +402,14 @@ def get_option_value(
     return opt.default
 
 
-def collect_all_options() -> t.Dict[str, OptionDef]:
-    """Collect all option definitions into a dict keyed by name"""
-    all_opts: t.Dict[str, OptionDef] = {}
+def collect_all_options() -> dict[str, OptionDef]:
+    """Collect all option definitions into a dict keyed by name.
 
-    # Base option lists
+    Used by list-envvars command to show all available environment variables.
+    """
+    all_opts: dict[str, OptionDef] = {}
+
+    # All option lists (base + command-specific)
     option_lists = [
         VERSION_SPEC_OPTIONS,
         POST_VERSION_SPEC_OPTIONS,
@@ -314,66 +431,22 @@ def collect_all_options() -> t.Dict[str, OptionDef]:
         NPM_INSTALL_OPTIONS,
         PYDIST_CHECK_OPTIONS,
         TAG_FORMAT_OPTIONS,
-    ]
-
-    # Command-specific options that have envvars
-    command_specific_options = [
-        OptionDef(
-            "release-message",
-            envvar="RH_RELEASE_MESSAGE",
-            default="Publish {version}",
-            help_text="The message to use for the release commit",
-        ),
-        OptionDef(
-            "tag-message",
-            envvar="RH_TAG_MESSAGE",
-            default="Release {tag_name}",
-            help_text="The message to use for the release tag",
-        ),
-        OptionDef("npm-token", envvar="NPM_TOKEN", help_text="A token for the npm release"),
-        OptionDef(
-            "npm-cmd",
-            envvar="RH_NPM_COMMAND",
-            default="npm publish",
-            help_text="The command to run for npm release",
-        ),
-        OptionDef(
-            "twine-cmd",
-            envvar="TWINE_COMMAND",
-            default="pipx run twine upload",
-            help_text="The twine to run for Python release",
-        ),
-        OptionDef(
-            "npm-registry",
-            envvar="NPM_REGISTRY",
-            default="https://registry.npmjs.org/",
-            help_text="The npm registry to target for publishing",
-        ),
-        OptionDef(
-            "twine-repository-url",
-            envvar="TWINE_REPOSITORY_URL",
-            default="https://upload.pypi.org/legacy/",
-            help_text="The pypi registry to target for publishing",
-        ),
-        OptionDef(
-            "npm-tag",
-            envvar="NPM_TAG",
-            default="",
-            help_text="The npm tag. It defaults to 'next' if it is a prerelease otherwise to 'latest'.",
-        ),
-        OptionDef(
-            "expected-sha",
-            envvar="RH_EXPECTED_SHA",
-            help_text="The expected sha of the branch HEAD",
-        ),
+        # Command-specific options
+        RELEASE_MESSAGE_OPTIONS,
+        TAG_MESSAGE_OPTIONS,
+        NO_GIT_TAG_WORKSPACE_OPTIONS,
+        NPM_TOKEN_OPTIONS,
+        NPM_CMD_OPTIONS,
+        TWINE_CMD_OPTIONS,
+        NPM_REGISTRY_OPTIONS,
+        TWINE_REPOSITORY_URL_OPTIONS,
+        NPM_TAG_OPTIONS,
+        EXPECTED_SHA_OPTIONS,
     ]
 
     for opts in option_lists:
         for opt in opts:
             all_opts[opt.name] = opt
-
-    for opt in command_specific_options:
-        all_opts[opt.name] = opt
 
     return all_opts
 
@@ -381,10 +454,10 @@ def collect_all_options() -> t.Dict[str, OptionDef]:
 # Command implementations
 
 
-def cmd_list_envvars(args):  # noqa: ARG001
-    """List the environment variables"""
+def cmd_list_envvars(args: argparse.Namespace) -> None:  # noqa: ARG001
+    """List the environment variables."""
     all_opts = collect_all_options()
-    envvars: t.Dict[str, str] = {}
+    envvars: dict[str, str] = {}
     for name, opt in all_opts.items():
         if opt.envvar:
             envvars[name] = opt.envvar
@@ -393,7 +466,7 @@ def cmd_list_envvars(args):  # noqa: ARG001
         util.log(f"{key}: {envvars[key]}")
 
 
-def cmd_prep_git(args, config_options):
+def cmd_prep_git(args: argparse.Namespace, config_options: dict[str, Any]) -> None:
     """Prep git and env variables and bump version"""
     opts = BRANCH_OPTIONS + AUTH_OPTIONS + USERNAME_OPTIONS + GIT_URL_OPTIONS
     values = {
@@ -410,7 +483,7 @@ def cmd_prep_git(args, config_options):
 
 
 @use_checkout_dir
-def cmd_bump_version(args, config_options):
+def cmd_bump_version(args: argparse.Namespace, config_options: dict[str, Any]) -> None:
     """Prep git and env variables and bump version"""
     opts = (
         VERSION_SPEC_OPTIONS
@@ -441,7 +514,7 @@ def cmd_bump_version(args, config_options):
 
 
 @use_checkout_dir
-def cmd_extract_changelog(args, config_options):
+def cmd_extract_changelog(args: argparse.Namespace, config_options: dict[str, Any]) -> None:
     """Extract the changelog entry."""
     opts = (
         DRY_RUN_OPTIONS
@@ -463,7 +536,7 @@ def cmd_extract_changelog(args, config_options):
 
 
 @use_checkout_dir
-def cmd_build_changelog(args, config_options):
+def cmd_build_changelog(args: argparse.Namespace, config_options: dict[str, Any]) -> None:
     """Build changelog entry"""
     opts = CHANGELOG_OPTIONS
     values = {
@@ -482,7 +555,7 @@ def cmd_build_changelog(args, config_options):
 
 
 @use_checkout_dir
-def cmd_draft_changelog(args, config_options):
+def cmd_draft_changelog(args: argparse.Namespace, config_options: dict[str, Any]) -> None:
     """Create a changelog entry PR"""
     opts = (
         VERSION_SPEC_OPTIONS
@@ -516,7 +589,7 @@ def cmd_draft_changelog(args, config_options):
 
 
 @use_checkout_dir
-def cmd_build_python(args, config_options):
+def cmd_build_python(args: argparse.Namespace, config_options: dict[str, Any]) -> None:
     """Build Python dist files"""
     opts = DIST_DIR_OPTIONS + PYTHON_PACKAGES_OPTIONS
     values = {
@@ -541,7 +614,7 @@ def cmd_build_python(args, config_options):
 
 
 @use_checkout_dir
-def cmd_check_python(args, config_options):
+def cmd_check_python(args: argparse.Namespace, config_options: dict[str, Any]) -> None:
     """Check Python dist files"""
     opts = DIST_DIR_OPTIONS + CHECK_IMPORTS_OPTIONS + PYDIST_CHECK_OPTIONS
     values = {
@@ -564,7 +637,7 @@ def cmd_check_python(args, config_options):
 
 
 @use_checkout_dir
-def cmd_build_npm(args, config_options):
+def cmd_build_npm(args: argparse.Namespace, config_options: dict[str, Any]) -> None:
     """Build npm package"""
     opts = DIST_DIR_OPTIONS
     values = {
@@ -581,7 +654,7 @@ def cmd_build_npm(args, config_options):
 
 
 @use_checkout_dir
-def cmd_check_npm(args, config_options):
+def cmd_check_npm(args: argparse.Namespace, config_options: dict[str, Any]) -> None:
     """Check npm package"""
     opts = DIST_DIR_OPTIONS + NPM_INSTALL_OPTIONS + REPO_OPTIONS
     values = {
@@ -595,28 +668,9 @@ def cmd_check_npm(args, config_options):
 
 
 @use_checkout_dir
-def cmd_tag_release(args, config_options):
-    """Create release commit and tag"""
-    tag_release_opts = [
-        OptionDef(
-            "release-message",
-            envvar="RH_RELEASE_MESSAGE",
-            default="Publish {version}",
-            help_text="The message to use for the release commit",
-        ),
-        OptionDef(
-            "tag-message",
-            envvar="RH_TAG_MESSAGE",
-            default="Release {tag_name}",
-            help_text="The message to use for the release tag",
-        ),
-        OptionDef(
-            "no-git-tag-workspace",
-            is_flag=True,
-            help_text="Whether to skip tagging npm workspace packages",
-        ),
-    ]
-    opts = DIST_DIR_OPTIONS + TAG_FORMAT_OPTIONS + tag_release_opts
+def cmd_tag_release(args: argparse.Namespace, config_options: dict[str, Any]) -> None:
+    """Create release commit and tag."""
+    opts = DIST_DIR_OPTIONS + TAG_FORMAT_OPTIONS + TAG_RELEASE_OPTIONS
     values = {
         opt.name.replace("-", "_"): get_option_value(args, opt, config_options) for opt in opts
     }
@@ -630,7 +684,7 @@ def cmd_tag_release(args, config_options):
 
 
 @use_checkout_dir
-def cmd_populate_release(args, config_options):
+def cmd_populate_release(args: argparse.Namespace, config_options: dict[str, Any]) -> None:
     """Populate a release."""
     opts = (
         BRANCH_OPTIONS
@@ -670,7 +724,7 @@ def cmd_populate_release(args, config_options):
 
 
 @use_checkout_dir
-def cmd_delete_release(args, config_options):
+def cmd_delete_release(args: argparse.Namespace, config_options: dict[str, Any]) -> None:
     """Delete a draft GitHub release by url to the release page"""
     opts = AUTH_OPTIONS + DRY_RUN_OPTIONS + RELEASE_URL_OPTIONS
     values = {
@@ -679,7 +733,7 @@ def cmd_delete_release(args, config_options):
     lib.delete_release(values["auth"], values["release_url"], values["dry_run"])
 
 
-def cmd_extract_release(args, config_options):
+def cmd_extract_release(args: argparse.Namespace, config_options: dict[str, Any]) -> None:
     """Download and verify assets from a draft GitHub release"""
     opts = AUTH_OPTIONS + DIST_DIR_OPTIONS + DRY_RUN_OPTIONS + RELEASE_URL_OPTIONS
     values = {
@@ -694,45 +748,12 @@ def cmd_extract_release(args, config_options):
 
 
 @use_checkout_dir
-def cmd_publish_assets(args, config_options):
-    """Publish release asset(s)"""
-    publish_opts = [
-        OptionDef("npm-token", envvar="NPM_TOKEN", help_text="A token for the npm release"),
-        OptionDef(
-            "npm-cmd",
-            envvar="RH_NPM_COMMAND",
-            default="npm publish",
-            help_text="The command to run for npm release",
-        ),
-        OptionDef(
-            "twine-cmd",
-            envvar="TWINE_COMMAND",
-            default="pipx run twine upload",
-            help_text="The twine to run for Python release",
-        ),
-        OptionDef(
-            "npm-registry",
-            envvar="NPM_REGISTRY",
-            default="https://registry.npmjs.org/",
-            help_text="The npm registry to target for publishing",
-        ),
-        OptionDef(
-            "twine-repository-url",
-            envvar="TWINE_REPOSITORY_URL",
-            default="https://upload.pypi.org/legacy/",
-            help_text="The pypi registry to target for publishing",
-        ),
-        OptionDef(
-            "npm-tag",
-            envvar="NPM_TAG",
-            default="",
-            help_text="The npm tag. It defaults to 'next' if it is a prerelease otherwise to 'latest'.",
-        ),
-    ]
+def cmd_publish_assets(args: argparse.Namespace, config_options: dict[str, Any]) -> None:
+    """Publish release asset(s)."""
     opts = (
         AUTH_OPTIONS
         + DIST_DIR_OPTIONS
-        + publish_opts
+        + PUBLISH_OPTIONS
         + DRY_RUN_OPTIONS
         + PYTHON_PACKAGES_OPTIONS
         + RELEASE_URL_OPTIONS
@@ -759,7 +780,7 @@ def cmd_publish_assets(args, config_options):
 
 
 @use_checkout_dir
-def cmd_publish_release(args, config_options):
+def cmd_publish_release(args: argparse.Namespace, config_options: dict[str, Any]) -> None:
     """Publish GitHub release"""
     opts = AUTH_OPTIONS + DRY_RUN_OPTIONS + RELEASE_URL_OPTIONS + SILENT_OPTIONS
     values = {
@@ -769,16 +790,9 @@ def cmd_publish_release(args, config_options):
 
 
 @use_checkout_dir
-def cmd_ensure_sha(args, config_options):
+def cmd_ensure_sha(args: argparse.Namespace, config_options: dict[str, Any]) -> None:
     """Ensure that a sha has not changed."""
-    ensure_sha_opts = [
-        OptionDef(
-            "expected-sha",
-            envvar="RH_EXPECTED_SHA",
-            help_text="The expected sha of the branch HEAD",
-        ),
-    ]
-    opts = BRANCH_OPTIONS + DRY_RUN_OPTIONS + ensure_sha_opts
+    opts = BRANCH_OPTIONS + DRY_RUN_OPTIONS + EXPECTED_SHA_OPTIONS
     values = {
         opt.name.replace("-", "_"): get_option_value(args, opt, config_options) for opt in opts
     }
@@ -786,7 +800,7 @@ def cmd_ensure_sha(args, config_options):
 
 
 @use_checkout_dir
-def cmd_forwardport_changelog(args, config_options):
+def cmd_forwardport_changelog(args: argparse.Namespace, config_options: dict[str, Any]) -> None:
     """Forwardport Changelog Entries to the Default Branch"""
     opts = (
         AUTH_OPTIONS
@@ -812,7 +826,7 @@ def cmd_forwardport_changelog(args, config_options):
 
 
 @use_checkout_dir
-def cmd_publish_changelog(args, config_options):
+def cmd_publish_changelog(args: argparse.Namespace, config_options: dict[str, Any]) -> None:
     """Remove changelog placeholder entries."""
     opts = AUTH_OPTIONS + BRANCH_OPTIONS + CHANGELOG_PATH_OPTIONS + DRY_RUN_OPTIONS
     values = {
@@ -828,7 +842,7 @@ def cmd_publish_changelog(args, config_options):
 
 
 # Command registry - maps command names to their handlers and options
-COMMANDS: t.Dict[str, t.Dict[str, t.Any]] = {
+COMMANDS: dict[str, dict[str, Any]] = {
     "list-envvars": {
         "func": cmd_list_envvars,
         "help": "List the environment variables",
@@ -902,27 +916,7 @@ COMMANDS: t.Dict[str, t.Dict[str, t.Any]] = {
     "tag-release": {
         "func": cmd_tag_release,
         "help": "Create release commit and tag",
-        "options": DIST_DIR_OPTIONS
-        + TAG_FORMAT_OPTIONS
-        + [
-            OptionDef(
-                "release-message",
-                envvar="RH_RELEASE_MESSAGE",
-                default="Publish {version}",
-                help_text="The message to use for the release commit",
-            ),
-            OptionDef(
-                "tag-message",
-                envvar="RH_TAG_MESSAGE",
-                default="Release {tag_name}",
-                help_text="The message to use for the release tag",
-            ),
-            OptionDef(
-                "no-git-tag-workspace",
-                is_flag=True,
-                help_text="Whether to skip tagging npm workspace packages",
-            ),
-        ],
+        "options": DIST_DIR_OPTIONS + TAG_FORMAT_OPTIONS + TAG_RELEASE_OPTIONS,
     },
     "populate-release": {
         "func": cmd_populate_release,
@@ -954,44 +948,14 @@ COMMANDS: t.Dict[str, t.Dict[str, t.Any]] = {
     "publish-assets": {
         "func": cmd_publish_assets,
         "help": "Publish release asset(s)",
-        "options": AUTH_OPTIONS
-        + DIST_DIR_OPTIONS
-        + [
-            OptionDef("npm-token", envvar="NPM_TOKEN", help_text="A token for the npm release"),
-            OptionDef(
-                "npm-cmd",
-                envvar="RH_NPM_COMMAND",
-                default="npm publish",
-                help_text="The command to run for npm release",
-            ),
-            OptionDef(
-                "twine-cmd",
-                envvar="TWINE_COMMAND",
-                default="pipx run twine upload",
-                help_text="The twine to run for Python release",
-            ),
-            OptionDef(
-                "npm-registry",
-                envvar="NPM_REGISTRY",
-                default="https://registry.npmjs.org/",
-                help_text="The npm registry to target for publishing",
-            ),
-            OptionDef(
-                "twine-repository-url",
-                envvar="TWINE_REPOSITORY_URL",
-                default="https://upload.pypi.org/legacy/",
-                help_text="The pypi registry to target for publishing",
-            ),
-            OptionDef(
-                "npm-tag",
-                envvar="NPM_TAG",
-                default="",
-                help_text="The npm tag. It defaults to 'next' if it is a prerelease otherwise to 'latest'.",
-            ),
-        ]
-        + DRY_RUN_OPTIONS
-        + PYTHON_PACKAGES_OPTIONS
-        + RELEASE_URL_OPTIONS,
+        "options": (
+            AUTH_OPTIONS
+            + DIST_DIR_OPTIONS
+            + PUBLISH_OPTIONS
+            + DRY_RUN_OPTIONS
+            + PYTHON_PACKAGES_OPTIONS
+            + RELEASE_URL_OPTIONS
+        ),
     },
     "publish-release": {
         "func": cmd_publish_release,
@@ -1001,15 +965,7 @@ COMMANDS: t.Dict[str, t.Dict[str, t.Any]] = {
     "ensure-sha": {
         "func": cmd_ensure_sha,
         "help": "Ensure that a sha has not changed",
-        "options": BRANCH_OPTIONS
-        + DRY_RUN_OPTIONS
-        + [
-            OptionDef(
-                "expected-sha",
-                envvar="RH_EXPECTED_SHA",
-                help_text="The expected sha of the branch HEAD",
-            ),
-        ],
+        "options": BRANCH_OPTIONS + DRY_RUN_OPTIONS + EXPECTED_SHA_OPTIONS,
     },
     "forwardport-changelog": {
         "func": cmd_forwardport_changelog,
@@ -1146,8 +1102,8 @@ def run_command(args: argparse.Namespace) -> int:
         os.chdir(orig_dir)
 
 
-def main(args: t.Optional[t.List[str]] = None) -> int:
-    """Main entry point for the CLI"""
+def main(args: list[str] | None = None) -> int:
+    """Main entry point for the CLI."""
     parser = create_parser()
     parsed_args = parser.parse_args(args)
     return run_command(parsed_args)
