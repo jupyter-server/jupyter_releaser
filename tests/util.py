@@ -18,7 +18,7 @@ TOML_CONFIG = """
 [hooks]
 """
 
-for name in cli.main.commands:
+for name in cli.COMMANDS:
     TOML_CONFIG += f"'before-{name}' = \"echo before-{name} >> 'log.txt'\"\n"
     TOML_CONFIG += f"'after-{name}' = \"echo after-{name} >> 'log.txt'\"\n"
 

@@ -27,7 +27,8 @@ import platform
 import subprocess
 import sys
 from asyncio import StreamReader
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
+from collections.abc import Callable
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     CompletedProcess = subprocess.CompletedProcess[Any]  # pylint: disable=E1136
@@ -53,7 +54,7 @@ async def _read_stream(stream: StreamReader, callback: Callable[..., Any]) -> No
 
 
 async def _stream_subprocess(args: str, **kwargs: Any) -> CompletedProcess:
-    platform_settings: Dict[str, Any] = {}
+    platform_settings: dict[str, Any] = {}
     if platform.system() == "Windows":
         platform_settings["env"] = os.environ
 
@@ -88,10 +89,10 @@ async def _stream_subprocess(args: str, **kwargs: Any) -> CompletedProcess:
         stderr=asyncio.subprocess.PIPE,
         **platform_settings,
     )
-    out: List[str] = []
-    err: List[str] = []
+    out: list[str] = []
+    err: list[str] = []
 
-    def tee_func(line: bytes, sink: List[str], pipe: Optional[Any]) -> None:  # noqa: ARG001
+    def tee_func(line: bytes, sink: list[str], pipe: Any | None) -> None:  # noqa: ARG001
         line_str = line.decode("utf-8").rstrip()
         sink.append(line_str)
         if not kwargs.get("quiet", False):
@@ -130,7 +131,7 @@ async def _stream_subprocess(args: str, **kwargs: Any) -> CompletedProcess:
     )
 
 
-def run(args: Union[str, List[str]], **kwargs: Any) -> CompletedProcess:
+def run(args: str | list[str], **kwargs: Any) -> CompletedProcess:
     """Drop-in replacement for subprocess.run that behaves like tee.
     Extra arguments added by our version:
     echo: False - Prints command before executing it.
