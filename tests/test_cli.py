@@ -245,7 +245,7 @@ def test_build_changelog_existing(py_package, mocker, runner):
     runner(["build-changelog", "--changelog-path", changelog_file])
 
     text = changelog_path.read_text(encoding="utf-8")
-    text = text.replace("defining contributions", "Defining contributions")
+    text = text.replace("Add link to the blog post", "Add LINK to the blog post")
     changelog_path.write_text(text, encoding="utf-8")
 
     # Commit the change
@@ -255,8 +255,8 @@ def test_build_changelog_existing(py_package, mocker, runner):
     runner(["build-changelog", "--changelog-path", changelog_file])
 
     text = changelog_path.read_text(encoding="utf-8")
-    assert "Defining contributions" in text, text
-    assert "defining contributions" not in text, text
+    assert "Add LINK to the blog post" in text, text
+    assert "Add link to the blog post" not in text, text
 
     assert len(re.findall(changelog.START_MARKER, text)) == 1
     assert len(re.findall(changelog.END_MARKER, text)) == 1
@@ -272,7 +272,7 @@ def test_build_changelog_backport(py_package, mocker, runner, mock_github):
     runner(["bump-version", "--version-spec", VERSION_SPEC])
 
     entry = CHANGELOG_ENTRY.replace(
-        "Support git references etc.", "Backport PR #50 on branch (original title"
+        "Add more content to the FAQ", "Backport PR #50 on branch (original title"
     )
 
     mocked_gen = mocker.patch("jupyter_releaser.changelog.generate_activity_md")

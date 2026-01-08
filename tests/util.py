@@ -22,50 +22,59 @@ for name in cli.COMMANDS:
     TOML_CONFIG += f"'before-{name}' = \"echo before-{name} >> 'log.txt'\"\n"
     TOML_CONFIG += f"'after-{name}' = \"echo after-{name} >> 'log.txt'\"\n"
 
-PR_ENTRY = "Mention the required GITHUB_ACCESS_TOKEN [#1](https://github.com/executablebooks/github-activity/pull/1) ([@consideRatio](https://github.com/consideRatio))"
+PR_ENTRY = "Add link to the blog post to the documentation [#591](https://github.com/jupyter-server/jupyter_releaser/pull/591) ([@jtpio](https://github.com/jtpio), [@krassowski](https://github.com/krassowski))"
 
 CHANGELOG_ENTRY = f"""
-## master@{{2019-09-01}}...master@{{2019-11-01}}
+## main@{{2024-10-01}}...main@{{2024-12-01}}
 
-([full changelog](https://github.com/executablebooks/github-activity/compare/479cc4b2f5504945021e3c4ee84818a10fabf810...ed7f1ed78b523c6b9fe6b3ac29e834087e299296))
+([full changelog](https://github.com/jupyter-server/jupyter_releaser/compare/4fe67ed3f81c41131d231a19696d912bb0abfb14...44e858497e4364a7546b7bd3cd08228b5563d027))
 
-### Merged PRs
+### Maintenance and upkeep improvements
 
-- defining contributions [#14](https://github.com/executablebooks/github-activity/pull/14) ([@choldgraf](https://github.com/choldgraf))
-- updating CLI for new tags [#12](https://github.com/executablebooks/github-activity/pull/12) ([@choldgraf](https://github.com/choldgraf))
-- fixing link to changelog with refs [#11](https://github.com/executablebooks/github-activity/pull/11) ([@choldgraf](https://github.com/choldgraf))
-- adding contributors list [#10](https://github.com/executablebooks/github-activity/pull/10) ([@choldgraf](https://github.com/choldgraf))
-- some improvements to `since` and opened issues list [#8](https://github.com/executablebooks/github-activity/pull/8) ([@choldgraf](https://github.com/choldgraf))
-- Support git references etc. [#6](https://github.com/executablebooks/github-activity/pull/6) ([@consideRatio](https://github.com/consideRatio))
-- adding authentication information [#2](https://github.com/executablebooks/github-activity/pull/2) ([@choldgraf](https://github.com/choldgraf))
+- Fix "test minimum versions" job [#597](https://github.com/jupyter-server/jupyter_releaser/pull/597) ([@krassowski](https://github.com/krassowski), [@brichet](https://github.com/brichet))
+- Pin `pypiserver` to v2.2.0 [#596](https://github.com/jupyter-server/jupyter_releaser/pull/596) ([@krassowski](https://github.com/krassowski), [@brichet](https://github.com/brichet))
+
+### Documentation improvements
+
 - {PR_ENTRY}
+- Add FAQ section about publish to `npm` only [#590](https://github.com/jupyter-server/jupyter_releaser/pull/590) ([@jtpio](https://github.com/jtpio), [@krassowski](https://github.com/krassowski))
+- Add link to GitHub repo in docs navbar [#589](https://github.com/jupyter-server/jupyter_releaser/pull/589) ([@krassowski](https://github.com/krassowski), [@jtpio](https://github.com/jtpio))
+- Add more content to the FAQ [#588](https://github.com/jupyter-server/jupyter_releaser/pull/588) ([@jtpio](https://github.com/jtpio), [@krassowski](https://github.com/krassowski))
+- Add `hatch` scripts to build, serve and watch the docs + docs improvements [#587](https://github.com/jupyter-server/jupyter_releaser/pull/587) ([@jtpio](https://github.com/jtpio), [@krassowski](https://github.com/krassowski))
+- Fix code indentation in README.md [#586](https://github.com/jupyter-server/jupyter_releaser/pull/586) ([@jtpio](https://github.com/jtpio), [@krassowski](https://github.com/krassowski))
 
 ### Contributors to this release
 
-([GitHub contributors page for this release](https://github.com/executablebooks/github-activity/graphs/contributors?from=2019-09-01&to=2019-11-01&type=c))
+The following people contributed discussions, new ideas, code and documentation contributions, and review.
+See [our definition of contributors](https://github-activity.readthedocs.io/en/latest/#how-does-this-tool-define-contributions-in-the-reports).
 
-[@betatim](https://github.com/search?q=repo%3Aexecutablebooks%2Fgithub-activity+involves%3Abetatim+updated%3A2019-09-01..2019-11-01&type=Issues) | [@choldgraf](https://github.com/search?q=repo%3Aexecutablebooks%2Fgithub-activity+involves%3Acholdgraf+updated%3A2019-09-01..2019-11-01&type=Issues) | [@consideRatio](https://github.com/search?q=repo%3Aexecutablebooks%2Fgithub-activity+involves%3AconsideRatio+updated%3A2019-09-01..2019-11-01&type=Issues)
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2024-10-01&to=2024-12-01&type=c))
+
+@brichet ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Abrichet+updated%3A2024-10-01..2024-12-01&type=Issues)) | @jtpio ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2024-10-01..2024-12-01&type=Issues)) | @krassowski ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2024-10-01..2024-12-01&type=Issues))
 """
 
 EMPTY_CHANGELOG_ENTRY = """
-## main@{2021-09-15}...main@{2022-01-18}
+## main@{2024-08-01}...main@{2024-08-15}
 
-([Full Changelog](https://github.com/QuantStack/jupyterlab-js-logs/compare/v0.2.4...None))
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/76ce4aa66e668f50b2f8eb4fe0a02a14659504fa...None))
 
 ### Contributors to this release
 
-([GitHub contributors page for this release](https://github.com/QuantStack/jupyterlab-js-logs/graphs/contributors?from=2021-09-15&to=2022-01-18&type=c))
+The following people contributed discussions, new ideas, code and documentation contributions, and review.
+See [our definition of contributors](https://github-activity.readthedocs.io/en/latest/#how-does-this-tool-define-contributions-in-the-reports).
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2024-08-01&to=2024-08-15&type=c))
 
 """
 
 GITHUB_CHANGELOG_ENTRY = """
 ## What's Changed
-* Some improvements to `since` and opened issues list @choldgraf in https://github.com/executablebooks/github-activity/pull/8
-* Defining contributions by @choldgraf in https://github.com/executablebooks/github-activity/pull/14
-* Fixing link to changelog with refs by @choldgraf in https://github.com/executablebooks/github-activity/pull/11
+* Fix test minimum versions job by @krassowski in https://github.com/jupyter-server/jupyter_releaser/pull/597
+* Pin pypiserver to v2.2.0 by @krassowski in https://github.com/jupyter-server/jupyter_releaser/pull/596
+* Add blog post link to the documentation by @jtpio in https://github.com/jupyter-server/jupyter_releaser/pull/591
 
 
-**Full Changelog**: https://github.com/executablebooks/github-activity/compare/479cc4b2f5504945021e3c4ee84818a10fabf810...ed7f1ed78b523c6b9fe6b3ac29e834087e299296
+**Full Changelog**: https://github.com/jupyter-server/jupyter_releaser/compare/4fe67ed3f81c41131d231a19696d912bb0abfb14...44e858497e4364a7546b7bd3cd08228b5563d027
 """
 
 
