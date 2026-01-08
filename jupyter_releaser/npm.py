@@ -19,7 +19,7 @@ PACKAGE_JSON = util.PACKAGE_JSON
 # Python 3.12+ gives a deprecation warning if TarFile.extraction_filter is None.
 # https://docs.python.org/3.12/library/tarfile.html#tarfile-extraction-filter
 if hasattr(tarfile, "fully_trusted_filter"):
-    tarfile.TarFile.extraction_filter = staticmethod(tarfile.fully_trusted_filter)  # type:ignore[assignment]
+    tarfile.TarFile.extraction_filter = staticmethod(tarfile.fully_trusted_filter)
 
 
 def build_dist(package, dist_dir):
