@@ -5,10 +5,11 @@ import argparse
 import os
 import os.path as osp
 import sys
+from collections.abc import Callable
 from dataclasses import dataclass
 from glob import glob
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 from jupyter_releaser import changelog, lib, npm, python, util
 

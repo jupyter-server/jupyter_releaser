@@ -3,7 +3,6 @@
 # Distributed under the terms of the Modified BSD License.
 import re
 from pathlib import Path
-from typing import Optional
 
 import mdformat
 from fastcore.net import HTTP404NotFoundError  # type:ignore[import-untyped]
@@ -222,7 +221,7 @@ def update_changelog(changelog_path, entry, silent=False):
 
 def remove_placeholder_entries(
     repo: str,
-    auth: Optional[str],
+    auth: str | None,
     changelog_path: str,
     dry_run: bool,
 ) -> int:
@@ -288,7 +287,7 @@ def remove_placeholder_entries(
 
 
 def insert_entry(
-    changelog: str, entry: str, version: Optional[str] = None, silent: bool = False
+    changelog: str, entry: str, version: str | None = None, silent: bool = False
 ) -> str:
     """Insert the entry into the existing changelog."""
     # Test if we are augmenting an existing changelog entry (for new PRs)
