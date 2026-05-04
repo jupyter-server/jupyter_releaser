@@ -135,8 +135,11 @@ def get_version_entry(
             ignored_contributors=ignored_contributors,
         )
     except ValueError as e:
-        # github-activity >= 1.1.4 raises ValueError when no activity is found
-        if "No activity found" in str(e):
+        # github-activity >= 1.1.4 raises ValueError when there are no PRs to
+        # include — either no activity in the range at all, or activity exists
+        # but none of it targets the requested branch.
+        msg = str(e)
+        if "No activity found" in msg or "Found activity, but none for the --branch target" in msg:
             util.log("No PRs found")
             return f"## {version}\n\nNo merged PRs"
         raise
