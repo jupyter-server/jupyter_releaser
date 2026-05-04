@@ -188,6 +188,7 @@ def test_get_changelog_version_entry_since_last_stable_multidigit(py_package, mo
         branch=branch,
         heading_level=2,
         auth=None,
+        ignored_contributors=DEFAULT_IGNORED_CONTRIBUTORS,
     )
 
     assert f"## {version}" in resp
