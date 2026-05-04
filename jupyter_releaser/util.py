@@ -416,7 +416,7 @@ def get_latest_tag(source, since_last_stable=False):
     tags = tags.splitlines()
 
     if since_last_stable:
-        stable_tag = re.compile(r"\d\.\d\.\d$")
+        stable_tag = re.compile(r"\d+\.\d+\.\d+$")
         tags = [t for t in tags if re.search(stable_tag, t)]
         if not tags:
             return ""
