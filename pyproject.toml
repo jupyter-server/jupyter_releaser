@@ -27,7 +27,7 @@ dependencies = [
     "ghapi<=1.0.4",
     "github-activity>=1.1.1,<2",
     "importlib_resources",
-    "jsonschema>=3.0.1",
+    "jsonschema>=4.0.0",
     "mdformat",
     "packaging",
     "pkginfo",
