@@ -2,6 +2,30 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.11.0
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...ca681965f114fd503fcc700047dd4a0743a9fd09))
+
+### Bugs fixed
+
+- Fix misparsing of 2 digit git tags [#650](https://github.com/jupyter-server/jupyter_releaser/pull/650) ([@Carreau](https://github.com/Carreau), [@krassowski](https://github.com/krassowski))
+- Handle `github-activity` reporting no activity on the target branch [#648](https://github.com/jupyter-server/jupyter_releaser/pull/648) ([@jtpio](https://github.com/jtpio), [@krassowski](https://github.com/krassowski))
+
+### Maintenance and upkeep improvements
+
+- Adapt to new `mypy` and `jsonschema` [#651](https://github.com/jupyter-server/jupyter_releaser/pull/651) ([@jtpio](https://github.com/jtpio), [@krassowski](https://github.com/krassowski))
+
+### Contributors to this release
+
+The following people contributed discussions, new ideas, code and documentation contributions, and review.
+See [our definition of contributors](https://github-activity.readthedocs.io/en/latest/use/#how-does-this-tool-define-contributions-in-the-reports).
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2026-01-05&to=2026-05-04&type=c))
+
+@Carreau ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3ACarreau+updated%3A2026-01-05..2026-05-04&type=Issues)) | @jtpio ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2026-01-05..2026-05-04&type=Issues)) | @krassowski ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2026-01-05..2026-05-04&type=Issues))
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.10.2
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...a79e34830cc24c4051b058402e06284434f721ad))
@@ -23,8 +47,6 @@ See [our definition of contributors](https://github-activity.readthedocs.io/en/l
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2025-12-12&to=2026-01-05&type=c))
 
 @jtpio ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2025-12-12..2026-01-05&type=Issues)) | @krassowski ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2025-12-12..2026-01-05&type=Issues))
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.10.1
 
