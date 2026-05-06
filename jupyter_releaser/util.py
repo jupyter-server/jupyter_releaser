@@ -416,13 +416,43 @@ def get_latest_tag(source, since_last_stable=False):
     tags = tags.splitlines()
 
     if since_last_stable:
-        stable_tag = re.compile(r"\d+\.\d+\.\d+$")
-        tags = [t for t in tags if re.search(stable_tag, t)]
+        tags = [t for t in tags if is_stable_tag(t)]
         if not tags:
             return ""
         return tags[0]
 
     return tags[0]
+
+
+def is_stable_tag(tag: str) -> bool:
+    """Check if a git tag name looks like a stable release tag."""
+    return bool(re.search(r"\d+\.\d+\.\d+$", tag))
+
+
+def is_final_version_spec(version_spec: str) -> bool:
+    """Check if a version specifier looks like a stable/final version."""
+    if not version_spec:
+        return False
+    normalized = version_spec.strip().lower()
+    if normalized == "release":
+        return True
+    try:
+        parsed = parse_version(version_spec)
+    except Exception:
+        return False
+    if not isinstance(parsed, Version):
+        return False
+    return not parsed.is_prerelease and not parsed.is_devrelease
+
+
+def should_use_since_last_stable(version_spec: str, branch: str | None = None) -> bool:
+    """Auto-detect when changelog generation should walk back to the last stable tag."""
+    if not is_final_version_spec(version_spec):
+        return False
+    latest_tag = get_latest_tag(branch)
+    if not latest_tag:
+        return False
+    return not is_stable_tag(latest_tag)
 
 
 def get_first_commit(source):
@@ -645,6 +675,16 @@ def handle_since() -> str:
     os.chdir(CHECKOUT_NAME)
     since_last_stable_env = os.environ.get("RH_SINCE_LAST_STABLE", "")
     since_last_stable = since_last_stable_env.lower() == "true"
+
+    if not since_last_stable and should_use_since_last_stable(
+        os.environ.get("RH_VERSION_SPEC", ""), os.environ.get("RH_BRANCH")
+    ):
+        since_last_stable = True
+        log(
+            "Auto-detected final release after a prerelease tag; "
+            "using the last stable tag for RH_SINCE."
+        )
+
     log(f"Since last stable? {since_last_stable}")
     since = get_latest_tag(os.environ.get("RH_BRANCH"), since_last_stable)
     if since:
