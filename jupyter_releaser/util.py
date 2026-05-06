@@ -19,6 +19,7 @@ from glob import glob
 from io import BytesIO
 from pathlib import Path
 from subprocess import PIPE, CalledProcessError, check_output
+from typing import Optional
 from urllib.parse import urlparse
 
 import requests
@@ -440,12 +441,10 @@ def is_final_version_spec(version_spec: str) -> bool:
         parsed = parse_version(version_spec)
     except Exception:
         return False
-    if not isinstance(parsed, Version):
-        return False
     return not parsed.is_prerelease and not parsed.is_devrelease
 
 
-def should_use_since_last_stable(version_spec: str, branch: str | None = None) -> bool:
+def should_use_since_last_stable(version_spec: str, branch: Optional[str] = None) -> bool:
     """Auto-detect when changelog generation should walk back to the last stable tag."""
     if not is_final_version_spec(version_spec):
         return False

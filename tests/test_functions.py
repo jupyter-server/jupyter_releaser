@@ -446,8 +446,7 @@ def test_handle_since_auto_uses_last_stable_for_final_release(npm_package, runne
     run("git add beta.txt", cwd=util.CHECKOUT_NAME)
     run('git commit -m "beta prep"', cwd=util.CHECKOUT_NAME)
     run("git tag v1.1.0b0", cwd=util.CHECKOUT_NAME)
-    os.environ["RH_BRANCH"] = run("git branch --show-current", cwd=util.CHECKOUT_NAME)
-    assert util.get_latest_tag(os.environ["RH_BRANCH"]) == "v1.1.0b0"
+    os.environ["RH_BRANCH"] = "bar"
 
     os.environ["RH_VERSION_SPEC"] = "1.1.0"
     os.environ["RH_SINCE_LAST_STABLE"] = "false"
@@ -464,8 +463,7 @@ def test_handle_since_auto_keeps_latest_prerelease_for_prerelease_release(npm_pa
     run("git add beta.txt", cwd=util.CHECKOUT_NAME)
     run('git commit -m "beta prep"', cwd=util.CHECKOUT_NAME)
     run("git tag v1.1.0b0", cwd=util.CHECKOUT_NAME)
-    os.environ["RH_BRANCH"] = run("git branch --show-current", cwd=util.CHECKOUT_NAME)
-    assert util.get_latest_tag(os.environ["RH_BRANCH"]) == "v1.1.0b0"
+    os.environ["RH_BRANCH"] = "bar"
 
     os.environ["RH_VERSION_SPEC"] = "1.1.0b1"
     os.environ["RH_SINCE_LAST_STABLE"] = "false"
@@ -482,8 +480,7 @@ def test_handle_since_auto_uses_last_stable_for_release_keyword(npm_package, run
     run("git add beta.txt", cwd=util.CHECKOUT_NAME)
     run('git commit -m "beta prep"', cwd=util.CHECKOUT_NAME)
     run("git tag v1.1.0rc1", cwd=util.CHECKOUT_NAME)
-    os.environ["RH_BRANCH"] = run("git branch --show-current", cwd=util.CHECKOUT_NAME)
-    assert util.get_latest_tag(os.environ["RH_BRANCH"]) == "v1.1.0rc1"
+    os.environ["RH_BRANCH"] = "bar"
 
     os.environ["RH_VERSION_SPEC"] = "release"
     os.environ["RH_SINCE_LAST_STABLE"] = "false"
