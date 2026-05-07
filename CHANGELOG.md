@@ -2,6 +2,25 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.11.1
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...ccf1be13734bc6f3544b77fe87b7ca9652515d3e))
+
+### Bugs fixed
+
+- Fix `pipx` use [#654](https://github.com/jupyter-server/jupyter_releaser/pull/654) ([@jtpio](https://github.com/jtpio), [@krassowski](https://github.com/krassowski))
+
+### Contributors to this release
+
+The following people contributed discussions, new ideas, code and documentation contributions, and review.
+See [our definition of contributors](https://github-activity.readthedocs.io/en/latest/use/#how-does-this-tool-define-contributions-in-the-reports).
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2026-05-04&to=2026-05-07&type=c))
+
+@jtpio ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2026-05-04..2026-05-07&type=Issues)) | @krassowski ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2026-05-04..2026-05-07&type=Issues))
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.11.0
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...ca681965f114fd503fcc700047dd4a0743a9fd09))
@@ -23,8 +42,6 @@ See [our definition of contributors](https://github-activity.readthedocs.io/en/l
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2026-01-05&to=2026-05-04&type=c))
 
 @Carreau ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3ACarreau+updated%3A2026-01-05..2026-05-04&type=Issues)) | @jtpio ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2026-01-05..2026-05-04&type=Issues)) | @krassowski ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2026-01-05..2026-05-04&type=Issues))
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.10.2
 
