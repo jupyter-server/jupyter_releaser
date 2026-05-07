@@ -186,7 +186,7 @@ def get_version():
     # Build the wheel and extract the version.
     if PYPROJECT.exists():
         with tempfile.TemporaryDirectory() as tempdir:
-            run(f"pipx run build --wheel --outdir {tempdir}")
+            run(f"pipx run --spec build pyproject-build --wheel --outdir {tempdir}")
             wheel_path = glob(f"{tempdir}/*.whl")[0]
             wheel = Wheel(wheel_path)
             return wheel.version

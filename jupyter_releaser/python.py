@@ -33,7 +33,7 @@ def build_dist(dist_dir, clean=True):
         for pkg in glob(f"{dest}/*.gz") + glob(f"{dest}/*.whl"):
             os.remove(pkg)
 
-    util.run(f"pipx run build --outdir {dest} .", quiet=True, show_cwd=True)
+    util.run(f"pipx run --spec build pyproject-build --outdir {dest} .", quiet=True, show_cwd=True)
 
 
 def check_dist(

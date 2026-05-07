@@ -139,7 +139,7 @@ def py_dist(py_package, runner, mocker, build_mock, git_prep):
     changelog_entry = testutil.mock_changelog_entry(py_package, runner, mocker)
 
     # Create the dist files
-    util.run("pipx run build .", cwd=util.CHECKOUT_NAME, quiet=True)
+    util.run("pipx run --spec build pyproject-build .", cwd=util.CHECKOUT_NAME, quiet=True)
 
     # Finalize the release
     runner(["tag-release"])
@@ -219,7 +219,7 @@ def build_mock(mocker):
     orig_run = util.run
 
     def wrapped(cmd, **kwargs):
-        if cmd == "pipx run build .":
+        if cmd == "pipx run --spec build pyproject-build .":
             if osp.exists(util.CHECKOUT_NAME):
                 dist_dir = Path(f"{util.CHECKOUT_NAME}/dist")
             else:
