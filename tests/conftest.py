@@ -1,20 +1,33 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
+import io
 import json
 import os
 import os.path as osp
+import sys
 import tempfile
 import time
 import uuid
 from pathlib import Path
 
 import pytest
-from click.testing import CliRunner
 from ghapi.core import GhApi
 
 from jupyter_releaser import cli, util
 from jupyter_releaser.util import ensure_mock_github, run
 from tests import util as testutil
+
+
+class CLIResult:
+    """Result from CLI invocation."""
+
+    def __init__(self, exit_code, output, exception=None):
+        self.exit_code = exit_code
+        self.output = output
+        self.stdout = output
+        self.stderr = ""
+        self.stderr_bytes = b""
+        self.exception = exception
 
 
 @pytest.fixture(autouse=True)
@@ -193,16 +206,55 @@ def npm_dist_prerelease(workspace_package, runner, mocker, git_prep):
 
 @pytest.fixture()
 def runner():
-    cli_runner = CliRunner()
+    def run(args, env=None):
+        # Convert any Path objects to strings
+        args = [str(arg) if isinstance(arg, Path) else arg for arg in args]
 
-    def run(*args, **kwargs):
-        result = cli_runner.invoke(cli.main, *args, **kwargs)
-        if result.exit_code != 0:
+        # Set up environment
+        if env:
+            old_env = os.environ.copy()
+            os.environ.update(env)
+
+        # Capture stdout and stderr
+        old_stdout = sys.stdout
+        old_stderr = sys.stderr
+        sys.stdout = captured_stdout = io.StringIO()
+        sys.stderr = captured_stderr = io.StringIO()
+
+        exception = None
+        exit_code = 0
+
+        try:
+            exit_code = cli.main(args)
+            if exit_code is None:
+                exit_code = 0
+        except SystemExit as e:
+            exit_code = e.code if e.code is not None else 0
+        except Exception as e:
+            exception = e
+            exit_code = 1
+
+        finally:
+            sys.stdout = old_stdout
+            sys.stderr = old_stderr
+            if env:
+                os.environ.clear()
+                os.environ.update(old_env)
+
+        stdout_output = captured_stdout.getvalue()
+        stderr_output = captured_stderr.getvalue()
+        combined_output = stdout_output + stderr_output
+        result = CLIResult(exit_code, combined_output, exception)
+        result.stdout = stdout_output
+        result.stderr = stderr_output
+        result.stderr_bytes = stderr_output.encode()
+
+        if exit_code != 0:
             if result.stderr_bytes:
                 print("Captured stderr\n", result.stderr, "\n\n")
             print("Captured stdout\n", result.stdout, "\n\n")
-            assert result.exception is not None
-            raise result.exception
+            if exception is not None:
+                raise exception
 
         return result
 

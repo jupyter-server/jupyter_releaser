@@ -5,7 +5,6 @@ import os
 import tempfile
 import uuid
 from datetime import datetime, timezone
-from typing import Dict, List
 
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
@@ -94,7 +93,7 @@ class Release(BaseModel):
     prerelease: bool
     tag_name: str
     target_commitish: str
-    assets: List[Asset]
+    assets: list[Asset]
     url: str
 
 
@@ -127,10 +126,10 @@ class Tag(BaseModel):
     object: TagObject
 
 
-releases: Dict[str, "Release"] = load_from_file("releases", Release)
-pulls: Dict[str, "PullRequest"] = load_from_file("pulls", PullRequest)
-release_ids_for_asset: Dict[str, str] = load_from_file("release_ids_for_asset", int)
-tag_refs: Dict[str, "Tag"] = load_from_file("tag_refs", Tag)
+releases: dict[str, "Release"] = load_from_file("releases", Release)
+pulls: dict[str, "PullRequest"] = load_from_file("pulls", PullRequest)
+release_ids_for_asset: dict[str, str] = load_from_file("release_ids_for_asset", int)
+tag_refs: dict[str, "Tag"] = load_from_file("tag_refs", Tag)
 
 
 @app.get("/")
@@ -140,7 +139,7 @@ def read_root():
 
 
 @app.get("/repos/{owner}/{repo}/releases")
-def list_releases(owner: str, repo: str) -> List[Release]:
+def list_releases(owner: str, repo: str) -> list[Release]:
     """https://docs.github.com/en/rest/releases/releases#list-releases"""
     return list(releases.values())
 
@@ -270,7 +269,7 @@ async def create_tag_ref(owner: str, repo: str, request: Request) -> None:
 
 
 @app.get("/repos/{owner}/{repo}/git/matching-refs/tags/{tag_ref}")
-def list_matching_references(owner: str, repo: str, tag_ref: str) -> List[Tag]:
+def list_matching_references(owner: str, repo: str, tag_ref: str) -> list[Tag]:
     """https://docs.github.com/en/rest/git/refs#list-matching-references"""
     # raise ValueError("we should have an api to set a sha for a tag ref for tests")
     return [tag_refs[tag_ref]]

@@ -13,7 +13,6 @@ from datetime import datetime, timezone
 from glob import glob
 from pathlib import Path
 from subprocess import CalledProcessError
-from typing import Type, Union
 
 import mdformat
 from packaging.utils import canonicalize_name
@@ -436,7 +435,7 @@ def publish_assets(
         util.log(f"Handling dist file {path}")
         suffix = Path(path).suffix
         if suffix in [".gz", ".whl"]:
-            dist: Union[Type[SDist], Type[Wheel]]
+            dist: type[SDist | Wheel]
             dist = SDist if suffix == ".gz" else Wheel
             pkg = dist(path)
             pkg_name = canonicalize_name(pkg.name or "")
