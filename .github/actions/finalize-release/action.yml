@@ -33,6 +33,9 @@ outputs:
   release_url:
     description: "The html URL of the GitHub release"
     value: ${{ steps.finalize-release.outputs.release_url }}
+  release_tag:
+    description: "The tag name of the GitHub release"
+    value: ${{ steps.finalize-release.outputs.release_tag }}
   pr_url:
     description: "The html URL of the forwardport PR if applicable"
     value: ${{ steps.finalize-release.outputs.pr_url }}

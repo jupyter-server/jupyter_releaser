@@ -752,13 +752,20 @@ def test_publish_assets_npm_prerelease_dry_run(npm_dist_prerelease, runner, mock
     runner(["publish-assets", "--dist-dir", dist_dir, "--dry-run"])
 
 
-def test_publish_release(npm_dist, runner, mocker, mock_github, draft_release):
+def test_publish_release(npm_dist, runner, mocker, mock_github, draft_release, tmp_path):
     os.environ["RH_RELEASE_URL"] = draft_release
+    github_output = tmp_path / "github_output"
+    os.environ["GITHUB_OUTPUT"] = str(github_output)
     runner(["publish-release"])
 
     log = get_log()
     assert "before-publish-release" in log
     assert "after-publish-release" in log
+
+    tag = draft_release.rsplit("/", 1)[-1]
+    outputs = github_output.read_text(encoding="utf-8")
+    assert f"release_url={draft_release}" in outputs
+    assert f"release_tag={tag}" in outputs
 
 
 def test_config_file(py_package, runner, mocker, git_prep):

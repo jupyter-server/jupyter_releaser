@@ -496,6 +496,7 @@ def publish_release(auth, dry_run, release_url, silent):
 
     # Set the GitHub action output
     util.actions_output("release_url", release.html_url)
+    util.actions_output("release_tag", release.tag_name)
 
 
 def prep_git(ref, branch, repo, auth, username, url):
