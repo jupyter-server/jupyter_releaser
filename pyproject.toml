@@ -24,6 +24,7 @@ requires-python = ">=3.10"
 dynamic = ["version"]
 dependencies = [
     "click<8.2.0",
+    "fastcore<2",
     "ghapi<=1.0.4",
     "github-activity>=1.1.1,<2",
     "importlib_resources",
