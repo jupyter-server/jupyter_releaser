@@ -50,7 +50,7 @@ def test_get_version_npm(npm_package):
 
 
 def test_format_pr_entry(mock_github):
-    gh = GhApi(owner="snuffy", repo="foo")
+    gh = GhApi(owner="snuffy", repo="foo", sync=True)
     info = gh.pulls.create("title", "head", "base", "body", True, False, None)
     resp = changelog.format_pr_entry("snuffy/foo", info["number"], auth="baz")
     assert resp.startswith("- ")
@@ -366,30 +366,14 @@ def test_get_config_file(git_repo):
 
 
 def test_get_latest_draft_release(mock_github):
-    gh = GhApi(owner="foo", repo="bar")
-    gh.create_release(
-        "v1.0.0",
-        "main",
-        "v1.0.0",
-        "body",
-        True,
-        True,
-        files=[],
-    )
+    gh = GhApi(owner="foo", repo="bar", sync=True)
+    util.create_release(gh, "v1.0.0", "main", "v1.0.0", "body", True, True, files=[])
     latest = util.latest_draft_release(gh)
     assert latest.name == "v1.0.0"
 
     # Ensure a different timestamp.
     time.sleep(1)
-    gh.create_release(
-        "v1.1.0",
-        "bob",
-        "v1.1.0",
-        "body",
-        True,
-        True,
-        files=[],
-    )
+    util.create_release(gh, "v1.1.0", "bob", "v1.1.0", "body", True, True, files=[])
     latest = util.latest_draft_release(gh)
     assert latest.name == "v1.1.0"
     latest = util.latest_draft_release(gh, "main")
@@ -412,7 +396,7 @@ def test_parse_release_url():
 
 
 def test_extract_metadata_from_release_url(mock_github, draft_release):
-    gh = GhApi(owner="foo", repo="bar")
+    gh = GhApi(owner="foo", repo="bar", sync=True)
     data = util.extract_metadata_from_release_url(gh, draft_release, "")
     assert os.environ["RH_BRANCH"] == data["branch"]
 

@@ -253,7 +253,7 @@ def release_metadata():
 
 @pytest.fixture()
 def draft_release(mock_github, release_metadata):
-    gh = GhApi(owner="foo", repo="bar")
+    gh = GhApi(owner="foo", repo="bar", sync=True)
     data = release_metadata
     tag = "v" + data["version"]
 
@@ -264,7 +264,7 @@ def draft_release(mock_github, release_metadata):
 
         # Ensure this is the latest release.
         time.sleep(1)
-        release = gh.create_release(tag, "bar", tag, "hi", True, True, files=[metadata_path])
+        release = util.create_release(gh, tag, "bar", tag, "hi", True, True, files=[metadata_path])
     yield release.html_url
     try:
         gh.repos.delete_release(release.id)
