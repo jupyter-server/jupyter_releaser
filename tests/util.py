@@ -110,8 +110,14 @@ LICENSE_TEMPLATE = "A fake license\n"
 README_TEMPLATE = "A fake readme\n"
 
 
-def pyproject_template(project_name="foo", module_name="foo", sub_packages=None):
+def pyproject_template(project_name="foo", module_name="foo", sub_packages=None, dependencies=None):
     sub_packages = sub_packages or []
+    dependencies = dependencies or []
+    deps_str = (
+        "\ndependencies = [" + ", ".join(f'"{d}"' for d in dependencies) + "]"
+        if dependencies
+        else ""
+    )
     res = f"""
 [build-system]
 requires = ["hatchling>=1.11"]
@@ -126,7 +132,7 @@ license = {{file = "LICENSE"}}
 authors = [
   {{email = "foo@foo.com"}},
   {{name = "foo"}}
-]
+]{deps_str}
 
 [tool.hatch.version]
 path = "{module_name}.py"
@@ -137,7 +143,7 @@ homepage = "https://foo.com"
 """
     if sub_packages:
         res += f"""
-[tools.jupyter-releaser.options]
+[tool.jupyter-releaser.options]
 python_packages = {sub_packages}
 """
     return res
@@ -212,15 +218,18 @@ def get_log():
     return log.read_text(encoding="utf-8").splitlines()
 
 
-def create_python_package(git_repo, multi=False, not_matching_name=False):
-    def write_files(git_repo, sub_packages=None, package_name="foo", module_name=None):
+def create_python_package(git_repo, multi=False, not_matching_name=False, with_inter_deps=False):
+    def write_files(
+        git_repo, sub_packages=None, package_name="foo", module_name=None, dependencies=None
+    ):
         sub_packages = sub_packages or []
 
         module_name = module_name or package_name
 
         pyproject = git_repo / "pyproject.toml"
         pyproject.write_text(
-            pyproject_template(package_name, module_name, sub_packages), encoding="utf-8"
+            pyproject_template(package_name, module_name, sub_packages, dependencies),
+            encoding="utf-8",
         )
 
         foopy = git_repo / f"{module_name}.py"
@@ -261,10 +270,12 @@ def create_python_package(git_repo, multi=False, not_matching_name=False):
             sub_package.mkdir()
             package_name = f"foo{i}"
             module_name = f"foo{i}bar" if not_matching_name else None
+            dependencies = ["foo0"] if (with_inter_deps and i == 1) else None
             write_files(
                 git_repo / sub_package,
                 package_name=package_name,
                 module_name=module_name,
+                dependencies=dependencies,
             )
             run(f"git add {sub_package}")
             run(f'git commit -m "initial python {sub_package}"')
