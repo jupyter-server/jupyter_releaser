@@ -219,14 +219,17 @@ def get_log():
 
 
 def create_python_package(git_repo, multi=False, not_matching_name=False, with_inter_deps=False):
-    def write_files(git_repo, sub_packages=None, package_name="foo", module_name=None, dependencies=None):
+    def write_files(
+        git_repo, sub_packages=None, package_name="foo", module_name=None, dependencies=None
+    ):
         sub_packages = sub_packages or []
 
         module_name = module_name or package_name
 
         pyproject = git_repo / "pyproject.toml"
         pyproject.write_text(
-            pyproject_template(package_name, module_name, sub_packages, dependencies), encoding="utf-8"
+            pyproject_template(package_name, module_name, sub_packages, dependencies),
+            encoding="utf-8",
         )
 
         foopy = git_repo / f"{module_name}.py"
