@@ -84,6 +84,11 @@ def py_multipackage(git_repo):
 
 
 @pytest.fixture()
+def py_multipackage_with_deps(git_repo):
+    return testutil.create_python_package(git_repo, multi=True, with_inter_deps=True)
+
+
+@pytest.fixture()
 def py_package_different_names(git_repo):
     return testutil.create_python_package(git_repo, not_matching_name=True)
 
