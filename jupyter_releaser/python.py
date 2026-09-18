@@ -79,7 +79,7 @@ def check_dist(
         # install, and run test command
         util.run(f"python -m venv {env_path}")
         util.run(f"{bin_path}/python -m pip install -q -U pip")
-        util.run(f"{bin_path}/pip install -q {dist_file}")
+        util.run(f"{bin_path}/pip install -q --find-links {dist_dir} {dist_file}")
         try:
             for cmd in test_commands:
                 util.run(f"{bin_path}/{cmd}")
