@@ -63,7 +63,7 @@ test = [
   "pytest-mock",
   "pytest-xdist[psutil]",
   "uvicorn",
-  "ruamel.yaml<0.19"
+  "ruamel.yaml"
 ]
 
 [project.scripts]

@@ -243,6 +243,8 @@ def create_python_package(git_repo, multi=False, not_matching_name=False, with_i
 
         # Remove sp-repo-review and don't check yaml files.
         yaml = YAML(typ="safe")
+        # Avoid line wrapping, which adds trailing whitespace with ruamel.yaml>=0.19.
+        yaml.width = 10000
         table = yaml.load(text)
         for item in list(table["repos"]):
             if item["repo"] == "https://github.com/scientific-python/cookie":
