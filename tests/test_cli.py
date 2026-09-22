@@ -399,6 +399,19 @@ def test_check_python(py_package, runner, build_mock, git_prep):
     assert "after-check-python" in log
 
 
+def test_check_python_inter_deps(py_multipackage_with_deps, runner, git_prep):
+    """check-python succeeds when packages in dist/ depend on each other."""
+    dist_dir = normalize_path(Path(util.CHECKOUT_NAME).resolve() / "dist")
+    # py_multipackage_with_deps[0] is the root wrapper package; skip it and
+    # only build the two sub-packages (foo0 and foo1 which depends on foo0).
+    for package in py_multipackage_with_deps[1:]:
+        run(
+            f"pipx run --spec build pyproject-build . -o {dist_dir}",
+            cwd=Path(util.CHECKOUT_NAME) / package["rel_path"],
+        )
+    runner(["check-python"])
+
+
 def test_check_python_different_names(
     monkeypatch, py_package_different_names, runner, build_mock, git_prep
 ):
