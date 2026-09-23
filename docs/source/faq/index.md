@@ -30,16 +30,18 @@ packages
 └── foo
 ```
 
-And `bar` depends on `foo`, for example with `foo>=1.0.0`. You may see the following error during the `check-python` step:
+And `bar` depends on `foo`, for example with `foo>=1.0.0`. With older versions of the releaser, you may see the following error during the `check-python` step:
 
 ```
 ERROR: Could not find a version that satisfies the requirement foo>=1.0.0 (from bar) (from versions: 1.0.0b4, 1.0.0b5, 1.0.0b6, 1.0.0b8)
 ERROR: No matching distribution found for foo>=1.0.0
 ```
 
-This issue is not fixed yet and is being tracked in [this issue](https://github.com/jupyter-server/jupyter_releaser/issues/499).
+This happens because `foo==1.0.0` is not published yet when `bar` is installed in a new environment.
 
-As a workaround, you can skip the `check-python` step with the following releaser config:
+This was fixed in [#758](https://github.com/jupyter-server/jupyter_releaser/pull/758): the `check-python` step now lets `pip` find the other packages of the repository in the dist folder (with `--find-links`). Third-party dependencies are still installed from PyPI.
+
+If you skipped the `check-python` step as a workaround, you can remove it from the `skip` list of the releaser config:
 
 ```toml
 [tool.jupyter-releaser]
