@@ -436,3 +436,54 @@ def test_handle_since(npm_package, runner):
     run("git tag v1.0.1", cwd=util.CHECKOUT_NAME)
     since = util.handle_since()
     assert since == "v1.0.1"
+
+
+def test_handle_since_auto_uses_last_stable_for_final_release(npm_package, runner):
+    runner(["prep-git", "--git-url", npm_package])
+    run("git tag v1.0.0", cwd=util.CHECKOUT_NAME)
+    time.sleep(1)
+    Path(util.CHECKOUT_NAME, "beta.txt").write_text("beta\n", encoding="utf-8")
+    run("git add beta.txt", cwd=util.CHECKOUT_NAME)
+    run('git commit -m "beta prep"', cwd=util.CHECKOUT_NAME)
+    run("git tag v1.1.0b0", cwd=util.CHECKOUT_NAME)
+    os.environ["RH_BRANCH"] = "bar"
+
+    os.environ["RH_VERSION_SPEC"] = "1.1.0"
+    os.environ["RH_SINCE_LAST_STABLE"] = "false"
+
+    since = util.handle_since()
+    assert since == "v1.0.0"
+
+
+def test_handle_since_auto_keeps_latest_prerelease_for_prerelease_release(npm_package, runner):
+    runner(["prep-git", "--git-url", npm_package])
+    run("git tag v1.0.0", cwd=util.CHECKOUT_NAME)
+    time.sleep(1)
+    Path(util.CHECKOUT_NAME, "beta.txt").write_text("beta\n", encoding="utf-8")
+    run("git add beta.txt", cwd=util.CHECKOUT_NAME)
+    run('git commit -m "beta prep"', cwd=util.CHECKOUT_NAME)
+    run("git tag v1.1.0b0", cwd=util.CHECKOUT_NAME)
+    os.environ["RH_BRANCH"] = "bar"
+
+    os.environ["RH_VERSION_SPEC"] = "1.1.0b1"
+    os.environ["RH_SINCE_LAST_STABLE"] = "false"
+
+    since = util.handle_since()
+    assert since == "v1.1.0b0"
+
+
+def test_handle_since_auto_uses_last_stable_for_release_keyword(npm_package, runner):
+    runner(["prep-git", "--git-url", npm_package])
+    run("git tag v1.0.0", cwd=util.CHECKOUT_NAME)
+    time.sleep(1)
+    Path(util.CHECKOUT_NAME, "beta.txt").write_text("beta\n", encoding="utf-8")
+    run("git add beta.txt", cwd=util.CHECKOUT_NAME)
+    run('git commit -m "beta prep"', cwd=util.CHECKOUT_NAME)
+    run("git tag v1.1.0rc1", cwd=util.CHECKOUT_NAME)
+    os.environ["RH_BRANCH"] = "bar"
+
+    os.environ["RH_VERSION_SPEC"] = "release"
+    os.environ["RH_SINCE_LAST_STABLE"] = "false"
+
+    since = util.handle_since()
+    assert since == "v1.0.0"
