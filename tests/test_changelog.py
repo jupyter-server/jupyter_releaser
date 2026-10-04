@@ -120,7 +120,7 @@ def test_remove_placeholder_entries(tmp_path, release_metadata, draft_release):
     os.chdir(tmp_path)
 
     # Publish the release (as it is a draft from `draft_release`)
-    gh = GhApi(owner="foo", repo="bar")
+    gh = GhApi(owner="foo", repo="bar", sync=True)
     release = release_for_url(gh, draft_release)
     published_changelog = "Published body"
     gh.repos.update_release(
