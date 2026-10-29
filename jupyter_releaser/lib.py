@@ -454,20 +454,28 @@ def publish_assets(
                     stacklevel=2,
                 )
         elif suffix == ".tgz":
-            # Ignore already published versions
-            try:
-                util.run(f"{npm_cmd} {name}", cwd=dist_dir, quiet=True, quiet_error=True, echo=True)
-            except CalledProcessError as e:
-                stderr = e.stderr
-                if (
-                    "E409" in stderr
-                    or "EPUBLISHCONFLICT" in stderr
-                    or "previously published versions" in stderr
-                ):
-                    continue
-                util.log(stderr)
-                raise e
-            found = True
+            for attempt in range(3):
+                try:
+                    util.run(
+                        f"{npm_cmd} {name}", cwd=dist_dir, quiet=True, quiet_error=True, echo=True
+                    )
+                except CalledProcessError as e:
+                    stderr = e.stderr
+                    # Ignore already published versions
+                    if (
+                        "E409" in stderr
+                        or "EPUBLISHCONFLICT" in stderr
+                        or "previously published versions" in stderr
+                    ):
+                        break
+                    util.log(stderr)
+                    # npm writes to the transparency log before it uploads the tarball,
+                    # so a new attempt is safe (https://github.com/npm/cli/issues/10078)
+                    if "TLOG_CREATE_ENTRY_ERROR" in stderr and attempt < 2:
+                        continue
+                    raise e
+                found = True
+                break
         else:
             util.log(f"Nothing to upload for {name}")
     if not found:
