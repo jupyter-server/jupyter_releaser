@@ -23,6 +23,11 @@ from tests.util import (
     mock_changelog_entry,
 )
 
+NPM_TLOG_ERROR = (
+    "npm error code TLOG_CREATE_ENTRY_ERROR\n"
+    "npm error error creating tlog entry - (409) an equivalent entry already exists"
+)
+
 
 def test_prep_git_simple(py_package, runner):
     """Standard local run with no env variables."""
@@ -743,6 +748,68 @@ def test_publish_assets_npm_all_exists(npm_dist, runner, mocker, mock_github, dr
     )
 
     assert called == 3, called
+
+
+def test_publish_assets_npm_tlog_error(npm_dist, runner, mocker, mock_github, draft_release):
+    os.environ["RH_RELEASE_URL"] = draft_release
+    dist_dir = npm_dist / util.CHECKOUT_NAME / "dist"
+    calls = []
+
+    def wrapped(cmd, **kwargs):
+        if cmd.startswith("npm publish --dry-run"):
+            calls.append(cmd)
+            if len(calls) == 1:
+                err = CalledProcessError(1, "foo")
+                err.stderr = NPM_TLOG_ERROR
+                raise err
+
+    mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
+    runner(
+        [
+            "publish-assets",
+            "--npm-token",
+            "abc",
+            "--npm-cmd",
+            "npm publish --dry-run",
+            "--dist-dir",
+            dist_dir,
+        ]
+    )
+
+    assert len(calls) == 4, calls
+    assert calls[0] == calls[1]
+
+
+def test_publish_assets_npm_tlog_error_persists(
+    npm_dist, runner, mocker, mock_github, draft_release
+):
+    os.environ["RH_RELEASE_URL"] = draft_release
+    dist_dir = npm_dist / util.CHECKOUT_NAME / "dist"
+    calls = []
+
+    def wrapped(cmd, **kwargs):
+        if cmd.startswith("npm publish --dry-run"):
+            calls.append(cmd)
+            err = CalledProcessError(1, "foo")
+            err.stderr = NPM_TLOG_ERROR
+            raise err
+
+    mocker.patch("jupyter_releaser.util.run", wraps=wrapped)
+    with pytest.raises(CalledProcessError):
+        runner(
+            [
+                "publish-assets",
+                "--npm-token",
+                "abc",
+                "--npm-cmd",
+                "npm publish --dry-run",
+                "--dist-dir",
+                dist_dir,
+            ]
+        )
+
+    assert len(calls) == 3, calls
+    assert len(set(calls)) == 1
 
 
 def test_publish_assets_npm_prerelease_dry_run(npm_dist_prerelease, runner, mock_github):
