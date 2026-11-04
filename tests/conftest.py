@@ -32,7 +32,7 @@ def mock_env(mocker):
     # Anything that starts with RH_ or GITHUB_ or PIP
     # Also clear HATCH_ENV_ACTIVE to prevent hatch 1.16+ from inheriting
     # the parent environment when running hatch version in subprocesses
-    prefixes = ["GITHUB_", "RH_", "PIP_", "HATCH_ENV"]
+    prefixes = ["GITHUB_", "RH_", "PIP_", "HATCH_ENV", "PYPI_TOKEN", "TWINE_", "ACTIONS_ID_TOKEN_"]
     env = os.environ.copy()
     for key in list(env):
         for prefix in prefixes:

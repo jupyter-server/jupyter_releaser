@@ -669,6 +669,83 @@ def test_publish_assets_py_skip(py_package, runner, mocker, git_prep, mock_githu
     assert called == 0
 
 
+PY_WHEEL = f"foo-{VERSION_SPEC}-py2.py3-none-any.whl"
+PY_SDIST = f"foo-{VERSION_SPEC}.tar.gz"
+
+
+@pytest.fixture()
+def py_dist_dir(py_package, runner, mocker, git_prep, mock_github):
+    """Build real Python dists and attach them to a draft release."""
+    mock_changelog_entry(py_package, runner, mocker)
+    run("pipx run --spec build pyproject-build .", cwd=util.CHECKOUT_NAME)
+    dist_dir = py_package / util.CHECKOUT_NAME / "dist"
+    release = create_draft_release(files=glob(f"{dist_dir}/*.*"))
+    os.environ["RH_RELEASE_URL"] = release.html_url
+    return dist_dir
+
+
+def use_trusted_publishing(mocker):
+    os.environ[util.GH_ID_TOKEN_TOKEN_VAR] = "id-token"
+    mocker.patch("jupyter_releaser.python.fetch_pypi_api_token", return_value="pypi-token")
+
+
+def publish_py_dists(runner, mocker, dist_dir, *args):
+    """Run publish-assets without running any command.
+
+    Returns the commands that sign or upload a dist, and the output.
+    """
+    mock_run = mocker.patch("jupyter_releaser.util.run")
+    result = runner(["publish-assets", "--dist-dir", dist_dir, *args])
+    cmds = [call.args[0] for call in mock_run.call_args_list]
+    return [cmd for cmd in cmds if PY_WHEEL in cmd or PY_SDIST in cmd], result.output
+
+
+def test_publish_assets_py_attestations(py_dist_dir, runner, mocker):
+    use_trusted_publishing(mocker)
+
+    cmds, _ = publish_py_dists(runner, mocker, py_dist_dir)
+
+    assert cmds == [
+        f"pipx run pypi-attestations sign {PY_WHEEL}",
+        f"pipx run twine upload --attestations {PY_WHEEL} {PY_WHEEL}.publish.attestation",
+        f"pipx run pypi-attestations sign {PY_SDIST}",
+        f"pipx run twine upload --attestations {PY_SDIST} {PY_SDIST}.publish.attestation",
+    ]
+
+
+def test_publish_assets_py_no_attestations_with_api_token(py_dist_dir, runner, mocker):
+    os.environ["PYPI_TOKEN"] = "api-token"
+
+    cmds, _ = publish_py_dists(runner, mocker, py_dist_dir)
+
+    assert cmds == [
+        f"pipx run twine upload {PY_WHEEL}",
+        f"pipx run twine upload {PY_SDIST}",
+    ]
+
+
+def test_publish_assets_py_no_attestations_on_dry_run(py_dist_dir, runner, mocker):
+    use_trusted_publishing(mocker)
+    mocker.patch("jupyter_releaser.python.start_local_pypi")
+
+    cmds, _ = publish_py_dists(runner, mocker, py_dist_dir, "--dry-run")
+
+    assert cmds == [
+        f"pipx run twine upload --repository-url=http://0.0.0.0:8081 {PY_WHEEL}",
+        f"pipx run twine upload --repository-url=http://0.0.0.0:8081 {PY_SDIST}",
+    ]
+
+
+def test_publish_assets_py_no_attestations_with_custom_command(py_dist_dir, runner, mocker):
+    use_trusted_publishing(mocker)
+    os.environ["TWINE_COMMAND"] = "my-upload-tool"
+
+    cmds, output = publish_py_dists(runner, mocker, py_dist_dir)
+
+    assert cmds == [f"my-upload-tool {PY_WHEEL}", f"my-upload-tool {PY_SDIST}"]
+    assert "Not producing PyPI attestations for custom twine command" in output
+
+
 def test_publish_assets_npm(npm_dist, runner, mocker, mock_github):
     # Create the release.
     dist_dir = npm_dist / util.CHECKOUT_NAME / "dist"
