@@ -455,11 +455,9 @@ def publish_assets(
                 upload_files = name
                 if use_attestations:
                     # Without a name in python_packages, each package uploads every dist,
-                    # and pypi-attestations refuses to overwrite an attestation
+                    # so sign each dist only once
                     if not Path(f"{path}.publish.attestation").exists():
-                        util.retry(
-                            f"pipx run pypi-attestations sign {name}", cwd=dist_dir, echo=True
-                        )
+                        util.retry_call(python.sign_dist, path)
                     # twine only attaches attestation files given on its command line
                     upload_files = f"{name} {name}.publish.attestation"
                 env = os.environ.copy()

@@ -15,6 +15,10 @@ from tempfile import TemporaryDirectory
 from typing import cast
 
 import requests
+from pypi_attestations import Attestation, Distribution
+from sigstore.models import ClientTrustConfig
+from sigstore.oidc import IdentityToken, detect_credential
+from sigstore.sign import SigningContext
 
 from jupyter_releaser import util
 
@@ -22,6 +26,30 @@ PYPROJECT = util.PYPROJECT
 SETUP_PY = util.SETUP_PY
 
 PYPI_GH_API_TOKEN_URL = "https://pypi.org/_/oidc/github/mint-token"  # noqa: S105
+
+
+def sign_dist(dist_file):
+    """Create a PyPI attestation for a Python dist file.
+
+    It is written next to the dist file like `pypi-attestations sign` does.
+    """
+    # Sign with the ambient OIDC credential of the GitHub Actions job (id-token: write)
+    oidc_token = detect_credential()
+    if oidc_token is None:
+        msg = f"No ambient OIDC credential found to sign {dist_file}"
+        raise RuntimeError(msg)
+
+    trust_config = ClientTrustConfig.production()
+
+    # TODO unpin once https://github.com/pypi/pypi-attestations/issues/142 is solved
+    trust_config.force_tlog_version = 1
+
+    signing_ctx = SigningContext.from_trust_config(trust_config)
+
+    dist = Distribution.from_file(Path(dist_file))
+    with signing_ctx.signer(IdentityToken(oidc_token)) as signer:
+        attestation = Attestation.sign(signer, dist)
+    Path(f"{dist_file}.publish.attestation").write_text(attestation.model_dump_json())
 
 
 def build_dist(dist_dir, clean=True):

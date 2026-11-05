@@ -690,25 +690,26 @@ def use_trusted_publishing(mocker):
 
 
 def publish_py_dists(runner, mocker, dist_dir, *args):
-    """Run publish-assets without running any command.
+    """Run publish-assets without signing or running any command.
 
-    Returns the commands that sign or upload a dist, and the output.
+    Returns the dist files signed, the commands that upload a dist, and the output.
     """
+    mock_sign = mocker.patch("jupyter_releaser.python.sign_dist")
     mock_run = mocker.patch("jupyter_releaser.util.run")
     result = runner(["publish-assets", "--dist-dir", dist_dir, *args])
+    signed = [Path(call.args[0]).name for call in mock_sign.call_args_list]
     cmds = [call.args[0] for call in mock_run.call_args_list]
-    return [cmd for cmd in cmds if PY_WHEEL in cmd or PY_SDIST in cmd], result.output
+    return signed, [cmd for cmd in cmds if PY_WHEEL in cmd or PY_SDIST in cmd], result.output
 
 
 def test_publish_assets_py_attestations(py_dist_dir, runner, mocker):
     use_trusted_publishing(mocker)
 
-    cmds, _ = publish_py_dists(runner, mocker, py_dist_dir)
+    signed, cmds, _ = publish_py_dists(runner, mocker, py_dist_dir)
 
+    assert signed == [PY_WHEEL, PY_SDIST]
     assert cmds == [
-        f"pipx run pypi-attestations sign {PY_WHEEL}",
         f"pipx run twine upload --attestations {PY_WHEEL} {PY_WHEEL}.publish.attestation",
-        f"pipx run pypi-attestations sign {PY_SDIST}",
         f"pipx run twine upload --attestations {PY_SDIST} {PY_SDIST}.publish.attestation",
     ]
 
@@ -716,8 +717,9 @@ def test_publish_assets_py_attestations(py_dist_dir, runner, mocker):
 def test_publish_assets_py_no_attestations_with_api_token(py_dist_dir, runner, mocker):
     os.environ["PYPI_TOKEN"] = "api-token"
 
-    cmds, _ = publish_py_dists(runner, mocker, py_dist_dir)
+    signed, cmds, _ = publish_py_dists(runner, mocker, py_dist_dir)
 
+    assert signed == []
     assert cmds == [
         f"pipx run twine upload {PY_WHEEL}",
         f"pipx run twine upload {PY_SDIST}",
@@ -728,8 +730,9 @@ def test_publish_assets_py_no_attestations_on_dry_run(py_dist_dir, runner, mocke
     use_trusted_publishing(mocker)
     mocker.patch("jupyter_releaser.python.start_local_pypi")
 
-    cmds, _ = publish_py_dists(runner, mocker, py_dist_dir, "--dry-run")
+    signed, cmds, _ = publish_py_dists(runner, mocker, py_dist_dir, "--dry-run")
 
+    assert signed == []
     assert cmds == [
         f"pipx run twine upload --repository-url=http://0.0.0.0:8081 {PY_WHEEL}",
         f"pipx run twine upload --repository-url=http://0.0.0.0:8081 {PY_SDIST}",
@@ -740,8 +743,9 @@ def test_publish_assets_py_no_attestations_with_custom_command(py_dist_dir, runn
     use_trusted_publishing(mocker)
     os.environ["TWINE_COMMAND"] = "my-upload-tool"
 
-    cmds, output = publish_py_dists(runner, mocker, py_dist_dir)
+    signed, cmds, output = publish_py_dists(runner, mocker, py_dist_dir)
 
+    assert signed == []
     assert cmds == [f"my-upload-tool {PY_WHEEL}", f"my-upload-tool {PY_SDIST}"]
     assert "Not producing PyPI attestations for custom twine command" in output
 
@@ -760,21 +764,16 @@ def test_publish_assets_py_attestations_multipackage(
     os.environ["RH_RELEASE_URL"] = release.html_url
     use_trusted_publishing(mocker)
 
-    def sign(cmd, cwd=None, **kwargs):
-        # Like pypi-attestations, refuse to overwrite an attestation
-        if cmd.startswith("pipx run pypi-attestations sign "):
-            attestation = Path(cwd) / f"{cmd.split()[-1]}.publish.attestation"
-            if attestation.exists():
-                raise CalledProcessError(1, cmd)
-            attestation.write_text("{}", encoding="utf-8")
+    def sign(path):
+        Path(f"{path}.publish.attestation").write_text("{}")
 
-    mock_run = mocker.patch("jupyter_releaser.util.run", side_effect=sign)
+    mocker.patch("jupyter_releaser.util.run")
+    mock_sign = mocker.patch("jupyter_releaser.python.sign_dist", side_effect=sign)
     # Without a package name, each package uploads every dist
     packages = ["--python-packages", "sub_package0", "--python-packages", "sub_package1"]
     runner(["publish-assets", "--dist-dir", dist_dir, *packages])
 
-    cmds = [call.args[0] for call in mock_run.call_args_list]
-    assert len([cmd for cmd in cmds if "pypi-attestations sign" in cmd]) == 4
+    assert mock_sign.call_count == 4
 
 
 def test_publish_assets_npm(npm_dist, runner, mocker, mock_github):
