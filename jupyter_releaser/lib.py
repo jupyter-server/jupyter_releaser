@@ -430,6 +430,17 @@ def publish_assets(
     else:
         os.environ.setdefault("TWINE_USERNAME", "__token__")
 
+    # PyPI only accepts attestations on trusted publishing uploads,
+    # see https://docs.pypi.org/attestations/producing-attestations/
+    use_attestations = False
+    if not dry_run and twine_token and os.environ.get(util.GH_ID_TOKEN_TOKEN_VAR, ""):
+        if "twine upload" in twine_cmd:
+            util.log("Turning on PyPI attestations as id-token permission is set.")
+            twine_cmd = f"{twine_cmd} --attestations"
+            use_attestations = True
+        else:
+            util.log(f"Not producing PyPI attestations for custom twine command: {twine_cmd}")
+
     found = False
     for path in sorted(glob(f"{dist_dir}/*.*")):
         name = Path(path).name
@@ -441,11 +452,19 @@ def publish_assets(
             pkg = dist(path)
             pkg_name = canonicalize_name(pkg.name or "")
             if not python_package_name or python_package_name == pkg_name:
+                upload_files = name
+                if use_attestations:
+                    # Without a name in python_packages, each package uploads every dist,
+                    # so sign each dist only once
+                    if not Path(f"{path}.publish.attestation").exists():
+                        util.retry_call(python.sign_dist, path)
+                    # twine only attaches attestation files given on its command line
+                    upload_files = f"{name} {name}.publish.attestation"
                 env = os.environ.copy()
                 env["TWINE_PASSWORD"] = twine_token
                 # NOTE: Do not print the env since a twine token extracted from
                 # a PYPI_TOKEN_MAP will not be sanitized in output
-                util.retry(f"{twine_cmd} {name}", cwd=dist_dir, env=env, echo=True)
+                util.retry(f"{twine_cmd} {upload_files}", cwd=dist_dir, env=env, echo=True)
                 found = True
             else:
                 warnings.warn(

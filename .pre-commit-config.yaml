@@ -48,7 +48,7 @@ repos:
         stages: [manual]
         args: ["--install-types", "--non-interactive"]
         additional_dependencies:
-          ["toml", "requests", "ghapi", "packaging","pkginfo", "fastapi", "click", "github_activity", "mdformat"]
+          ["toml", "requests", "ghapi", "packaging","pkginfo", "fastapi", "click", "github_activity", "mdformat", "pypi-attestations"]
 
   - repo: https://github.com/adamchainz/blacken-docs
     rev: "1.16.0"

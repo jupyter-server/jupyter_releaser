@@ -46,6 +46,8 @@ See checklist below for details:
     - if you use the example workflows, the _workflow name_ is `publish-release.yml` (or `full-release.yml`) and the
       _environment_ should be `release` (the name of the GitHub environment).
   - Ensure the publish release job as `permissions`: `id-token : write` (see the [documentation](https://docs.pypi.org/trusted-publishers/using-a-publisher/))
+  - With trusted publishing, the releaser also signs each Python distribution and uploads its
+    [PyPI attestation](https://docs.pypi.org/attestations/). No extra configuration is needed.
 
 - [ ] Set up npm (if publishing to npm):
 

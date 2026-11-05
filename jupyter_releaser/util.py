@@ -433,12 +433,16 @@ def get_first_commit(source):
 
 def retry(cmd, **kwargs):
     """Run a command with retries"""
+    retry_call(run, cmd, **kwargs)
+
+
+def retry_call(func, *args, **kwargs):
+    """Call a function with retries"""
     attempt = 0
     while True:
         time.sleep(attempt)
         try:
-            run(cmd, **kwargs)
-            return
+            return func(*args, **kwargs)
         except Exception as e:
             attempt += 1
             if attempt == 3:
