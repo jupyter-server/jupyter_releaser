@@ -2,6 +2,25 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 1.12.0
+
+([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...29abd5be1778da7211136426c3d8183925ac2db6))
+
+### Enhancements made
+
+- Produce PyPI attestations when using trusted publishing [#769](https://github.com/jupyter-server/jupyter_releaser/pull/769) ([@Yann-P](https://github.com/Yann-P), [@claude](https://github.com/claude), [@krassowski](https://github.com/krassowski))
+
+### Contributors to this release
+
+The following people contributed discussions, new ideas, code and documentation contributions, and review.
+See [our definition of contributors](https://github-activity.readthedocs.io/en/latest/use/#how-does-this-tool-define-contributions-in-the-reports).
+
+([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2026-10-29&to=2026-11-05&type=c))
+
+@claude ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Aclaude+updated%3A2026-10-29..2026-11-05&type=Issues)) | @krassowski ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2026-10-29..2026-11-05&type=Issues)) | @Yann-P ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3AYann-P+updated%3A2026-10-29..2026-11-05&type=Issues))
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 1.11.3
 
 ([Full Changelog](https://github.com/jupyter-server/jupyter_releaser/compare/v2...d65dafa45edf309eef8f86b198ab9a5c47a0afd1))
@@ -28,8 +47,6 @@ See [our definition of contributors](https://github-activity.readthedocs.io/en/l
 ([GitHub contributors page for this release](https://github.com/jupyter-server/jupyter_releaser/graphs/contributors?from=2026-07-09&to=2026-10-29&type=c))
 
 @brichet ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Abrichet+updated%3A2026-07-09..2026-10-29&type=Issues)) | @jtpio ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Ajtpio+updated%3A2026-07-09..2026-10-29&type=Issues)) | @krassowski ([activity](https://github.com/search?q=repo%3Ajupyter-server%2Fjupyter_releaser+involves%3Akrassowski+updated%3A2026-07-09..2026-10-29&type=Issues))
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 1.11.2
 
