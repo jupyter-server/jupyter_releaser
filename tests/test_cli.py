@@ -746,6 +746,37 @@ def test_publish_assets_py_no_attestations_with_custom_command(py_dist_dir, runn
     assert "Not producing PyPI attestations for custom twine command" in output
 
 
+def test_publish_assets_py_attestations_multipackage(
+    py_multipackage, runner, mocker, git_prep, mock_github
+):
+    mock_changelog_entry(py_multipackage[0]["abs_path"], runner, mocker)
+    dist_dir = normalize_path(Path(util.CHECKOUT_NAME).resolve() / "dist")
+    for package in py_multipackage[1:]:
+        run(
+            f"pipx run --spec build pyproject-build . -o {dist_dir}",
+            cwd=Path(util.CHECKOUT_NAME) / package["rel_path"],
+        )
+    release = create_draft_release(files=glob(f"{dist_dir}/*.*"))
+    os.environ["RH_RELEASE_URL"] = release.html_url
+    use_trusted_publishing(mocker)
+
+    def sign(cmd, cwd=None, **kwargs):
+        # Like pypi-attestations, refuse to overwrite an attestation
+        if cmd.startswith("pipx run pypi-attestations sign "):
+            attestation = Path(cwd) / f"{cmd.split()[-1]}.publish.attestation"
+            if attestation.exists():
+                raise CalledProcessError(1, cmd)
+            attestation.write_text("{}", encoding="utf-8")
+
+    mock_run = mocker.patch("jupyter_releaser.util.run", side_effect=sign)
+    # Without a package name, each package uploads every dist
+    packages = ["--python-packages", "sub_package0", "--python-packages", "sub_package1"]
+    runner(["publish-assets", "--dist-dir", dist_dir, *packages])
+
+    cmds = [call.args[0] for call in mock_run.call_args_list]
+    assert len([cmd for cmd in cmds if "pypi-attestations sign" in cmd]) == 4
+
+
 def test_publish_assets_npm(npm_dist, runner, mocker, mock_github):
     # Create the release.
     dist_dir = npm_dist / util.CHECKOUT_NAME / "dist"
