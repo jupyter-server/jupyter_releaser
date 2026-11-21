@@ -6,6 +6,7 @@ import shutil
 import time
 from pathlib import Path
 
+import pytest
 import toml
 from ghapi.core import GhApi
 
@@ -19,6 +20,26 @@ def test_get_branch(git_repo):
     assert util.get_branch() == "bar"
     run("git checkout foo")
     assert util.get_branch() == "foo"
+
+
+@pytest.mark.parametrize("same_time", [False, True], ids=["older", "tied"])
+def test_get_first_commit_with_unrelated_histories(git_repo, monkeypatch, same_time):
+    timestamp, original = run("git rev-list --timestamp -1 HEAD").split()
+    run("git checkout --orphan other")
+    other_time = int(timestamp) if same_time else int(timestamp) - 60
+    monkeypatch.setenv("GIT_COMMITTER_DATE", f"@{other_time} +0000")
+    monkeypatch.setenv("GIT_AUTHOR_DATE", f"@{int(timestamp) + 60} +0000")
+    run("git commit --allow-empty -m other")
+    other = run("git rev-parse HEAD")
+    run("git merge --allow-unrelated-histories --no-edit bar")
+
+    expected = min(original, other) if same_time else other
+    assert util.get_first_commit(None) == expected
+    assert util.get_first_commit("bar") == original
+
+    run("git checkout bar")
+    run(f"git merge --allow-unrelated-histories --no-edit {other}")
+    assert util.get_first_commit(None) == expected
 
 
 def test_get_repo(git_repo, mocker):

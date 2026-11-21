@@ -426,9 +426,14 @@ def get_latest_tag(source, since_last_stable=False):
 
 
 def get_first_commit(source):
-    """Get the default 'since' value for a branch"""
-    source = source or get_branch()
-    return run("git rev-list --max-parents=0 HEAD", quiet=True)
+    """Get the oldest root commit reachable from the given ref."""
+    ref = source or "HEAD"
+    cmd = ["git", "rev-list", "--timestamp", "--max-parents=0", "--end-of-options", ref, "--"]
+    output = check_output(cmd, text=True)  # noqa: S603
+    # github-activity uses the committer date of the ref as the start of the changelog.
+    roots = (line.split() for line in output.splitlines())
+    _, oldest = min((int(timestamp), sha) for timestamp, sha in roots)
+    return oldest
 
 
 def retry(cmd, **kwargs):
