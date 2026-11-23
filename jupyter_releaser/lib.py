@@ -117,8 +117,15 @@ def draft_changelog(
         with open(metadata_path, "w") as fid:
             json.dump(data, fid)
 
-        release = gh.create_release(
-            tag_name, branch, tag_name, current, True, prerelease, files=[metadata_path]
+        release = util.create_release(
+            gh,
+            tag_name,
+            branch,
+            tag_name,
+            current,
+            True,
+            prerelease,
+            files=[metadata_path],
         )
 
     # Remove non-silent draft releases over a day old
@@ -290,7 +297,7 @@ def populate_release(
     )
 
     # Upload the assets to the draft release.
-    release = util.upload_assets(gh, assets, release, auth)
+    release = util.upload_assets(gh, assets, release)
 
     # Set the GitHub action output
     util.actions_output("release_url", release.html_url)
